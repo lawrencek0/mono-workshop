@@ -1,0 +1,71 @@
+-provide(:title, 'Petrol Finder | ')
+div.row
+  div.col-md-3.col-xs-3
+    div.row
+      div.col-md-2.col-xs-1
+      div.col-md-7.col-xs-10 style="padding-top: 65px;"
+        h3.h4 Distribution date
+        select.form-control name="date" ng-model="petrol.date" ng-init="petrol.date = '2015/11/07'"
+          option ng-option="" ng-selected="selected" value="2015/11/07" Nov 7, 2015
+          option ng-option="" value="2015/11/06" Nov 6, 2015
+          option ng-option="" value="2015/11/05" Nov 5, 2015
+      div.col-md-3.col-xs-1
+  div.col-md-8.col-xs-9
+    h1.h2 <i class="fa fa-tint"></i> Petrol Finder
+    div#map_20151107 style = "height: 600px;" ng-if="petrol.date == '2015/11/07'"
+      petrol-finder
+    div#map_20151106 style = "height: 600px;" ng-if="petrol.date == '2015/11/06'"
+      petrol-finder
+    div#map_20151105 style = "height: 600px;" ng-if="petrol.date == '2015/11/05'"
+      petrol-finder
+  div.col-md-1.col-xs-0
+br
+hr
+br
+div.row
+  div.col-md-1
+  div.col-md-10
+    h2.text-justify
+      'What is Petrol Finder?
+  div.col-md-1
+div.row
+  div.col-md-1
+  div.col-md-10
+    div.text-justify
+      'Petrol Finder uses the map provided by <a href=”http://openstreetmap.org/”> Open Srreet Map </a> for displaying the petrol pumps where the fuel is going to be distributed for the certain lots of vehicles for specific dates. The list of petrol pumps is provided by Nepal Oil Corporation and can be viewed <a href='http://nepaloil.com.np/news-events/Notice/5/'> here.</a>
+  div.col-md-1
+p
+div.row
+  div.col-md-1
+  div.col-md-10
+    h2.text-justify
+      'Why?
+  div.col-md-1
+div.row
+  div.col-md-1
+  div.col-md-10
+    div.text-justify
+      'Currently, Nepal is facing a huge humanitarian crisis due to economic blockade at the southern custom points. There is a complete shortage of fuel.  The fuel crisis has made the lives of the people of Nepal very hard.  People from Kathmandu are forced to buy wood to make food which has increased expenses for the people. The costs of making food have also increased thanks to the skyrocketing inflation and the economic blockade which is evident from the pie chart comparing the cost of making food between 2003 and 2015 .This blockade comes at the time when Nepal is just recovering from the disastrous earthquakes that struck Nepal on April and June.
+  div.col-md-1
+p
+div.row
+  div.col-md-2.col-xs-1
+  div.col-md-8.col-xs-10
+    div.container
+      div.span12
+        div#pieChart cost-pie-chart-one=""
+  div.col-md-2.col-xs-1
+div.row
+  div.col-md-2.col-xs-1
+  div.col-md-8.col-xs-10
+    div.container
+      div.span12
+        div#pieChart cost-pie-chart-two=""
+  div.col-md-2.col-xs-1
+p
+div.row
+  div.col-md-1
+  div.col-md-10
+    div.pull-left
+      '<em>The Geojson data for the petrol pumps can be downloaded from the<a href="https://github.com/LKhadka/Nepal-Portal/tree/master/public"> GitHub</a> page.</em>
+  div.col-md-1

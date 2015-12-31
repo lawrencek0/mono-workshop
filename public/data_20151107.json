@@ -1,0 +1,384 @@
+{
+  "objects":[
+    {
+      "name":"Ambe Petroleum, Naikap",
+      "url":"https://goo.gl/maps/vvE6Jy2tVuG2",
+      "circle":{
+        "coordinates":[
+          27.6900183,
+          85.2612452
+        ]
+      }
+    },
+    {
+      "name":"D.M. Oil Store, Naikap",
+      "url":"https://goo.gl/maps/ZuihtEcvdsv",
+      "circle":{
+        "coordinates":[
+          27.6865481,
+          85.2562735
+        ]
+      }
+    },
+    {
+      "name":"Shyama Oil, Kalanki",
+      "url":"https://goo.gl/maps/1AS6ZZJSg1S2",
+      "circle":{
+        "coordinates":[
+          27.6927187,
+          85.2773913
+        ]
+      }
+    },
+    {
+      "name":"Makalu Oil Store, Kalanki",
+      "url":"https://goo.gl/maps/UeVEGK1nrUC2",
+      "circle":{
+        "coordinates":[
+          27.694026,
+          85.280972
+        ]
+      }
+    },
+    {
+      "name":"Padma Fuel, Sitapaila",
+      "url":"https://goo.gl/maps/9zThiGEis5N2",
+      "circle":{
+        "coordinates":[
+          27.7144568,
+          85.2638411
+        ]
+      }
+    },
+    {
+      "name":"Hama Oil, Swayambhu ",
+      "url":"https://goo.gl/maps/VZxVgE5vTv62",
+      "circle":{
+        "coordinates":[
+          27.713892,
+          85.292740
+        ]
+      }
+    },
+    {
+      "name":"Halchowk Fuel Station Swayambhu",
+      "url":"https://goo.gl/maps/geKGHJH2z4z",
+      "circle":{
+        "coordinates":[
+          27.7201415,
+          85.2855876
+        ]
+      }
+    },
+    {
+      "name":"Sajha Bandar, Swayambhu",
+      "url":"https://goo.gl/maps/tocqvB6UG5N2",
+      "circle":{
+        "coordinates":[
+          27.7137418,
+          85.2567159
+        ]
+      }
+    },
+    {
+      "name":"Sai E. Private, Balaju",
+      "url":"https://goo.gl/maps/NcETzAErzEr",
+      "circle":{
+        "coordinates":[
+          27.7272591,
+          85.302548
+        ]
+      }
+    },
+    {
+      "name":"Crystal Suppliers, Balaju",
+      "url":"https://goo.gl/maps/qJnxxjGjMEw",
+      "circle":{
+        "coordinates":[
+          27.7332337,
+          85.3036332
+        ]
+      }
+    },
+    {
+      "name":"Manamaiju Fuel, Manamaiju",
+      "url":"https://goo.gl/maps/q181GkWP4ET2",
+      "circle":{
+        "coordinates":[
+          27.7502396,
+          85.3011239
+        ]
+      }
+    },
+    {
+      "name":"Tarakeshwar Oil Store, Dharmasthali",
+      "url":"https://goo.gl/maps/w5WwUHHUfe22",
+      "circle":{
+        "coordinates":[
+          27.7610252,
+          85.2896333
+        ]
+      }
+    },
+    {
+      "name":"Newa Trade, Naya Bazar",
+      "url":"https://goo.gl/maps/5rUQi9D99RC2",
+      "circle":{
+        "coordinates":[
+          27.7191861,
+          85.3074291
+        ]
+      }
+    },
+    {
+      "name":"Divya Suppliers, Dapashi",
+      "url":"https://goo.gl/maps/HgtTQjfHdhD2",
+      "circle":{
+        "coordinates":[
+          27.7373947,
+          85.3212162
+        ]
+      }
+    },
+    {
+      "name":"Mahalaxmi Fuel Center, Basundhara",
+      "url":"https://goo.gl/maps/CLQYXKVzsR42",
+      "circle":{
+        "coordinates":[
+          27.7420223,
+          85.3312075
+        ]
+      }
+    },
+    {
+      "name":"Khadka Oil Suppliers, Bansbari",
+      "url":"https://goo.gl/maps/xTKrZx5rmEt",
+      "circle":{
+        "coordinates":[
+          27.7431741,
+          85.3378071
+        ]
+      }
+    },
+    {
+      "name":"Sita Fuel, Maharajgunj",
+      "url":"https://goo.gl/maps/BNxqYfnnniJ2",
+      "circle":{
+        "coordinates":[
+          27.6886677,
+          85.2842893
+        ]
+      }
+    },
+    {
+      "name":"Chuchepati Oil Store, Chuchepati",
+      "url":"https://goo.gl/maps/4LTX422T2m72",
+      "circle":{
+        "coordinates":[
+          27.7194817,
+          85.3493102
+        ]
+      }
+    },
+    {
+      "name":"New Lama Enterprise, Jorpati",
+      "url":"https://goo.gl/maps/SwuiUZDGNq82",
+      "circle":{
+        "coordinates":[
+          27.7219977,
+          85.3744472
+        ]
+      }
+    },
+    {
+      "name":"Everest D., Jorpati",
+      "url":"https://goo.gl/maps/onG7729JVBK2",
+      "circle":{
+        "coordinates":[
+          27.71155,
+          85.3672229
+        ]
+      }
+    },
+    {
+      "name":"Bagmati Petrol Center, Jorpati",
+      "url":"https://goo.gl/maps/S2EKZi8jmRB2",
+      "circle":{
+        "coordinates":[
+          27.7256255,
+          85.3713762
+        ]
+      }
+    },
+    {
+      "name":"Ma Padma Oil Store, Mulpani",
+      "url":"https://goo.gl/maps/PdZjBLSUF9Q2",
+      "circle":{
+        "coordinates":[
+          27.7097838,
+          85.3913426
+        ]
+      }
+    },
+    {
+      "name":"Shrestha Oil D., Tilganga",
+      "url":"https://goo.gl/maps/7VJ5U2qerjq",
+      "circle":{
+        "coordinates":[
+          27.7058507,
+          85.3486253
+        ]
+      }
+    },
+    {
+      "name":"New Pushpanjali Oil Trade Pvt. Ltd., Jay Bageshwori",
+      "url":"https://goo.gl/maps/uHTbS6avS3U2",
+      "circle":{
+        "coordinates":[
+          27.7117377,
+          85.3425382
+        ]
+      }
+    },
+    {
+      "name":"Jay Shree Goma Ganesh Oil Stores, Baluwatar",
+      "url":"https://goo.gl/maps/PL7xxhQB9LD2",
+      "circle":{
+        "coordinates":[
+          27.7214015,
+          85.3256462
+        ]
+      }
+    },
+    {
+      "name":"Valley Fuel Center, Gyaneshwor",
+      "url":"https://goo.gl/maps/vGkbnjDKfuC2",
+      "circle":{
+        "coordinates":[
+          27.7090017,
+          85.3276383
+        ]
+      }
+    },
+    {
+      "name":"Valley Rikesh Suppliers, Gaurigau",
+      "url":"https://goo.gl/maps/L2vwPBWdeuM2",
+      "circle":{
+        "coordinates":[
+          27.6877767,
+          85.3484372
+        ]
+      }
+    },
+    {
+      "name":"Shree Harisiddhi Oil Store, Minbhawan",
+      "url":"https://goo.gl/maps/ATdFKq3TFw82",
+      "circle":{
+        "coordinates":[
+          27.6868314,
+          85.3402938
+        ]
+      }
+    },
+    {
+      "name":"Three Brothers Oil Store, New Baneshwor",
+      "url":"https://goo.gl/maps/fXLmDuJFgGw",
+      "circle":{
+        "coordinates":[
+          27.6832705,
+          85.3470086
+        ]
+      }
+    },
+    {
+      "name":"Mayaram Bholaram Petrol Pump, Tripureshwor",
+      "url":"https://goo.gl/maps/FzmNw188uzT2",
+      "circle":{
+        "coordinates":[
+          27.6937152,
+          85.3122139
+        ]
+      }
+    },
+    {
+      "name":"Sanjay Services, Sundhara",
+      "url":"https://goo.gl/maps/f7SyUCmUBzz",
+      "circle":{
+        "coordinates":[
+          27.7000199,
+          85.3108442
+        ]
+      }
+    },
+    {
+      "name":"Ripumardini Petrol Station, Badrakali",
+      "url":"https://goo.gl/maps/jUJhwWHbL582",
+      "circle":{
+        "coordinates":[
+          27.6954857,
+          85.3131226
+        ]
+      }
+    },
+    {
+      "name":"Prahari Kalyan Kosh Petrol pump, Nakshal",
+      "url":"https://goo.gl/maps/HuzoSX35ta92",
+      "circle":{
+        "coordinates":[
+          27.2024906,
+          84.9784682
+        ]
+      }
+    },
+    {
+      "name":"Sita Care, Kalimati",
+      "url":"https://goo.gl/maps/otKdR2gwrYr",
+      "circle":{
+        "coordinates":[
+          27.6971518,
+          85.2935073
+        ]
+      }
+    },
+    {
+      "name":"Raskatar Trading, Kirtipur",
+      "url":"https://goo.gl/maps/hhB2EAMm9Pv",
+      "circle":{
+        "coordinates":[
+          27.6679339,
+          85.256463
+        ]
+      }
+    },
+    {
+      "name":"Bandana Oil Stores, Pepsicola",
+      "url":"https://goo.gl/maps/bsqYLJYfNHn",
+      "circle":{
+        "coordinates":[
+          27.6838451,
+          85.355752
+        ]
+      }
+    },
+    {
+      "name":"Shree Ugra Chandi Oil Store, Banepa",
+      "url":"https://goo.gl/maps/aeXCN9MuFaw",
+      "circle":{
+        "coordinates":[
+          27.6333849,
+          85.5121923
+        ]
+      }
+    },
+    {
+      "name":"Baghwati Oil Store, Banepa",
+      "url":"https://goo.gl/maps/mNKedsP7cgJ2",
+      "circle":{
+        "coordinates":[
+          27.6351582,
+          85.4862183
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+/*
+  *= require_tree .
+  *= require_self
+  *= require 'bootstrap-sass-official'
+  *= require 'leaflet'
+*/
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+    p#social-link {
+        padding-left: 200px;
+    }
+    footer	ul	li	{
+        float:	left;
+        margin-left:	15px;
+    }
+    .flexslider {
+        min-width: 500px;
+    }
+}
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    p#social-link {
+        padding-left: 200px;
+    }
+    footer	ul	li	{
+        float:	left;
+        margin-left:	15px;
+    }
+    .flexslider {
+        min-width: 500px;
+    }
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+    p#social-link {
+        padding-left: 10px;
+        padding-top: 60px;
+        padding-right: 80px;
+        width: 50px;
+        height: 50px;
+    }
+    footer	ul	li	{
+        float:	left;
+        margin-left:	5px;
+    }
+    .flexslider {
+        max-width: 100%;
+    }
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    p#social-link {
+        padding-left: 10px;
+        padding-top: 60px;
+        padding-right: 80px;
+        width: 50px;
+        height: 50px;
+    }
+    footer	ul	li	{
+        float:	left;
+        margin-left:	5px;
+    }
+    .flexslider {
+        max-width: 100%;
+    }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+    p#social-link {
+        padding-left: 10px;
+        padding-top: 60px;
+        padding-right: 80px;
+        width: 50px;
+        height: 50px;
+    }
+    footer	ul	li	{
+        float:	left;
+        margin-left:	5px;
+    }
+    .flexslider {
+        max-width: 100%;
+    }
+}
+#logo	{
+    float:	left;
+    margin-right:	10px;
+    font-size:	1.7em;
+    color:	#fff;
+    text-transform:	uppercase;
+    letter-spacing:	-1px;
+    padding-top:	9px;
+    font-weight:	bold;
+}
+#logo:hover	{
+    color:	#fff;
+    text-decoration:	none;
+}
+
+
+body {
+    padding-top: 55px;
+    position: relative;
+}
+#image1 {
+    padding-top: 60px;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+p#social-link {
+    padding-top: 40px;
+    padding-bottom: 50px;
+    width: 50px;
+    height: 50px;
+}
+
+a#social {
+    color: inherit;
+    text-decoration: none;
+    width: 50px;
+    height: 50px;
+
+}
+.wrapper {
+    float: left;
+    clear: left;
+    display: table;
+    table-layout: fixed;
+}
+img.img-responsive {
+    display: table-cell;
+    max-width: 100%;
+}
+.col-md-6 { width: 85%}
+footer	{
+    margin-top:	30px;
+    padding-top:	5px;
+    border-top:	1px	solid	#eaeaea;
+    color:	#777;
+}
+footer	a	{
+    color:	#555;
+}
+footer	a:hover	{
+    color:	#222;
+}
+footer	small	{
+    float:	left;
+}
+footer	ul	{
+    float:	right;
+    list-style:	none;
+}
+
+
+

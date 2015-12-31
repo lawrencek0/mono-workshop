@@ -1,0 +1,123 @@
+-provide(:title, 'Petrol Finder | ')
+article ng-app="nepal"
+  div.row
+    div.col-md-3.col-xs-0.col-sm-0
+      div.row
+        div.col-md-2.col-xs-1
+        div.col-md-7.col-xs-10.hidden-xs.hidden-sm style="padding-top: 65px;"
+          h3.h4.hidden-xs.hidden-sm Distribution date
+          select.form-control.hidden-xs.hidden-sm name="date" ng-model="petrol.date" ng-init="petrol.date = '2015/12/14'"
+            option ng-option="" ng-selected="selected" value="2015/12/14" Dec 14, 2015
+            option ng-option="" value="2015/12/12" Dec 12, 2015
+            option ng-option="" value="2015/12/10" Dec 10, 2015
+            option ng-option="" value="2015/12/08" Dec 08, 2015
+            option ng-option="" value="2015/11/07" Nov 7, 2015
+            option ng-option="" value="2015/11/06" Nov 6, 2015
+            option ng-option="" value="2015/11/05" Nov 5, 2015
+        div.col-md-3.col-xs-1
+    div.col-md-8.col-xs-12
+      h1.h2 <i class="fa fa-tint"></i> Petrol Finder
+      div#map_20151214 style = "height: 600px;" ng-if="petrol.date == '2015/12/14'"
+        petrol-finder
+      div#map_20151212 style = "height: 600px;" ng-if="petrol.date == '2015/12/12'"
+        petrol-finder
+      div#map_20151210 style = "height: 600px;" ng-if="petrol.date == '2015/12/10'"
+        petrol-finder
+      div#map_20151208 style = "height: 600px;" ng-if="petrol.date == '2015/12/08'"
+        petrol-finder
+      div#map_20151107 style = "height: 600px;" ng-if="petrol.date == '2015/11/07'"
+        petrol-finder
+      div#map_20151106 style = "height: 600px;" ng-if="petrol.date == '2015/11/06'"
+        petrol-finder
+      div#map_20151105 style = "height: 600px;" ng-if="petrol.date == '2015/11/05'"
+        petrol-finder
+      small
+        em.pull-right Click on the circle for more info!
+    div.col-md-1.col-xs-0.col-sm-0
+  div.row.visible-sm.visible-xs
+    div.col-xs-2
+    div.col-xs-8 style="padding-top: 30px;"
+      h3.h4 Distribution date
+      select.form-control name="date" ng-model="petrol.date" ng-init="petrol.date = '2015/12/14'"
+        option ng-option="" ng-selected="selected" value="2015/12/14" Dec 14, 2015
+        option ng-option="" value="2015/12/12" Dec 12, 2015
+        option ng-option="" value="2015/12/10" Dec 10, 2015
+        option ng-option="" value="2015/12/08" Dec 08, 2015
+        option ng-option="" value="2015/11/07" Nov 7, 2015
+        option ng-option="" value="2015/11/06" Nov 6, 2015
+        option ng-option="" value="2015/11/05" Nov 5, 2015
+    div.col-xs-2
+  br
+  hr
+  br
+  div.row
+    div.col-md-1
+    div.col-md-10
+      h2.h1.text-justify
+        'What is Petrol Finder?
+    div.col-md-1
+  div.row
+    div.col-md-1
+    div.col-md-10
+      div.text-justify
+        'Petrol Finder uses the map provided by <a href=”http://openstreetmap.org/”> Open Srreet Map </a> for displaying the petrol pumps where the fuel is going to be distributed for the certain lots of vehicles for specific dates. The list of petrol pumps is provided by Nepal Oil Corporation and can be viewed <a href='http://nepaloil.com.np/news-events/Notice/5/'> here.</a>
+    div.col-md-1
+  p
+  div.row
+    div.col-md-1
+    div.col-md-10
+      h2.text-justify
+        'Why?
+    div.col-md-1
+  div.row
+    div.col-md-1
+    div.col-md-10
+      div.text-justify
+        'Currently, Nepal is facing a huge humanitarian crisis due to economic blockade at the southern custom points. There is a complete shortage of fuel.  The fuel crisis has made the lives of the people of Nepal very hard.  People from Kathmandu are forced to buy wood to cook food due to the lack of the cooking gas/Liquified Petroleum Gas (LPG) cylinders.
+    div.col-md-1
+  p
+  div.row
+    div.col-md-2.col-xs-1
+    div.col-md-8.col-xs-10
+      div.hidden-xs.hidden-sm
+        div#pieChart cost-pie-chart-one=""
+      div.visible-xs.visible-sm
+        div.text-center
+          h3.h4 Average Monthly Spending of Every Household of Five to Cook Food in 2003
+        div#pie1
+          div#tooltip2 class="hidden"
+            p <strong>Expenditure: NRS <span style="color: rgb(0,128,128)" id = "value"> x</span></strong>
+        div.pull-right
+          em
+            small Source: Amrit M Nakarmi, Professor, Tribhuvan University <br/>
+    div.col-md-2.col-xs-1
+  p
+  div.row
+    div.col-md-2.col-xs-1
+    div.col-md-8.col-xs-10
+      div.hidden-xs.hidden-sm
+        div#pieChart cost-pie-chart-two=""
+      div.visible-xs.visible-sm
+        div.text-center
+          h3.h4 Average Monthly Spending of Every Household of Five to Cook Food in 2015
+        div#pie2
+          div#tooltip2 class="hidden"
+            p <strong>Expenditure: NRS <span style="color: rgb(0,128,128)" id = "value"> x</span></strong>
+        div.pull-right
+          em
+            small Source: Amrit M Nakarmi, Professor, Tribhuvan University <br/>
+    div.col-md-2.col-xs-1
+  p
+  div.row
+    div.col-md-1
+    div.col-md-10
+      div.pull-left
+        'The economic blockade has increased expenses for the people. The costs of making food have also increased thanks to the skyrocketing inflation and the economic blockade which is evident from the pie chart comparing the cost of making food between 2003 and 2015 .This blockade comes at the time when Nepal is just recovering from the disastrous earthquakes that struck Nepal on April and June.
+    div.col-md-1
+  p
+  div.row
+    div.col-md-1
+    div.col-md-10
+    div.pull-left
+      small <em>The Geojson data for the petrol pumps can be downloaded from Nepal Portal's<a href="https://github.com/LKhadka/Nepal-Portal/tree/master/public"> GitHub</a> page.</em>
+  div.col-md-1
