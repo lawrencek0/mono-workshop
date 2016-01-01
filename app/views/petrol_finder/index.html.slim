@@ -33,7 +33,13 @@ article ng-app="nepal"
         petrol-finder
       small
         em.pull-right Click on the circle for more info! <br/>
-        span ng-if="petrol.date == '2015/12/14'" Only for motorcycles/scooters belonging to <em style="color: rgb(0,128,128)">lot no. 56 and up</em>
+        span ng-if="petrol.date == '2015/12/14'" For motorcycles/scooters belonging to <strong style="color: rgb(0,128,128)">lot no. 56 and up</strong>
+        span ng-if="petrol.date == '2015/12/12'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 41 and 55</strong>
+        span ng-if="petrol.date == '2015/12/10'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 26 and 40</strong>
+        span ng-if="petrol.date == '2015/12/08'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 1 and 25</strong>
+        span ng-if="petrol.date == '2015/11/07'" For motorcycles/scooters belonging to <strong style="color: rgb(0,128,128)">lot no. 51 and up</strong> and for cars/jeeps belonging to <strong style="color: rgb(0,128,128)">lot no. 9 and up</strong>
+        span ng-if="petrol.date == '2015/11/06'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 31 and 50</strong> and for cars/jeeps between <strong style="color: rgb(0,128,128)">lot no. 6 and 8</strong>
+        span ng-if="petrol.date == '2015/11/05'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 1 and 30</strong> and for cars/jeeps between <strong style="color: rgb(0,128,128)">lot no. 1 and 5</strong>
     div.col-md-1.col-xs-0.col-sm-0
   div.row.visible-sm.visible-xs
     div.col-xs-2
@@ -120,5 +126,7 @@ article ng-app="nepal"
     div.col-md-1
     div.col-md-10
     div.pull-left
-      small <em>The Geojson data for the petrol pumps can be downloaded from Nepal Portal's<a href="https://github.com/LKhadka/Nepal-Portal/tree/master/public"> GitHub</a> page.</em>
+      small
+        em The Geojson data for the petrol pumps can be downloaded from Nepal Portal's<a href="https://github.com/LKhadka/Nepal-Portal/tree/master/public"> GitHub</a> page.
+        p The notice about the petrol pumps from NOC can be found<a href="http://nepaloil.com.np/news/details.php?n=84> here.</a>
   div.col-md-1
