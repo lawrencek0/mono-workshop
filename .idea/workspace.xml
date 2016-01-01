@@ -29,8 +29,8 @@
       <file leaf-file-name="index.html.slim" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views/petrol_finder/index.html.slim">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.28654125">
-              <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.26049203">
+              <caret line="35" column="148" selection-start-line="35" selection-start-column="148" selection-end-line="35" selection-end-column="148" />
               <folding />
             </state>
           </provider>
@@ -70,8 +70,8 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-22" />
-    <option name="y" value="517" />
+    <option name="x" value="2" />
+    <option name="y" value="173" />
     <option name="width" value="1590" />
     <option name="height" value="874" />
   </component>
@@ -281,7 +281,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-22" y="517" width="1590" height="874" extended-state="0" />
+    <frame x="2" y="173" width="1590" height="874" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25453368" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -348,8 +348,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/views/petrol_finder/index.html.slim">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28654125">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.26049203">
+          <caret line="35" column="148" selection-start-line="35" selection-start-column="148" selection-end-line="35" selection-end-column="148" />
           <folding />
         </state>
       </provider>
