@@ -32,7 +32,8 @@ article ng-app="nepal"
       div#map_20151105 style = "height: 600px;" ng-if="petrol.date == '2015/11/05'"
         petrol-finder
       small
-        em.pull-right Click on the circle for more info!
+        em.pull-right Click on the circle for more info! <br/>
+        span ng-if="petrol.date == '2015/12/14'" Only for motorcycles/scooters belonging to lot no. <span style="color: rgb(0,128,128)"> 56 </span>and up
     div.col-md-1.col-xs-0.col-sm-0
   div.row.visible-sm.visible-xs
     div.col-xs-2
