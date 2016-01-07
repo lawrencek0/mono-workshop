@@ -6,24 +6,12 @@
 */
 /* Large desktops and laptops */
 @media (min-width: 1200px) {
-    p#social-link {
-        padding-left: 200px;
-    }
-    footer	ul	li	{
-        float:	left;
-        margin-left:	15px;
-    }
-    .flexslider {
-        min-width: 500px;
-    }
-}
+    p#social-link {  padding-left: 200px;  }
+    footer	ul	li	{  float:	left;  margin-left:	15px;  }
+    .flexslider {  min-width: 500px;  }  }
 /* Landscape tablets and medium desktops */
-@media (min-width: 992px) and (max-width: 1199px) {
-    p#social-link {
-        padding-left: 200px;
-    }
-    footer	ul	li	{
-        float:	left;
+@media (min-width: 992px) and (max-width: 1199px) {  p#social-link {  padding-left: 200px;  }
+    footer	ul	li	{  float:	left;
         margin-left:	15px;
     }
     .flexslider {
