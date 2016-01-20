@@ -39,7 +39,7 @@ article ng-app="nepal"
         petrol-finder
       small
         em.pull-right Click on the circle for more info! <br/>
-        span ng-if="petrol.date == '2015/12/08'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 1 and 30</strong>
+        span ng-if="petrol.date == '2015/01/20'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 1 and 30</strong>
         span ng-if="petrol.date == '2016/01/06'" For four wheelers between <strong style="color: rgb(0,128,128)">lot no. 1 and 6</strong>
         span ng-if="petrol.date == '2015/12/14'" For motorcycles/scooters belonging to <strong style="color: rgb(0,128,128)">lot no. 56 and up</strong>
         span ng-if="petrol.date == '2015/12/12'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 41 and 55</strong>
@@ -53,7 +53,7 @@ article ng-app="nepal"
     div.col-xs-2
     div.col-xs-8 style="padding-top: 30px;"
       h3.h4 Distribution date
-      select.form-control name="date" ng-model="petrol.date" ng-init="petrol.date = '2016/01/06'"
+      select.form-control name="date" ng-model="petrol.date" ng-init="petrol.date = '2016/01/20'"
         option ng-option="" ng-selected="selected" value="2016/01/20" Jan 20, 2016
         option ng-option="" value="2016/01/06" Jan 06, 2016
         option ng-option="" value="2015/12/14" Dec 14, 2015
