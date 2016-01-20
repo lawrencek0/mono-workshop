@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ea1f45ee-37e6-4f34-a7b6-e8f3c75ade32" name="Default" comment="" />
+    <list default="true" id="ea1f45ee-37e6-4f34-a7b6-e8f3c75ade32" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/petrol_finder/index.html.slim" afterPath="$PROJECT_DIR$/app/views/petrol_finder/index.html.slim" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="a.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -24,12 +27,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="bower.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/bower.json">
+      <file leaf-file-name="index.html.slim" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/views/petrol_finder/index.html.slim">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.31738034">
-              <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-              <folding />
+            <state vertical-scroll-proportion="1.1561713">
+              <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
+              <folding>
+                <element signature="e#1433#1532#0" expanded="false" />
+                <element signature="e#1539#1638#0" expanded="false" />
+                <element signature="e#1645#1744#0" expanded="false" />
+                <element signature="e#1751#1850#0" expanded="false" />
+                <element signature="e#1857#1956#0" expanded="false" />
+                <element signature="e#1963#2062#0" expanded="false" />
+                <element signature="e#4585#4701#0" expanded="false" />
+                <element signature="e#4634#4684#0" expanded="false" />
+                <element signature="e#4704#5165#0" expanded="false" />
+                <element signature="e#5172#5267#0" expanded="false" />
+                <element signature="e#5270#5714#0" expanded="false" />
+                <element signature="e#5299#5697#0" expanded="false" />
+                <element signature="e#6311#6894#0" expanded="false" />
+                <element signature="e#6901#7382#0" expanded="false" />
+                <element signature="e#7389#7753#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -54,13 +73,16 @@
         <option value="$PROJECT_DIR$/public/data_20151107.json" />
         <option value="$PROJECT_DIR$/public/data_20151105.json" />
         <option value="$PROJECT_DIR$/public/data_20151210.json" />
-        <option value="$PROJECT_DIR$/app/views/petrol_finder/index.html.slim" />
         <option value="$PROJECT_DIR$/app/assets/javascripts/directives/petrol_finder_20160106_directive.js" />
         <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/config/development.rb" />
         <option value="$PROJECT_DIR$/.buildpacks" />
         <option value="$PROJECT_DIR$/config/application.rb" />
         <option value="$PROJECT_DIR$/bower.json" />
+        <option value="$PROJECT_DIR$/public/data_20160106.json" />
+        <option value="$PROJECT_DIR$/public/data_20160120.json" />
+        <option value="$PROJECT_DIR$/app/assets/javascripts/directives/petrol_finder_20160120_directive.js" />
+        <option value="$PROJECT_DIR$/app/views/petrol_finder/index.html.slim" />
       </list>
     </option>
   </component>
@@ -99,22 +121,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="RailsProjectView" />
       <pane id="Scratches" />
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="a">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -135,10 +142,79 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="RailsProjectView" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="a">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="a">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="app">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="views">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="a">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="app">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="views">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="petrol_finder">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="a">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="app">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/niraj1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="false" />
@@ -343,7 +419,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-4" width="1600" height="904" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.205625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -381,7 +457,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="ruby-line">
           <url>file://$PROJECT_DIR$/app/views/petrol_finder/index.html.slim</url>
-          <line>107</line>
+          <line>112</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
@@ -390,20 +466,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/assets/javascripts/directives/bubble_directive.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30694276">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/assets/javascripts/directives/fuel_cost_pie_chart_2003_directive.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8989038">
-          <caret line="107" column="17" selection-start-line="107" selection-start-column="17" selection-end-line="107" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/assets/javascripts/fuel_pie_chart_2003.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.12302071">
@@ -537,73 +599,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20151107.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33245033">
-          <caret line="246" column="19" selection-start-line="246" selection-start-column="17" selection-end-line="246" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20151106.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33289647">
-          <caret line="196" column="19" selection-start-line="196" selection-start-column="17" selection-end-line="196" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20151105.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33245033">
-          <caret line="233" column="31" selection-start-line="233" selection-start-column="27" selection-end-line="233" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20151212.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33289647">
-          <caret line="143" column="26" selection-start-line="143" selection-start-column="21" selection-end-line="143" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20151210.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.4807947">
-          <caret line="153" column="40" selection-start-line="153" selection-start-column="37" selection-end-line="153" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20151208.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33289647">
-          <caret line="113" column="26" selection-start-line="113" selection-start-column="21" selection-end-line="113" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/assets/javascripts/directives/petrol_finder_20160106_directive.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2734177">
-          <caret line="12" column="30" selection-start-line="12" selection-start-column="30" selection-end-line="12" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/assets/javascripts/directives/petrol_finder_20151214_directive.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.06577345">
           <caret line="3" column="29" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20160106.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/data_20151214.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="123" column="22" selection-start-line="123" selection-start-column="17" selection-end-line="123" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -618,41 +617,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/layouts/application.html.slim">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.3333335">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="e#603#1113#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/petrol_finder/index.html.slim">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.988665">
-          <caret line="51" column="95" selection-start-line="51" selection-start-column="95" selection-end-line="51" selection-end-column="95" />
-          <folding>
-            <element signature="e#1263#1362#0" expanded="false" />
-            <element signature="e#1369#1468#0" expanded="false" />
-            <element signature="e#1475#1574#0" expanded="false" />
-            <element signature="e#1581#1680#0" expanded="false" />
-            <element signature="e#1687#1786#0" expanded="false" />
-            <element signature="e#1793#1892#0" expanded="false" />
-            <element signature="e#4209#4325#0" expanded="false" />
-            <element signature="e#4258#4308#0" expanded="false" />
-            <element signature="e#4328#4789#0" expanded="false" />
-            <element signature="e#4796#4891#0" expanded="false" />
-            <element signature="e#4894#5338#0" expanded="false" />
-            <element signature="e#4923#5321#0" expanded="false" />
-            <element signature="e#5935#6518#0" expanded="false" />
-            <element signature="e#6525#7006#0" expanded="false" />
-            <element signature="e#7013#7377#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -667,14 +631,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Gemfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.81120586">
-          <caret line="37" column="3" selection-start-line="37" selection-start-column="3" selection-end-line="37" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -703,7 +659,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="2" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -711,15 +666,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.021924483">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.ru">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39464068">
-          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -727,7 +673,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -735,7 +680,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -743,7 +687,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -751,7 +694,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -759,6 +701,122 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.72350794">
           <caret line="33" column="74" selection-start-line="33" selection-start-column="74" selection-end-line="33" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22670025">
+          <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.ru">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/layouts/application.html.slim">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="59" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Gemfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="12" selection-start-line="20" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20151105.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.37931">
+          <caret line="253" column="17" selection-start-line="253" selection-start-column="14" selection-end-line="253" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20151107.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.37931">
+          <caret line="243" column="35" selection-start-line="243" selection-start-column="29" selection-end-line="243" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20151212.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.37931">
+          <caret line="223" column="16" selection-start-line="221" selection-start-column="8" selection-end-line="231" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20151210.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.37931">
+          <caret line="183" column="37" selection-start-line="183" selection-start-column="34" selection-end-line="183" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20151208.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.5">
+          <caret line="324" column="18" selection-start-line="321" selection-start-column="8" selection-end-line="331" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20151214.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.0689654">
+          <caret line="272" column="7" selection-start-line="271" selection-start-column="8" selection-end-line="281" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20151106.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.37931">
+          <caret line="173" column="35" selection-start-line="173" selection-start-column="32" selection-end-line="173" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20160120.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.7027708">
+          <caret line="543" column="1" selection-start-line="543" selection-start-column="1" selection-end-line="543" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/data_20160106.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33289647">
+          <caret line="83" column="27" selection-start-line="83" selection-start-column="21" selection-end-line="83" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/assets/javascripts/directives/petrol_finder_20160120_directive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2734177">
+          <caret line="12" column="30" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/assets/javascripts/directives/petrol_finder_20160106_directive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06577345">
+          <caret line="3" column="35" selection-start-line="0" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -771,11 +829,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bower.json">
+    <entry file="file://$PROJECT_DIR$/app/views/petrol_finder/index.html.slim">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31738034">
-          <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-          <folding />
+        <state vertical-scroll-proportion="1.1561713">
+          <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
+          <folding>
+            <element signature="e#1433#1532#0" expanded="false" />
+            <element signature="e#1539#1638#0" expanded="false" />
+            <element signature="e#1645#1744#0" expanded="false" />
+            <element signature="e#1751#1850#0" expanded="false" />
+            <element signature="e#1857#1956#0" expanded="false" />
+            <element signature="e#1963#2062#0" expanded="false" />
+            <element signature="e#4585#4701#0" expanded="false" />
+            <element signature="e#4634#4684#0" expanded="false" />
+            <element signature="e#4704#5165#0" expanded="false" />
+            <element signature="e#5172#5267#0" expanded="false" />
+            <element signature="e#5270#5714#0" expanded="false" />
+            <element signature="e#5299#5697#0" expanded="false" />
+            <element signature="e#6311#6894#0" expanded="false" />
+            <element signature="e#6901#7382#0" expanded="false" />
+            <element signature="e#7389#7753#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
