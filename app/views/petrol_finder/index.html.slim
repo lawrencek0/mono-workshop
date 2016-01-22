@@ -6,8 +6,9 @@ article ng-app="nepal"
         div.col-md-2.col-xs-1
         div.col-md-7.col-xs-10.hidden-xs.hidden-sm style="padding-top: 65px;"
           h3.h4.hidden-xs.hidden-sm Distribution date
-          select.form-control.hidden-xs.hidden-sm name="date" ng-model="petrol.date" ng-init="petrol.date = '2016/01/20'"
-            option ng-option="" ng-selected="selected" value="2016/01/20" Jan 20, 2016
+          select.form-control.hidden-xs.hidden-sm name="date" ng-model="petrol.date" ng-init="petrol.date = '2016/01/22'"
+            option ng-option="" ng-selected="selected" value="2016/01/22" Jan 22, 2016
+            option ng-option="" value="2016/01/20" Jan 20, 2016
             option ng-option="" value="2016/01/06" Jan 06, 2016
             option ng-option="" value="2015/12/14" Dec 14, 2015
             option ng-option="" value="2015/12/12" Dec 12, 2015
@@ -19,6 +20,8 @@ article ng-app="nepal"
         div.col-md-3.col-xs-1
     div.col-md-8.col-xs-12
       h1.h2 <i class="fa fa-tint"></i> Petrol Finder
+      div#map_20160122 style = "height: 600px;" ng-if="petrol.date == '2016/01/22'"
+        petrol-finder
       div#map_20160120 style = "height: 600px;" ng-if="petrol.date == '2016/01/20'"
         petrol-finder
       div#map_20160106 style = "height: 600px;" ng-if="petrol.date == '2016/01/06'"
@@ -39,6 +42,7 @@ article ng-app="nepal"
         petrol-finder
       small
         em.pull-right Click on the circle for more info! <br/>
+        span ng-if="petrol.date == '2016/01/22'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 31 and 50</strong>
         span ng-if="petrol.date == '2016/01/20'" For motorcycles/scooters between <strong style="color: rgb(0,128,128)">lot no. 1 and 30</strong>
         span ng-if="petrol.date == '2016/01/06'" For four wheelers between <strong style="color: rgb(0,128,128)">lot no. 1 and 6</strong>
         span ng-if="petrol.date == '2015/12/14'" For motorcycles/scooters belonging to <strong style="color: rgb(0,128,128)">lot no. 56 and up</strong>
@@ -53,8 +57,9 @@ article ng-app="nepal"
     div.col-xs-2
     div.col-xs-8 style="padding-top: 30px;"
       h3.h4 Distribution date
-      select.form-control name="date" ng-model="petrol.date" ng-init="petrol.date = '2016/01/20'"
-        option ng-option="" ng-selected="selected" value="2016/01/20" Jan 20, 2016
+      select.form-control name="date" ng-model="petrol.date" ng-init="petrol.date = '2016/01/22'"
+        option ng-option="" ng-selected="selected" value="2016/01/22" Jan 22, 2016
+        option ng-option="" value="2016/01/20" Jan 20, 2016
         option ng-option="" value="2016/01/06" Jan 06, 2016
         option ng-option="" value="2015/12/14" Dec 14, 2015
         option ng-option="" value="2015/12/12" Dec 12, 2015
