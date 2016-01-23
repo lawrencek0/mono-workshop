@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler'
+require 'rack-zippy'
 
 $stdout.sync = true
 Bundler.require(:rack)
@@ -11,7 +12,6 @@ require 'em-proxy'
 require 'logger'
 require 'heroku-forward'
 require 'heroku/forward/backends/puma'
-require 'rack-zippy'
 
 # Set asset_root to an absolute or relative path to the directory holding your asset files
 # e.g. '/path/to/my/apps/static-assets' or 'public'
