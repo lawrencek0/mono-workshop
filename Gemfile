@@ -22,6 +22,7 @@ gem 'leaflet-rails'
 gem 'flexslider'
 gem 'heroku-forward'
 gem 'execjs'
+gem 'rack-zippy'
 
 
 group :development, :test do
