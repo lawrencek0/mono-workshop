@@ -102,7 +102,7 @@ p#social-link {
     padding-bottom: 50px;
     width: 50px;
     height: 50px;
-    float: right;
+    float: inherit;
 }
 
 a#social {
