@@ -11,6 +11,7 @@ gem 'jbuilder'
 
 group :production do
   gem 'rails_12factor'
+  gem 'heroku-deflater'
 end
 gem 'puma'
 gem 'bower-rails'
