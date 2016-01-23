@@ -36,48 +36,32 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    angularjs-rails (1.4.8)
+    addressable (2.4.0)
     arel (6.0.3)
-    bcrypt (3.1.10)
     bower-rails (0.10.0)
     builder (3.2.2)
-    capybara (2.5.0)
+    capybara (2.6.0)
+      addressable
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
     cliver (0.3.2)
-    coffee-rails (4.1.1)
-      coffee-script (>= 2.2.0)
-      railties (>= 4.0.0, < 5.1.x)
-    coffee-script (2.4.1)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.10.0)
     d3-rails (3.5.11)
       railties (>= 3.1)
     database_cleaner (1.5.1)
-    devise (3.5.3)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 3.2.6, < 5)
-      responders
-      thread_safe (~> 0.1)
-      warden (~> 1.2.3)
     diff-lcs (1.2.5)
     em-proxy (0.1.8)
       eventmachine
     erubis (2.7.0)
-    eventmachine (1.0.8)
+    eventmachine (1.0.9.1)
     execjs (2.6.0)
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    faker (1.6.1)
-      i18n (~> 0.5)
     ffi (1.9.10)
     flexslider (2.2.0)
       sass-rails (>= 3.1.0)
@@ -90,14 +74,10 @@ GEM
       spoon (~> 0.0.1)
     hike (1.2.3)
     i18n (0.7.0)
-    inline_svg (0.6.1)
-      activesupport (>= 4.0.4)
-      loofah (>= 2.0)
-      nokogiri (~> 1.6)
     jbuilder (2.4.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
-    jquery-rails (4.0.5)
+    jquery-rails (4.1.0)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
@@ -111,11 +91,10 @@ GEM
       mime-types (>= 1.16, < 3)
     mime-types (2.99)
     mini_portile2 (2.0.0)
-    minitest (5.8.3)
+    minitest (5.8.4)
     multi_json (1.11.2)
-    nokogiri (1.6.7.1)
+    nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
-    orm_adapter (0.5.0)
     pg (0.18.4)
     poltergeist (1.8.1)
       capybara (~> 2.1)
@@ -155,15 +134,13 @@ GEM
       activesupport (= 4.2.5)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (10.4.2)
-    responders (2.1.1)
-      railties (>= 4.2.0, < 5.1)
+    rake (10.5.0)
     rspec-core (3.4.1)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
-    rspec-mocks (3.4.0)
+    rspec-mocks (3.4.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-rails (3.4.0)
@@ -175,7 +152,7 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    sass (3.4.20)
+    sass (3.4.21)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.1)
@@ -202,7 +179,7 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    teaspoon (1.1.1)
+    teaspoon (1.1.2)
       railties (>= 3.2.5, < 5)
     teaspoon-jasmine (2.3.4)
       teaspoon (>= 1.0.0)
@@ -217,8 +194,6 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    warden (1.2.4)
-      rack (>= 1.0)
     websocket-driver (0.6.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
@@ -229,18 +204,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  angularjs-rails
   bower-rails
-  coffee-rails
   d3-rails
   database_cleaner
-  devise
   execjs
   factory_girl_rails
-  faker
   flexslider
   heroku-forward
-  inline_svg
   jbuilder
   jquery-rails
   jquery-ui-rails
