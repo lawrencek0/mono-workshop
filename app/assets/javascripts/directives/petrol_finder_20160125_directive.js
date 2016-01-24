@@ -1,16 +1,16 @@
 var app = angular.module('nepal');
 app.directive('petrolFinder', function() {
     function link(scope) {
-        var map = L.map('map_20151106').setView([27.7005574, 85.3497986], 11);
+        var map = L.map('map_20160125').setView([27.6838451, 85.355752], 10);
         var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; ' + mapLink,
             maxZoom: 18
         }).addTo(map);
         map._initPathRoot();
-        var svg = d3.select("#map_20151106").select("svg");
+        var svg = d3.select("#map_20160125").select("svg");
         var g = svg.append("g");
-        d3.json('data_20151106.json', function (collection) {
+        d3.json('data_20160125.json', function (collection) {
             collection.objects.forEach(function(d){
                 d.LatLng = new L.LatLng(d.circle.coordinates[0],
                     d.circle.coordinates[1])
@@ -47,6 +47,7 @@ app.directive('petrolFinder', function() {
                 )
             }
         });
+        $('.leaflet-container').css('cursor','crosshair');
     }
     return {
         link: link,
