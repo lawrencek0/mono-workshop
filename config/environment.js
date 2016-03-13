@@ -3,6 +3,7 @@
 module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'nepal-portal',
+    podModulePrefix: 'nepal-portal/pods',
     environment: environment,
     baseURL: '/',
     locationType: 'auto',
