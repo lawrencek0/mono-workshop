@@ -1,3 +1,8 @@
 @import "pods";
 @import "bootstrap";
 @import "bootstrap/theme";
+
+body {
+  padding-top: 55px;
+  position: relative;
+}
