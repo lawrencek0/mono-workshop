@@ -3,7 +3,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   didInsertElement: function() {
     Ember.run.scheduleOnce("afterRender", function() {
-      var chart = c3.generate({
+      var chart;
+      chart = c3.generate({
         bindto: "#power-bar-chart",
         data: {
           columns: [

@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5f67fc2c-084e-4b38-8c8a-7d1c9de66dba" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js" afterPath="$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/power-bar-chart/template.hbs" afterPath="$PROJECT_DIR$/app/pods/components/power-bar-chart/template.hbs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/loadshedding/template.hbs" afterPath="$PROJECT_DIR$/app/pods/loadshedding/template.hbs" />
     </list>
     <ignored path="NepalPortal.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,8 +36,8 @@
       <file leaf-file-name="component.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.14419226">
-              <caret line="6" column="28" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.7209613">
+              <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -256,7 +254,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="27" y="211" width="1590" height="876" extended-state="1" />
+    <frame x="27" y="211" width="1590" height="876" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25143588" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -485,8 +483,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14419226">
-          <caret line="6" column="28" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.7209613">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding />
         </state>
       </provider>
