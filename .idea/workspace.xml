@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f67fc2c-084e-4b38-8c8a-7d1c9de66dba" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js" afterPath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs" afterPath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" afterPath="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" />
     </list>
     <ignored path="NepalPortal.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,21 +33,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="template.hbs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="template.hbs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.02586207">
+            <state vertical-scroll-proportion="-0.6666667">
               <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="component.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
+      <file leaf-file-name="template.hbs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/pods/petrol-finder/template.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="1" selection-start-line="3" selection-start-column="1" selection-end-line="5" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.094827585">
+              <caret line="55" column="19" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -88,9 +86,9 @@
         <option value="$PROJECT_DIR$/.jshintrc" />
         <option value="$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js" />
         <option value="$PROJECT_DIR$/app/pods/partials/-navbar/template.hbs" />
-        <option value="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" />
         <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs" />
         <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js" />
+        <option value="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" />
       </list>
     </option>
   </component>
@@ -182,26 +180,8 @@
               <option name="myItemId" value="pods" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="NepalPortal" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="NepalPortal" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pods" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
+              <option name="myItemId" value="petrol-finder" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -222,12 +202,26 @@
               <option name="myItemId" value="pods" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
+              <option name="myItemId" value="NepalPortal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NepalPortal" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="power-bar-chart" />
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pods" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -536,20 +530,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/pods/petrol-finder/template.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.074074">
-          <caret line="80" column="21" selection-start-line="80" selection-start-column="21" selection-end-line="80" selection-end-column="21" />
-          <folding>
-            <element signature="n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#!!top" expanded="false" />
-            <element signature="n#div#2;n#!!top" expanded="false" />
-            <element signature="n#div#3;n#!!top" expanded="false" />
-            <element signature="n#div#4;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/template.hbs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0">
@@ -576,8 +556,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.02586207">
+        <state vertical-scroll-proportion="-0.6666667">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/pods/petrol-finder/template.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.094827585">
+          <caret line="55" column="19" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="19" />
           <folding />
         </state>
       </provider>
