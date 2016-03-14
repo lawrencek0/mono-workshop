@@ -51,26 +51,20 @@
 <div class="row">
     <div class="col-md-2 col-xs-1"></div>
     <div class="col-md-8 col-xs-10">
-        <div class="hidden-xs hidden-sm">
-            <div cost-pie-chart-one="" id="pieChart"></div>
-        </div>
-        <div class="visible-xs visible-sm">
+        <div>
             <div class="text-center">
                 <h3 class="h4">
                     Average Monthly Spending of Every Household of Five to Cook Food in 2003
                 </h3>
             </div>
-            <div id="pie1">
-                <div class="hidden" id="tooltip2">
-                    <p>
-                        <strong>Expenditure: NRS <span style="color: rgb(0,128,128)" id = "value"> x</span></strong>
-                    </p>
-                </div>
+            <div class="donut-chart">
+                {{components/fuel-donut-chart-2003}}
             </div>
             <div class="pull-right">
                 <em><small>Source: Amrit M Nakarmi, Professor, Tribhuvan University <br/></small></em>
             </div>
         </div>
+        <div class="col-md-2 col-xs-1"></div>
     </div>
     <div class="col-md-2 col-xs-1"></div>
 </div>
@@ -78,21 +72,14 @@
 <div class="row">
     <div class="col-md-2 col-xs-1"></div>
     <div class="col-md-8 col-xs-10">
-        <div class="hidden-xs hidden-sm">
-            <div cost-pie-chart-two="" id="pieChart"></div>
-        </div>
-        <div class="visible-xs visible-sm">
+        <div>
             <div class="text-center">
                 <h3 class="h4">
                     Average Monthly Spending of Every Household of Five to Cook Food in 2015
                 </h3>
             </div>
-            <div id="pie2">
-                <div class="hidden" id="tooltip2">
-                    <p>
-                        <strong>Expenditure: NRS <span style="color: rgb(0,128,128)" id = "value"> x</span></strong>
-                    </p>
-                </div>
+            <div class="donut-chart">
+              {{components/fuel-donut-chart-2015}}
             </div>
             <div class="pull-right">
                 <em><small>Source: Amrit M Nakarmi, Professor, Tribhuvan University <br/></small></em>
@@ -117,5 +104,5 @@
     <div class="col-md-10">
         <small><em>The Geojson data for the petrol pumps can be downloaded from Nepal Portal's<a href="https://github.com/LKhadka/Nepal-Portal/tree/master/public"> GitHub</a> page. <br/></em><em>The notice about the petrol pumps from NOC can be found<a href="http://nepaloil.com.np/news/details.php?n=84"> here.</a></em></small>
     </div>
+    <div class="col-md-1"></div>
 </div>
-<div class="col-md-1"></div>
