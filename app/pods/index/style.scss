@@ -88,9 +88,15 @@ div.desc{
   opacity: 0.5;
   position: absolute;
   width: 100%;
+  display: inline-block;
 }
 
 .fix{
   width: 100%;
   padding: 0px;
+
+}
+img.img-responsive {
+  display: table-cell;
+  max-width: 100%;
 }
