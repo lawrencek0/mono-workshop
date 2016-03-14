@@ -8,6 +8,7 @@ module.exports = function(environment) {
     baseURL: '/',
     locationType: 'auto',
     contentSecurityPolicy: {
+      'style-src': "'self' 'unsafe-inline'",
       'img-src': "'self' data: https://i.imgur.com/"
     },
     EmberENV: {
