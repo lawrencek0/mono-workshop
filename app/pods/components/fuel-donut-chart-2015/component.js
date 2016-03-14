@@ -19,7 +19,7 @@ export default Ember.Component.extend({
         donut: {
           label: {
             format: function (value) {
-              return (value);
+              return ("रू " + value);
             }
           }
         }
