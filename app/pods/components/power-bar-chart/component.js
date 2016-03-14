@@ -13,6 +13,9 @@ export default Ember.Component.extend({
           ],
           type: 'bar'
         },
+        zoom: {
+          enabled: true
+        },
         axis: {
           y: {
             label: {
