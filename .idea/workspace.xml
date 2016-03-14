@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5f67fc2c-084e-4b38-8c8a-7d1c9de66dba" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js" afterPath="$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js" />
     </list>
     <ignored path="NepalPortal.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,8 +26,8 @@
       <file leaf-file-name="component.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7930574">
-              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.120160215">
+              <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -523,8 +522,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7930574">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.120160215">
+          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
           <folding />
         </state>
       </provider>

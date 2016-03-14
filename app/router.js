@@ -9,6 +9,7 @@ Router.map(function() {
   this.route('about');
   this.route('emergency_numbers');
   this.route('loadshedding');
+  this.route('petrol_finder');
 });
 
 export default Router;
