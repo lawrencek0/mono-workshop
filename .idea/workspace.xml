@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f67fc2c-084e-4b38-8c8a-7d1c9de66dba" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" afterPath="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/component.js" afterPath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/component.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/template.hbs" afterPath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/template.hbs" />
     </list>
     <ignored path="NepalPortal.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -23,31 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="component.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js">
+      <file leaf-file-name="component.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/component.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="template.hbs" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.6666667">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="template.hbs" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/pods/petrol-finder/template.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.094827585">
-              <caret line="55" column="19" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.22406639">
+              <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -89,6 +70,8 @@
         <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs" />
         <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js" />
         <option value="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" />
+        <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/template.hbs" />
+        <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/component.js" />
       </list>
     </option>
   </component>
@@ -100,8 +83,8 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="15" />
-    <option name="y" value="372" />
+    <option name="x" value="26" />
+    <option name="y" value="333" />
     <option name="width" value="1600" />
     <option name="height" value="878" />
   </component>
@@ -225,6 +208,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NepalPortal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NepalPortal" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pods" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fuel-donut-chart-2015" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -301,7 +310,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="15" y="372" width="1600" height="878" extended-state="0" />
+    <frame x="26" y="333" width="1600" height="878" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24984147" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -546,26 +555,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js">
+    <entry file="file://$PROJECT_DIR$/app/pods/petrol-finder/template.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+        <state vertical-scroll-proportion="-2.4444444">
+          <caret line="55" column="19" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6666667">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.02586207">
+          <caret line="1" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/pods/petrol-finder/template.hbs">
+    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/template.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.094827585">
-          <caret line="55" column="19" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="30" selection-start-line="0" selection-start-column="30" selection-end-line="0" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34854773">
+          <caret line="14" column="26" selection-start-line="0" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2015/component.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22406639">
+          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
           <folding />
         </state>
       </provider>
