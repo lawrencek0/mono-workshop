@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5f67fc2c-084e-4b38-8c8a-7d1c9de66dba" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" afterPath="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js" afterPath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs" afterPath="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs" />
     </list>
     <ignored path="NepalPortal.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,7 +29,7 @@
         <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -37,18 +38,8 @@
       <file leaf-file-name="template.hbs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="template.hbs" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/template.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="0" column="21" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="32" />
+            <state vertical-scroll-proportion="0.02586207">
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -58,7 +49,7 @@
         <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+              <caret line="3" column="1" selection-start-line="3" selection-start-column="1" selection-end-line="5" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -98,6 +89,8 @@
         <option value="$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js" />
         <option value="$PROJECT_DIR$/app/pods/partials/-navbar/template.hbs" />
         <option value="$PROJECT_DIR$/app/pods/petrol-finder/template.hbs" />
+        <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs" />
+        <option value="$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js" />
       </list>
     </option>
   </component>
@@ -109,8 +102,8 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="13" />
-    <option name="y" value="81" />
+    <option name="x" value="15" />
+    <option name="y" value="372" />
     <option name="width" value="1600" />
     <option name="height" value="878" />
   </component>
@@ -314,7 +307,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="13" y="81" width="1600" height="878" extended-state="0" />
+    <frame x="15" y="372" width="1600" height="878" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24984147" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -414,6 +407,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9559902">
           <caret line="91" column="50" selection-start-line="91" selection-start-column="50" selection-end-line="91" selection-end-column="50" />
+          <folding>
+            <element signature="e#743#1844#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -554,22 +550,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/template.hbs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.0">
@@ -578,10 +558,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs">
+    <entry file="file://$PROJECT_DIR$/app/pods/components/power-bar-chart/component.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="3" column="1" selection-start-line="3" selection-start-column="1" selection-end-line="5" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/component.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/pods/components/fuel-donut-chart-2003/template.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.02586207">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
         </state>
       </provider>
