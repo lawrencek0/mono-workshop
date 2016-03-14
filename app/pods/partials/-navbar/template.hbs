@@ -7,20 +7,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {{#link-to "index" id="SiteLogo"}}nepal portal{{/link-to}}
+          {{#link-to "index" id="SiteLogo"}}nepal portal{{/link-to}}
         </div>
         <div class="collapse navbar-collapse" id="MyNavbar">
             <ul class="nav navbar-nav navbar-left">
-                <li>{{#link-to "index"}}{{fa-icon "home"}} Home{{/link-to}}</li>
-                <li>{{#link-to "petrol_finder"}}{{fa-icon "tint"}} Petrol Finder{{/link-to}}</li>
-                <li>{{#link-to "loadshedding"}}{{fa-icon "lightbulb-o"}} Loadshedding Schedule{{/link-to}}</li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown">Misc {{fa-icon "level-down"}}</a>
-                    <ul class="dropdown-menu">
-                        <li>{{#link-to "emergency_numbers"}}Emergency Numbers{{/link-to}}</li>
-                    </ul>
-                </li>
-                <li>{{#link-to "about"}}{{fa-icon "info"}} About{{/link-to}}</li>
+              {{#link-to "index" tagName="li"}}<a>{{fa-icon "home"}} Home</a>{{/link-to}}
+              {{#link-to "petrol_finder" tagName="li"}}<a>{{fa-icon "tint"}} Petrol Finder</a>{{/link-to}}
+              {{#link-to "loadshedding" tagName="li"}}<a>{{fa-icon "lightbulb-o"}} Loadshedding Schedule</a>{{/link-to}}
+              {{#link-to "emergency_numbers" tagName="li"}}<a>{{fa-icon "exclamation"}} Emergency Numbers</a>{{/link-to}}
+              {{#link-to "about" tagName="li"}}<a>{{fa-icon "info"}} About</a>{{/link-to}}
             </ul>
         </div>
     </div>
