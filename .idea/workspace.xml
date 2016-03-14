@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f67fc2c-084e-4b38-8c8a-7d1c9de66dba" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/pods/components/slick-slider/component.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/pods/components/slick-slider/template.hbs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/pods/index/style.scss" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/integration/pods/components/slick-slider/component-test.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/pods/partials/-footer/style.scss" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/pods/index/template.hbs" afterPath="$PROJECT_DIR$/app/pods/index/template.hbs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/styles/pods.scss" afterPath="$PROJECT_DIR$/app/styles/pods.scss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bower.json" afterPath="$PROJECT_DIR$/bower.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/environment.js" afterPath="$PROJECT_DIR$/config/environment.js" />
     </list>
     <ignored path="NepalPortal.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,20 +23,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="template.hbs" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/pods/components/slick-slider/template.hbs">
+      <file leaf-file-name="environment.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/config/environment.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18204804">
-              <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.21882641">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding>
-                <element signature="e#73#479#0#Handlebars" expanded="false" />
-                <element signature="e#484#921#0#Handlebars" expanded="false" />
-                <element signature="e#926#1364#0#Handlebars" expanded="false" />
-                <element signature="e#1369#1814#0#Handlebars" expanded="false" />
-                <element signature="e#1819#2283#0#Handlebars" expanded="false" />
-                <element signature="e#2288#2688#0#Handlebars" expanded="false" />
-                <element signature="e#2693#3120#0#Handlebars" expanded="false" />
-                <element signature="e#3125#3583#0#Handlebars" expanded="false" />
+                <element signature="n#!!doc" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -61,7 +45,6 @@
       <list>
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/bower.json" />
-        <option value="$PROJECT_DIR$/config/environment.js" />
         <option value="$PROJECT_DIR$/.ember-cli" />
         <option value="$PROJECT_DIR$/app/pods/partials/-navbar/template.hbs" />
         <option value="$PROJECT_DIR$/app/pods/partials/-navbar/style.scss" />
@@ -75,6 +58,7 @@
         <option value="$PROJECT_DIR$/app/pods/components/slick-slider/component.js" />
         <option value="$PROJECT_DIR$/app/pods/index/style.scss" />
         <option value="$PROJECT_DIR$/app/pods/components/slick-slider/template.hbs" />
+        <option value="$PROJECT_DIR$/config/environment.js" />
       </list>
     </option>
   </component>
@@ -86,8 +70,8 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="88" />
-    <option name="y" value="301" />
+    <option name="x" value="70" />
+    <option name="y" value="378" />
     <option name="width" value="1590" />
     <option name="height" value="973" />
   </component>
@@ -144,7 +128,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
+              <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -225,7 +209,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="88" y="301" width="1590" height="973" extended-state="1" />
+    <frame x="70" y="378" width="1590" height="973" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25143588" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -274,13 +258,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.09972299">
           <caret line="4" column="24" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/environment.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17370325">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -383,8 +360,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/pods/components/slick-slider/template.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18204804">
-          <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.31858408">
+          <caret line="86" column="23" selection-start-line="86" selection-start-column="23" selection-end-line="86" selection-end-column="23" />
           <folding>
             <element signature="e#73#479#0#Handlebars" expanded="false" />
             <element signature="e#484#921#0#Handlebars" expanded="false" />
@@ -394,6 +371,16 @@
             <element signature="e#2288#2688#0#Handlebars" expanded="false" />
             <element signature="e#2693#3120#0#Handlebars" expanded="false" />
             <element signature="e#3125#3583#0#Handlebars" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/environment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21882641">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
