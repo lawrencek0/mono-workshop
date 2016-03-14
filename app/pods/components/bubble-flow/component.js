@@ -20,17 +20,31 @@ export default Ember.Component.extend({
         }))
         .enter().append("svg:circle")
         .attr("r", 4)
-        .attr("fill","SkyBlue")
-        .attr("opacity","1.2");
+        .attr("fill","SkyBlue");
 
-      var text = svg.append("svg:text")
-        .attr("x", 20)
-        .attr("y", 20);
       d3.timer(function()
       {
         circle.attr("cx", function(d) {
-            d.x += Math.random()*4*Math.sin(Math.random()*4*d.x + Math.random()*10); if (d.x > w) d.x -= w; else if (d.x < 0) d.x += w; return d.x; })
-          .attr("cy", function(d) { d.y += d.dy ; if (d.y > h) d.y -= h; else if (d.y < 0) d.y += h; return d.y; })
+          d.x += Math.random()*4*Math.sin(Math.random()*4*d.x + Math.random()*10);
+          if (d.x > w) {
+            d.x -= w;
+          } else if (d.x < 0) {
+            d.x += w;
+            return d.x;
+          } else {
+            return d.x;
+          }
+        })
+          .attr("cy", function(d) {
+            d.y += d.dy ;
+            if (d.y > h) {
+              d.y -= h;
+            } else if (d.y < 0) {
+              d.y += h;
+              return d.y;
+            } else {
+              return d.y;
+            }})
           .attr("r",function(d)
           {
             return (d.y < 100) ? d3.select(this).attr("r") : d.mu*500/d.y;
@@ -38,6 +52,5 @@ export default Ember.Component.extend({
       });
 
     });
-    }
-
+  }
 });
