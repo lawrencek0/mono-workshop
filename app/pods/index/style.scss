@@ -1,3 +1,36 @@
+footer	{
+  margin-top:	30px;
+  padding-top:	5px;
+  border-top:	1px	solid	#eaeaea;
+  color:	#777;
+}
+footer	a	{
+  color:	#555;
+}
+footer	a:hover	{
+  color:	#222;
+}
+
+div.desc{
+  background-color: #000;
+  bottom: 0;
+  color: #fff;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+  display: inline-block;
+}
+
+.fix{
+  width: 100%;
+  padding: 0px;
+
+}
+img.img-responsive {
+  display: table-cell;
+  max-width: 100%;
+}
 /* Taken from https://github.com/selvagsz/selvagsz.github.io*/
 /* Rich Carousel */
 
@@ -80,23 +113,4 @@
   border-color: #444;
 }
 
-div.desc{
-  background-color: #000;
-  bottom: 0;
-  color: #fff;
-  left: 0;
-  opacity: 0.5;
-  position: absolute;
-  width: 100%;
-  display: inline-block;
-}
 
-.fix{
-  width: 100%;
-  padding: 0px;
-
-}
-img.img-responsive {
-  display: table-cell;
-  max-width: 100%;
-}
