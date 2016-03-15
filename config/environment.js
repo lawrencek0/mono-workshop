@@ -7,9 +7,8 @@ module.exports = function(environment) {
     environment: environment,
     baseURL: '/',
     locationType: 'auto',
-    contentSecurityPolicy: {
-      'style-src': "'self' 'unsafe-inline'",
-      'img-src': "'self' data: https://i.imgur.com/ "
+    mapbox: {
+      accessToken: 'pk.eyJ1IjoibGtoYWRrYSIsImEiOiJjaWxzdTFlZ3MwMDdodTlrcjR6N3lwdTFtIn0._4d4rk09nzc6A-6MAY26Ew'
     },
     EmberENV: {
       FEATURES: {

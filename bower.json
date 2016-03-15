@@ -1,7 +1,7 @@
 {
   "name": "nepal-portal",
   "dependencies": {
-    "ember": "~2.4.0",
+    "ember": "2.3.0",
     "ember-cli-shims": "0.1.0",
     "ember-cli-test-loader": "0.2.1",
     "ember-load-initializers": "0.1.7",
@@ -15,10 +15,12 @@
     "slick-carousel": "^1.5.9",
     "d3": "^3.5.16",
     "c3": "^0.4.10",
-    "font-awesome": "^4.5.0"
+    "font-awesome": "^4.5.0",
+    "mapbox.js": "2.3.0",
+    "leaflet.markerclusterer": "0.4.0"
   },
   "resolutions": {
-    "ember": "~2.4.0",
-    "d3": "^3.5.16"
+    "d3": "^3.5.16",
+    "ember": "2.3.0"
   }
 }
