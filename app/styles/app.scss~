@@ -3,7 +3,7 @@
 @import "bootstrap/theme";
 
 html, body {
-  padding-top: 30px;
+  padding-top: 55px;
   max-width: 100%;
   overflow-x: hidden;
 }
