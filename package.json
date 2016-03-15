@@ -42,6 +42,7 @@
     "ember-data": "^2.3.0",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
-    "ember-font-awesome": "2.0.0"
+    "ember-font-awesome": "2.0.0",
+    "ember-leaflet": "git://github.com/gabesmed/ember-leaflet.git#8c22085c93ababc709c9c01d11905fccac496f71"
   }
 }
