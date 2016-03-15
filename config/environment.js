@@ -9,7 +9,7 @@ module.exports = function(environment) {
     locationType: 'auto',
     contentSecurityPolicy: {
       'style-src': "'self' 'unsafe-inline'",
-      'img-src': "'self' data: https://i.imgur.com/"
+      'img-src': "'self' data: https://i.imgur.com/ "
     },
     EmberENV: {
       FEATURES: {
