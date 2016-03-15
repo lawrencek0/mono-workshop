@@ -24,6 +24,11 @@ module.exports = function(environment) {
     }
   };
 
+  ENV['mapbox'] = {
+    accessToken: 'pk.eyJ1IjoibGtoYWRrYSIsImEiOiJjaWxzdTFlZ3MwMDdodTlrcjR6N3lwdTFtIn0._4d4rk09nzc6A-6MAY26Ew',
+    mapId: 'lkhadka.pdk081d1'
+  };
+
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
