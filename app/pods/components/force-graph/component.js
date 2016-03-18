@@ -74,22 +74,35 @@ export default Ember.Component.extend({
         .on("dragstart", function() {
           d3.event.sourceEvent.stopPropagation();
         });
-      var nodes = svg.selectAll("circle")
+      var nodes = svg.selectAll(".node")
         .data(dataset.nodes)
         .enter()
-        .append("circle")
+        .append("g")
+        .attr("class","node")
+        .call(drag);
+      var circle = nodes.append("circle")
         .attr("r", 12)
         .style("fill", function(d, i) {
           return colors(i);
-        })
-        .call(drag);
+        });
+       var label = nodes.append("text")
+        .attr("dy", ".35em")
+        .text(function(d) { return d.name; });
       force.on("tick", function() {
-        edges.attr("x1", function(d) { return d.source.x; })
+        edges
+          .attr("x1", function(d) { return d.source.x; })
           .attr("y1", function(d) { return d.source.y; })
           .attr("x2", function(d) { return d.target.x; })
           .attr("y2", function(d) { return d.target.y; });
-        nodes.attr("cx", function(d) { return d.x; })
+        circle
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+        nodes
+          .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y;});
+        label
+          .attr("x", function(d) { return d.x + 8; })
+          .attr("y", function(d) { return d.y; });
       });
     });
   }
