@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* from w3.org */
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0 -50% 0 0;
+  transform: translate(-50%, -50%)
+}
