@@ -1,26 +1,30 @@
-.parallax-container {
-  overflow: scroll;
+.parallax {
+  height: 500px;
+  width: auto;
+  text-align: center;
+  position: relative;
+  top: -24px;
+  margin: auto -24px;
 }
 
 .parallax-img {
-  /* Full height */
-  height: 450px;
-  min-width: 100%;
-  /* Create the parallax scrolling effect */
-  background: url("../assets/river.jpg") no-repeat center;
+  height: 500px;
+  background: url("../assets/river.jpg") no-repeat fixed center;
   background-size: cover;
   filter: blur(2px);
 }
-.parallax-text {
-  padding: 0 20px;
-}
+
+
 .parallax-box {
-  position: fixed;
-  top: calc(50% - 200px);
-  left: 0;
+  position:absolute;
+  top: calc(50% - 50px);
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.parallax-text {
   color: #fff;
+  padding: 0 20px;
 }
 
 .after-line {
@@ -30,7 +34,6 @@
   border-top: solid 4px;
   text-align: center;
 }
-
 
 .after-line:after {
   content: '\f121';
@@ -42,3 +45,5 @@
   background-color: #fafafa;
   color: #424242;
 }
+
+
