@@ -51,4 +51,76 @@ hr.after-line:after {
   color: #424242;
 }
 
+.extra-info-container {
+  padding-top: 96px;
+}
 
+.extra-info {
+  width: auto;
+  background: #313131 linear-gradient(90deg, #0094d2 0, #0094d2 50%, #313131 0);
+  margin: auto -24px;
+}
+.extra-info-block {
+  padding: 0;
+}
+
+.extra-info-block+.extra-info-block {
+  background-color: #424242;
+}
+
+.extra-info-block {
+  padding: 0
+}
+
+
+a.info-buttons {
+  display: block;
+  line-height: 48px;
+  margin-top: 96px;
+  margin-bottom: 24px;
+  position: relative;
+  padding-left: 54px;
+  color: #fff
+}
+
+a.social-button {
+  margin-top: 2em;
+  margin-left: 3.1%;
+  margin-right: 3.1%;
+  color: #eee;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border: solid 2px;
+  border-radius: 100%;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  transition: all 0.6s ease-in-out;
+}
+
+a.social-button:hover {
+  border: solid 2px #fff;
+  color: #313131;
+  background-color: #fff;
+}
+
+.fa-3x {
+  line-height: inherit;
+}
+
+@media (max-width:768px) {
+  .extra-info-container>.row {
+    flex-direction: column-reverse;
+  }
+  .extra-info-block {
+    background-color: #0094d2;
+    max-width: 100%;
+  }
+  a.info-buttons {
+    margin-top: 24px
+  }
+  a.social-button {
+    margin: 28px;
+  }
+}
