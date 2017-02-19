@@ -73,7 +73,7 @@ hr.after-line:after {
 }
 
 
-a.info-buttons {
+span.info-text {
   display: block;
   line-height: 48px;
   margin-top: 96px;
@@ -117,7 +117,7 @@ a.social-button:hover {
     background-color: #0094d2;
     max-width: 100%;
   }
-  a.info-buttons {
+  span.info-text {
     margin-top: 24px;
   }
   a.social-button {
