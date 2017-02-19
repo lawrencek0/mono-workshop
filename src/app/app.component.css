@@ -121,7 +121,6 @@ a.social-button:hover {
     margin-top: 24px;
   }
   a.social-button {
-    margin-top: 24px;
-    margin-left: 2em;
+    margin: 24px 2em 24px;
   }
 }
