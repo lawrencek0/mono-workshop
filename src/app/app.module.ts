@@ -10,6 +10,7 @@ import { SlickCarouselComponent } from './slick-carousel/slick-carousel.componen
 @NgModule({
   declarations: [
     AppComponent,
+    SlickCarouselComponent,
     SlickCarouselComponent
   ],
   imports: [
