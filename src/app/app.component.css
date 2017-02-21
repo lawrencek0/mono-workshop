@@ -73,11 +73,12 @@ hr.after-line:after {
 }
 
 
-h2.extra-info-text {
+span.extra-info-text {
+  font-size: 2em;
   display: block;
   line-height: 48px;
-  margin-top: 96px;
-  margin-bottom: 24px;
+  margin-top: 2em;
+  margin-bottom: 1.5em;
   position: relative;
   padding-left: 54px;
   color: #fff
@@ -115,8 +116,11 @@ a.social-button:hover {
     background-color: #0094d2;
     max-width: 100%;
   }
-  span.info-text {
+  span.extra-info-text {
+    font-size: 1.3em;
     margin-top: 24px;
+    margin-left: 1%;
+    padding-left: 0.8em;
   }
   a.social-button {
     margin-top: 1.5em;
@@ -128,6 +132,12 @@ a.social-button:hover {
 }
 
 @media (max-width: 320px) {
+  span.extra-info-text {
+    margin-top: 24px;
+    font-size: 1.2em;
+    padding-left: 0.5em;
+    margin-left: 1%;
+  }
   a.social-button {
     margin-left: 3.7%;
     margin-right: 3.7%;
