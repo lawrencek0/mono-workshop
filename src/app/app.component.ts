@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SwiperComponent, SwiperConfigInterface } from 'angular2-swiper-wrapper';
 
 @Component({
   selector: 'hero-root',
