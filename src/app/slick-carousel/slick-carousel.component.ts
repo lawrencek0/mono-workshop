@@ -13,6 +13,7 @@ export class SlickCarouselComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     $('.slider').slick({
+      lazyLoad: 'ondemand',
       dots: true,
       infinite: true,
       speed: 500,
