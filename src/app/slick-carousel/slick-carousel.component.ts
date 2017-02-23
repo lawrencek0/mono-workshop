@@ -13,13 +13,11 @@ export class SlickCarouselComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     $('.slider').slick({
-      centerMode: true,
-      centerPadding: '60px',
-      dots: true, /* Just changed this to get the bottom dots navigation */
+      dots: true,
       infinite: true,
-      speed: 300,
-      slidesToShow: 4,
-      slidesToScroll: 1,
+      speed: 500,
+      fade: true,
+      cssEase: 'linear',
       arrows: true
     });
   };
