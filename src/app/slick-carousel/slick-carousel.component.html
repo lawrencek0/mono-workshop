@@ -1,20 +1,10 @@
 <div class="slider">
-  <div>
-    <img data-lazy="http://www.onguardapparel.com/images/products/thumb/8013LN_Cat.jpg" />
-  </div>
-  <div>
-    <img data-lazy="http://www.onguardapparel.com/images/products/thumb/HiddenTailor.9074B.jpg" />
-  </div>
-  <div>
-    <img data-lazy="http://www.onguardapparel.com/images/products/thumb/1600ETY.JPG" />
-  </div>
-  <div>
-    <img data-lazy="http://www.onguardapparel.com/images/products/thumb/VIPERPRO81.jpg" />
-  </div>
-  <div>
-    <img data-lazy="http://www.onguardapparel.com/images/products/thumb/garment_bag.jpg" />
-  </div>
-  <div>
-    <img data-lazy="http://www.onguardapparel.com/images/products/thumb/1077.jpg" />
-  </div>
+    <div class="img-slide" *ngFor="let link of links">
+      <a href="{{link.url}}" target="_blank">
+        <img class="img-fluid" src="https://res.cloudinary.com/lkhadka/image/upload/{{link.image}}.png">
+        <div class="img-text-layer">
+          <h2 class="img-caption">{{link.name | uppercase}}</h2>
+        </div>
+      </a>
+    </div>
 </div>

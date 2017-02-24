@@ -5,15 +5,19 @@ import 'slick-carousel/slick/slick';
 @Component({
   selector: 'portfolio-slick-carousel',
   templateUrl: './slick-carousel.component.html',
-  styles: []
+  styleUrls: ['./slick-carousel.component.css']
 })
 export class SlickCarouselComponent implements AfterViewInit {
+  links = [
+    {name: 'Nepal Portal', url: 'https://nepalportal.herokuapp.com', image: 'v1487888597/Nepal%20Portal'},
+    {name: 'Narayan Gopal Tribute Page', url: 'https://codepen.io/LKhadka/full/vXQdZv', image: 'v1459667037/41saJId_rbkysj'}
+    ];
+  isVisible: boolean = false;
 
   constructor() { }
 
   ngAfterViewInit() {
     $('.slider').slick({
-      lazyLoad: 'ondemand',
       dots: true,
       infinite: true,
       speed: 500,
@@ -22,4 +26,5 @@ export class SlickCarouselComponent implements AfterViewInit {
       arrows: true
     });
   };
+
 }
