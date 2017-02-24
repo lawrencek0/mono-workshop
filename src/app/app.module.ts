@@ -6,11 +6,13 @@ import { ClarityModule } from "clarity-angular";
 
 import { AppComponent } from './app.component';
 import { SlickCarouselComponent } from './slick-carousel/slick-carousel.component';
+import { ContactFormComponent } from './contact-form/contact-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SlickCarouselComponent,
+    ContactFormComponent,
   ],
   imports: [
     BrowserModule,
