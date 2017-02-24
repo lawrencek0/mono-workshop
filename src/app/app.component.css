@@ -1,3 +1,7 @@
+.card .card-header {
+  border-bottom: none;
+}
+
 .parallax {
   height: 500px;
   width: auto;
@@ -47,7 +51,7 @@ hr.after-line:after {
   position: relative;
   top: -0.4em;
   padding: 5px;
-  background-color: #fafafa;
+  background-color: #fff;
   color: #424242;
 }
 

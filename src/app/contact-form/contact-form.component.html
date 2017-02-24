@@ -1,15 +1,15 @@
 <form class="form" [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
   <section class="form-block">
-    <label>Contact me plox</label>
+    <label><h3>Want to get in touch with me? Feel free to drop me a line</h3></label>
     <div class="form-group">
-      <label for="fullName">Full Name</label>
-      <label for="fullName"
+      <label for="name">Name</label>
+      <label for="name"
              aria-haspopup="true"
              role="tooltip"
              class="tooltip tooltip-validation tooltip-sm"
-             [class.invalid]="contactForm.get('fullName').invalid
-                        && (contactForm.get('fullName').dirty || contactForm.get('fullName').touched)">
-        <input id="fullName" type="text" formControlName="fullName">
+             [class.invalid]="contactForm.get('name').invalid
+                        && (contactForm.get('name').dirty || contactForm.get('name').touched)">
+        <input id="name" type="text" formControlName="name">
         <span class="tooltip-content">Full Name is required.</span>
       </label>
     </div>
@@ -29,9 +29,13 @@
     <div class="form-group">
       <label for="message">Message</label>
       <label for="message"
+             aria-haspopup="true"
+             role="tooltip"
+             class="tooltip tooltip-validation tooltip-sm"
              [class.invalid]="contactForm.get('message').invalid
                         && (contactForm.get('message').dirty || contactForm.get('message').touched)">
-        <textarea row="6" id="message" type="text" formControlName="message"></textarea>
+        <input id="message" type="text" formControlName="message">
+        <span class="tooltip-content">Message is required.</span>
       </label>
     </div>
     <button class="btn btn-primary"

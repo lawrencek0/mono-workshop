@@ -4,7 +4,13 @@ import {CustomValidators} from "ng2-validation";
 @Component({
   selector: 'portfolio-contact-form',
   templateUrl: './contact-form.component.html',
-  styles: []
+  styles: [`
+    form {
+          margin-top: -4em;
+          margin-bottom: -3em;
+          padding: 1.25rem;
+    }
+  `]
 })
 export class ContactFormComponent implements OnInit {
   contactForm: FormGroup;
@@ -15,7 +21,7 @@ export class ContactFormComponent implements OnInit {
 
   createForm() {
     this.contactForm = this.fb.group({
-      fullName: ['', Validators.required],
+      name: ['', Validators.required],
       email: ['', Validators.compose([Validators.required, CustomValidators.email])],
       message: ['', Validators.required]
     })
