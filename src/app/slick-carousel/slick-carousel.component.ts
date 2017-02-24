@@ -12,7 +12,6 @@ export class SlickCarouselComponent implements AfterViewInit {
     {name: 'Nepal Portal', url: 'https://nepalportal.herokuapp.com', image: 'v1487888597/Nepal%20Portal'},
     {name: 'Narayan Gopal Tribute Page', url: 'https://codepen.io/LKhadka/full/vXQdZv', image: 'v1459667037/41saJId_rbkysj'}
     ];
-  isVisible: boolean = false;
 
   constructor() { }
 
