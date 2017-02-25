@@ -14,6 +14,7 @@ import {CustomValidators} from "ng2-validation";
 })
 export class ContactFormComponent implements OnInit {
   contactForm: FormGroup;
+  showMessage: boolean = false;
 
   constructor(private fb: FormBuilder) {
     this.createForm();
@@ -30,8 +31,12 @@ export class ContactFormComponent implements OnInit {
   onSubmit() {
     console.log(this.contactForm.value);
     this.contactForm.reset();
+    this.showMessage = true;
   }
 
+  onClose() {
+    this.showMessage = false;
+  }
   ngOnInit() {
   }
 }
