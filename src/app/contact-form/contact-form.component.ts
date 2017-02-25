@@ -10,6 +10,9 @@ import {CustomValidators} from "ng2-validation";
           margin-bottom: -3em;
           padding: 1.25rem;
     }
+    button {
+      margin: -1.25rem;
+    }
   `]
 })
 export class ContactFormComponent implements OnInit {
