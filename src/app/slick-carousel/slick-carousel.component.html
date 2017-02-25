@@ -1,10 +1,24 @@
-<div class="slider">
-    <div class="img-slide" *ngFor="let link of links">
-      <a href="{{link.url}}" target="_blank">
-        <img class="img-fluid card-img" src="https://res.cloudinary.com/lkhadka/image/upload/{{link.image}}.png">
-        <div class="img-text-layer">
-          <h2 class="img-caption">{{link.name | uppercase}}</h2>
+<section class="portfolio">
+  <div class="row">
+    <div class="offset-md-1 col-md-10 col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <h2 id="portfolio" class="text-center"><i class="fa fa-briefcase" aria-hidden="true"></i> PORTFOLIO</h2>
+          <hr class="after-line">
         </div>
-      </a>
+        <div class="card-text">
+          <div class="slider">
+            <div class="img-slide" *ngFor="let link of links">
+              <a href="{{link.url}}" target="_blank">
+                <img class="img-fluid card-img" src="https://res.cloudinary.com/lkhadka/image/upload/{{link.image}}.png">
+                <div class="img-text-layer">
+                  <h2 class="img-caption">{{link.name | uppercase}}</h2>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+</section>

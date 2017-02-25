@@ -1,53 +1,66 @@
 <clr-alert *ngIf="showMessage" (clrAlertClosedChange)="onClose()">
   <div class="alert-item">
-        <span class="alert-text">
-            This is an app level alert.
-        </span>
+    <span class="alert-text">
+      This is an app level alert.
+    </span>
   </div>
 </clr-alert>
-
-<form class="form" [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
-  <section class="form-block">
-    <label><h3>Want to get in touch with me? Feel free to drop me a line</h3></label>
-    <div class="form-group">
-      <label for="name">Name</label>
-      <label for="name"
-             aria-haspopup="true"
-             role="tooltip"
-             class="tooltip tooltip-validation tooltip-sm"
-             [class.invalid]="contactForm.get('name').invalid
+<section class="contact">
+  <div class="row">
+    <div class="offset-md-1 col-md-10 col-sm-12 col-xs-12">
+      <div class="card">
+        <div class="card-header">
+          <h2 id="contact" class="text-center"><i class="fa fa-address-card" aria-hidden="true"></i> CONTACT</h2>
+          <hr class="after-line">
+        </div>
+        <div class="card-text">
+          <form class="form" [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+            <section class="form-block">
+              <label><h3>Want to get in touch with me? Feel free to drop me a line</h3></label>
+              <div class="form-group">
+                <label for="name">Name</label>
+                <label for="name"
+                       aria-haspopup="true"
+                       role="tooltip"
+                       class="tooltip tooltip-validation tooltip-sm"
+                       [class.invalid]="contactForm.get('name').invalid
                         && (contactForm.get('name').dirty || contactForm.get('name').touched)">
-        <input id="name" type="text" formControlName="name">
-        <span class="tooltip-content">Full Name is required.</span>
-      </label>
-    </div>
-    <div class="form-group">
-        <label for="email">Email</label>
-        <label for="email"
-               aria-haspopup="true"
-               role="tooltip"
-               class="tooltip tooltip-validation tooltip-sm"
-               [class.invalid]="contactForm.get('email').invalid
+                  <input id="name" type="text" formControlName="name">
+                  <span class="tooltip-content">Full Name is required.</span>
+                </label>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <label for="email"
+                       aria-haspopup="true"
+                       role="tooltip"
+                       class="tooltip tooltip-validation tooltip-sm"
+                       [class.invalid]="contactForm.get('email').invalid
                         && (contactForm.get('email').dirty || contactForm.get('email').touched)">
-          <input id="email" type="email" formControlName="email">
-          <span class="tooltip-content" *ngIf="contactForm.get('email').errors?.required">Email is required.</span>
-          <span class="tooltip-content" *ngIf="contactForm.get('email').errors?.email">Email is invalid.</span>
-        </label>
-    </div>
-    <div class="form-group">
-      <label for="message">Message</label>
-      <label for="message"
-             aria-haspopup="true"
-             role="tooltip"
-             class="tooltip tooltip-validation tooltip-sm"
-             [class.invalid]="contactForm.get('message').invalid
+                  <input id="email" type="email" formControlName="email">
+                  <span class="tooltip-content" *ngIf="contactForm.get('email').errors?.required">Email is required.</span>
+                  <span class="tooltip-content" *ngIf="contactForm.get('email').errors?.email">Email is invalid.</span>
+                </label>
+              </div>
+              <div class="form-group">
+                <label for="message">Message</label>
+                <label for="message"
+                       aria-haspopup="true"
+                       role="tooltip"
+                       class="tooltip tooltip-validation tooltip-sm"
+                       [class.invalid]="contactForm.get('message').invalid
                         && (contactForm.get('message').dirty || contactForm.get('message').touched)">
-        <input id="message" type="text" formControlName="message">
-        <span class="tooltip-content">Message is required.</span>
-      </label>
+                  <input id="message" type="text" formControlName="message">
+                  <span class="tooltip-content">Message is required.</span>
+                </label>
+              </div>
+              <button class="btn btn-primary"
+                      type="submit"
+                      [disabled]="contactForm.invalid">Submit</button>
+            </section>
+          </form>
+        </div>
+      </div>
     </div>
-    <button class="btn btn-primary"
-            type="submit"
-            [disabled]="contactForm.invalid">Submit</button>
-  </section>
-</form>
+  </div>
+</section>

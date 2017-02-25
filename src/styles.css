@@ -16,3 +16,30 @@
   transform: translate(-50%, -50%)
 }
 
+hr {
+  margin: 42px 21px 0;
+  border-bottom: 1px solid #fafafa;
+}
+
+hr.after-line {
+  margin: 20px auto 30px;
+  padding: 0;
+  border: 0;
+  border-top: solid 4px;
+  text-align: center;
+}
+
+hr.after-line:after {
+  content: '\f121';
+  font-family: FontAwesome;
+  font-size: 40px;
+  position: relative;
+  top: -0.4em;
+  padding: 5px;
+  background-color: #fff;
+  color: #424242;
+}
+
+.card .card-header {
+  border-bottom: none;
+}
