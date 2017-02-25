@@ -17,7 +17,7 @@
 
 .parallax-box {
   position:absolute;
-  top: calc(50% - 50px);
+  top: calc(50% - 2.5em);
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -85,6 +85,12 @@ a.social-button:hover {
 }
 
 @media (max-width:768px) {
+  .parallax-img {
+    height: 100vmax;
+  }
+  .parallax-box {
+    top: 30vmin;
+  }
   .extra-info-container>.row {
     flex-direction: column-reverse;
   }
@@ -108,6 +114,9 @@ a.social-button:hover {
 }
 
 @media (max-width: 320px) {
+  .parallax-box {
+    top: 20vmax;
+  }
   span.extra-info-text {
     margin-top: 24px;
     font-size: 1.2em;

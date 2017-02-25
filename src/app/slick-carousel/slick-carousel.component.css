@@ -32,3 +32,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+@media (max-width:768px) {
+  section.portfolio {
+    padding-top: auto;
+  }
+}
+
+@media (max-width:320px) {
+  section.portfolio {
+    padding-top: 3em;
+  }
+}
