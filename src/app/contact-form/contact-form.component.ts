@@ -10,8 +10,15 @@ import {CustomValidators} from "ng2-validation";
           margin-bottom: -3em;
           padding: 1.25rem;
     }
+    label {
+      font-size: 1.2em;
+    }
     div.card-footer {
       margin: -1.25rem;
+    }
+    h3 {
+      padding-top: 5px;
+      padding-bottom: 8px;
     }
   `]
 })
