@@ -21,7 +21,8 @@ import { ContactFormComponent } from './contact-form/contact-form.component';
     HttpModule,
     ClarityModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

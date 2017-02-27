@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
 import {CustomValidators} from "ng2-validation";
+
 @Component({
   selector: 'portfolio-contact-form',
   templateUrl: './contact-form.component.html',
