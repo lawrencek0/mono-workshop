@@ -7,6 +7,7 @@ import { ClarityModule } from "clarity-angular";
 import { AppComponent } from './app.component';
 import { SlickCarouselComponent } from './slick-carousel/slick-carousel.component';
 import { ContactFormComponent } from './contact-form/contact-form.component';
+import {ContactService} from "./contact-form/contact.service";
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { ContactFormComponent } from './contact-form/contact-form.component';
     ClarityModule.forRoot(),
   ],
   providers: [
+    ContactService
   ],
   bootstrap: [AppComponent]
 })

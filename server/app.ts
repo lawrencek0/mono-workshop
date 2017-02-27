@@ -4,6 +4,7 @@ import { json, urlencoded } from  'body-parser';
 import * as compression from 'compression';
 
 import { publicRouter } from './routes/public';
+import { contactRouter } from "./routes/contact";
 
 const app: express.Application = express();
 
@@ -15,6 +16,7 @@ app.use(urlencoded({ extended: true }));
 
 // routes
 app.use('/api', publicRouter);
+app.use('/api/contact', contactRouter);
 
 if (app.get('env') === 'production') {
   app.use(express.static(path.join(__dirname, '/../client')));

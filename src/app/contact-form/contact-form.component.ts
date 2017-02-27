@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
 import {CustomValidators} from "ng2-validation";
+import {ContactService} from "./contact.service";
 
 @Component({
   selector: 'portfolio-contact-form',
   templateUrl: './contact-form.component.html',
-  styleUrls: ['./contact-form.component.css']
+  styleUrls: ['./contact-form.component.css'],
+  providers: [ContactService]
 })
 export class ContactFormComponent implements OnInit {
   contactForm: FormGroup;
   showMessage: boolean = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private contactService: ContactService) {
     this.createForm();
   }
 
@@ -23,10 +25,19 @@ export class ContactFormComponent implements OnInit {
     })
   }
 
+  sendContact() {
+    this.contactService.sendContact(this.contactForm.value).subscribe(
+      res => {
+        console.log(res.json());
+        this.contactForm.reset();
+        this.showMessage = true;
+      },
+      err => console.log(err)
+    );
+  }
   onSubmit() {
     console.log(this.contactForm.value);
-    this.contactForm.reset();
-    this.showMessage = true;
+    this.sendContact();
   }
 
   onClose() {
