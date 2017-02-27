@@ -33,6 +33,22 @@
   transform: translate(-50%, -50%);
 }
 
+img:after {
+  content: "\f1c5" " " attr(alt);
+  font-size: 16px;
+  font-family: FontAwesome;
+  color: rgb(100, 100, 100);
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+}
+
 @media (max-width:768px) {
   section.portfolio {
     padding-top: auto;

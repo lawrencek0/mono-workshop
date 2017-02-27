@@ -1,3 +1,7 @@
+.content-container {
+  background-color: #e9ebee;
+}
+
 .parallax {
   height: 500px;
   width: auto;
@@ -5,6 +9,7 @@
   position: relative;
   top: -24px;
   margin: auto -24px;
+  background-color: rgba(43,43,43,0.8);
 }
 
 .parallax-img {

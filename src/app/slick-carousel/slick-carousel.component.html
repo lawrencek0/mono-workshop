@@ -10,7 +10,7 @@
           <div class="slider">
             <div class="img-slide" *ngFor="let link of links">
               <a href="{{link.url}}" target="_blank">
-                <img class="img-fluid card-img" src="https://res.cloudinary.com/lkhadka/image/upload/{{link.image}}.png">
+                <img alt="{{link.name}}" title="{{link.name}}" class="img-fluid card-img" src="https://res.cloudinary.com/lkhadka/image/upload/{{link.image}}.png">
                 <div class="img-text-layer">
                   <h2 class="img-caption">{{link.name | uppercase}}</h2>
                 </div>
