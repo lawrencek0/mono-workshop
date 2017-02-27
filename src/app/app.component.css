@@ -84,6 +84,15 @@ a.social-button:hover {
   line-height: inherit;
 }
 
+footer {
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 0 0;
+}
+
+footer .credits {
+  margin-top: 6px;
+}
 @media (max-width:768px) {
   .parallax-img {
     height: 100vmax;
