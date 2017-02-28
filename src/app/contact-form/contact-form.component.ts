@@ -27,13 +27,11 @@ export class ContactFormComponent implements OnInit {
 
   sendContact() {
     this.contactService.sendContact(this.contactForm.value).subscribe(
-      res => {
-        console.log(res.json());
-        this.contactForm.reset();
-        this.showMessage = true;
-      },
+      res => console.log(res.json()),
       err => console.log(err)
     );
+    this.contactForm.reset();
+    this.showMessage = true;
   }
   onSubmit() {
     console.log(this.contactForm.value);

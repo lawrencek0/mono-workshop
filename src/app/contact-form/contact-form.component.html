@@ -1,21 +1,21 @@
-<clr-alert *ngIf="showMessage" (clrAlertClosedChange)="onClose()">
-  <div class="alert-item">
-    <span class="alert-text">
-      This is an app level alert.
-    </span>
-  </div>
-</clr-alert>
 <section class="contact">
   <div class="row">
     <div class="offset-md-1 col-md-10 col-sm-12 col-xs-12">
       <div class="card">
+        <clr-alert *ngIf="showMessage" (clrAlertClosedChange)="onClose()">
+          <div class="alert-item">
+            <span class="alert-text">
+              The email was sent. I will get back to you as soon as I can.
+            </span>
+          </div>
+        </clr-alert>
         <div class="card-header">
           <h2 id="contact" class="text-center"><i class="fa fa-address-card" aria-hidden="true"></i> CONTACT</h2>
           <hr class="after-line">
         </div>
-          <form class="form" [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
-            <section class="form-block">
-              <div class="card-text">
+        <form class="form" [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+          <section class="form-block">
+            <div class="card-text">
               <h3 class="text-md-center">Want to get in touch with me? Feel free to drop me a line</h3>
               <div class="form-group">
                 <label for="name"><i class="fa fa-user-circle" aria-hidden="true"></i> Name</label>
@@ -54,14 +54,14 @@
                   <span class="tooltip-content">Message is required.</span>
                 </label>
               </div>
-              </div>
-              <div class="card-footer">
-                <button class="btn btn-primary"
-                        type="submit"
-                        [disabled]="contactForm.invalid">Submit</button>
-              </div>
-            </section>
-          </form>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-primary"
+                      type="submit"
+                      [disabled]="contactForm.invalid">Submit</button>
+            </div>
+          </section>
+        </form>
       </div>
     </div>
   </div>
