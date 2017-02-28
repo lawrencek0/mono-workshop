@@ -18,8 +18,8 @@ contactRouter.post('/', (req: Request, res: Response) => {
     from: req.body.email,
     to: 'lawrence_2009@hotmail.com',
     subject: req.body.name,
-    text: req.body.message,
-    html: `<b>${req.body.message}</b>`
+    text: `${req.body.message} From ${req.body.name} ${req.body.email}`,
+    html: `<b><p>${req.body.message}</p><p>From ${req.body.name}<br>${req.body.email}</p></b>`
   };
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
