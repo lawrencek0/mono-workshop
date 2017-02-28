@@ -16,9 +16,10 @@ let transporter = nodemailer.createTransport( {
 contactRouter.post('/', (req: Request, res: Response) => {
   let mailOptions = {
     from: req.body.email,
-    to: 'lawatlifecompany@gmail.com',
+    to: 'lawatlifecompany@gmail.com, lawrence_2009@hotmail.com',
     subject: req.body.name,
-    text: req.body.message
+    text: req.body.message,
+    html: `<b>${req.body.message}</b>`
   };
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
