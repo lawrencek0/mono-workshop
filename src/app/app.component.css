@@ -13,7 +13,7 @@
 }
 
 .parallax-img {
-  height: 500px;
+  height: 100vh;
   background: url("https://res.cloudinary.com/lkhadka/image/upload/v1488257838/river_hwhc8s.jpg") no-repeat fixed center;
   background-size: cover;
   filter: blur(2px);
