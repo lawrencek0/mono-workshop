@@ -17,7 +17,7 @@ This app uses the API provided by [Weather Underground](https://www.wunderground
     cd weather-app
     ```
 3. Install project related dependencies
-       
+
     ```bash
     npm install
     ```
@@ -27,9 +27,3 @@ This app uses the API provided by [Weather Underground](https://www.wunderground
     npm start
     ```
 5. Navigate to `http://localhost:8080`
-
-## Future Plans
-1. Switch to Material Design
-2. Add and use different background images according to weather conditon
-3. Make it user driven and allow them to see more information regarding weather
-4. Rewrite the app in Angular and Ionic

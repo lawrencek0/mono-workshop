@@ -2,7 +2,7 @@
 Allows the user to perform basic calculations
 
 ## Info
-This app makes use of jQuery and Bootstrap to create a calculator which allows the user to perform basic 
+This app makes use of jQuery and Bootstrap to create a calculator which allows the user to perform basic
 calculations.
 
 ## Usage
@@ -18,7 +18,7 @@ calculations.
     cd javascript-calculator
     ```
 3. Install project related dependencies
-       
+
     ```bash
     npm install
     ```
@@ -28,9 +28,3 @@ calculations.
     npm start
     ```
 5. Navigate to `http://localhost:8080`
-
-## Future Plans
-1. Switch to Material Design
-2. Handle errors better and display error messages
-3. Add more calculation options
-4. Rewrite the app in Angular and Ionic

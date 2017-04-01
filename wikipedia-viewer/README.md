@@ -1,12 +1,12 @@
 # Weather App
-It allows the user to search for Wikipedia articles with autocomplete search functionality or 
-read a random Wikipedia article. 
+It allows the user to search for Wikipedia articles with autocomplete search functionality or
+read a random Wikipedia article.
 
 ## Info
-This app uses [MediaWiki action API](https://www.mediawiki.org/wiki/API:Main_page/) to search for Wikipedia 
-articles or to open a random article. It also uses Twitter's 
-[typeahead.js](https://github.com/twitter/typeahead.js/) to add autocomplete search functionality. 
-Bloodhound is used to filter the response and Typeahead is triggered whenever the user enters anything in 
+This app uses [MediaWiki action API](https://www.mediawiki.org/wiki/API:Main_page/) to search for Wikipedia
+articles or to open a random article. It also uses Twitter's
+[typeahead.js](https://github.com/twitter/typeahead.js/) to add autocomplete search functionality.
+Bloodhound is used to filter the response and Typeahead is triggered whenever the user enters anything in
 the input field.
 
 ## Usage
@@ -21,7 +21,7 @@ the input field.
     cd weather-app
     ```
 3. Install project related dependencies
-       
+
     ```bash
     npm install
     ```
@@ -31,8 +31,3 @@ the input field.
     npm start
     ```
 5. Navigate to `http://localhost:8080`
-
-## Future Plans
-1. Implement material design better
-2. Handle errors
-3. Rewrite the app in Angular and Ionic

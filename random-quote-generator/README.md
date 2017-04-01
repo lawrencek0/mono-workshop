@@ -2,7 +2,7 @@
 Generates random quote
 
 ## Info
-This app uses [Andruxnet's API](https://market.mashape.com/andruxnet) to generate random quotes. It allows the users to 
+This app uses [Andruxnet's API](https://market.mashape.com/andruxnet) to generate random quotes. It allows the users to
 copy the entire quote to clipboard on the click of a button and tweet it using
 [Twiiter's Web Intents](https://dev.twitter.com/web/intents).  
 
@@ -20,7 +20,7 @@ Materialize Toasts are used whenever an action button is clicked and spin.js is 
     cd random-quote-generator
     ```
 3. Install project related dependencies
-       
+
     ```bash
     npm install
     ```
@@ -30,8 +30,3 @@ Materialize Toasts are used whenever an action button is clicked and spin.js is 
     npm start
     ```
 5. Navigate to `http://localhost:8080`
-
-## Future Plans
-1. Handle errors.
-2. Add Facebook share functionality
-3. Rewrite the app in Angular and Ionic
