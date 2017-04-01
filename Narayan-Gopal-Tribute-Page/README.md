@@ -1,7 +1,7 @@
 # A Tribute Page For Swor Samrat Narayan Gopal
-## Info
+Tribute Page for Nepali Music Legend - Narayan Gopal
 
-A Simple Tribute Page
+You can check it out [here](http://codepen.io/LKhadka/pen/pyWPwL).
 
 ## Usage
 

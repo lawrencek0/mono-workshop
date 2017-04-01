@@ -2,6 +2,8 @@
 It allows the user to search for Wikipedia articles with autocomplete search functionality or
 read a random Wikipedia article.
 
+You can check it out [here](http://codepen.io/LKhadka/pen/yOKKjv).
+
 ## Info
 This app uses [MediaWiki action API](https://www.mediawiki.org/wiki/API:Main_page/) to search for Wikipedia
 articles or to open a random article. It also uses Twitter's

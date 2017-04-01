@@ -1,6 +1,8 @@
 # Random Quote Generator
 Generates random quote
 
+You can check it out [here](http://codepen.io/LKhadka/pen/JXOmdB).
+
 ## Info
 This app uses [Andruxnet's API](https://market.mashape.com/andruxnet) to generate random quotes. It allows the users to
 copy the entire quote to clipboard on the click of a button and tweet it using

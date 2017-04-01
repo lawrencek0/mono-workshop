@@ -1,7 +1,7 @@
 # Javascript Calculator
 Allows the user to perform basic calculations
 
-You can check it out (here)[http://codepen.io/LKhadka/pen/vXQdZv].
+You can check it out [here](http://codepen.io/LKhadka/pen/vXQdZv).
 
 ## Info
 This app makes use of jQuery and Bootstrap to create a calculator which allows the user to perform basic

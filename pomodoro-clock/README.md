@@ -1,6 +1,8 @@
 # Pomodoro Clock
 Allows the user to set a Pomodoro Clock
 
+You can check it out [here](http://codepen.io/LKhadka/pen/pNvRze).
+
 ## Info
 This app uses [FlipClock.js](http://flipclockjs.com/) to create the countdown timer. It allows the users to set
 different timers for doing their work and their break.
