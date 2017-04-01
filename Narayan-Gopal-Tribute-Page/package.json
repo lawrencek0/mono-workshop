@@ -1,0 +1,18 @@
+{
+  "name": "tribute",
+  "description": "A Tribute Page For Swor Samrat Narayan Gopal",
+  "scripts": {
+    "start": "live-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LKhadka/Narayan-Gopal-Tribute-Page.git"
+  },
+  "devDependencies": {
+    "live-server": "^1.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1"
+  }
+}
