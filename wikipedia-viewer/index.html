@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wikipedia Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/materialize-css/dist/js/materialize.js"></script>
+    <script src="node_modules/typeahead.js/dist/typeahead.bundle.js"></script>
+
+    <script src="./index.js" async></script>
+
+    <link href="node_modules/materialize-css/dist/css/materialize.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+
+    <link href="dist/typeaheadjs.css" rel="stylesheet">
+
+    <link href="./styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="card light-blue lighten-2">
+    <div class="card-content white-text">
+        <h3 class="center-align">Wikipedia Viewer</h3>
+        <div class="card-action" id="header-card-action">
+            <div class="container-full">
+                <nav class="light-blue lighten-3">
+                    <div class="nav-wrapper">
+                        <form>
+                            <div class="input-field black-text">
+                                <input class="typeahead" id="search" type="search" required>
+                                <label for="search"><i class="material-icons">search</i></label>
+                                <i class="material-icons red-text right" id="close">close</i>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+                <div class="row" id="header-btn">
+                    <div class="col s6">
+                        <a class="btn waves-effect right grey rounded" id="submit">
+                            Submit <i class="material-icons right">send</i>
+                        </a>
+                    </div>
+                    <div class="col s6 ">
+                        <a class="btn waves-effect left grey rounded" href="http://en.wikipedia.org/wiki/Special:Random" target="_blank">
+                            Random Article <i class="fa fa-random" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="articles"></div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "Wikipedia-Viewer",
+  "description": "Users can search for Wikipeida articles with this app or read a random article",
+  "scripts": {
+    "start": "live-server"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.1.1",
+    "materialize-css": "^0.97.8",
+    "typeahead.js": "^0.11.1"
+  }
+}
