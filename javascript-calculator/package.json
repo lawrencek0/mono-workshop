@@ -1,0 +1,12 @@
+{
+  "name": "Javascript-Calculator",
+  "description": "A basic calculator built using jQuery",
+  "scripts": {
+    "start": "live-server"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1"
+  }
+}
+mm

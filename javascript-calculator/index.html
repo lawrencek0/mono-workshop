@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Javascript Calculator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+
+    <script src="./index.js" async></script>
+
+    <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <link href="./styles.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="calc well">
+    <pre class="text-center">Javascript Calculator</pre>
+    <div class="display text-right">
+        <div id="history">&nbsp;</div>
+        <div class="bg-info"><span id="blink">|</span>
+            <div id="result"></div>
+        </div>
+    </div>
+    <div class="buttons">
+        <div class="deleteBtn">
+            <div class="btn btn-danger" id="clear">AC</div>
+            <div class="btn btn-danger" id="delete">CE</div>
+            <br>
+        </div>
+        <div class="btn btn-default num">7</div>
+        <div class="btn btn-default num">8</div>
+        <div class="btn btn-default num">9</div>
+        <div class="btn btn-default operator" id="add">+</div>
+        <div class="btn btn-default num">4</div>
+        <div class="btn btn-default num">5</div>
+        <div class="btn btn-default num">6</div>
+        <div class="btn btn-default operator" id="subtract">-</div>
+
+        <div class="btn btn-default num">1</div>
+        <div class="btn btn-default num">2</div>
+        <div class="btn btn-default num">3</div>
+        <div class="btn btn-default operator" id="multiply">*</div>
+        <div class="btn btn-default num" id="zero">0</div>
+        <div class="btn btn-default" id="decimal">.</div>
+        <div class="btn btn-default" id="equal">=</div>
+        <div class="btn btn-default operator" id="divide">/</div>
+    </div>
+</div>
+</body>
+</html>
