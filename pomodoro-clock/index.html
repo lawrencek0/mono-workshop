@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pomodoro Clock</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/materialize-css/dist/js/materialize.js"></script>
+    <script src="node_modules/flipclock/compiled/flipclock.js"></script>
+
+    <script src="./index.js" async></script>
+
+    <link href="node_modules/materialize-css/dist/css/materialize.css" rel="stylesheet">
+    <link href="node_modules/flipclock/compiled/flipclock.css" rel="stylesheet">
+    <link href="./styles.css" rel="stylesheet">
+</head>
+<body>
+<h2 class="h2">Pomodoro Timer</h2>
+<div class="row">
+    <div class="col s6">
+        <div class="session-time left">SESSION LENGTH
+            <h6>
+                <span class="ctrl waves-effect waves-light" id="subSession"><i class="material-icons">remove</i></span>
+                <span id="session-time" class="timer">25</span>
+                <span class="ctrl waves-effect waves-light" id="addSession"><i class="material-icons">add</i></span>
+            </h6>
+        </div>
+    </div>
+    <div class="col s6">
+        <div class="break-time right">BREAK LENGTH
+            <h6>
+                <span class="ctrl waves-effect waves-light" id="subBreak"><i class="material-icons">remove</i></span>
+                <span id="break-time" class="timer">5</span>
+                <span class="ctrl waves-effect waves-light" id="addBreak"><i class="material-icons">add</i></span>
+            </h6>
+        </div>
+    </div>
+</div>
+<div class="timer start center">
+    <div class="session clock">
+        <h3>Session</h3>
+        <span id="session"></span>
+    </div>
+    <div class="break clock">
+        <h3>Break!</h3>
+        <span id="break"></span>
+    </div>
+</div>
+</body>
+</html>
