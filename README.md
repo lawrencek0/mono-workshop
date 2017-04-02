@@ -1,8 +1,8 @@
-## React Projects 2017
+# React Projects 2017
 
 This repository will contain a collection of projects which I built in order to learn React. 
 
-# Ideas
-create transpilers
-Youtube Viewer
-Rewrite all javascript projects using react-router
+## Ideas
+1. Create transpilers
+2. Youtube Viewer
+3. Rewrite all javascript projects using react-router
