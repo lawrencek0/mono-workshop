@@ -1,3 +1,7 @@
-/**
- * Created by lawrence on 4/2/17.
- */
+import React from 'react';
+
+const Changer = ({classes, update, children}) => (
+  <button className={classes} onClick={update}>{children}</button>
+);
+
+export default Changer;

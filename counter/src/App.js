@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
 import Counter from './components/Counter';
+import Changer from './components/Changer';
 
 class App extends Component {
   constructor() {
     super();
 
     this.state = {
-      counter: 0
+      count: 0
     };
 
     this.increment = this.increment.bind(this);
@@ -16,15 +17,15 @@ class App extends Component {
 
   increment() {
     this.setState({
-      counter: this.state.counter + 1
+      count: this.state.count + 1
     })
   };
 
   decrement() {
     this.setState({
-      counter: this.state.counter - 1
+      count: this.state.count - 1
     })
-  }
+  };
 
   render() {
     return(
@@ -33,13 +34,13 @@ class App extends Component {
           <div className="col-12 col-sm-6 offset-sm-3">
             <div className="card">
               <div className="card-block">
-                <Counter counter={this.state.counter} />
+                <Counter count={this.state.count} />
                   <div className="row">
                     <div className="col-sm-6 pull-left">
-                      <button className="btn btn-success" onClick={this.increment}>+</button>
+                      <Changer classes="btn btn-success" update={this.increment}>+</Changer>
                     </div>
                     <div className="col-sm-6 pull-right">
-                      <button className="btn btn-danger right" onClick={this.decrement}>-</button>
+                      <Changer classes="btn btn-danger right" update={this.decrement}>-</Changer>
                     </div>
                   </div>
               </div>
