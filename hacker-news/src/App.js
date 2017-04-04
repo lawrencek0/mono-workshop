@@ -45,7 +45,7 @@ const Table = ({list, pattern, onDismiss}) => {
   };
 
   const smallColumn = {
-    width: '20%',
+    width: '10%',
   };
 
   return (
