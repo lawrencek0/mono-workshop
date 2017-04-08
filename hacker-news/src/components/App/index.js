@@ -30,6 +30,7 @@ class App extends Component {
       searchTerm: DEFAULT_QUERY,
       isLoading: false,
       sortKey: 'NONE',
+      isSortReverse: false,
     };
 
     this.needToSearchTopStories = this.needToSearchTopStories.bind(this);
@@ -42,7 +43,8 @@ class App extends Component {
   }
 
   onSort(sortKey) {
-    this.setState({ sortKey });
+    const isSortReverse = this.state.sortKey === sortKey && !this.state.isSortReverse;
+    this.setState({ sortKey, isSortReverse });
   }
 
   needToSearchTopStories(searchTerm) {
@@ -125,7 +127,8 @@ class App extends Component {
       results,
       searchKey,
       isLoading,
-      sortKey
+      sortKey,
+      isSortReverse
     } = this.state;
 
     const page = (
@@ -155,6 +158,7 @@ class App extends Component {
           list={list}
           sortKey={sortKey}
           onSort={this.onSort}
+          isSortReverse={isSortReverse}
           onDismiss={this.onDismiss}
         />
         <div className="interactions">
