@@ -29,6 +29,7 @@ class App extends Component {
       searchKey: '',
       searchTerm: DEFAULT_QUERY,
       isLoading: false,
+      sortKey: 'NONE',
     };
 
     this.needToSearchTopStories = this.needToSearchTopStories.bind(this);
@@ -37,6 +38,11 @@ class App extends Component {
     this.onDismiss =this.onDismiss.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
+    this.onSort = this.onSort.bind(this);
+  }
+
+  onSort(sortKey) {
+    this.setState({ sortKey });
   }
 
   needToSearchTopStories(searchTerm) {
@@ -118,7 +124,8 @@ class App extends Component {
       searchTerm,
       results,
       searchKey,
-      isLoading
+      isLoading,
+      sortKey
     } = this.state;
 
     const page = (
@@ -146,6 +153,8 @@ class App extends Component {
         </div>
         <Table
           list={list}
+          sortKey={sortKey}
+          onSort={this.onSort}
           onDismiss={this.onDismiss}
         />
         <div className="interactions">
