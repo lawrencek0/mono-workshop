@@ -1,0 +1,18 @@
+{
+  "name": "football-scoreboard",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "Lawrence Khadkda <lawrence_2009@hotmail.com> (https://lawatlife.herokuapp.com)",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^2.1.0",
+    "react": "^15.5.3",
+    "react-addons-css-transition-group": "^15.5.2",
+    "react-addons-transition-group": "^15.5.2",
+    "react-dom": "^15.5.3",
+    "react-md": "^1.0.11"
+  }
+}
