@@ -7,15 +7,9 @@ export default ({ children, title}) => (
       <title>{ title } Football Scoreboard</title>
       <meta charSet='utf-8' />
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      <link rel='stylesheet' href='/static/react-md.light_blue-yellow.min.css' />
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Material+Icons' />
-      <style>{`
-        @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500);
-
-        body {
-          font-family: 'Roboto', sans-serif;
-        }
-      `}
-      </style>
+      <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' />
     </Head>
     <header>
       <nav>
