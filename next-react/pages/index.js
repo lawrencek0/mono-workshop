@@ -1,14 +1,59 @@
 import React from 'react';
 import Head from 'next/head';
+import axios from 'axios';
 
-export default () =>
-  (
-    <div>
-      <Head>
-        <title>EPL Score Board</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.1/build/pure-min.css" />
-      </Head>
-      <h1>Hello in a Material Way!!</h1>
-    </div>
-  )
+export default class extends React.Component {
+  static async getInitialProps() {
+    const res = await axios.get('http://api.football-data.org/v1/competitions/426/leagueTable');
+
+    return {data: res.data }
+  }
+
+  render() {
+    return(
+      <div>
+        <Head>
+          <title>EPL Score Board</title>
+          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+          <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.1/build/pure-min.css" />
+        </Head>
+        <div className="pure-g">
+          <div className="pure-u-1-3" />
+          <div className="pure-u-1-3">
+            <h1>Barclays Premier League</h1>
+            <table className="pure-table">
+              <thead>
+              <tr>
+                <th>Position</th>
+                <th>Team</th>
+                <th>P</th>
+                <th>GL</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+              </tr>
+              </thead>
+              <tbody>
+              {this.props.data.standing.map((standing, i) => {
+                const oddOrNot = i % 2 == 1 ? "pure-table-odd" : "";
+                return (
+                  <tr key={standing.teamId} className={oddOrNot}>
+                    <td>{standing.position}</td>
+                    <td><img className="pure-img logo" src={standing.crestURI}/></td>
+                    <td>{standing.points}</td>
+                    <td>{standing.goals}</td>
+                    <td>{standing.wins}</td>
+                    <td>{standing.draws}</td>
+                    <td>{standing.losses}</td>
+                  </tr>
+                )
+              })}
+              </tbody>
+            </table>
+          </div>
+          <div className="pure-u-1-3" />
+        </div>
+      </div>
+    )
+  }
+}
