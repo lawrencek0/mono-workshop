@@ -8,6 +8,7 @@
   "author": "Lawrence Khadkda <lawrence_2009@hotmail.com> (https://lawatlife.herokuapp.com)",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.16.1",
     "next": "^2.1.0",
     "react": "^15.5.3",
     "react-addons-css-transition-group": "^15.5.2",
