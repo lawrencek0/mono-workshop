@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
+import Popular from './Popular';
 
-const App = () =>
-  <h1>Hello world</h1>
-
+class App extends Component {
+  render() {
+    return (
+      <div className="container">
+        <Popular/>
+      </div>
+    )
+  }
+}
 export default App
