@@ -1,7 +1,7 @@
 import React from 'react';
 import './index.css';
 
-const Parallax = (props) =>
+const Parallax = () =>
   <div className="parallax">
     <div className="parallax-img" />
     <div className="parallax-box">
