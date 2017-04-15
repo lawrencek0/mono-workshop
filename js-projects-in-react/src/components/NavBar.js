@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 import {spacing, typography} from 'material-ui/styles';
 import {cyan500} from 'material-ui/styles/colors';
 import { List, ListItem } from 'material-ui/List';
