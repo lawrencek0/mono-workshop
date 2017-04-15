@@ -1,6 +1,8 @@
 import React from 'react';
 
+import Parallax from './Parallax';
+
 const Portfolio = () =>
-  <h1>Ya</h1>
+  <Parallax/>
 
 export default Portfolio;

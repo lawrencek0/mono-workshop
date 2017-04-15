@@ -1,0 +1,31 @@
+.parallax {
+    height: 96vh;
+    width: auto;
+    text-align: center;
+    position: relative;
+    top: -24px;
+    background-color: rgba(43,43,43,0.8);
+}
+
+.parallax-img {
+    height: 96vh;
+    background: url("https://res.cloudinary.com/lkhadka/image/upload/v1488257838/river_hwhc8s.jpg") no-repeat fixed center;
+    background-size: cover;
+    filter: blur(2px);
+}
+
+
+.parallax-box {
+    position:absolute;
+    top: calc(50% - 2.5em);
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.parallax-text {
+    color: #fff;
+    padding: 0 20px;
+    font-weight: 200;
+    font-size: 22px;
+    line-height: 24px;
+}

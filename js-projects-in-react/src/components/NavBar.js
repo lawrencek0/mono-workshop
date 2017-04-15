@@ -3,7 +3,7 @@ import { NavLink, Link } from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import {spacing, typography} from 'material-ui/styles';
-import {cyan500} from 'material-ui/styles/colors';
+import {grey800} from 'material-ui/styles/colors';
 import { List, ListItem } from 'material-ui/List';
 
 const styles = {
@@ -12,7 +12,7 @@ const styles = {
     fontSize: 24,
     lineHeight: `${spacing.desktopKeylineIncrement}px`,
     fontWeight: typography.fontWeightLight,
-    backgroundColor: cyan500,
+    backgroundColor: grey800,
     paddingLeft: spacing.desktopGutter,
     marginBottom: 8,
   }
@@ -37,6 +37,7 @@ class NavBar extends Component {
     return (
       <div>
         <AppBar
+          style={{backgroundColor: grey800}}
           onLeftIconButtonTouchTap={this.handleToggle}
           iconClassNameRight="muidocs-icon-navigation-expand-more"
         />

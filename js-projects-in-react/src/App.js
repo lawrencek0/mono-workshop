@@ -15,7 +15,6 @@ class App extends Component {
       <Router>
         <div className="container">
           <NavBar/>
-
           <Switch>
             <Route exact path='/' render={Portfolio}/>
             <Route render={() => <h4>Not Found</h4>}/>
