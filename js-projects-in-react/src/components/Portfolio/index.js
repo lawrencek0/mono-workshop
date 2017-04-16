@@ -1,12 +1,12 @@
 import React from 'react';
 
 import Parallax from './Parallax';
-import SlickGoTo from './Carousel';
 
 const Portfolio = () =>
   <div>
     <Parallax/>
-    <SlickGoTo/>
+    {/*----- To do -----
+     Add Carousel Slider*/}
   </div>
 
 export default Portfolio;
