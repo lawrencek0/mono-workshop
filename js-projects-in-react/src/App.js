@@ -8,6 +8,7 @@ import {
 import './App.css';
 import NavBar from './components/NavBar';
 import Portfolio from './components/Portfolio';
+import Footer from './components/Footer';
 
 class App extends Component {
   render() {
@@ -19,6 +20,7 @@ class App extends Component {
             <Route exact path='/' render={Portfolio}/>
             <Route render={() => <h4>Not Found</h4>}/>
           </Switch>
+          <Footer/>
         </div>
       </Router>
     );

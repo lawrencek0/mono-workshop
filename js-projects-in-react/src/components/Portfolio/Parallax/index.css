@@ -29,3 +29,19 @@
     font-size: 22px;
     line-height: 24px;
 }
+
+@media (max-width:768px) {
+    .parallax-img {
+        height: 100vmax;
+    }
+
+    .parallax-box {
+        top: 30vmin;
+    }
+}
+
+@media (max-width: 320px) {
+    .parallax-box {
+        top: 20vmax;
+    }
+}
