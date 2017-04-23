@@ -4,6 +4,7 @@ class App extends Component {
   render() {
     return (
       <div className="container">
+        ya i m the app bitch
       </div>
     );
   }
