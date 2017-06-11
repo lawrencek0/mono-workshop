@@ -14,4 +14,18 @@ body {
 
 .container {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.outer {
+    background-color: #b14de5;
+    padding: 25vh;
+}
+
+.inner {
+    background-color: #50c001;
+    padding: 15vh;
+    border-radius: 50%;
 }
