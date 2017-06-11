@@ -16,10 +16,13 @@ body * + * {
     margin-top: 1.5em;
 }
 
+.container {
+    display: flex;
+}
+
 .box {
     text-align: center;
-    padding-top: 1.5em;
-    padding-bottom: 1.5em;
+    padding: 2em;
     color: #fff;
 }
 
