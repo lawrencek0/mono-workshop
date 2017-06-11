@@ -31,12 +31,15 @@ body {
 
 .two {
     background-color: #c0ffee;
+    padding: 3.5em;
 }
 
 .three {
     background-color: #10aded;
+    padding: 3em;
 }
 
 .four {
     background-color: #fa5732;
+    padding: 1.6em;
 }
