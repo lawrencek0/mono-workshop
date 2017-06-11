@@ -24,7 +24,7 @@ main {
     padding: 0.8em;
 }
 
-button {
+.btn {
     display: inline-block;
     text-align: center;
     border: 2px solid #7edd1e;
@@ -35,7 +35,7 @@ button {
     transition-duration: .4s;
 }
 
-button:hover {
+.btn:hover {
     background-color: #7edd1e;
     color: #fff;
 }
