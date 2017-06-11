@@ -1,0 +1,40 @@
+:root {
+    box-sizing: border-box;
+}
+
+*,
+::before,
+::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body * + * {
+    margin-top: 1.5em;
+}
+
+.box {
+    text-align: center;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    color: #fff;
+}
+
+.one {
+    background-color: #bada55;
+}
+
+.two {
+    background-color: #c0ffee;
+}
+
+.three {
+    background-color: #10aded;
+}
+
+.four {
+    background-color: #fa5732;
+}
