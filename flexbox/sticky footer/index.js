@@ -11,5 +11,7 @@ button.addEventListener('click', event => {
 
     main.insertBefore(newItem, button);
 
-    window.scrollTo(0, document.body.scrollHeight);
+    button.scrollIntoView({
+        behavior: 'smooth'
+    })
 });
