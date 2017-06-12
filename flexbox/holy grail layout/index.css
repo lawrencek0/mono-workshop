@@ -47,14 +47,14 @@ header, footer {
     background-color: #1e2a2d;
 }
 
-.nav > ul {
+.side-nav {
     display: flex;
     flex-direction: column;
     padding-left: 0;
     list-style-type: none;
 }
 
-.nav a {
+.side-nav a {
     text-decoration: none;
     color: #fff;
     display: block;
@@ -62,16 +62,20 @@ header, footer {
     font-size: 2rem;
 }
 
-.nav a:hover {
+.side-nav a:hover {
     transform: scale(1.2);
-    box-shadow: inset 0 0 0 0.2em #fff;
+    box-shadow: inset 0 0 0 0.18em #fff;
 }
 
 .nav, .aside {
     flex: 0 0 25vh;
-    /*background-color: #fac11e;*/
     color: #fff;
     padding: 1.5em;
+}
+
+.aside {
+    height: 25vh;
+    background-color: #10aded;
 }
 
 .main, .aside {
