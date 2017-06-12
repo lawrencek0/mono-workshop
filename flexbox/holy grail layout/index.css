@@ -25,6 +25,7 @@ header, footer {
 .container {
     display: flex;
     flex: 1;
+    height: 100vh;
 }
 
 .center {
@@ -32,11 +33,12 @@ header, footer {
 }
 
 .main {
-    flex: 1;
+    flex: 2;
     border: 1px dotted #ccc;
     margin: 0 2em;
     padding: 0 0.8em;
     line-height: 1.2;
+    overflow-y: auto;
 }
 
 .nav {
