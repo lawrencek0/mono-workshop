@@ -59,6 +59,11 @@ header, footer {
     font-size: 2rem;
 }
 
+.nav a:hover {
+    transform: scale(1.2);
+    box-shadow: inset 0 0 0 0.2em #fff;
+}
+
 .nav, .aside {
     flex: 0 0 25vh;
     /*background-color: #fac11e;*/
