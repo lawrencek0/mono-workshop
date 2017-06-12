@@ -12,6 +12,6 @@ button.addEventListener('click', event => {
     main.insertBefore(newItem, button);
 
     button.scrollIntoView({
-        behavior: 'smooth'
+        behavior: 'smooth' /* works only in firefox */
     })
 });
