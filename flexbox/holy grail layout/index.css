@@ -24,7 +24,6 @@ header, footer {
 
 .container {
     display: flex;
-    margin: 2em 0.8em;
     flex: 1;
 }
 
@@ -46,4 +45,8 @@ header, footer {
     display: flex;
     justify-content: center;
     padding: 1.5em;
+}
+
+.main, .aside {
+        margin: 0.8em 1em;
 }
