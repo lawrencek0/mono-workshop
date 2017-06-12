@@ -10,5 +10,27 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
+}
+
+.media {
+    display: flex;
+    background-color: #eee;
+    align-items: flex-start;
+    padding: .4em .8em;
+}
+
+.media-image {
+    margin: .2em .1em;
+}
+
+.media-body {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: .2em .4em;
+}
+
+.media.media-reverse {
+    flex-direction: row-reverse;
 }
