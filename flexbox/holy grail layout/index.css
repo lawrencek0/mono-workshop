@@ -27,11 +27,16 @@ header, footer {
     flex: 1;
 }
 
+.center {
+    text-align: center;
+}
+
 .main {
     flex: 1;
     border: 1px dotted #ccc;
     margin: 0 2em;
-    text-align: center;
+    padding: 0 0.8em;
+    line-height: 1.2;
 }
 
 .nav {
@@ -48,5 +53,5 @@ header, footer {
 }
 
 .main, .aside {
-        margin: 0.8em 1em;
+    margin: 0.8em 1em;
 }
