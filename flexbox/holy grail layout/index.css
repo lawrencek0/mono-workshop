@@ -11,4 +11,39 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header, footer {
+    padding: 1.5em;
+    background-color: #f15ca1;
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    margin: 2em 0.8em;
+    flex: 1;
+}
+
+.main {
+    flex: 1;
+    border: 1px dotted #ccc;
+    margin: 0 2em;
+    text-align: center;
+}
+
+.nav {
+    order: -1;
+}
+
+.nav, .aside {
+    flex: 0 0 25vh;
+    background-color: #fac11e;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 1.5em;
 }
