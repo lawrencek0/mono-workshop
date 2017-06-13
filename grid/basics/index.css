@@ -11,3 +11,44 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+.container {
+    display: grid;
+    grid-template-rows: repeat(4, auto);
+    grid-gap: 1.5em;
+}
+
+.box {
+    padding: 2em;
+    color: #fff;
+    font-size: 150%;
+    border-radius: .5em;
+    text-align: center;
+}
+
+.grid-1 {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: 200px 100px;
+    grid-auto-rows: 50px;
+    grid-gap: 1.5em;
+}
+
+.grid-1 .box {
+    background-color: #bada55;
+}
+
+/*.two {
+    background-color: #c0ffee;
+    padding: 3.5em;
+}
+
+.three {
+    background-color: #10aded;
+    padding: 3em;
+}
+
+.four {
+    background-color: #fa5732;
+    padding: 1.6em;
+}*/
