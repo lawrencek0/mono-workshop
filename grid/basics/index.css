@@ -26,10 +26,14 @@ body {
     text-align: center;
 }
 
+h1 {
+    grid-column: 1 / -1;
+}
+
 .grid-1 {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    grid-template-rows: 2fr 1fr;
+    grid-template-rows: 3em 1fr 1fr;
     grid-gap: 1.5em;
 }
 
@@ -37,12 +41,17 @@ body {
     background-color: #bada55;
 }
 
-/*.two {
-    background-color: #c0ffee;
+.grid-2 {
+    display: grid;
+    grid-gap: 1.5em;
+}
+
+.grid-2 .box {
+    background-color: #10aded;
     padding: 3.5em;
 }
 
-.three {
+/*.three {
     background-color: #10aded;
     padding: 3em;
 }
