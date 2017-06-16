@@ -99,7 +99,7 @@ h1 {
 .grid-4 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, auto);
+    grid-template-rows: repeat(3, 2fr);
     grid-template-areas:
       "hd  hd   hd"
       "nav main ad"
