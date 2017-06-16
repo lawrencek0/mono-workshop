@@ -168,7 +168,7 @@ h1 {
     grid-gap: .8em;
     grid-template-columns: repeat(3, 25vw);
     grid-template-rows: repeat(5, 100px);
-    justify-content: center;
+    justify-content: space-around;
     align-content: center;
 }
 
@@ -190,4 +190,5 @@ h1 {
 
 .grid-6 :last-child {
     grid-column: span 3;
+    align-self: start;
 }
