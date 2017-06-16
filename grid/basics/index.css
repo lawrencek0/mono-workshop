@@ -103,8 +103,7 @@ h1 {
     grid-template-areas:
       "hd  hd   hd"
       "nav main ad"
-      "ft  ft   ad";
-    grid-gap: 1.5em;
+      "ft  main   ad";
 }
 
 .grid-4 header {
@@ -114,6 +113,7 @@ h1 {
 .grid-4 * {
     background-color: #fb1;
     color: #fff;
+    border: 1px dotted #fff;
 }
 
 .grid-4 main {
