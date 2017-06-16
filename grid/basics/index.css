@@ -93,9 +93,7 @@ h1 {
 }
 
 .grid-3 :last-child {
-    grid-column: 1;
-    grid-row-start: 2;
-    grid-row-end: 5;
+    grid-area: 2 / 1 / 5 / 1;
 }
 
 /*
