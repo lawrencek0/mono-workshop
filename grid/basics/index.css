@@ -96,7 +96,38 @@ h1 {
     grid-area: 2 / 1 / 5 / 1;
 }
 
-/*
-.four {
-    background-color: #fa5732;
-}*/
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, auto);
+    grid-template-areas:
+      "hd  hd   hd"
+      "nav main ad"
+      "ft  ft   ad";
+    grid-gap: 1.5em;
+}
+
+.grid-4 header {
+    grid-area: hd;
+}
+
+.grid-4 * {
+    background-color: #fb1;
+    color: #fff;
+}
+
+.grid-4 main {
+    grid-area: main;
+}
+
+.grid-4 nav {
+    grid-area: nav;
+}
+
+.grid-4 aside {
+    grid-area: ad;
+}
+
+.grid-4 ft {
+    grid-area: ft;
+}
