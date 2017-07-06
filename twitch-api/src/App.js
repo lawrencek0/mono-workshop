@@ -20,27 +20,27 @@ class App extends Component {
     const channelInfo = await res.json();
 
     if (!channelInfo.error) {
-      this.getStreams(channel);
+      this.getStreams(channel, channelInfo.logo);
     } else {
       this.setState({ channels: [...this.state.channels, { channelInfo, channel }] });
     }
   }
 
-  async getStreams(stream) {
+  async getStreams(stream, logo) {
     const res = await fetch(`${PROXY_URL}/${BASE_URL}/streams/${stream}`);
     const streamInfo = await res.json();
 
-    this.setState({ channels: [...this.state.channels, streamInfo] });
+    this.setState({ channels: [...this.state.channels, { streamInfo, logo }] });
   }
 
   render() {
     return (
       <div>
         {this.state.channels.map((channel, index) => {
-          if (!channel.stream) {
-            return <div key={index}>Null</div>
+          if (!channel.logo) {
+            return <div key={index}>Deleted</div>
           }
-          return <div key={index}>{channel.stream.delay}</div>
+          return <div key={index}>{channel.logo}</div>
         })}
       </div>
     );
