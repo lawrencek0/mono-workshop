@@ -1,0 +1,76 @@
+.container {
+  margin: .5em 1.5em;
+  padding: 0;
+}
+
+@media (min-width: 35em) {
+  .container {
+    padding: .5em 3em;
+  }
+}
+
+a {
+  color: #01d1e5;
+  text-decoration: none;
+}
+
+a:hover, a:active {
+  text-decoration: underline;
+}
+
+.card {
+  display: flex;
+  background-color: #fff;
+  padding: .5em 1.2em;
+}
+
+.card:hover, .card:active {
+  background-color: #eee;
+}
+
+.card .logo {
+  align-self: flex-end;
+}
+.card .logo img {
+  width: 60px;
+  height: 60px;
+}
+
+.card .info {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  margin-left: .8em;
+}
+
+.card .info .name {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.card .info .name.online::after, .card .info .name.offline::after {
+  content: '\2022';
+  color: #000;
+  position: absolute;
+  font-size: 1.5rem;
+  top: -.5em;
+  margin-left: .1em;
+}
+
+.card .info .name.online::after {
+  color: greenyellow;
+}
+
+.card .info .name.offline::after {
+  color: pink;
+}
+
+
+.card .info .status {
+  font-size: .9rem;
+  color: rgba(0,0,0,0.7);
+  align-self: center;
+}
+

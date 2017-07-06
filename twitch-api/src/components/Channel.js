@@ -1,19 +1,27 @@
 import React from 'react';
 
-const Channel = ({ logo, name, status }) => {
+const Channel = ({ logo, name, link, children }) => {
   return (
     <div className="card">
       <div className="logo">
         <img alt={name} src={logo} />
       </div>
-      <div className="name">
-        <h3>{name}</h3>
-      </div>
-      <div className="status">
-        {status}
+      <div className="info">
+        <a href={link} className={`name ${checkStatus()}`}>
+          {name}
+        </a>
+        <span className="status">
+          {children}
+        </span>
       </div>
     </div>
-  )
+  );
+
+  function checkStatus() {
+    if (children === "") return 'offline';
+    if (!logo) return;
+    return 'online';
+  }
 }
 
 export default Channel;
