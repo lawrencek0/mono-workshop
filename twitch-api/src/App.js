@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { PROXY_URL, BASE_URL, TWITCH_CHANNELS } from './constants';
+import { PROXY_URL, BASE_URL, TWITCH_CHANNELS, STATUSES } from './constants';
 import './App.css';
 import Channel from './components/Channel';
+import Tab from './components/Tab';
 
 class App extends Component {
   constructor(props) {
@@ -9,11 +10,20 @@ class App extends Component {
 
     this.state = {
       channels: [],
+      filter: 'All'
     };
   };
 
   componentDidMount() {
     TWITCH_CHANNELS.map(channel => this.getChannels(channel));
+  }
+
+  isActive = (filter) => {
+    return this.state.filter === filter;
+  }
+
+  changeActive = (activeFilter) => {
+    this.setState({ filter: activeFilter });
   }
 
   async getChannels(channel) {
@@ -37,6 +47,7 @@ class App extends Component {
   render() {
     return (
       <div className="container">
+        {STATUSES.map((status, index) => <Tab key={index} onChangeActive={this.changeActive} isActive={this.isActive(status)} name={status} />)}
         {this.state.channels.map((channel, index) => {
           if (!channel.logo) {
             return <Channel
