@@ -1,29 +1,19 @@
 'use strict';
 
 var config = {
-    // TODO Add Application ID
-    appId : '<APP-ID>',
-    // TODO Add an appropriate welcome message.
-    welcome_message : '<WELCOME_MESSAGE>',
-
+    appId : 'amzn1.ask.skill.084be93c-6ee0-4bb4-bdb9-504cc6004918',
+    welcome_message : 'Welcome to ULM News Feed Skill',
     number_feeds_per_prompt : 3,
     speak_only_feed_title : true,
     display_only_title_in_card : true,
-
-    // TODO Add the category name (to feed name) and the corresponding URL
     feeds : {
-        'CATEGORY_NAME_1' : '<FEED_URL>',
-        'CATEGORY_NAME_2' : '<FEED_URL>',
-        'CATEGORY_NAME_3' : '<FEED_URL>'
-
+        'ULM News Center' : 'http://www.ulm.edu/news/rss/news.xml',
+        'ULM Warhawks News' : 'http://www.ulmwarhawks.com/rss.dbml?db_oem_id=19000&media=news',
     },
-
     speech_style_for_numbering_feeds : 'Item',
-
-    // TODO Add the s3 Bucket Name, dynamoDB Table Name and Region
-    s3BucketName : '<S3-BUCKET-NAME>',
-    dynamoDBTableName : '<DYNAMODB-TABLE-NAME>',
-    dynamoDBRegion : '<DYNAMODB-REGION>'
+    s3BucketName : 'my-ulm-news-feed-reader',
+    dynamoDBTableName : 'myULMNewsFeedTable',
+    dynamoDBRegion : 'us-east-1'
 };
 
 module.exports = config;

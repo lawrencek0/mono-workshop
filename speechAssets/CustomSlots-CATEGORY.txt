@@ -1,4 +1,3 @@
-CATEGORY_NAME_1
-CATEGORY_NAME_2
-CATEGORY_NAME_3
+ULM News Center
+ULM Warhawks News
 Favorite
