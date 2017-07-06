@@ -4,10 +4,10 @@ const Channel = ({ logo, name, status }) => {
   return (
     <div className="card">
       <div className="logo">
-        <img src={logo} />
+        <img alt={name} src={logo} />
       </div>
       <div className="name">
-        <h3>{stream}</h3>
+        <h3>{name}</h3>
       </div>
       <div className="status">
         {status}
@@ -15,3 +15,5 @@ const Channel = ({ logo, name, status }) => {
     </div>
   )
 }
+
+export default Channel;
