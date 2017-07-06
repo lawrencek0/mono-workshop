@@ -1,3 +1,3 @@
 import React from 'react';
 
-const Channel = ({ image, })
+const Channel = ({ logo, })

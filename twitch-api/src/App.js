@@ -30,7 +30,7 @@ class App extends Component {
     const res = await fetch(`${PROXY_URL}/${BASE_URL}/streams/${stream}`);
     const streamInfo = await res.json();
 
-    this.setState({ channels: [...this.state.channels, { streamInfo, logo }] });
+    this.setState({ channels: [...this.state.channels, { streamInfo, stream, logo }] });
   }
 
   render() {
