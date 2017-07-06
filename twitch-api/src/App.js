@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PROXY_URL, BASE_URL, TWITCH_STREAMERS } from './constants';
+import { PROXY_URL, BASE_URL, TWITCH_CHANNELS } from './constants';
 import './App.css';
 
 class App extends Component {
@@ -7,30 +7,40 @@ class App extends Component {
     super(props);
 
     this.state = {
-      streams: [],
+      channels: [],
     };
   };
 
   componentDidMount() {
-    this.getUsers()
+    TWITCH_CHANNELS.map(channel => this.getChannels(channel));
   }
 
-  getUsers() {
-    TWITCH_STREAMERS.map(streamer => {
-      return fetch(`${PROXY_URL}/${BASE_URL}/streams/${streamer}`)
-        .then(res => res.json())
-        .then(json => this.setState({ streams: [...this.state.streams, json] }));
-    });
+  async getChannels(channel) {
+    const res = await fetch(`${PROXY_URL}/${BASE_URL}/channels/${channel}`);
+    const channelInfo = await res.json();
+
+    if (!channelInfo.error) {
+      this.getStreams(channel);
+    } else {
+      this.setState({ channels: [...this.state.channels, { channelInfo, channel }] });
+    }
+  }
+
+  async getStreams(stream) {
+    const res = await fetch(`${PROXY_URL}/${BASE_URL}/streams/${stream}`);
+    const streamInfo = await res.json();
+
+    this.setState({ channels: [...this.state.channels, streamInfo] });
   }
 
   render() {
     return (
       <div>
-        {this.state.streams.map((stream, index) => {
-          if (!stream.stream) {
+        {this.state.channels.map((channel, index) => {
+          if (!channel.stream) {
             return <div key={index}>Null</div>
           }
-          return <div key={index}>{stream.stream.delay}</div>
+          return <div key={index}>{channel.stream.delay}</div>
         })}
       </div>
     );
