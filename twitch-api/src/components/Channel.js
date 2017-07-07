@@ -18,7 +18,7 @@ const Channel = ({ logo, name, link, children }) => {
   );
 
   function checkStatus() {
-    if (children === "") return 'offline';
+    if (!children) return 'offline';
     if (!logo) return;
     return 'online';
   }

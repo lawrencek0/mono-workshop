@@ -59,23 +59,37 @@ class App extends Component {
         </div>
 
         {this.state.channels.map((channel, index) => {
-          if (!channel.logo) {
+          if (!channel.logo && this.state.filter === 'All') {
             return <Channel
               key={index}
               name={channel.name}
             >
               <em>User not found!</em>
             </Channel>
+          } else if (!channel.logo) return;
+
+          const status = channel.streamInfo.stream ? `Streaming ${channel.streamInfo.stream.game}` : null;
+          if (this.state.filter === 'All' || (this.state.filter === 'Offline' && !status)) {
+            return <Channel
+              key={index}
+              logo={channel.logo}
+              name={channel.name}
+              link={channel.url}
+            >
+              {status}
+            </Channel>
           }
-          const status = channel.streamInfo.stream ? `Streaming ${channel.streamInfo.stream.game}` : '';
-          return <Channel
-            key={index}
-            logo={channel.logo}
-            name={channel.name}
-            link={channel.url}
-          >
-            {status}
-          </Channel>
+
+          if (this.state.filter === 'Online' && status) {
+            return <Channel
+              key={index}
+              logo={channel.logo}
+              name={channel.name}
+              link={channel.url}
+            >
+              {status}
+            </Channel>
+          }
         })}
       </div>
     );
