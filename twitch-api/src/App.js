@@ -47,14 +47,16 @@ class App extends Component {
   render() {
     return (
       <div className="container">
-        {STATUSES.map((status, index) => (
-          <Tab
-            key={index}
-            onChangeActive={this.changeActive}
-            isActive={this.isActive(status)}
-            name={status}
-          />
-        ))}
+        <div className="tabs">
+          {STATUSES.map((status, index) => (
+            <Tab
+              key={index}
+              onChangeActive={this.changeActive}
+              isActive={this.isActive(status)}
+              name={status}
+            />
+          ))}
+        </div>
 
         {this.state.channels.map((channel, index) => {
           if (!channel.logo) {
