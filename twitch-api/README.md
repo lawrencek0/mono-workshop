@@ -1,4 +1,5 @@
 ## TODO
+* implement caching
 * add animations
 * write tests
 * search to add streamers
