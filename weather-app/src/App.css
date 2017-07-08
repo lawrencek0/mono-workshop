@@ -50,13 +50,86 @@ header, footer {
   width: 24em;
   height: 44em;
   background-color: #2f2f2f;
+  position: relative;
 }
 
-@media (max-width: 35em) {
+.power-button {
+  position: absolute;
+  width: 5px;
+  height: 48px;
+  left: 24.5em;
+  background-color: #000;
+  top: 222px;
+  box-shadow: 
+    0px 0px 40px 6px rgba(0, 0, 0, 0.5),
+    inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2);
+}
+
+.volume-button {
+  position: absolute;
+  width: 5px;
+  height: 96px;
+  left: 24.5em;
+  background-color: #000;
+  top: 310px;
+  box-shadow: 
+    0px 0px 40px 6px rgba(0, 0, 0, 0.5),
+    inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2);
+}
+
+.nav {
+  background-color: rgba(0,0,0,0.8);
+  height: 50px;
+  width: 100%;
+  display: flex;
+  top: calc(44em - 50px);
+  position: absolute;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav div {
+  background-color: #fff;
+  height: 16px;
+  width: 16px;
+}
+
+.nav .back {
+  width: 0;
+	height: 0;
+	border-top: 8px solid #000;
+	border-right: 16px solid #fff;
+	border-bottom: 8px solid #000;
+}
+
+.nav .home {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #fff;
+  border: 1px solid #000;
+}
+
+.overview {
+  border-radius: 3px;
+}
+
+@media (max-width: 25em) {
+
   .container {
     margin: 1em 1.5em;
   }
+
+  .camera {
+    left: 14vw;
+  }
+
   .screen {
     width: 90vw;
   }
+
+  .power-button, .volume-button {
+    left: calc(90vw + .5em);
+  }
+
 }
