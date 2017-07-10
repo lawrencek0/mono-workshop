@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { PROXY_URL, BASE_URL, PARAM, API_KEY } from '../constants';
+import { PROXY_URL, BASE_URL, PARAM, API_KEY, TABS } from '../constants';
+import Tab from './Tab';
+import './Weather.css';
 
 class WeatherApp extends Component {
   constructor(props) {
@@ -7,11 +9,20 @@ class WeatherApp extends Component {
 
     this.state = {
       weather: {},
+      activeTab: 'Today',
     }
   }
 
   componentDidMount() {
     this.requestLocation();
+  }
+
+  isActiveTab = (tabName) => {
+    return this.state.activeTab === tabName;
+  }
+
+  changeActiveTab = (activeTab) => {
+    this.setState({ activeTab });
   }
 
   setWeather = (weather) => {
@@ -33,7 +44,17 @@ class WeatherApp extends Component {
 
   render() {
     return (
-      <div className="weather-screen">
+      <div className="weather-app">
+        <div className="tabs">
+          {TABS.map((tab, index) => (
+            <Tab
+              key={index}
+              name={tab}
+              onChangeActiveTab={this.changeActiveTab}
+              isActiveTab={this.isActiveTab(tab)}
+            />
+          ))}
+        </div>
       </div>
     )
   }
