@@ -13,8 +13,10 @@ class App extends Component {
     }
   }
 
-  useLocation(pos) {
-    fetch(`${PROXY_URL}/${BASE_URL}/${PARAM}/${API_KEY}/${pos.coords.latitude},${pos.coords.longitude}`).then(res => res.json()).then(json => console.log(json));
+  async useLocation(pos) {
+    const res = await fetch(`${PROXY_URL}/${BASE_URL}/${PARAM}/${API_KEY}/${pos.coords.latitude},${pos.coords.longitude}`);
+    const weatherInfo = await res.json();
+    console.log(weatherInfo);
   }
 
   render() {
