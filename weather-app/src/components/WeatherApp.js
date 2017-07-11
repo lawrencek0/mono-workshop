@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { PROXY_URL, BASE_URL, PARAM, API_KEY, TABS } from '../constants';
 import Tab from './Tab';
+import DailyWeather from './DailyWeather';
 import './Weather.css';
 
 class WeatherApp extends Component {
@@ -26,7 +27,7 @@ class WeatherApp extends Component {
   }
 
   setWeather = (weather) => {
-    this.setState(weather);
+    this.setState({ weather });
   }
 
   requestLocation() {
@@ -43,6 +44,10 @@ class WeatherApp extends Component {
   }
 
   render() {
+    const { currently, minutely, hourly } = this.state.weather;
+
+    if (!currently) return <div>Loading...</div>
+
     return (
       <div className="weather-app">
         <div className="tabs">
@@ -55,6 +60,14 @@ class WeatherApp extends Component {
             />
           ))}
         </div>
+        {this.state.activeTab === 'Today' ?
+          <DailyWeather
+            currently={currently}
+            minutely={minutely}
+            hourly={hourly}
+          />
+          : ''
+        }
       </div>
     )
   }

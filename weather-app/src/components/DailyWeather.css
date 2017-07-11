@@ -1,0 +1,8 @@
+.daily-weather {
+  display: grid;
+}
+
+.overview {
+  display: flex;
+  justify-content: space-between;
+}
