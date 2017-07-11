@@ -49,7 +49,7 @@ header, footer {
 .screen {
   width: 24em;
   height: 44em;
-  background-color: #fff;
+  background-image: linear-gradient(to bottom, rgb(6,209,229), white);
   position: relative;
   display: flex;
   flex-direction: column;
