@@ -44,7 +44,7 @@ class WeatherApp extends Component {
   }
 
   render() {
-    const { currently, minutely, hourly } = this.state.weather;
+    const { currently, minutely, hourly, daily } = this.state.weather;
 
     if (!currently) return <div>Loading...</div>
 
@@ -65,6 +65,7 @@ class WeatherApp extends Component {
             currently={currently}
             minutely={minutely}
             hourly={hourly}
+            daily={daily.data[0]}
           />
           : ''
         }

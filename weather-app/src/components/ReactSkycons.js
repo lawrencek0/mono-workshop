@@ -14,7 +14,7 @@ class ReactSkycons extends Component {
   componentDidMount() {
     this.state.skycons.add(ReactDOM.findDOMNode(this), Skycons[this.fixNaming(this.props.icon)]);
 
-    if (this.props.autoplay) {
+    if (this.props.autoPlay) {
       this.state.skycons.play();
     }
   }

@@ -4,5 +4,29 @@
 
 .overview {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  margin-top: .5em;
+}
+
+.weather-icon {
+  width: 196px;
+}
+
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  color: #fff;
+}
+
+.temp {
+  display: flex;
+}
+
+.temp .temp-number {
+  font-size: 4rem;
+}
+
+.temp .temp-unit {
+  font-size: 2rem;
 }
