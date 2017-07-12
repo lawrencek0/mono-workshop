@@ -14,6 +14,7 @@ const DailyWeather = ({ currently, daily, unit }) => {
           <ReactSkycons
             icon={`${currently.icon.toUpperCase()}`}
             color="white"
+            autoPlay={true}
           />
           <div className="summary">
             {currently.summary}
