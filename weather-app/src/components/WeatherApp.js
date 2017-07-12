@@ -44,7 +44,7 @@ class WeatherApp extends Component {
   }
 
   render() {
-    const { currently, minutely, hourly, daily } = this.state.weather;
+    const { currently, daily } = this.state.weather;
 
     if (!currently) return <div>Loading...</div>
 
@@ -63,8 +63,6 @@ class WeatherApp extends Component {
         {this.state.activeTab === 'Today' ?
           <DailyWeather
             currently={currently}
-            minutely={minutely}
-            hourly={hourly}
             daily={daily.data[0]}
           />
           : ''
