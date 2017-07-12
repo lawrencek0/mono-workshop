@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PROXY_URL, BASE_URL, PARAM, API_KEY, TABS } from '../constants';
 import Tab from './Tab';
 import DailyWeather from './DailyWeather';
+import WeeklyWeatherList from './WeeklyWeather/';
 import './Weather.css';
 
 class WeatherApp extends Component {
@@ -10,7 +11,7 @@ class WeatherApp extends Component {
 
     this.state = {
       weather: {},
-      activeTab: 'Today',
+      activeTab: 'Weekly',
     }
   }
 
@@ -67,6 +68,12 @@ class WeatherApp extends Component {
           />
           : ''
         }
+
+        {this.state.activeTab === 'Weekly' ?
+          <WeeklyWeatherList daily={daily} />
+          : ''
+        }
+
       </div>
     )
   }

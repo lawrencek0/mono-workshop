@@ -7,7 +7,7 @@ class ReactSkycons extends Component {
     super(props);
 
     this.state = {
-      skycons: new Skycons({ 'color': 'white' })
+      skycons: new Skycons({ 'color': this.props.color })
     }
   }
 
@@ -43,7 +43,6 @@ class ReactSkycons extends Component {
   render() {
 
     const defaultStyle = {
-      width: '100%',
       height: '100%'
     };
 

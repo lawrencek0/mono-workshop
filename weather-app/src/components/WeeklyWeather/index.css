@@ -1,0 +1,49 @@
+.weather-lists {
+  display: flex;
+  flex-direction: column;
+}
+
+.weather-lists > .weather-panel {
+  background-color: #fff;
+  color: #000;
+  display: flex;
+  border: 1px solid #eee;
+  padding: 1em 1.5em;
+  font-size: 1.1rem;  
+}
+
+.weather-lists .weather-panel .overview {
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.weather-lists .overview > span.summary {
+  padding-top: .3em;
+  text-transform: capitalize;
+  color: rgba(0,0,0,0.8);
+}
+
+.weather-lists .weather-panel .weather-info {
+  margin-left: auto;
+  display: inline-flex;
+  align-content: space-between;
+}
+
+.weather-lists .weather-icon canvas {
+  width: 96px;
+}
+.weather-lists .weather-info .temp {
+  display: flex;
+  flex-direction: column;
+  font-size: .9rem;
+}
+
+.weather-info .temp .max::after, .weather-info .temp .min::after {
+   content: '\00b0';
+}
+
+.weather-lists .weather-info .temp .min {
+   color: rgba(0,0,0,0.8);
+}
