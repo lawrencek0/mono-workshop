@@ -3,7 +3,7 @@ import moment from 'moment';
 import ReactSkycons from './ReactSkycons';
 import './DailyWeather.css';
 
-const DailyWeather = ({ currently, daily }) => {
+const DailyWeather = ({ currently, daily, unit }) => {
   return (
     <div className="daily-weather">
       <div className="overview">
@@ -30,7 +30,7 @@ const DailyWeather = ({ currently, daily }) => {
             <span className="temp-number">
               {Math.round(currently.temperature)}
             </span>
-            <span className="temp-unit">&deg;F</span>
+            <span className="temp-unit">&deg;{unit}</span>
           </div>
           <div className="apparent-temp">
             Feels like {Math.round(currently.apparentTemperature)}

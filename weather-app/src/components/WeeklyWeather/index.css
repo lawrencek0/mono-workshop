@@ -1,13 +1,16 @@
 .weather-lists {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
+  margin-top: .1em;
+  font-size: 1.125rem;  
 }
 
 .weather-lists > .weather-panel {
   background-color: #fff;
   color: #000;
   display: flex;
-  border: 1px solid #eee;
+  border-bottom: 1px solid #eee;
   padding: 1em 1.5em;
   font-size: 1.1rem;  
 }

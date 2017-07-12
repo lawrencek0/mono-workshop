@@ -2,9 +2,9 @@ import React from 'react';
 
 const Tab = ({ name, onChangeActiveTab, isActiveTab }) => {
   return (
-    <div className={`tab ${isActiveTab ? 'active' : ''}`}>
+    <li className={`tab ${isActiveTab ? 'active' : ''}`}>
       <a onClick={onTabClick}>{name}</a>
-    </div>
+    </li>
   )
 
   function onTabClick() {

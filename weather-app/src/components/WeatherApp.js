@@ -3,7 +3,8 @@ import { PROXY_URL, BASE_URL, PARAM, API_KEY, TABS } from '../constants';
 import Tab from './Tab';
 import DailyWeather from './DailyWeather';
 import WeeklyWeatherList from './WeeklyWeather/';
-import './Weather.css';
+import More from './More';
+import './WeatherApp.css';
 
 class WeatherApp extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class WeatherApp extends Component {
 
     this.state = {
       weather: {},
-      activeTab: 'Weekly',
+      activeTab: 'Today',
+      unit: 'F',
     }
   }
 
@@ -31,14 +33,26 @@ class WeatherApp extends Component {
     this.setState({ weather });
   }
 
+  setUnit = (unit) => {
+    this.setState({ unit });
+  }
+
   requestLocation() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(this.fetchWeatherInfo);
     }
   }
 
+  toggleUnit = () => {
+    this.requestLocation();
+    const unit = this.state.unit === 'F' ? 'C' : 'F';    
+    this.setState({unit});
+  }
+
   fetchWeatherInfo = async (pos) => {
-    const res = await fetch(`${PROXY_URL}/${BASE_URL}/${PARAM}/${API_KEY}/${pos.coords.latitude},${pos.coords.longitude}`);
+    const unit = this.state.unit === 'F' ? 'us' : 'si';
+
+    const res = await fetch(`${PROXY_URL}/${BASE_URL}/${PARAM}/${API_KEY}/${pos.coords.latitude},${pos.coords.longitude}?units=${unit}&exclude=minutely,hourly,alerts,flags`);
     const weatherInfo = await res.json();
 
     this.setWeather(weatherInfo);
@@ -51,7 +65,7 @@ class WeatherApp extends Component {
 
     return (
       <div className="weather-app">
-        <div className="tabs">
+        <ul className="tabs">
           {TABS.map((tab, index) => (
             <Tab
               key={index}
@@ -60,17 +74,26 @@ class WeatherApp extends Component {
               isActiveTab={this.isActiveTab(tab)}
             />
           ))}
-        </div>
+          </ul>
         {this.state.activeTab === 'Today' ?
           <DailyWeather
             currently={currently}
             daily={daily.data[0]}
+            unit={this.state.unit}
           />
           : ''
         }
 
         {this.state.activeTab === 'Weekly' ?
           <WeeklyWeatherList daily={daily} />
+          : ''
+        }
+
+        {this.state.activeTab === 'More' ?
+          <More 
+            toggleUnit={this.toggleUnit} 
+            unit={this.state.unit}
+          /> 
           : ''
         }
 
