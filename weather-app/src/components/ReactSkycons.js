@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 const Skycons = require('skycons')(window);
 
+/* Based on (React Skycons)[https://github.com/roadmanfong/react-skycons/] */
+
 class ReactSkycons extends Component {
   constructor(props) {
     super(props);

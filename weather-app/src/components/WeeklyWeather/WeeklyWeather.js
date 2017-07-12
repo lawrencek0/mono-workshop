@@ -25,7 +25,7 @@ const WeeklyWeather = ({ day }) => {
         </div>
       </div>
     </div>
-  )
+  );
 
   function formatTime(time) {
     const t = new Date(time);

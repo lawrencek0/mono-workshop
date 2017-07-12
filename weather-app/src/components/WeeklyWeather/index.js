@@ -7,7 +7,7 @@ const WeeklyWeatherList = ({ daily }) => {
     <div className="weather-lists">
       {daily.data.map(day => <WeeklyWeather key={day.time} day={day} />)}
     </div>
-  )
+  );
 }
 
 export default WeeklyWeatherList;
