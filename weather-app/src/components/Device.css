@@ -1,5 +1,7 @@
 .container {
   margin: 1.5em;
+  display: flex;
+  justify-content: center;
 }
 
 .device {
@@ -49,8 +51,10 @@ header, footer {
 .screen {
   width: 24em;
   height: 44em;
-  background-color: #2f2f2f;
+  background-image: linear-gradient(to bottom, rgb(6,209,229), rgb(119, 239, 251));
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .power-button {
@@ -60,9 +64,6 @@ header, footer {
   left: 24.5em;
   background-color: #000;
   top: 222px;
-  box-shadow: 
-    0px 0px 40px 6px rgba(0, 0, 0, 0.5),
-    inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2);
 }
 
 .volume-button {
@@ -72,20 +73,16 @@ header, footer {
   left: 24.5em;
   background-color: #000;
   top: 310px;
-  box-shadow: 
-    0px 0px 40px 6px rgba(0, 0, 0, 0.5),
-    inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2);
 }
 
 .nav {
-  background-color: rgba(0,0,0,0.8);
+  background-color: #000;
   height: 50px;
   width: 100%;
-  display: flex;
-  top: calc(44em - 50px);
-  position: absolute;
+  display: inline-flex;
   justify-content: space-around;
   align-items: center;
+  margin-top: auto;
 }
 
 .nav div {

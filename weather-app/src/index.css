@@ -1,6 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 body {
-  font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-  background-color: #208075;
+  font-family: 'Roboto', sans-serif;
+  background-color: #a6aad6;
+}
+
+.badge {
+  margin-top: .8em;
+  font-size: 4rem;
+  text-align: center;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: black;
 }

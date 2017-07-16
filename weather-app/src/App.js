@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
-import Nexus from './components/Nexus';
-import './App.css';
+import React from 'react';
+import Device from './components/Device';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="container">
-        <Nexus />
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div>
+    <Device />
+    <div className="badge">Powered by <a href="https://darksky.net/">Dark Sky API</a></div>
+  </div>
+);
 
 export default App;

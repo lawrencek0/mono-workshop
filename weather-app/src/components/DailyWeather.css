@@ -1,0 +1,71 @@
+.daily-weather .overview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.daily-weather .weather-icon {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.daily-weather .weather-icon .date {
+  align-self: flex-end;
+  font-size: .9rem;
+  margin: .5em 0 .7em;
+}
+
+.daily-weather .weather-icon .summary {
+  margin: .5em 0 1.5em;
+}
+
+.daily-weather .weather-info {
+  font-size: 1.4rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas: 'max .    min'
+                       '.   temp .  '
+                       '.   app  .  ';
+}
+
+.daily-weather .max {
+  grid-area: max;
+}
+
+.daily-weather .max::after {
+  content: '\00b0\1f851';
+}
+
+.daily-weather .weather-info .min {
+  grid-area: min;
+}
+
+.daily-weather .min::after {
+  content: '\00b0\1f853';
+}
+
+.daily-weather .temp {
+  display: flex;
+  grid-area: temp;
+  margin-top: .4em;
+  justify-self: center;
+}
+
+.daily-weather .temp .temp-number{
+  font-size: 4rem;
+}
+
+.daily-weather .temp .temp-unit {
+  font-size: 2rem;
+}
+
+.daily-weather .apparent-temp {
+  grid-area: app;
+}
+
+.daily-weather .apparent-temp::after {
+  content: '\00b0';
+}

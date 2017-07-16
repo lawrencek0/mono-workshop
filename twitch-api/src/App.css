@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: flex-start;
   background-color: #fff;
+  box-shadow: 0 0 30px 1px #000;
 }
 
 a {

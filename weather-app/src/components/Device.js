@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
+import WeatherApp from './WeatherApp';
+import './Device.css';
 
-class Nexus extends Component {
-  render() {
-    return (
+const Device = () => {
+  return (
+    <div className="container">
       <div className="device">
         <header>
           <div className="notification-light"></div>
@@ -12,18 +14,19 @@ class Nexus extends Component {
         <div className="screen">
           <div className="power-button"></div>
           <div className="volume-button"></div>
+          <WeatherApp />
           <div className="nav">
             <div className="back"></div>
-            <div className="home"></div>  
+            <div className="home"></div>
             <div className="overview"></div>
-          </div>  
-        </div> 
+          </div>
+        </div>
         <footer>
           <div className="speaker"></div>
         </footer>
-      </div> 
-    )
-  }
+      </div>
+    </div>
+  );
 }
 
-export default Nexus;
+export default Device;
