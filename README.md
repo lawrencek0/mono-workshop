@@ -6,3 +6,4 @@ This repository will contain a collection of projects which I built in order to 
 1. Create transpilers
 2. Youtube Viewer
 3. Rewrite all javascript projects using react-router
+4. Create an extension for pausing tabs. Tab with higher priority will pause video playing in another tab which will again start playing as soon as the former is paused/closed.
