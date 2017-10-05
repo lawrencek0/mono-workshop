@@ -1,0 +1,20 @@
+{
+  "name": "phage-updater",
+  "version": "1.0.0",
+  "description": "Tool to Show Changes in PhagesDB and Visualizer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lawrence Khadka <l.khadka@outlook.com> (https://lawatlife.herokuapp.com)",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "clear": "^0.0.1",
+    "clui": "^0.3.6",
+    "figlet": "^1.2.0",
+    "inquirer": "^3.3.0",
+    "lodash": "^4.17.4",
+    "preferences": "^0.2.1"
+  }
+}
