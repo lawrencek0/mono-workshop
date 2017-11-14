@@ -1,6 +1,5 @@
-import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
+import resolve from 'rollup-plugin-node-resolve';
 
 export default {
   input: 'src/index.js',
@@ -9,12 +8,9 @@ export default {
     format: 'cjs'
   },
   plugins: [
-    resolve(),
+    resolve({ jsnext: true }),
     commonjs({
-      include: ['/node_modules/**', './src/index.js']
-    }),
-    babel({
-      exclude: 'node_modules/**'
+      include: ['/node_modules/**']
     })
   ]
 };
