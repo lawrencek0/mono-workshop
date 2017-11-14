@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Lawrence Khadka <l.khadka@outlook.com> (https://lawatlife.herokuapp.com)",
+  "author":
+    "Lawrence Khadka <l.khadka@outlook.com> (https://lawatlife.herokuapp.com)",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=8.0.0"
