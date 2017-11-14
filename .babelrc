@@ -1,11 +1,25 @@
 {
-  "presets": [
-    [
-      "es2015",
-      {
-        "modules": false
-      }
-    ]
-  ],
-  "plugins": ["external-helpers"]
+  "env": {
+    "commonjs": {
+      "presets": [
+        [
+          "env",
+          {
+            "useBuiltIns": false
+          }
+        ]
+      ]
+    },
+    "es": {
+      "presets": [
+        [
+          "env",
+          {
+            "useBuiltIns": false,
+            "modules": false
+          }
+        ]
+      ]
+    }
+  }
 }
