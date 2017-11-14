@@ -14,3 +14,32 @@ console.log(
     })
   )
 );
+
+function getCreds(callback) {
+  const questions = [
+    {
+      name: 'email',
+      type: 'input',
+      message: 'Enter your PET e-mail address:',
+      validate(value) {
+        if (value.length) {
+          return true;
+        }
+        return 'Please enter your e-mail address.';
+      }
+    },
+    {
+      name: 'password',
+      type: 'password',
+      message: 'Enter your password:',
+      validate(value) {
+        if (value.length) {
+          return true;
+        }
+        return 'Please enter your password.';
+      }
+    }
+  ];
+
+  inquirer.prompt(questions).then(callback);
+}
