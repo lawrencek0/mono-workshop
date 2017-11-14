@@ -7,11 +7,18 @@ export default {
     file: 'build/bundle.js',
     format: 'cjs'
   },
-  external: ['preferences', 'chalk', 'figlet', 'inquirer'],
+  external: [
+    'preferences',
+    'chalk',
+    'figlet',
+    'inquirer',
+    'nightmare',
+    'nightmare-real-mouse'
+  ],
   plugins: [
-    resolve({ jsnext: true }),
+    resolve({ modulesOnly: true }),
     commonjs({
-      include: ['/node_modules/**']
+      include: /node_modules/
     })
   ]
 };

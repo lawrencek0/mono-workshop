@@ -1,6 +1,6 @@
 import Nightmare from 'nightmare';
 import Preferences from 'preferences';
-// import { Spinner } from 'clui';
+import { Spinner } from 'clui';
 import chalk from 'chalk';
 import clear from './lib/clear';
 import figlet from 'figlet';
@@ -44,4 +44,12 @@ function getCreds(callback) {
   ];
 
   inquirer.prompt(questions).then(callback);
+}
+
+function tryToLogin() {
+  const prefs = new Preferences('pet.tools.updater');
+
+  if (prefs.email && prefs.password) {
+    return;
+  }
 }
