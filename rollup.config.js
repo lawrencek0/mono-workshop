@@ -7,6 +7,7 @@ export default {
     file: 'build/bundle.js',
     format: 'cjs'
   },
+  external: ['preferences', 'chalk', 'figlet', 'inquirer'],
   plugins: [
     resolve({ jsnext: true }),
     commonjs({
