@@ -6,7 +6,7 @@ import clear from './lib/clear';
 import figlet from 'figlet';
 import inquirer from 'inquirer';
 import realMouse from 'nightmare-real-mouse';
-
+realMouse(Nightmare);
 clear();
 console.log(
   chalk.yellowBright(
@@ -65,7 +65,6 @@ async function tryToLogin(prefs) {
       .insert('input#inputEmail', email)
       .insert('input#inputPassword', password)
       .click('input#inputPassword + button.btn')
-      .wait(1000)
       .exists('span[style="color: red; "]')
       .then(function(result) {
         status.stop();
@@ -87,6 +86,30 @@ async function tryToLogin(prefs) {
           );
         }
       });
+  } catch (e) {
+    console.error(e);
+  }
+  selectPhage(nightmare);
+}
+
+async function selectPhage(nightmare) {
+  try {
+    await nightmare
+      .wait('ul.nav-sidebar')
+      .click('a[href="known_phage_visualization"]')
+      .wait('ul.tabs')
+      .click('input[placeholder="Search Genera"]')
+      .wait('li[id$="-Actinoplanes"]')
+      .realClick('li[id$="-Bacillus"]')
+      .click('input[placeholder="Search Enzymes"]')
+      .wait('li[id$="-AanI"]')
+      .realClick('li[id$="-AanI"]')
+      .realClick('a#searchCriteriaTab')
+      .click('button#submit')
+      .wait('table#cutTable')
+      .scrollTo(500, 0)
+      .select('#cutTable_length select[name="cutTable_length"]', '100')
+      .wait();
   } catch (e) {
     console.error(e);
   }
