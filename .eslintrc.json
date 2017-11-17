@@ -1,6 +1,5 @@
 {
   "root": true,
-  "plugins": ["node"],
   "extends": ["eslint:recommended"],
   "env": {
     "node": true,
