@@ -93,7 +93,7 @@ async function tryToLogin(prefs) {
 }
 
 async function selectPhage(nightmare) {
-  //ASK PROMPT
+  //TODO: Inquire users to get phage name
   try {
     await nightmare
       .wait('ul.nav-sidebar')
@@ -120,6 +120,7 @@ async function selectPhage(nightmare) {
 }
 
 async function scrapePhage(nightmare) {
+  // TODO: Better way to store data. Use json or DB?
   try {
     let hasNext = await nightmare.exists('a#cutTable_next.disabled');
     const phages = [];
