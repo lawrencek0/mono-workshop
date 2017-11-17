@@ -26,6 +26,7 @@ async function loginToPET() {
         type: 'input',
         message: 'Enter your PET e-mail address:',
         validate(value) {
+          //FIXME: Use regexp for email
           if (value.length) {
             return true;
           }
@@ -57,7 +58,9 @@ async function tryToLogin(prefs) {
   const { email, password } = prefs;
   const status = new Spinner('Authenticating you, please wait...');
   status.start();
-  const nightmare = new Nightmare({ show: true });
+  const nightmare = new Nightmare({
+    show: true
+  });
   try {
     await nightmare
       .goto('http://phageenzymetools.com/login')
@@ -89,11 +92,46 @@ async function tryToLogin(prefs) {
   } catch (e) {
     console.error(e);
   }
-  selectPhage(nightmare);
+
+  const phages = [
+    { name: 'Mycobacterium', value: 1 },
+    { name: 'Rhodococcus', value: 2 },
+    { name: 'Arthrobacter', value: 3 },
+    { name: 'Streptomyces', value: 4 },
+    { name: 'Bacillus', value: 5 },
+    { name: 'Gordonia', value: 6 },
+    { name: 'Corynebacterium', value: 7 },
+    { name: 'Propionibacterium', value: 8 },
+    { name: 'Actinoplanes', value: 9 },
+    { name: 'Tetrasphaera', value: 10 },
+    { name: 'Tsukamurella', value: 11 },
+    { name: 'Microbacterium', value: 12 },
+    // { name: 'Dietzia', value: 13 },
+    { name: 'Rothia', value: 14 },
+    { name: 'Brevibacterium', value: 15 }
+    // {name: 'Kocuria', value: 16}
+  ];
+  await inquirer
+    .prompt([
+      {
+        type: 'rawlist',
+        name: 'phage',
+        message: 'Select a Phage',
+        choices: phages,
+        pageSize: 15
+      }
+    ])
+    .then(ans => {
+      const { name } = phages.find(phage => phage.value === ans.phage);
+      fetchData(nightmare, name, ans.phage);
+    });
 }
 
-async function selectPhage(nightmare) {
-  //TODO: Inquire users to get phage name
+async function fetchData(nightmare, phageName, phage) {
+  selectPhage(nightmare, phageName);
+}
+
+async function selectPhage(nightmare, phageName = 'Arthrobacter') {
   try {
     await nightmare
       .wait('ul.nav-sidebar')
@@ -101,11 +139,11 @@ async function selectPhage(nightmare) {
       .wait('ul.tabs')
       .click('input[placeholder="Search Genera"]')
       .wait('li[id$="-Actinoplanes"]')
-      .evaluate(() => {
-        const el = document.querySelector('li[id$="-Mycobacteriophage"]');
+      .evaluate(phageName => {
+        const el = document.querySelector(`li[id$="-${phageName}"]`);
         el.scrollIntoView();
-      })
-      .realClick('li[id$="-Mycobacteriophage"]')
+      }, phageName)
+      .realClick(`li[id$="-${phageName}"]`)
       .click('input[placeholder="Search Enzymes"]')
       .wait('li[id$="-AanI"]')
       .realClick('li[id$="-AanI"]')
