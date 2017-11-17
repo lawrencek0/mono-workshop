@@ -78,7 +78,7 @@ async function tryToLogin(prefs) {
               )
             );
             prefs.clear();
-            fetchCreds();
+            loginToPET();
           });
         } else {
           console.log(
