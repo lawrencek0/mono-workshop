@@ -1,7 +1,7 @@
 {
-  "name": "pet-tools-updater",
+  "name": "pet-updater",
   "version": "1.0.0",
-  "description": "Tool to Show Changes in PhagesDB and Visualizer",
+  "description": "Tool to Update in PhagesDB and PET Visualizer",
   "main": "index.js",
   "scripts": {
     "start": "nodemon build/bundle.js",
@@ -9,7 +9,8 @@
     "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Lawrence Khadka <l.khadka@outlook.com> (https://lawatlife.herokuapp.com)",
+  "author":
+    "Lawrence Khadka <l.khadka@outlook.com> (https://lkhadka.github.io)",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=8.0.0"
