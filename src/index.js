@@ -1,11 +1,19 @@
-import Datastore from 'nedb';
+/**
+ * TODO: 
+ * Option to update records and compare records from local NeDB
+ * Move questions to separate file
+ * Better prompts to user
+ * Add comments
+ */
+
 import Files from './lib/files';
-//TODO: Option to update records and compare records from local NeDB
 import Nightmare from 'nightmare';
 import Preferences from 'preferences';
 import { Spinner } from 'clui';
+import _ from 'lodash';
 import chalk from 'chalk';
 import clear from './lib/clear';
+import datastore from 'nedb-promise';
 import figlet from 'figlet';
 import got from 'got';
 import inquirer from 'inquirer';
@@ -24,7 +32,7 @@ console.log(
   )
 );
 
-async function loginToPET() {
+async function start() {
   const prefs = new Preferences('pet.tools.updater');
   if (!prefs.email || !prefs.password) {
     const questions = [
@@ -58,10 +66,10 @@ async function loginToPET() {
       prefs.password = password;
     });
   }
-  tryToLogin(prefs);
+  loginToPET(prefs);
 }
 
-async function tryToLogin(prefs) {
+async function loginToPET(prefs) {
   const { email, password } = prefs;
   const status = new Spinner('Authenticating you, please wait...');
   status.start();
@@ -136,19 +144,20 @@ async function tryToLogin(prefs) {
 }
 
 async function fetchData(nightmare, phageName, phage) {
-  const phagesDB = new Datastore({
-    filename: `${file.getWorkingDirectoryBase}/database/phages-db/${phageName}`,
+  const phagesDB = new datastore({
+    filename: `${file.getWorkingDirectoryBase()}/database/phages-db/${phageName}.db`,
     autoload: true
   });
-  const petDB = new Datastore({
-    filename: `${file.getWorkingDirectoryBase}/database/pet-phages/${phageName}`,
+  const petDB = new datastore({
+    filename: `${file.getWorkingDirectoryBase()}/database/pet-phages/${phageName}.db`,
     autoload: true
   });
-
+  phagesDB.ensureIndex({ fieldName: 'phageName', unique: true });
+  petDB.ensureIndex({ fieldName: 'phageName', unique: true });
   const status = new Spinner('Updating records. Please wait...');
   status.start();
   await Promise.all([
-    selectPhage(nightmare, phageName),
+    selectPhage(nightmare, phageName, petDB),
     getPhagesFromPhageDb(phage)
   ]);
   status.stop();
@@ -171,7 +180,7 @@ async function getPhagesFromPhageDb(pk, pageNum = 1) {
   }
 }
 
-async function selectPhage(nightmare, phageName) {
+async function selectPhage(nightmare, phageName, petDB) {
   try {
     await nightmare
       .wait('ul.nav-sidebar')
@@ -194,11 +203,12 @@ async function selectPhage(nightmare, phageName) {
   } catch (e) {
     console.error(e);
   }
-  scrapePhage(nightmare);
+  scrapePhage(nightmare, petDB);
 }
 
-async function scrapePhage(nightmare) {
+async function scrapePhage(nightmare, petDB) {
   // TODO: Better way to store data. Use json or DB?
+  //FIXME: last page wont work! Better scrape the final page number
   try {
     let hasNext = await nightmare.exists('a#cutTable_next.disabled');
     const phages = [];
@@ -212,11 +222,39 @@ async function scrapePhage(nightmare) {
       hasNext = await nightmare.exists('a#cutTable_next.disabled');
       if (!hasNext) await nightmare.click('a#cutTable_next');
     } while (!hasNext);
-    console.log(phages);
     console.log(chalk.green('Finished scraping phages from PET'));
+    savePetPhages(formatPetPhages(phages), petDB);
   } catch (e) {
     console.error(e);
   }
 }
 
-//loginToPET();
+function formatPetPhages(phages) {
+  return phages.map(phage => {
+    return _.zipObject(
+      ['phageName', 'genus', 'cluster', 'subcluster'],
+      phage.split('\t')
+    );
+  });
+}
+
+function savePetPhages(phages, petDB) {
+  let count = 0;
+  phages.forEach(async phage => {
+    try {
+      const res = await petDB.findOne({ phageName: phage.phageName });
+      if (!res) {
+        await petDB.insert(phage);
+        console.log(`Inserted new phage: ${phage.phageName}`);
+        count++;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  });
+  if (count > 0) {
+    console.log(`Inserted ${count} new phages`);
+  }
+}
+
+start();
