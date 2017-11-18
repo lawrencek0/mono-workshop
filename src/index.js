@@ -96,7 +96,7 @@ async function tryToLogin(prefs) {
   }
 
   const phages = [
-    { name: 'Mycobacterium', value: 1 },
+    { name: 'Mycobacteriophage', value: 1 },
     { name: 'Rhodococcus', value: 2 },
     { name: 'Arthrobacter', value: 3 },
     { name: 'Streptomyces', value: 4 },
