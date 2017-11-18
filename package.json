@@ -18,13 +18,13 @@
     "chalk": "^2.1.0",
     "clui": "^0.3.6",
     "figlet": "^1.2.0",
+    "got": "^8.0.0",
     "inquirer": "^3.3.0",
     "lodash": "^4.17.4",
     "nightmare": "^2.10.0",
     "nightmare-real-mouse": "^1.0.0",
     "nodemon": "^1.12.1",
-    "preferences": "1.0.0",
-    "superagent": "^3.8.1"
+    "preferences": "1.0.0"
   },
   "devDependencies": {
     "eslint": "^4.11.0",

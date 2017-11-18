@@ -5,9 +5,9 @@ import { Spinner } from 'clui';
 import chalk from 'chalk';
 import clear from './lib/clear';
 import figlet from 'figlet';
+import got from 'got';
 import inquirer from 'inquirer';
 import realMouse from 'nightmare-real-mouse';
-import request from 'superagent';
 realMouse(Nightmare);
 clear();
 console.log(
@@ -143,11 +143,12 @@ async function fetchData(nightmare, phageName, phage) {
 async function getPhagesFromPhageDb(pk, pageNum = 1) {
   //TODO: To Store the Data
   try {
-    const res = await request.get(
-      `http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`
+    const res = await got(
+      `http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`,
+      { json: true }
     );
-    const phages = await JSON.parse(res.text);
-    if (phages.next != null) {
+    const { next, results } = await res.body;
+    if (next != null) {
       getPhagesFromPhageDb(pk, ++pageNum);
     }
     console.log(chalk.green('Finished fetching phages from PhagesDB'));
