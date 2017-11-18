@@ -1,3 +1,4 @@
+//TODO: Option to update records and compare records from local NeDB
 import Nightmare from 'nightmare';
 import Preferences from 'preferences';
 import { Spinner } from 'clui';
@@ -6,6 +7,7 @@ import clear from './lib/clear';
 import figlet from 'figlet';
 import inquirer from 'inquirer';
 import realMouse from 'nightmare-real-mouse';
+import request from 'superagent';
 realMouse(Nightmare);
 clear();
 console.log(
@@ -119,6 +121,7 @@ async function tryToLogin(prefs) {
         message: 'Select a Phage',
         choices: phages,
         pageSize: 15
+        //TODO: Add Validator
       }
     ])
     .then(ans => {
@@ -128,7 +131,29 @@ async function tryToLogin(prefs) {
 }
 
 async function fetchData(nightmare, phageName, phage) {
-  selectPhage(nightmare, phageName);
+  const status = new Spinner('Updating records. Please wait...');
+  status.start();
+  await Promise.all([
+    selectPhage(nightmare, phageName),
+    getPhagesFromPhageDb(phage)
+  ]);
+  status.stop();
+}
+
+async function getPhagesFromPhageDb(pk, pageNum = 1) {
+  //TODO: To Store the Data
+  try {
+    const res = await request.get(
+      `http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`
+    );
+    const phages = await JSON.parse(res.text);
+    if (phages.next != null) {
+      getPhagesFromPhageDb(pk, ++pageNum);
+    }
+    console.log(chalk.green('Finished fetching phages from PhagesDB'));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 async function selectPhage(nightmare, phageName = 'Arthrobacter') {
@@ -173,6 +198,7 @@ async function scrapePhage(nightmare) {
       if (!hasNext) await nightmare.click('a#cutTable_next');
     } while (!hasNext);
     console.log(phages);
+    console.log(chalk.green('Finished scraping phages from PET'));
   } catch (e) {
     console.error(e);
   }

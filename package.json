@@ -9,8 +9,7 @@
     "dev": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author":
-    "Lawrence Khadka <l.khadka@outlook.com> (https://lkhadka.github.io)",
+  "author": "Lawrence Khadka <l.khadka@outlook.com> (https://lkhadka.github.io)",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=8.0.0"
@@ -24,7 +23,8 @@
     "nightmare": "^2.10.0",
     "nightmare-real-mouse": "^1.0.0",
     "nodemon": "^1.12.1",
-    "preferences": "1.0.0"
+    "preferences": "1.0.0",
+    "superagent": "^3.8.1"
   },
   "devDependencies": {
     "eslint": "^4.11.0",
