@@ -5,9 +5,22 @@ class Files {
   getWorkingDirectoryBase() {
     return path.dirname(__dirname);
   }
-  directoryExists(filePath) {
+  directoryExists(dirname) {
     try {
-      return fs.stat(filePath).isDirectory();
+      return fs
+        .statSync(`${this.getWorkingDirectoryBase()}/${dirname}`)
+        .isDirectory();
+    } catch (err) {
+      return false;
+    }
+  }
+  makeDir(dirname) {
+    try {
+      if (!this.directoryExists(dirname)) {
+        fs.mkdirSync(dirname);
+      } else {
+        return false;
+      }
     } catch (err) {
       return false;
     }

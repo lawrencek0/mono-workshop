@@ -1,5 +1,5 @@
 /**
- * TODO: 
+ * TODO:
  * Option to update records and compare records from local NeDB
  * Move questions to separate file
  * Better prompts to user
@@ -14,13 +14,15 @@ import _ from 'lodash';
 import chalk from 'chalk';
 import clear from './lib/clear';
 import datastore from 'nedb-promise';
+import dbFoldersCreator from './utils/folder';
 import figlet from 'figlet';
 import got from 'got';
 import inquirer from 'inquirer';
 import realMouse from 'nightmare-real-mouse';
+
 realMouse(Nightmare);
 
-const file = new Files();
+dbFoldersCreator();
 
 clear();
 console.log(
@@ -144,6 +146,7 @@ async function loginToPET(prefs) {
 }
 
 async function fetchData(nightmare, phageName, phage) {
+  const file = new Files();
   const phagesDB = new datastore({
     filename: `${file.getWorkingDirectoryBase()}/database/phages-db/${phageName}.db`,
     autoload: true
@@ -257,4 +260,4 @@ function savePetPhages(phages, petDB) {
   }
 }
 
-start();
+// start();
