@@ -115,7 +115,8 @@ async function loginToPET(prefs) {
     { name: 'Rhodococcus', value: 2 },
     { name: 'Arthrobacter', value: 3 },
     { name: 'Streptomyces', value: 4 },
-    { name: 'Bacillus', value: 5 },
+    // TODO: Run Nightmare for scraping Bacillus
+    // { name: 'Bacillus', value: 5 },
     { name: 'Gordonia', value: 6 },
     { name: 'Corynebacterium', value: 7 },
     { name: 'Propionibacterium', value: 8 },
@@ -156,25 +157,26 @@ async function fetchData(nightmare, phageName, phage) {
     autoload: true
   });
   phagesDB.ensureIndex({ fieldName: 'phageName', unique: true });
+  phagesDB.ensureIndex({ fieldName: 'oldName' });
   petDB.ensureIndex({ fieldName: 'phageName', unique: true });
   const status = new Spinner('Updating records. Please wait...');
   status.start();
   await Promise.all([
     selectPhage(nightmare, phageName, petDB),
-    getPhagesFromPhageDb(phage)
+    getPhagesFromPhageDb(phage, 1, phagesDB)
   ]);
   status.stop();
 }
 
-async function getPhagesFromPhageDb(pk, pageNum = 1) {
-  //TODO: To Store the Data
+async function getPhagesFromPhageDb(pk, pageNum = 1, phagesDB) {
   try {
     const res = await got(
       `http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`,
       { json: true }
     );
     const { next, results } = await res.body;
-    if (next != null) {
+    saveToDb(formatPhageDbPhages(results), phagesDB, 'PhagesDB');
+    if (next) {
       getPhagesFromPhageDb(pk, ++pageNum);
     }
     console.log(chalk.green('Finished fetching phages from PhagesDB'));
@@ -210,7 +212,6 @@ async function selectPhage(nightmare, phageName, petDB) {
 }
 
 async function scrapePhage(nightmare, petDB) {
-  // TODO: Better way to store data. Use json or DB?
   //FIXME: last page wont work! Better scrape the final page number
   try {
     let hasNext = await nightmare.exists('a#cutTable_next.disabled');
@@ -226,10 +227,33 @@ async function scrapePhage(nightmare, petDB) {
       if (!hasNext) await nightmare.click('a#cutTable_next');
     } while (!hasNext);
     console.log(chalk.green('Finished scraping phages from PET'));
-    savePetPhages(formatPetPhages(phages), petDB);
+    saveToDb(formatPetPhages(phages), petDB, 'PET');
   } catch (e) {
     console.error(e);
   }
+}
+
+function formatPhageDbPhages(phages) {
+  return phages.map(
+    ({
+      phage_name,
+      old_name,
+      pcluster,
+      psubcluster,
+      isolation_host: { genus },
+      fasta_file
+    }) => {
+      if (!fasta_file) return;
+      return {
+        phageName: phage_name,
+        oldName: old_name ? old_name : phage_name,
+        genus,
+        cluster: pcluster ? pcluster.cluster : 'Unclustered',
+        subcluster: psubcluster ? psubcluster : 'None',
+        fastaFile: fasta_file
+      };
+    }
+  );
 }
 
 function formatPetPhages(phages) {
@@ -241,23 +265,19 @@ function formatPetPhages(phages) {
   });
 }
 
-function savePetPhages(phages, petDB) {
-  let count = 0;
+function saveToDb(phages, db, dbName) {
   phages.forEach(async phage => {
+    if (!phage) return;
     try {
-      const res = await petDB.findOne({ phageName: phage.phageName });
+      const res = await db.findOne({ phageName: phage.phageName });
       if (!res) {
-        await petDB.insert(phage);
-        console.log(`Inserted new phage: ${phage.phageName}`);
-        count++;
+        await db.insert(phage);
+        console.log(`${dbName}: Inserted new phage: ${phage.phageName}`);
       }
     } catch (e) {
       console.error(e);
     }
   });
-  if (count > 0) {
-    console.log(`Inserted ${count} new phages`);
-  }
 }
 
-// start();
+start();
