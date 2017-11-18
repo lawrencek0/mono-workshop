@@ -3,7 +3,7 @@ import path from 'path';
 
 class Files {
   getWorkingDirectoryBase() {
-    return path.basename(process.cwd());
+    return path.dirname(__dirname);
   }
   directoryExists(filePath) {
     try {

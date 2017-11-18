@@ -1,3 +1,5 @@
+import Datastore from 'nedb';
+import Files from './lib/files';
 //TODO: Option to update records and compare records from local NeDB
 import Nightmare from 'nightmare';
 import Preferences from 'preferences';
@@ -9,6 +11,9 @@ import got from 'got';
 import inquirer from 'inquirer';
 import realMouse from 'nightmare-real-mouse';
 realMouse(Nightmare);
+
+const file = new Files();
+
 clear();
 console.log(
   chalk.yellowBright(
@@ -131,6 +136,15 @@ async function tryToLogin(prefs) {
 }
 
 async function fetchData(nightmare, phageName, phage) {
+  const phagesDB = new Datastore({
+    filename: `${file.getWorkingDirectoryBase}/database/phages-db/${phageName}`,
+    autoload: true
+  });
+  const petDB = new Datastore({
+    filename: `${file.getWorkingDirectoryBase}/database/pet-phages/${phageName}`,
+    autoload: true
+  });
+
   const status = new Spinner('Updating records. Please wait...');
   status.start();
   await Promise.all([
@@ -157,7 +171,7 @@ async function getPhagesFromPhageDb(pk, pageNum = 1) {
   }
 }
 
-async function selectPhage(nightmare, phageName = 'Arthrobacter') {
+async function selectPhage(nightmare, phageName) {
   try {
     await nightmare
       .wait('ul.nav-sidebar')
@@ -205,4 +219,4 @@ async function scrapePhage(nightmare) {
   }
 }
 
-loginToPET();
+//loginToPET();

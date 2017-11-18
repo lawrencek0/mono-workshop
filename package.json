@@ -21,6 +21,7 @@
     "got": "^8.0.0",
     "inquirer": "^3.3.0",
     "lodash": "^4.17.4",
+    "nedb": "^1.8.0",
     "nightmare": "^2.10.0",
     "nightmare-real-mouse": "^1.0.0",
     "nodemon": "^1.12.1",
