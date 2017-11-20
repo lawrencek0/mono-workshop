@@ -9,7 +9,6 @@
 import Files from './lib/files';
 import Nightmare from 'nightmare';
 import Preferences from 'preferences';
-import _ from 'lodash';
 import chalk from 'chalk';
 import clear from './lib/clear';
 import datastore from 'nedb-promise';
@@ -307,10 +306,6 @@ function formatPetPhages(phages) {
         [curr]: values[i]
       });
     }, {});
-    // return _.zipObject(
-    //   ['phageName', 'genus', 'cluster', 'subcluster'],
-    //   phage.split('\t')
-    // );
   });
 }
 
