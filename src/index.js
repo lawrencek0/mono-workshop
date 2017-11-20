@@ -1,13 +1,14 @@
 /**
  * TODO:
- * Option to update records and compare records from local NeDB
+ * !-- Option to update records and compare records from local NeDB --
+ * Make nightmare a global variable
  * Move questions to separate file
  * Better prompts to user
  * Add comments
  */
 
 import Files from './lib/files';
-import Nightmare from 'nightmare';
+import Nightmare from './lib/Nightmare';
 import Preferences from 'preferences';
 import chalk from 'chalk';
 import clear from './lib/clear';
@@ -28,7 +29,6 @@ clear();
 console.log(
   chalk.yellowBright(
     figlet.textSync('PhageDB Updater', {
-      horizontalLayout: 'full',
       verticalLayout: 'full'
     })
   )
@@ -189,9 +189,33 @@ async function fetchData(nightmare, genus, pk) {
     ];
     console.log(table(data));
     console.log(`${newPhages.length} new phages found for ${genus}`);
+
+    //end_type: CIRC
+    //addPhageToPet;
   } else {
     console.log(`${genus} is up to date`);
   }
+
+  askToContinue(nightmare);
+}
+
+function askToContinue(nightmare) {
+  inquirer
+    .prompt([
+      {
+        message: 'Would you like to check another phage?',
+        type: 'confirm',
+        name: 'checkPhage',
+        default: true
+      }
+    ])
+    .then(({ checkPhage }) => {
+      if (checkPhage) {
+        selectPhage(nightmare);
+      } else {
+        process.exit();
+      }
+    });
 }
 
 async function fetchPhagesFromPet(nightmare, genus) {
@@ -215,6 +239,7 @@ async function fetchPhagesFromPhagesDb(genus, pk) {
 async function goToGenus(nightmare, genus) {
   try {
     await nightmare
+      .show()
       .wait('ul.nav-sidebar')
       .click('a[href="known_phage_visualization"]')
       .wait('ul.tabs')
@@ -286,16 +311,14 @@ function formatPhageDbPhages(phages) {
         psubcluster,
         isolation_host,
         fasta_file
-      }) => {
-        return {
-          phageName: phage_name,
-          oldNames: old_names ? old_names : phage_name,
-          genus: isolation_host ? isolation_host.genus : '',
-          cluster: pcluster ? pcluster.cluster : 'Unclustered',
-          subcluster: psubcluster ? psubcluster.subcluster : 'None',
-          fastaFile: fasta_file
-        };
-      }
+      }) => ({
+        phageName: phage_name,
+        oldNames: old_names ? old_names : phage_name,
+        genus: isolation_host ? isolation_host.genus : '',
+        cluster: pcluster ? pcluster.cluster : 'Unclustered',
+        subcluster: psubcluster ? psubcluster.subcluster : 'None',
+        fastaFile: fasta_file
+      })
     );
 }
 
