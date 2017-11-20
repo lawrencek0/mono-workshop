@@ -184,7 +184,24 @@ async function fetchData(nightmare, genus, pk) {
   // saveToDb(formatPetPhages(phages), petDB, 'PET');
   // saveToDb(formatPhageDbPhages(results), phagesDB, 'PhagesDB');
   // status.succeed('Finished fetching records.');
-  // comparePhages(phagesDB, petDB, genus);
+  const newPhages = await comparePhages(phagesDB, petDB, genus);
+  if (newPhages.length) {
+    const data = [
+      [
+        'Phage Name',
+        'Old Name',
+        'Genus',
+        'Cluster',
+        'Subcluster',
+        'Fasta File'
+      ],
+      ...newPhages
+    ];
+    console.log(table(data));
+    console.log(`${newPhages.length} new phages found for ${genus}`);
+  } else {
+    console.log(`${genus} is up to date`);
+  }
 }
 
 async function fetchPhagesFromPet(nightmare, genus) {
@@ -321,48 +338,38 @@ async function saveToDb(phages, db) {
   );
 }
 
-async function comparePhages(phagesDB, petDB, genus) {
+async function comparePhages(phagesDb, petDb, genus) {
   try {
-    let isUptoDate = true;
-    const petPhages = await petDB.find({ genus });
-    const phagesPromArr = await Promise.all(
-      petPhages.map(async ({ phageName }) => {
-        const phageDbPhage = await phagesDB.findOne({ phageName });
-        if (phageDbPhage) return;
+    const phagesDbPhages = await phagesDb.find({ genus });
+    const newPhagesArr = [];
+    await Promise.all(
+      phagesDbPhages.map(async phageDbPhage => {
+        const petDbPhage = await petDb.findOne({
+          phageName: phageDbPhage.phageName
+        });
+
+        if (petDbPhage) return;
 
         const {
+          phageName,
           oldNames,
           genus,
           cluster,
           subcluster,
           fastaFile
         } = phageDbPhage;
-        isUptoDate = true;
         // FIXME: Use ES6 destructuring with buble
-        return [
-          phageDbPhage.phageName,
+        newPhagesArr.push([
+          phageName,
           oldNames,
           genus,
           cluster,
           subcluster,
           fastaFile
-        ];
+        ]);
       })
     );
-    if (!isUptoDate) {
-      const data = [
-        [
-          'Phage Name',
-          'Old Name',
-          'Genus',
-          'Cluster',
-          'Subcluster',
-          'Fasta File'
-        ],
-        ...phagesPromArr
-      ];
-      console.log(table(data));
-    }
+    return newPhagesArr;
   } catch (err) {
     console.error(err);
   }
