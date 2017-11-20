@@ -157,19 +157,18 @@ async function fetchData(nightmare, genus, pk) {
   phagesDB.ensureIndex({ fieldName: 'phageName', unique: true });
   phagesDB.ensureIndex({ fieldName: 'oldNames' });
   petDB.ensureIndex({ fieldName: 'phageName', unique: true });
-  const status = ora('Updating records. Please wait...');
+  const status = ora('Updating records.');
   status.start();
 
   const [phagesDbPhages, petPhages] = await Promise.all([
     fetchPhagesFromPhagesDb(genus, pk),
     fetchPhagesFromPet(nightmare, genus)
   ]);
-  status.text = 'Finished fetching records. Saving to Database...';
   await Promise.all([
-    saveToDb(phagesDbPhages, phagesDB, 'PhagesDB'),
-    saveToDb(petPhages, petDB, 'PET')
+    saveToDb(phagesDbPhages, phagesDB),
+    saveToDb(petPhages, petDB)
   ]);
-  status.succeed('Finished saving to database');
+  status.succeed();
   //TODO: Save to DB!!!!
   // const v = await fetchPhagesFromPhagesDb(genus, pk);
   // const u = await fetchPhagesFromPet(nightmare, genus);
@@ -189,11 +188,11 @@ async function fetchData(nightmare, genus, pk) {
 }
 
 async function fetchPhagesFromPet(nightmare, genus) {
-  // const petPhagesStatus = ora('Scraping phages from PET');
-  // petPhagesStatus.start();
+  const petPhagesStatus = ora('Scraping phages from PET');
+  petPhagesStatus.start();
   await goToGenus(nightmare, genus);
   const petPhages = await scrapePhagesFromPet(nightmare);
-  // petPhagesStatus.succeed(chalk.green('Finished scraping phages from PET'));
+  petPhagesStatus.succeed();
   return petPhages;
 }
 
@@ -202,7 +201,7 @@ async function fetchPhagesFromPhagesDb(genus, pk) {
   // if (genus==bacillus) do nightmareish stuff
   const phagesDbStatus = ora('Fetching phages from PhagesDB');
   const phagesDbPhages = await getPhagesFromPhagesApi(pk);
-  phagesDbStatus.succeed(chalk.green('Finished fetching phages from PhagesDB'));
+  phagesDbStatus.succeed();
   return phagesDbPhages;
 }
 
@@ -309,21 +308,19 @@ function formatPetPhages(phages) {
   });
 }
 
-async function saveToDb(phages, db, dbName) {
-  Promise.all(
+async function saveToDb(phages, db) {
+  await Promise.all(
     phages.filter(phage => Boolean(phage)).map(async phage => {
       try {
         const res = await db.findOne({ phageName: phage.phageName });
-        if (!res) {
-          await db.insert(phage);
-          console.log(`${dbName}: Inserted new phage: ${phage.phageName}`);
-        }
+        if (!res) await db.insert(phage);
       } catch (e) {
         console.error(e);
       }
     })
   );
 }
+
 async function comparePhages(phagesDB, petDB, genus) {
   try {
     let isUptoDate = true;
@@ -331,10 +328,8 @@ async function comparePhages(phagesDB, petDB, genus) {
     const phagesPromArr = await Promise.all(
       petPhages.map(async ({ phageName }) => {
         const phageDbPhage = await phagesDB.findOne({ phageName });
-        if (phageDbPhage) {
-          console.log(`${phageDbPhage.genus} is upto date!`);
-          return;
-        }
+        if (phageDbPhage) return;
+
         const {
           oldNames,
           genus,
