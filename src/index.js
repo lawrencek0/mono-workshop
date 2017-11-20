@@ -76,7 +76,7 @@ async function loginToPET(prefs) {
   const status = ora('Loggin in to PET, please wait...').start();
   status.start();
   const nightmare = new Nightmare({
-    show: true
+    show: false
   });
   try {
     await nightmare
@@ -191,12 +191,27 @@ async function fetchData(nightmare, genus, pk) {
     console.log(`${newPhages.length} new phages found for ${genus}`);
 
     //end_type: CIRC
-    //addPhageToPet;
+    await addPhagesToPet(nightmare, newPhages);
   } else {
     console.log(`${genus} is up to date`);
   }
 
   askToContinue(nightmare);
+}
+
+async function addPhagesToPet(nightmare, phages) {
+  await Promise.all(
+    phages.map(async phage => {
+      try {
+        await nightmare
+          .click('a[href="modify_phage_data"]')
+          .show()
+          .wait(10000000000000);
+      } catch (e) {
+        console.error(e);
+      }
+    })
+  );
 }
 
 function askToContinue(nightmare) {
@@ -239,7 +254,6 @@ async function fetchPhagesFromPhagesDb(genus, pk) {
 async function goToGenus(nightmare, genus) {
   try {
     await nightmare
-      .show()
       .wait('ul.nav-sidebar')
       .click('a[href="known_phage_visualization"]')
       .wait('ul.tabs')
@@ -292,7 +306,7 @@ async function getPhagesFromPhagesApi(pk, pageNum = 1, phages = []) {
     const { next, results } = await res.body;
     const allPhages = [...phages, ...formatPhageDbPhages(results)];
     if (next) {
-      return getPhagesFromPhagesApi(pk, ++pageNum, allPhages, status);
+      return getPhagesFromPhagesApi(pk, ++pageNum, allPhages);
     }
     return allPhages;
   } catch (e) {
