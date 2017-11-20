@@ -107,12 +107,15 @@ async function loginToPET(prefs) {
     console.error(e);
   }
 
+  selectPhage(nightmare);
+}
+
+function selectPhage(nightmare) {
   const genera = [
     { name: 'Mycobacteriophage', value: 1 },
     { name: 'Rhodococcus', value: 2 },
     { name: 'Arthrobacter', value: 3 },
-    { name: 'Streptomyces', value: 4 },
-    // TODO: Run Nightmare for scraping Bacillus
+    { name: 'Streptomyces', value: 4 }, // TODO: Run Nightmare for scraping Bacillus
     // { name: 'Bacillus', value: 5 },
     { name: 'Gordonia', value: 6 },
     { name: 'Corynebacterium', value: 7 },
@@ -120,12 +123,11 @@ async function loginToPET(prefs) {
     { name: 'Actinoplanes', value: 9 },
     { name: 'Tetrasphaera', value: 10 },
     { name: 'Tsukamurella', value: 11 },
-    { name: 'Microbacterium', value: 12 },
-    // { name: 'Dietzia', value: 13 },
+    { name: 'Microbacterium', value: 12 }, // { name: 'Dietzia', value: 13 },
     { name: 'Rothia', value: 14 },
     { name: 'Brevibacterium', value: 15 }
-    // {name: 'Kocuria', value: 16}
   ];
+  // {name: 'Kocuria', value: 16}
   inquirer
     .prompt([
       {
@@ -164,26 +166,14 @@ async function fetchData(nightmare, genus, pk) {
     fetchPhagesFromPhagesDb(genus, pk),
     fetchPhagesFromPet(nightmare, genus)
   ]);
+
   await Promise.all([
     saveToDb(phagesDbPhages, phagesDB),
     saveToDb(petPhages, petDB)
   ]);
+
   status.succeed();
-  //TODO: Save to DB!!!!
-  // const v = await fetchPhagesFromPhagesDb(genus, pk);
-  // const u = await fetchPhagesFromPet(nightmare, genus);
-  // console.log(v);
-  // console.log(u);
-  //);
-  // await Promise.all([
-  //   loadPhages(nightmare, genus, petDB)
-  //   //getPhagesFromPhageDb(phage, 1, phagesDB)
-  // ]);
-  // const phages = await scrapePhages(nightmare, petDB);
-  // console.log(phages);
-  // saveToDb(formatPetPhages(phages), petDB, 'PET');
-  // saveToDb(formatPhageDbPhages(results), phagesDB, 'PhagesDB');
-  // status.succeed('Finished fetching records.');
+
   const newPhages = await comparePhages(phagesDB, petDB, genus);
   if (newPhages.length) {
     const data = [
