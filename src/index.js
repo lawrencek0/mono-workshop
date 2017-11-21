@@ -76,9 +76,10 @@ async function loginToPET(prefs) {
   status.start();
   const nightmare = new Nightmare({
     show: false,
+    waitTimeout: 70000,
+    pollInterval: 500,
     height: 1000,
-    width: 1000,
-    waitTimeout: 50000
+    width: 1000
   });
   try {
     await nightmare
@@ -212,7 +213,7 @@ async function uploadPhages(nightmare, phages) {
     const phagesDbNightmare = new Nightmare({
       show: true,
       height: 1000,
-      width: 1000
+      width: 1200
     });
     await Promise.all([
       openPhagesDb(phagesDbNightmare, phageName),
@@ -242,7 +243,23 @@ async function saveToPet(nightmare, phage) {
         'input[name="file"]',
         file.getFile(`fasta_files/${phageName}.fasta`)
       )
-      .wait('span[style="color: green; "]');
+      .wait('span[style="color: green; "]')
+      .wait(function() {
+        if (document.querySelector('span[style="color: green; "]'))
+          return (
+            document.querySelector('span[style="color: green; "]').innerText ==
+            'Phage successfully added to database.'
+          );
+      });
+  } catch (e) {
+    console.error(e);
+  }
+  await goToGenus(nightmare, genus);
+  try {
+    await nightmare
+      .wait('input[aria-controls="cutTable"]')
+      .insert('input[aria-controls="cutTable"]', phageName)
+      .wait(5000);
   } catch (e) {
     console.error(e);
   }
