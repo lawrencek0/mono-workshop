@@ -238,12 +238,11 @@ async function saveToPet(nightmare, phage) {
       .select('select#genus', genus)
       .select('select#cluster', cluster)
       .select('select#subcluster', subcluster)
-      .wait()
       .upload(
         'input[name="file"]',
         file.getFile(`fasta_files/${phageName}.fasta`)
       )
-      .wait(30000);
+      .wait('span[style="color: green; "]');
   } catch (e) {
     console.error(e);
   }
