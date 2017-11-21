@@ -18,13 +18,12 @@ import figlet from 'figlet';
 import got from 'got';
 import inquirer from 'inquirer';
 import ora from 'ora';
-import realMouse from 'nightmare-real-mouse';
 import { table } from 'table';
-realMouse(Nightmare);
 
 dbFoldersCreator();
 
 clear();
+const file = new Files();
 
 console.log(
   chalk.yellowBright(
@@ -76,7 +75,10 @@ async function loginToPET(prefs) {
   const status = ora('Loggin in to PET, please wait...').start();
   status.start();
   const nightmare = new Nightmare({
-    show: false
+    show: false,
+    height: 1000,
+    width: 1000,
+    waitTimeout: 50000
   });
   try {
     await nightmare
@@ -147,7 +149,6 @@ function selectPhage(nightmare) {
 
 //NOTE: PhagesDB API calls the genus value as pk
 async function fetchData(nightmare, genus, pk) {
-  const file = new Files();
   const phagesDB = new datastore({
     filename: `${file.getWorkingDirectoryBase()}/database/phages-db/${genus}.db`,
     autoload: true
@@ -156,6 +157,7 @@ async function fetchData(nightmare, genus, pk) {
     filename: `${file.getWorkingDirectoryBase()}/database/pet-phages/${genus}.db`,
     autoload: true
   });
+  file.makeDir('fasta_files');
   phagesDB.ensureIndex({ fieldName: 'phageName', unique: true });
   phagesDB.ensureIndex({ fieldName: 'oldNames' });
   petDB.ensureIndex({ fieldName: 'phageName', unique: true });
@@ -183,6 +185,7 @@ async function fetchData(nightmare, genus, pk) {
         'Genus',
         'Cluster',
         'Subcluster',
+        'End Type',
         'Fasta File'
       ],
       ...newPhages
@@ -200,18 +203,71 @@ async function fetchData(nightmare, genus, pk) {
 }
 
 async function addPhagesToPet(nightmare, phages) {
-  await Promise.all(
-    phages.map(async phage => {
-      try {
-        await nightmare
-          .click('a[href="modify_phage_data"]')
-          .show()
-          .wait(10000000000000);
-      } catch (e) {
-        console.error(e);
-      }
-    })
-  );
+  for (let phage of phages) {
+    const phageName = phage[0];
+    const fastaFile = phage[6];
+
+    if (!file.fileExists(`fasta_files/${phageName}.fasta`))
+      await saveFastaFile(phageName, fastaFile);
+    const phagesDbNightmare = new Nightmare({
+      show: true,
+      height: 1000,
+      width: 1000
+    });
+    await Promise.all([
+      openPhagesDb(phagesDbNightmare, phageName),
+      saveToPet(nightmare, phage)
+    ]);
+  }
+}
+
+async function saveToPet(nightmare, phage) {
+  //TODO: what to do if there is no subcluster/cluster??
+  const [phageName, oldNames, genus, cluster, subcluster, endType] = phage;
+  const type = endType === 'circle' ? endType : 'linear';
+  try {
+    await nightmare
+      .click('a[href="modify_phage_data"]')
+      .show()
+      .wait('input[name="file"]')
+      .evaluate(() => {
+        document.querySelector('input[name="phage_name"]').value = '';
+      })
+      .insert('input[name="phage_name"]', phageName)
+      .click(`input[value="${type}"]`)
+      .select('select#genus', genus)
+      .select('select#cluster', cluster)
+      .select('select#subcluster', subcluster)
+      .wait()
+      .upload(
+        'input[name="file"]',
+        file.getFile(`fasta_files/${phageName}.fasta`)
+      )
+      .wait(30000);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function openPhagesDb(phagesDbNightmare, phageName) {
+  try {
+    await phagesDbNightmare
+      .goto(`http://phagesdb.org/phages/${phageName}`)
+      .wait(30000)
+      .end();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function saveFastaFile(phageName, fastaFile) {
+  try {
+    await got.get(fastaFile, { encoding: null }).then(res => {
+      file.saveFile(`fasta_files/${phageName}.fasta`, res.body);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function askToContinue(nightmare) {
@@ -324,6 +380,7 @@ function formatPhageDbPhages(phages) {
         pcluster,
         psubcluster,
         isolation_host,
+        end_type,
         fasta_file
       }) => ({
         phageName: phage_name,
@@ -331,6 +388,7 @@ function formatPhageDbPhages(phages) {
         genus: isolation_host ? isolation_host.genus : '',
         cluster: pcluster ? pcluster.cluster : 'Unclustered',
         subcluster: psubcluster ? psubcluster.subcluster : 'None',
+        endType: end_type === 'CIRC' ? 'circular' : end_type,
         fastaFile: fasta_file
       })
     );
@@ -383,6 +441,7 @@ async function comparePhages(phagesDb, petDb, genus) {
           genus,
           cluster,
           subcluster,
+          endType,
           fastaFile
         } = phageDbPhage;
         // FIXME: Use ES6 destructuring with buble
@@ -392,6 +451,7 @@ async function comparePhages(phagesDb, petDb, genus) {
           genus,
           cluster,
           subcluster,
+          endType,
           fastaFile
         ]);
       })
