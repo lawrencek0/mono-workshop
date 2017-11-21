@@ -194,7 +194,7 @@ async function fetchData(nightmare, genus, pk) {
     console.log(`${newPhages.length} new phages found for ${genus}`);
 
     //end_type: CIRC
-    await addPhagesToPet(nightmare, newPhages);
+    await uploadPhages(nightmare, newPhages);
   } else {
     console.log(`${genus} is up to date`);
   }
@@ -202,7 +202,7 @@ async function fetchData(nightmare, genus, pk) {
   askToContinue(nightmare);
 }
 
-async function addPhagesToPet(nightmare, phages) {
+async function uploadPhages(nightmare, phages) {
   for (let phage of phages) {
     const phageName = phage[0];
     const fastaFile = phage[6];
@@ -223,7 +223,7 @@ async function addPhagesToPet(nightmare, phages) {
 
 async function saveToPet(nightmare, phage) {
   //TODO: what to do if there is no subcluster/cluster??
-  const [phageName, oldNames, genus, cluster, subcluster, endType] = phage;
+  const [phageName, , genus, cluster, subcluster, endType] = phage;
   const type = endType === 'circle' ? endType : 'linear';
   try {
     await nightmare
