@@ -12,6 +12,7 @@
  */
 import { app, BrowserWindow, ipcMain } from 'electron';
 import Nightmare from 'nightmare';
+import keytar from 'keytar';
 import MenuBuilder from './menu';
 
 let mainWindow = null;
@@ -41,12 +42,13 @@ const installExtensions = async () => {
  * Add event listeners...
  */
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
   }
+  await nightmare.end();
 });
 
 app.on('ready', async () => {
@@ -64,19 +66,26 @@ app.on('ready', async () => {
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.on('did-finish-load', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
     mainWindow.show();
     mainWindow.focus();
+
+    // start a nightmare window to go to the phages page
+    startNightmare();
+
+    // check if user is already logged in
+    if (await keytar.findCredentials('pet-updater')) {
+      mainWindow.webContents.send('login-request');
+    } else {
+      // TODO: what to do if user is already logged in? THINK
+      console.log('hah');
+    }
   });
 
   mainWindow.webContents.toggleDevTools();
-
-  ipcMain.on('login-user', (event, arg) => {
-    event.sender.send('logged-in-user', arg);
-  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -85,7 +94,19 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  await startNightmare();
+  // handle login event and check if valid creds were used
+  ipcMain.on('login-user', async (event, { email, password }) => {
+    const res = await loginToPet(email, password);
+    if (res) {
+      await nightmare.end();
+      // TODO: send  message to ask for user creds again
+      console.log('nightmare ended');
+    } else {
+      console.log('nightmare begins!');
+      keytar.setPassword('pet-updater', email, password);
+    }
+    event.sender.send('login-user-reply', !res);
+  });
 });
 
 const startNightmare = async () => {
@@ -93,8 +114,16 @@ const startNightmare = async () => {
     show: true,
     electronPath: require('./node_modules/electron')
   });
-  await nightmare
-    .goto('http://phageenzymetools.com/login')
+  await nightmare.goto('http://phageenzymetools.com/login');
+};
+
+const loginToPet = async (email, password) => {
+  const res = await nightmare
     .wait('input#inputEmail')
-    .wait('5000');
+    .insert('input#inputEmail', email)
+    .insert('input#inputPassword', password)
+    .click('input#inputPassword + button.btn')
+    .wait(500)
+    .exists('span[style="color: red; "]');
+  return res;
 };

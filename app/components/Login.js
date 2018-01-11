@@ -8,11 +8,7 @@ class Login extends Component {
     password: ''
   };
 
-  componentDidMount() {
-    ipcRenderer.on('logged-in-user', (event, arg) => {
-      console.log(arg);
-    });
-  }
+  componentDidMount() {}
 
   handleChange = name => event => {
     this.setState({
@@ -22,12 +18,12 @@ class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    ipcRenderer.send('login-user', this.state.email);
+    ipcRenderer.send('login-user', { email: this.state.email, password: this.state.password });
   };
 
   render() {
     return (
-      <React.Fragment>
+      <div>
         <form onSubmit={this.handleSubmit}>
           <input
             placeholder="Email"
@@ -43,7 +39,7 @@ class Login extends Component {
           />
           <button type="submit">Submit</button>
         </form>
-      </React.Fragment>
+      </div>
     );
   }
 }
