@@ -10,10 +10,15 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
+import Nightmare from 'nightmare';
 import MenuBuilder from './menu';
 
 let mainWindow = null;
+const nightmare = Nightmare({
+  show: true,
+  electronPath: require('./node_modules/electron')
+});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -72,10 +77,20 @@ app.on('ready', async () => {
 
   mainWindow.webContents.toggleDevTools();
 
+  ipcMain.on('login-user', (event, arg) => {
+    event.sender.send('logged-in-user', arg);
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
+
+  await nightmare
+    .goto('https://duckduckgo.com')
+    .goto('http://phageenzymetools.com/login')
+    .wait('input#inputEmail')
+    .wait('5000');
 });
