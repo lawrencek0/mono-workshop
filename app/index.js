@@ -13,7 +13,7 @@ render(
 
 if (module.hot) {
   module.hot.accept('./containers/Root', async () => {
-    const NextRoot = await import('./containers/Root'); // eslint-disable-line global-require
+    const NextRoot = await import('./containers/Root');
     render(
       <AppContainer>
         <NextRoot />
