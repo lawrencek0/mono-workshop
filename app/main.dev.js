@@ -91,10 +91,9 @@ app.on('ready', async () => {
 const startNightmare = async () => {
   nightmare = Nightmare({
     show: true,
-    electronPath: await import('./node_modules/electron')
+    electronPath: require('./node_modules/electron')
   });
   await nightmare
-    .goto('https://duckduckgo.com')
     .goto('http://phageenzymetools.com/login')
     .wait('input#inputEmail')
     .wait('5000');
