@@ -15,10 +15,7 @@ import Nightmare from 'nightmare';
 import MenuBuilder from './menu';
 
 let mainWindow = null;
-const nightmare = Nightmare({
-  show: true,
-  electronPath: require('./node_modules/electron')
-});
+let nightmare = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -88,9 +85,17 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
+  await startNightmare();
+});
+
+const startNightmare = async () => {
+  nightmare = Nightmare({
+    show: true,
+    electronPath: await import('./node_modules/electron')
+  });
   await nightmare
     .goto('https://duckduckgo.com')
     .goto('http://phageenzymetools.com/login')
     .wait('input#inputEmail')
     .wait('5000');
-});
+};
