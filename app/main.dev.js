@@ -64,6 +64,8 @@ app.on('ready', async () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
+  // start a nightmare window to go to the phages page
+
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', async () => {
@@ -73,15 +75,28 @@ app.on('ready', async () => {
     mainWindow.show();
     mainWindow.focus();
 
-    // start a nightmare window to go to the phages page
     startNightmare();
 
     // check if user is already logged in
-    if (await keytar.findCredentials('pet-updater')) {
+    const [creds] = await keytar.findCredentials('PetUpdater');
+
+    if (!creds) {
       mainWindow.webContents.send('login-request');
     } else {
       // TODO: what to do if user is already logged in? THINK
-      console.log('hah');
+      const { account, password } = creds[0];
+      const res = await loginToPet(account, password);
+      console.log(res);
+      // TODO: wrap this in a function!!
+      if (res) {
+        // TODO: send  message to ask for user creds again
+        console.log('nightmare ended');
+      } else {
+        console.log('nightmare begins!');
+        await keytar.setPassword('PetUpdater', account, password);
+      }
+
+      mainWindow.webContents.send('login-user-reply', !res);
     }
   });
 
@@ -97,13 +112,13 @@ app.on('ready', async () => {
   // handle login event and check if valid creds were used
   ipcMain.on('login-user', async (event, { email, password }) => {
     const res = await loginToPet(email, password);
+    // TODO: wrap this in a function!!
     if (res) {
-      await nightmare.end();
       // TODO: send  message to ask for user creds again
       console.log('nightmare ended');
     } else {
       console.log('nightmare begins!');
-      keytar.setPassword('pet-updater', email, password);
+      await keytar.setPassword('PetUpdater', email, password);
     }
     event.sender.send('login-user-reply', !res);
   });

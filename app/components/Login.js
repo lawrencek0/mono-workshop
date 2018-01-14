@@ -8,7 +8,9 @@ class Login extends Component {
     password: ''
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    // TODO: handle login-user-reply
+  }
 
   handleChange = name => event => {
     this.setState({

@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 class Home extends Component {
   componentDidMount() {
     ipcRenderer.on('login-request', () => {
+      console.log('Changing history!');
       this.props.history.push('/login');
     });
   }
