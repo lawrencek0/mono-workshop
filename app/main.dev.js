@@ -83,7 +83,6 @@ app.on('ready', async () => {
     if (!creds) {
       mainWindow.webContents.send('login-request');
     } else {
-      // TODO: what to do if user is already logged in? THINK
       const { account, password } = creds;
       const res = await loginToPet(account, password);
       mainWindow.webContents.send('login-user-reply', !res);
