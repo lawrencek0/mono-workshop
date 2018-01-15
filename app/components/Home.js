@@ -11,6 +11,7 @@ class Home extends Component {
     });
     // when saved password fro keytar is wrong
     // TODO: if successfully logged in set global username or show indicator?
+    // maybe add a function and pass it to login so i could call it there
     ipcRenderer.on('login-user-reply', (event, isLoggedIn) => {
       if (isLoggedIn) {
         this.props.history.push('/login');
