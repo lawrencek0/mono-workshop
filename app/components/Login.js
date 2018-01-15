@@ -1,15 +1,24 @@
 // @flow
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
+import { withRouter } from 'react-router';
 
 class Login extends Component {
   state = {
     email: '',
-    password: ''
+    password: '',
+    errors: false
   };
 
   componentDidMount() {
     // TODO: handle login-user-reply
+    ipcRenderer.on('login-user-reply', (event, args) => {
+      if (args) {
+        this.props.history.push('/');
+      } else {
+        this.setState({ errors: true });
+      }
+    });
   }
 
   handleChange = name => event => {
@@ -26,6 +35,7 @@ class Login extends Component {
   render() {
     return (
       <div>
+        {this.state.errors && <span style={{ color: 'red' }}>DANGER</span>}
         <form onSubmit={this.handleSubmit}>
           <input
             placeholder="Email"
@@ -46,4 +56,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);
