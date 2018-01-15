@@ -118,12 +118,16 @@ const startNightmare = async () => {
 };
 
 const loginToPet = async (email, password) => {
-  const res = await nightmare
-    .wait('input#inputEmail')
-    .insert('input#inputEmail', email)
-    .insert('input#inputPassword', password)
-    .click('input#inputPassword + button.btn')
-    .wait(500)
-    .exists('span[style="color: red; "]');
-  return res;
+  try {
+    const res = await nightmare
+      .wait('input#inputEmail')
+      .insert('input#inputEmail', email)
+      .insert('input#inputPassword', password)
+      .click('input#inputPassword + button.btn')
+      .wait(500)
+      .exists('span[style="color: red; "]');
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
 };
