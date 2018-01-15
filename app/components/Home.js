@@ -9,6 +9,12 @@ class Home extends Component {
       console.log('Changing history!');
       this.props.history.push('/login');
     });
+    // when saved password fro keytar is wrong
+    ipcRenderer.on('login-request-reply', (event, args) => {
+      if (!args) {
+        this.props.history.push('/login');
+      }
+    });
   }
   render() {
     return (
