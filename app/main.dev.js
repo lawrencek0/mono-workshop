@@ -101,11 +101,7 @@ app.on('ready', async () => {
   // handle login event and check if valid creds were used
   ipcMain.on('login-user', async (event, { email, password }) => {
     const res = await loginToPet(email, password);
-    // TODO: wrap this in a function!!
-    if (res) {
-      // TODO: send  message to ask for user creds again
-      console.log('nightmare ended');
-    } else {
+    if (!res) {
       console.log('nightmare begins!');
       await keytar.setPassword('PetUpdater', email, password);
     }
