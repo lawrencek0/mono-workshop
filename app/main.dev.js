@@ -84,8 +84,8 @@ app.on('ready', async () => {
       mainWindow.webContents.send('login-request');
     } else {
       const { account, password } = creds;
-      const res = await loginToPet(account, password);
-      mainWindow.webContents.send('login-user-reply', !res);
+      const isLoggedIn = await loginToPet(account, password);
+      mainWindow.webContents.send('login-user-reply', isLoggedIn);
     }
   });
 
@@ -100,12 +100,11 @@ app.on('ready', async () => {
 
   // handle login event and check if valid creds were used
   ipcMain.on('login-user', async (event, { email, password }) => {
-    const res = await loginToPet(email, password);
-    if (!res) {
-      console.log('nightmare begins!');
+    const isLoggedIn = await loginToPet(email, password);
+    if (isLoggedIn) {
       await keytar.setPassword('PetUpdater', email, password);
     }
-    event.sender.send('login-user-reply', !res);
+    event.sender.send('login-user-reply', isLoggedIn);
   });
 });
 
@@ -126,7 +125,7 @@ const loginToPet = async (email, password) => {
       .click('input#inputPassword + button.btn')
       .wait(500)
       .exists('span[style="color: red; "]');
-    return res;
+    return !res;
   } catch (e) {
     console.error(e);
   }

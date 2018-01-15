@@ -12,8 +12,8 @@ class Login extends Component {
 
   componentDidMount() {
     // TODO: handle login-user-reply
-    ipcRenderer.on('login-user-reply', (event, args) => {
-      if (args) {
+    ipcRenderer.on('login-user-reply', (event, isLoggedIn) => {
+      if (isLoggedIn) {
         this.props.history.push('/');
       } else {
         this.setState({ errors: true });

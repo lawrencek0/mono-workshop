@@ -10,8 +10,8 @@ class Home extends Component {
       this.props.history.push('/login');
     });
     // when saved password fro keytar is wrong
-    ipcRenderer.on('login-request-reply', (event, args) => {
-      if (!args) {
+    ipcRenderer.on('login-user-reply', (event, isLoggedIn) => {
+      if (!isLoggedIn) {
         this.props.history.push('/login');
       }
     });
