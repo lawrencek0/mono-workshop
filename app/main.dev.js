@@ -75,7 +75,7 @@ app.on('ready', async () => {
     mainWindow.show();
     mainWindow.focus();
 
-    startNightmare();
+    await startNightmare();
 
     // check if user is already logged in
     const [creds] = await keytar.findCredentials('PetUpdater');
