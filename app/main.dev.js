@@ -84,18 +84,8 @@ app.on('ready', async () => {
       mainWindow.webContents.send('login-request');
     } else {
       // TODO: what to do if user is already logged in? THINK
-      const { account, password } = creds[0];
+      const { account, password } = creds;
       const res = await loginToPet(account, password);
-      console.log(res);
-      // TODO: wrap this in a function!!
-      if (res) {
-        // TODO: send  message to ask for user creds again
-        console.log('nightmare ended');
-      } else {
-        console.log('nightmare begins!');
-        await keytar.setPassword('PetUpdater', account, password);
-      }
-
       mainWindow.webContents.send('login-user-reply', !res);
     }
   });
