@@ -11,8 +11,8 @@
  * @flow
  */
 import { app, BrowserWindow, ipcMain } from 'electron';
-import Nightmare from 'nightmare';
 import keytar from 'keytar';
+import Nightmare from './lib/Nightmare';
 import MenuBuilder from './menu';
 
 let mainWindow = null;
