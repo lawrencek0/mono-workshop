@@ -14,6 +14,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import keytar from 'keytar';
 import Nightmare from './lib/Nightmare';
 import MenuBuilder from './menu';
+import { PET_URL } from './constants';
 
 let mainWindow = null;
 let nightmare = null;
@@ -113,7 +114,7 @@ const startNightmare = async () => {
     show: true,
     electronPath: require('./node_modules/electron')
   });
-  await nightmare.goto('http://phageenzymetools.com/login');
+  await nightmare.goto(PET_URL);
 };
 
 const loginToPet = async (email, password) => {
