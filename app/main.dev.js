@@ -88,6 +88,8 @@ app.on('ready', async () => {
       const isLoggedIn = await loginToPet(account, password);
       mainWindow.webContents.send('login-user-reply', isLoggedIn);
     }
+    // TODO: maybe send reply from renderer when all is good?
+    // create a for-of-loop and get data from all the phages and save to nedb?
   });
 
   mainWindow.webContents.toggleDevTools();
@@ -157,3 +159,35 @@ const openGenus = async genus => {
     console.error(e);
   }
 };
+
+const scrapePhagesFromPet = async () => {
+  let hasNext;
+  let phages;
+  async function scrapePhage() {
+    const data = await nightmare.evaluate(() =>
+      [...document.querySelectorAll('tr[id^="phage"]')].map(el => el.innerText.trim()));
+    hasNext = await nightmare.exists('a#cutTable_next.disabled');
+    return data;
+  }
+  // FIXME: last page wont work! Better scrape the final page number
+  try {
+    phages = await scrapePhage();
+    if (!hasNext) phages.push(await scrapePhage());
+  } catch (e) {
+    console.error(e);
+  }
+  return formatPetPhages(phages);
+};
+
+function formatPetPhages(phages) {
+  return phages.map(phage => {
+    const values = phage.split('\t');
+    return ['phageName', 'genus', 'cluster', 'subcluster'].reduce(
+      (accumulator, curr, i) =>
+        Object.assign(accumulator, {
+          [curr]: values[i]
+        }),
+      {}
+    );
+  });
+}
