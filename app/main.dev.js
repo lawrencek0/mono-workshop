@@ -131,3 +131,29 @@ const loginToPet = async (email, password) => {
     console.error(e);
   }
 };
+
+const openGenus = async genus => {
+  try {
+    await nightmare
+      .wait('ul.nav-sidebar')
+      .click('a[href="known_phage_visualization"]')
+      .wait('ul.tabs')
+      .click('input[placeholder="Search Genera"]')
+      .wait('li[id$="-Actinoplanes"]')
+      // eslint-disable-next-line no-shadow
+      .evaluate(genus => {
+        const el = document.querySelector(`li[id$="-${genus}"]`);
+        el.scrollIntoView();
+      }, genus)
+      .realClick(`li[id$="-${genus}"]`)
+      .click('input[placeholder="Search Enzymes"]')
+      .wait('li[id$="-AanI"]')
+      .realClick('li[id$="-AanI"]')
+      .click('button#submit')
+      .wait('table#cutTable')
+      .scrollTo(500, 0)
+      .select('#cutTable_length select[name="cutTable_length"]', '100');
+  } catch (e) {
+    console.error(e);
+  }
+};
