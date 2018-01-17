@@ -161,21 +161,24 @@ const openGenus = async genus => {
 };
 
 const scrapePhagesFromPet = async () => {
-  let hasNext;
-  let phages;
+  let phages = [];
+  // TODO: how to make this function recursive?
   async function scrapePhage() {
     const data = await nightmare.evaluate(() =>
       [...document.querySelectorAll('tr[id^="phage"]')].map(el => el.innerText.trim()));
-    hasNext = await nightmare.exists('a#cutTable_next.disabled');
-    return data;
+    const hasNext = await nightmare.exists('a#cutTable_next.disabled');
+    phages = [...phages, ...data];
+    /* eslint-disable promise/always-return */
+    await nightmare.then(async () => {
+      if (!hasNext) {
+        await nightmare.click('a#cutTable_next');
+        await scrapePhage();
+      }
+    });
+    /* eslint-enable */
   }
   // FIXME: last page wont work! Better scrape the final page number
-  try {
-    phages = await scrapePhage();
-    if (!hasNext) phages.push(await scrapePhage());
-  } catch (e) {
-    console.error(e);
-  }
+  await scrapePhage();
   return formatPetPhages(phages);
 };
 
