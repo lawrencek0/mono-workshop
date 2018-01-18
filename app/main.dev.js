@@ -14,7 +14,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import keytar from 'keytar';
 import Nightmare from './lib/Nightmare';
 import MenuBuilder from './menu';
-import { PET_URL } from './constants';
+import { PET_URL, GENERA } from './constants';
 
 let mainWindow = null;
 let nightmare = null;
@@ -88,8 +88,6 @@ app.on('ready', async () => {
       const isLoggedIn = await loginToPet(account, password);
       mainWindow.webContents.send('login-user-reply', isLoggedIn);
     }
-    // TODO: maybe send reply from renderer when all is good?
-    // create a for-of-loop and get data from all the phages and save to nedb?
   });
 
   mainWindow.webContents.toggleDevTools();
@@ -180,6 +178,18 @@ const scrapePhagesFromPet = async () => {
   // FIXME: last page wont work! Better scrape the final page number
   await scrapePhage();
   return formatPetPhages(phages);
+};
+
+const scrapeAllPhagesFromPet = async () => {
+  // TODO: maybe send reply from renderer when all is good?
+  // create a for-of-loop and get data from all the phages and save to nedb?
+  /* eslint-disable no-restricted-syntax, no-await-in-loop */
+  for (const genus of GENERA) {
+    await openGenus(genus);
+    const gen = await scrapePhagesFromPet();
+    console.log(gen);
+  }
+  /* eslint-enable */
 };
 
 function formatPetPhages(phages) {
