@@ -18,13 +18,9 @@ database.schema.hasTable('petPhages').then(exists => {
   if (!exists) {
     return database.schema.createTable('petPhages', t => {
       t.primary('phage_name');
-      // FIXME: what if phage has multiple old names? array?
-      t.string('old_name');
       t.string('genus', 32);
       t.string('cluster', 16);
       t.string('subcluster', 8);
-      t.string('end_type', 64);
-      t.string('fasta_file');
     });
   }
 });

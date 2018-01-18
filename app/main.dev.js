@@ -200,7 +200,7 @@ const scrapeAllPhagesFromPet = async () => {
 function formatPetPhages(phages) {
   return phages.map(phage => {
     const values = phage.split('\t');
-    return ['phageName', 'genus', 'cluster', 'subcluster'].reduce(
+    return ['phage_name', 'genus', 'cluster', 'subcluster'].reduce(
       (accumulator, curr, i) =>
         Object.assign(accumulator, {
           [curr]: values[i]
