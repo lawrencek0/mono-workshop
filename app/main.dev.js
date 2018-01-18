@@ -107,6 +107,11 @@ app.on('ready', async () => {
     }
     event.sender.send('login-user-reply', isLoggedIn);
   });
+
+  // start scraping from PET after user is logged in
+  ipcMain.on('scrapping-start', async () => {
+    await scrapeAllPhagesFromPet();
+  });
 });
 
 const startNightmare = async () => {

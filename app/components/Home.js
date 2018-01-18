@@ -15,6 +15,8 @@ class Home extends Component {
     ipcRenderer.on('login-user-reply', (event, isLoggedIn) => {
       if (!isLoggedIn) {
         this.props.history.push('/login');
+      } else {
+        ipcRenderer.send('scraping-start');
       }
     });
   }
