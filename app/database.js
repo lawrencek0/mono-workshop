@@ -1,14 +1,10 @@
-import path from 'path';
 import knex from 'knex';
-import { remote } from 'electron';
 import 'sqlite3';
-
-const { app } = remote;
 
 const database = knex({
   client: 'sqlite3',
   connection: {
-    filename: path.join(app.getPath('userData'), 'pet-updater.sqlite')
+    filename: './pet-updater.sqlite'
   },
   useNullAsDefault: true
 });
