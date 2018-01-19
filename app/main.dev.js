@@ -194,7 +194,7 @@ const scrapeAllPhagesFromPet = async () => {
   // create a for-of-loop and get data from all the phages and save to nedb?
   /* eslint-disable no-restricted-syntax, no-await-in-loop */
   for (const genus of GENERA) {
-    await openGenus(genus);
+    await openGenus(genus.name);
     const gen = await scrapePhagesFromPet();
     console.log(gen);
   }
