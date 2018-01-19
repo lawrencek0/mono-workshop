@@ -11,23 +11,12 @@ const database = knex({
 });
 
 /* eslint-disable array-callback-return, promise/catch-or-return, promise/always-return */
-GENERA.map(genus => {
-  database.schema.hasTable(`${genus}PetPhages`).then(exists => {
+Promise.all(GENERA.map(genus => {
+  database.schema.hasTable(`${genus}PhagesDb`).then(exists => {
     if (!exists) {
-      return database.schema.createTable('petPhages', t => {
-        t.primary('phage_name');
-        t.string('genus', 32);
-        t.string('cluster', 16);
-        t.string('subcluster', 8);
-      });
-    }
-  });
-
-  database.schema.hasTable(`${genus}PhagesDbPhages`).then(exists => {
-    if (!exists) {
-      return database.schema.createTable('petPhages', t => {
-        t.primary('phage_name');
-        t.string('old_name');
+      return database.schema.createTable(`${genus}PhagesDb`, t => {
+        t.string('phage_name').primary();
+        t.string('old_names');
         t.string('genus', 32);
         t.string('cluster', 16);
         t.string('subcluster', 8);
@@ -36,7 +25,20 @@ GENERA.map(genus => {
       });
     }
   });
-});
+}));
+
+Promise.all(GENERA.map(genus => {
+  database.schema.hasTable(`${genus}PetPhages`).then(exists => {
+    if (!exists) {
+      return database.schema.createTable(`${genus}PetPhages`, t => {
+        t.string('phage_name').primary();
+        t.string('genus', 32);
+        t.string('cluster', 16);
+        t.string('subcluster', 8);
+      });
+    }
+  });
+}));
 /* eslint-enable */
 
 export default database;
