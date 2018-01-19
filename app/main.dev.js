@@ -90,6 +90,10 @@ app.on('ready', async () => {
     }
   });
 
+  mainWindow.webContents.on('ready-to-show', () => {
+    mainWindow.webContents.send('ready');
+  });
+
   mainWindow.webContents.toggleDevTools();
 
   mainWindow.on('closed', () => {
