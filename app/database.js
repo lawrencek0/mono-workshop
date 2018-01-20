@@ -10,9 +10,11 @@ const database = knex({
   useNullAsDefault: true
 });
 
+const tables = [];
+
 /* eslint-disable array-callback-return, promise/catch-or-return, promise/always-return */
-Promise.all(GENERA.map(({ name: genus }) => {
-  database.schema
+GENERA.map(({ name: genus }) => {
+  tables.push(database.schema
     .hasTable(`${genus}PhagesDb`)
     .then(exists => {
       if (!exists) {
@@ -27,11 +29,9 @@ Promise.all(GENERA.map(({ name: genus }) => {
         });
       }
     })
-    .catch(console.error);
-}));
+    .catch(console.error));
 
-Promise.all(GENERA.map(({ genus }) => {
-  database.schema
+  tables.push(database.schema
     .hasTable(`${genus}PetPhages`)
     .then(exists => {
       if (!exists) {
@@ -43,8 +43,10 @@ Promise.all(GENERA.map(({ genus }) => {
         });
       }
     })
-    .catch(console.error);
-}));
+    .catch(console.error));
+});
 /* eslint-enable */
+
+Promise.all(tables).catch(console.error);
 
 export default database;
