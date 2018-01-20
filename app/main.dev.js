@@ -77,6 +77,7 @@ app.on('ready', async () => {
     mainWindow.focus();
 
     await startNightmare();
+    mainWindow.webContents.send('ready');
 
     // check if user is already logged in
     const [creds] = await keytar.findCredentials('PetUpdater');
@@ -88,10 +89,6 @@ app.on('ready', async () => {
       const isLoggedIn = await loginToPet(account, password);
       mainWindow.webContents.send('login-user-reply', isLoggedIn);
     }
-  });
-
-  mainWindow.webContents.on('ready-to-show', () => {
-    mainWindow.webContents.send('ready');
   });
 
   mainWindow.webContents.toggleDevTools();
