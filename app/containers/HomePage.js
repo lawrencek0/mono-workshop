@@ -10,13 +10,36 @@ type Props = {};
 
 class HomePage extends Component<Props> {
   props: Props;
-  componentDidMount() {}
+  componentDidMount() {
+    ipcRenderer.on('ready', () => {
+      this.fetchAllPhages();
+    });
+  }
+
+  fetchPhage = async (genus = 'Rhodococcus') => {
+    try {
+      const phages = await database(`${genus}PhagesDb`).select();
+      return phages;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  fetchAllPhages = async () => {
+    try {
+      const phages = await Promise.all(GENERA.map(({ name }) => this.fetchPhage(name)));
+      console.log(await phages);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   updateAllPhages = async () => {
     try {
       const phages = [].concat(...(await Promise.all(GENERA.map(({ value }) => this.fetchPhagesFromPhagesDb(value)))));
       await Promise.all(phages.map(async phage => {
-        const genus = phage.genus === 'Mycobacterium' ? 'Mycobacteriophage' : phage.genus;
+        const genus =
+            phage.genus === 'Mycobacterium' ? 'Mycobacteriophage' : phage.genus;
         const phageName = await database(`${genus}PhagesDb`)
           .where({
             phage_name: phage.phage_name
