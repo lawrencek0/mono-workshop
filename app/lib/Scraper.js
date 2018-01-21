@@ -18,8 +18,9 @@ class Scraper {
         .type(email, 'input#inputEmail')
         .type(password, 'input#inputPassword')
         .click('input#inputPassword + button.btn')
-        .wait(5000)
+        .wait(1500)
         .exists('span[style="color: red; "]');
+
       return !res;
     } catch (e) {
       console.error(e);

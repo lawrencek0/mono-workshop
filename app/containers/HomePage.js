@@ -25,7 +25,13 @@ class HomePage extends Component {
         this.props.history.push('/login');
       } else {
         const { account, password } = creds;
-        await scraper.loginToPet(account, password);
+        const isLoggedIn = await scraper.loginToPet(
+          'account@account.co',
+          password
+        );
+        if (!isLoggedIn) {
+          this.props.history.push('/login');
+        }
       }
     } catch (e) {
       console.error(e);
