@@ -24,7 +24,10 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+if (
+  process.env.NODE_ENV === 'development' ||
+  process.env.DEBUG_PROD === 'true'
+) {
   require('electron-debug')();
   const path = require('path');
   const p = path.join(__dirname, '..', 'app', 'node_modules');
@@ -49,11 +52,14 @@ app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
-  await nightmare.end();
+  // await nightmare.end();
 });
 
 app.on('ready', async () => {
-  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true'
+  ) {
     await installExtensions();
   }
 
@@ -76,19 +82,8 @@ app.on('ready', async () => {
     mainWindow.show();
     mainWindow.focus();
 
-    await startNightmare();
+    // await startNightmare();
     mainWindow.webContents.send('ready');
-
-    // check if user is already logged in
-    const [creds] = await keytar.findCredentials('PetUpdater');
-
-    if (!creds) {
-      mainWindow.webContents.send('login-request');
-    } else {
-      const { account, password } = creds;
-      const isLoggedIn = await loginToPet(account, password);
-      mainWindow.webContents.send('login-user-reply', isLoggedIn);
-    }
   });
 
   mainWindow.webContents.toggleDevTools();
@@ -169,7 +164,8 @@ const scrapePhagesFromPet = async () => {
   // TODO: how to make this function recursive?
   async function scrapePhage() {
     const data = await nightmare.evaluate(() =>
-      [...document.querySelectorAll('tr[id^="phage"]')].map(el => el.innerText.trim()));
+      [...document.querySelectorAll('tr[id^="phage"]')].map(el =>
+        el.innerText.trim()));
     const hasNext = await nightmare.exists('a#cutTable_next.disabled');
     phages = [...phages, ...data];
     /* eslint-disable promise/always-return */

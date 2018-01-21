@@ -1,19 +1,35 @@
 // @flow
 import React, { Component } from 'react';
-import { ipcRenderer } from 'electron';
-import database from '../database';
-import { GENERA } from '../constants';
+import { withRouter } from 'react-router-dom';
+import { remote, ipcRenderer } from 'electron';
 import Home from '../components/Home';
+import database from '../database';
+import scraper from '../lib/Scraper';
+import { GENERA } from '../constants';
 import { formatPhageDbPhages } from '../utils/PhageFormatter';
 
-type Props = {};
+const keytar = remote.require('keytar');
 
-class HomePage extends Component<Props> {
-  props: Props;
+class HomePage extends Component {
   componentDidMount() {
     ipcRenderer.on('ready', () => {
       this.fetchAllPhages();
     });
+    this.getPetCreds();
+  }
+
+  async getPetCreds() {
+    try {
+      const [creds] = await keytar.findCredentials('PetUpdater');
+      if (!creds) {
+        this.props.history.push('/login');
+      } else {
+        const { account, password } = creds;
+        await scraper.loginToPet(account, password);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   fetchPhage = async (genus = 'Rhodococcus') => {
@@ -75,4 +91,4 @@ class HomePage extends Component<Props> {
   }
 }
 
-export default HomePage;
+export default withRouter(HomePage);

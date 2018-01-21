@@ -6,6 +6,7 @@ type Props = {
 };
 
 class App extends Component<Props> {
+  componentDidMount() {}
   render() {
     return <div>{this.props.children}</div>;
   }
