@@ -3,7 +3,7 @@ import { PET_URL } from '../constants';
 
 class Scraper {
   constructor() {
-    this.chromeless = new Chromeless({ scrollBeforeClick: true });
+    this.chromeless = new Chromeless();
   }
 
   async startChromeless() {
@@ -51,6 +51,26 @@ class Scraper {
       console.error(e);
     }
   }
+
+  scrapePhagesFromPet = async () => {
+    try {
+      let phages = await this.chromeless.evaluate(() =>
+        [...document.querySelectorAll('tr[id^="phage"]')].map(el =>
+          el.innerText.trim()));
+      const hasNext = await this.chromeless.exists('a#cutTable_next.disabled');
+      if (!hasNext) {
+        await this.chromeless
+          .scrollToElement('a#cutTable_next')
+          .click('a#cutTable_next')
+          .exists('a#cutTable_next.disabled');
+        const newPhages = await this.scrapePhagesFromPet();
+        phages = [...phages, ...newPhages];
+      }
+      return phages;
+    } catch (e) {
+      console.error(e);
+    }
+  };
 }
 
 export default new Scraper();
