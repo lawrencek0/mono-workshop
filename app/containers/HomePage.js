@@ -6,7 +6,7 @@ import Home from '../components/Home';
 import database from '../database';
 import scraper from '../lib/Scraper';
 import { GENERA } from '../constants';
-import { formatPhageDbPhages } from '../utils/PhageFormatter';
+import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
 
 const keytar = remote.require('keytar');
 
@@ -15,9 +15,15 @@ class HomePage extends Component {
     ipcRenderer.on('ready', () => {});
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async getPetCreds() {
+    return keytar.findCredentials('PetUpdater');
+  }
+  // eslint-enable
+
+  async scrapePhageFromPet(genus) {
     try {
-      const [creds] = await keytar.findCredentials('PetUpdater');
+      const [creds] = await this.getPetCreds();
       if (!creds) {
         this.props.history.push('/login');
       } else {
@@ -25,6 +31,10 @@ class HomePage extends Component {
         const isLoggedIn = await scraper.loginToPet(account, password);
         if (!isLoggedIn) {
           this.props.history.push('/login');
+        } else {
+          await scraper.openGenus(genus);
+          const phages = await scraper.scrapePhagesFromPet();
+          return formatPetPhages(phages);
         }
       }
     } catch (e) {
