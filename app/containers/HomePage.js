@@ -12,10 +12,7 @@ const keytar = remote.require('keytar');
 
 class HomePage extends Component {
   componentDidMount() {
-    ipcRenderer.on('ready', () => {
-      this.fetchAllPhages();
-    });
-    this.getPetCreds();
+    ipcRenderer.on('ready', () => {});
   }
 
   async getPetCreds() {
@@ -25,10 +22,7 @@ class HomePage extends Component {
         this.props.history.push('/login');
       } else {
         const { account, password } = creds;
-        const isLoggedIn = await scraper.loginToPet(
-          account,
-          password
-        );
+        const isLoggedIn = await scraper.loginToPet(account, password);
         if (!isLoggedIn) {
           this.props.history.push('/login');
         }
