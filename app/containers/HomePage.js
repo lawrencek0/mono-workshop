@@ -26,7 +26,7 @@ class HomePage extends Component {
       } else {
         const { account, password } = creds;
         const isLoggedIn = await scraper.loginToPet(
-          'account@account.co',
+          account,
           password
         );
         if (!isLoggedIn) {
