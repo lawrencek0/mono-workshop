@@ -22,6 +22,7 @@ class HomePage extends Component {
   // eslint-enable
 
   async scrapePhageFromPet(genus) {
+    let phages;
     try {
       const [creds] = await this.getPetCreds();
       if (!creds) {
@@ -33,18 +34,19 @@ class HomePage extends Component {
           this.props.history.push('/login');
         } else {
           await scraper.openGenus(genus);
-          const phages = await scraper.scrapePhagesFromPet();
+          phages = await scraper.scrapePhagesFromPet();
           return formatPetPhages(phages);
         }
       }
     } catch (e) {
       console.error(e);
     }
+    return phages;
   }
 
   updatePetDbPhages = async genus => {
     try {
-      const phages = await this.scrapePhageFromPet('Gordonia');
+      const phages = await this.scrapePhageFromPet(genus);
       await Promise.all(phages.map(async phage =>
         this.savePhageToDb(`${phage.genus}PetPhages`, phage)));
     } catch (e) {
