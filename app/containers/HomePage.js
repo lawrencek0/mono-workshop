@@ -42,25 +42,21 @@ class HomePage extends Component {
     }
   }
 
-  fetchPhage = async (genus = 'Rhodococcus') => {
+  // eslint-disable-next-line class-methods-use-this
+  async fetchPhagesDbPhages(genus) {
+    return database(`${genus}PhagesDb`).select();
+  }
+  // eslint-enable
+
+  fetchAllPhagesDbPhages = async () => {
     try {
-      const phages = await database(`${genus}PhagesDb`).select();
-      return phages;
+      return Promise.all(GENERA.map(({ name }) => this.fetchPhagesDbPhages(name)));
     } catch (e) {
       console.error(e);
     }
   };
 
-  fetchAllPhages = async () => {
-    try {
-      const phages = await Promise.all(GENERA.map(({ name }) => this.fetchPhage(name)));
-      console.log(await phages);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  updateAllPhages = async () => {
+  updateAllPhagesDbPhages = async () => {
     try {
       const phages = [].concat(...(await Promise.all(GENERA.map(({ value }) => this.fetchPhagesFromPhagesDb(value)))));
       await Promise.all(phages.map(async phage => {
