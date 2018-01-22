@@ -4,7 +4,13 @@ export function formatPhageDbPhages(phages) {
   return phages
     .filter(({ fasta_file }) => Boolean(fasta_file))
     .map(({
-      phage_name, old_names, pcluster, psubcluster, isolation_host, end_type, fasta_file
+      phage_name,
+      old_names,
+      pcluster,
+      psubcluster,
+      isolation_host,
+      end_type,
+      fasta_file
     }) => ({
       phage_name,
       old_names,
