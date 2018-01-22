@@ -21,28 +21,32 @@ class HomePage extends Component {
   }
   // eslint-enable
 
+  async loginToPet() {
+    const [creds] = await this.getPetCreds();
+    if (!creds) {
+      this.props.history.push('/login');
+    } else {
+      const { account, password } = creds;
+      const isLoggedIn = await scraper.loginToPet(account, password);
+      if (!isLoggedIn) {
+        this.props.history.push('/login');
+      }
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   async scrapePhageFromPet(genus) {
     let phages;
     try {
-      const [creds] = await this.getPetCreds();
-      if (!creds) {
-        this.props.history.push('/login');
-      } else {
-        const { account, password } = creds;
-        const isLoggedIn = await scraper.loginToPet(account, password);
-        if (!isLoggedIn) {
-          this.props.history.push('/login');
-        } else {
-          await scraper.openGenus(genus);
-          phages = await scraper.scrapePhagesFromPet();
-          return formatPetPhages(phages);
-        }
-      }
+      await scraper.openGenus(genus);
+      phages = await scraper.scrapePhagesFromPet();
+      return formatPetPhages(phages);
     } catch (e) {
       console.error(e);
     }
     return phages;
   }
+  // eslint-disable
 
   updatePetDbPhages = async genus => {
     try {
@@ -53,10 +57,11 @@ class HomePage extends Component {
       console.error(e);
     }
   };
-
   updateAllPetDbPhages = async () => {
     try {
-      return Promise.all(GENERA.map(async genus => this.updatePetDbPhages(genus)));
+      for (const genus of GENERA) {
+        await this.updatePetDbPhages(genus.name);
+      }
     } catch (e) {
       console.error(e);
     }
