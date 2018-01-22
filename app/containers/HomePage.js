@@ -54,6 +54,14 @@ class HomePage extends Component {
     }
   };
 
+  updateAllPetDbPhages = async () => {
+    try {
+      return Promise.all(GENERA.map(async genus => this.updatePetDbPhages(genus)));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // eslint-disable-next-line class-methods-use-this
   async savePhageToDb(tableName, phage) {
     const phageName = await database(tableName)
