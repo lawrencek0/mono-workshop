@@ -42,6 +42,30 @@ class HomePage extends Component {
     }
   }
 
+  updatePetDbPhages = async genus => {
+    try {
+      const phages = await this.scrapePhageFromPet('Gordonia');
+      await Promise.all(phages.map(async phage =>
+        this.savePhageToDb(`${phage.genus}PetPhages`, phage)));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // eslint-disable-next-line class-methods-use-this
+  async savePhageToDb(tableName, phage) {
+    const phageName = await database(tableName)
+      .where({ phage_name: phage.phage_name })
+      .select('phage_name');
+    if (phageName.length === 0) {
+      database(tableName)
+        .insert(phage)
+        .then(console.log)
+        .catch(console.error);
+    }
+  }
+  // eslint-enable
+
   // eslint-disable-next-line class-methods-use-this
   async fetchPhagesDbPhages(genus) {
     return database(`${genus}PhagesDb`).select();
