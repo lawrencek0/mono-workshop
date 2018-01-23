@@ -24,14 +24,11 @@ export function formatPhageDbPhages(phages) {
 /* eslint-enable */
 
 export function formatPetPhages(phages) {
-  return phages.map(phage => {
-    const values = phage.split('\t');
-    return ['phage_name', 'genus', 'cluster', 'subcluster'].reduce(
-      (accumulator, curr, i) =>
-        Object.assign(accumulator, {
-          [curr]: values[i]
-        }),
-      {}
-    );
-  });
+  return phages.map(phage => ['phage_name', 'genus', 'cluster', 'subcluster'].reduce(
+    (accumulator, curr, i) =>
+      Object.assign(accumulator, {
+        [curr]: phage[i]
+      }),
+    {}
+  ));
 }
