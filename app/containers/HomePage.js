@@ -11,15 +11,7 @@ import { savePhageToDb, getPetCreds, savePetCreds } from '../utils/Misc';
 
 class HomePage extends Component {
   componentDidMount() {
-    ipcRenderer.on('login-user', async ({ email, password }) => {
-      const isLoggedIn = await scraper.loginToPet(email, password);
-      if (!isLoggedIn) {
-        this.props.history.push('/login');
-      } else {
-        await savePetCreds(email, password);
-      }
-    });
-    ipcRenderer.on('ready', () => {});
+    this.loginToPet();
   }
 
   async loginToPet() {

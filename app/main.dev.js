@@ -94,10 +94,6 @@ app.on('ready', async () => {
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
-
-  // handle login event and check if valid creds were used
-  ipcMain.on('user-creds', async (event, { email, password }) => {
-    mainWindow.webContents.send('login-user', (email, password));
 });
 
 const startNightmare = async () => {

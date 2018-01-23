@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import { ipcRenderer } from 'electron';
 import { withRouter } from 'react-router';
+import scraper from '../lib/Scraper';
+import { savePetCreds } from '../utils/Misc';
 
 class Login extends Component {
   state = {
@@ -16,13 +18,16 @@ class Login extends Component {
     });
   };
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
-    ipcRenderer.send('user-creds', {
-      email: this.state.email,
-      password: this.state.password
-    });
-    this.props.history.push('/');
+    const { email, password } = this.state;
+    const canLogIn = await scraper.loginToPet(email, password);
+    if (!canLogIn) {
+      this.setState({ errors: true });
+    } else {
+      await savePetCreds(email, password);
+      this.props.history.push('/');
+    }
   };
 
   render() {
