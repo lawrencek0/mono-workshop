@@ -6,7 +6,7 @@ import Home from '../components/Home';
 import database from '../database';
 import scraper from '../lib/Scraper';
 import { GENERA } from '../constants';
-import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
+import { formatPhageDbPhages } from '../utils/PhageFormatter';
 import getPetCreds from '../utils/Misc';
 
 class HomePage extends Component {
@@ -27,44 +27,18 @@ class HomePage extends Component {
     }
   }
 
-  // // eslint-disable-next-line class-methods-use-this
-  // async scrapePhageFromPet(genus) {
-  //   let phages;
-  //   try {
-  //     await scraper.openGenus(genus);
-  //     phages = await scraper.scrapePhagesFromPet();
-  //     return formatPetPhages(phages);
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  //   return phages;
-  // }
-  // // eslint-disable
-
   updatePetDbPhages = async genus => {
     try {
       await scraper.openGenus(genus);
       const phages = await scraper.scrapePhagesFromPet(genus);
-      // await Promise.all(phages.map(async phage => {
-      //   // this.savePhageToDb(`${phage.genus}PetPhages`, phage);
-      //   const phageName = await database(`${phage.genus}PetPhages`)
-      //     .where({ phage_name: phage.phage_name })
-      //     .select('phage_name');
-      //   console.log(phageName);
-      //   console.log(phage);
-      //   if (phageName.length === 0) {
-      //     database(`${phage.genus}PetPhages`)
-      //       .insert(phage)
-      //       .then(console.log)
-      //       .catch(console.error);
-      //   } else {
-      //     console.log(`WHAT THE FUCK HOW ${phageName}`);
-      //   }
-      // }));
+      await Promise.all(phages.map(async phage => {
+        this.savePhageToDb(`${phage.genus}PetPhages`, phage);
+      }));
     } catch (e) {
       console.error(e);
     }
   };
+
   updateAllPetDbPhages = async () => {
     try {
       for (const genus of GENERA) {
@@ -76,14 +50,20 @@ class HomePage extends Component {
   };
 
   // eslint-disable-next-line class-methods-use-this
-  async savePhageToDb(tableName, phage) {}
-  // eslint-enable
+  async savePhageToDb(tableName, phage) {
+    const phageName = await database(`${phage.genus}PetPhages`)
+      .where({ phage_name: phage.phage_name })
+      .select('phage_name');
 
-  // eslint-disable-next-line class-methods-use-this
-  async fetchPhagesDbPhages(genus) {
-    return database(`${genus}PhagesDb`).select();
+    if (phageName.length === 0) {
+      database(`${phage.genus}PetPhages`)
+        .insert(phage)
+        .then(console.log)
+        .catch(console.error);
+    }
   }
-  // eslint-enable
+
+  fetchPhagesDbPhages = async genus => database(`${genus}PhagesDb`).select();
 
   fetchAllPhagesDbPhages = async () => {
     try {
