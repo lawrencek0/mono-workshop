@@ -10,17 +10,6 @@ class Login extends Component {
     errors: false
   };
 
-  componentDidMount() {
-    // TODO: handle login-user-reply
-    ipcRenderer.on('login-user-reply', (event, isLoggedIn) => {
-      if (isLoggedIn) {
-        this.props.history.push('/');
-      } else {
-        this.setState({ errors: true });
-      }
-    });
-  }
-
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value
@@ -29,7 +18,11 @@ class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    ipcRenderer.send('login-user', { email: this.state.email, password: this.state.password });
+    ipcRenderer.send('user-creds', {
+      email: this.state.email,
+      password: this.state.password
+    });
+    this.props.history.push('/');
   };
 
   render() {

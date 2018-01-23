@@ -7,6 +7,10 @@ export async function getPetCreds() {
   return keytar.findCredentials('PetUpdater');
 }
 
+export async function savePetCreds(email, password) {
+  await keytar.setPassword('PetUpdater', email, password);
+}
+
 export async function savePhageToDb(tableName, phage) {
   const phageName = await database(`${phage.genus}PetPhages`)
     .where({ phage_name: phage.phage_name })

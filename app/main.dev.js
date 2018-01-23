@@ -96,18 +96,8 @@ app.on('ready', async () => {
   menuBuilder.buildMenu();
 
   // handle login event and check if valid creds were used
-  ipcMain.on('login-user', async (event, { email, password }) => {
-    const isLoggedIn = await loginToPet(email, password);
-    if (isLoggedIn) {
-      await keytar.setPassword('PetUpdater', email, password);
-    }
-    event.sender.send('login-user-reply', isLoggedIn);
-  });
-
-  // start scraping from PET after user is logged in
-  ipcMain.on('scrapping-start', async () => {
-    await scrapeAllPhagesFromPet();
-  });
+  ipcMain.on('user-creds', async (event, { email, password }) => {
+    mainWindow.webContents.send('login-user', (email, password));
 });
 
 const startNightmare = async () => {
