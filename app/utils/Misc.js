@@ -13,6 +13,19 @@ export async function savePetCreds(email, password) {
   await keytar.setPassword('PetUpdater', email, password);
 }
 
+export async function fetchPhagesFromDb(tableName) {
+  return database(tableName).select();
+}
+
+export async function fetchAllPhagesFromDb(phageSource) {
+  try {
+    return Promise.all(GENERA.map(({ name }) =>
+      this.fetchPhagesDbPhages(`${name}${phageSource}`)));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export async function savePhageToDb(tableName, phage) {
   const phageName = await database(tableName)
     .where({ phage_name: phage.phage_name })
@@ -35,4 +48,45 @@ export async function getPhagesFromPhagesDbApi(pk, pageNum = 1, phages = []) {
     return getPhagesFromPhagesDbApi(pk, num, allPhages);
   }
   return allPhages;
+}
+
+export async function updatePhagesDbPhages(genus) {
+  try {
+    const { value } = GENERA.find(({ name }) => name === genus);
+    const phages = await getPhagesFromPhagesDbApi(value);
+    await Promise.all(phages.map(phage => savePhageToDb(`${genus}PhagesDb`, phage)));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function updateAllPhagesDbPhages() {
+  try {
+    await Promise.all(GENERA.map(({ name }) => updatePhagesDbPhages(name)));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function updatePetDbPhages(scraper, genus) {
+  try {
+    await scraper.openGenus(genus);
+    const phages = await scraper.scrapePhagesFromPet(genus);
+    console.log(phages);
+    await Promise.all(phages.map(phage => savePhageToDb(`${phage.genus}PetPhages`, phage)));
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function updateAllPetDbPhages(scraper) {
+  try {
+    /* eslint-disable no-restricted-syntax, no-await-in-loop */
+    for (const genus of GENERA) {
+      await updatePetDbPhages(scraper, genus.name);
+    }
+    /* eslint-enable */
+  } catch (e) {
+    console.error(e);
+  }
 }
