@@ -1,28 +1,21 @@
 // @flow
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { remote, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 import Home from '../components/Home';
 import database from '../database';
 import scraper from '../lib/Scraper';
 import { GENERA } from '../constants';
 import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
-
-const keytar = remote.require('keytar');
+import getPetCreds from '../utils/Misc';
 
 class HomePage extends Component {
   componentDidMount() {
     ipcRenderer.on('ready', () => {});
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  async getPetCreds() {
-    return keytar.findCredentials('PetUpdater');
-  }
-  // eslint-enable
-
   async loginToPet() {
-    const [creds] = await this.getPetCreds();
+    const [creds] = await getPetCreds();
     if (!creds) {
       this.props.history.push('/login');
     } else {
@@ -34,25 +27,40 @@ class HomePage extends Component {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  async scrapePhageFromPet(genus) {
-    let phages;
-    try {
-      await scraper.openGenus(genus);
-      phages = await scraper.scrapePhagesFromPet();
-      return formatPetPhages(phages);
-    } catch (e) {
-      console.error(e);
-    }
-    return phages;
-  }
-  // eslint-disable
+  // // eslint-disable-next-line class-methods-use-this
+  // async scrapePhageFromPet(genus) {
+  //   let phages;
+  //   try {
+  //     await scraper.openGenus(genus);
+  //     phages = await scraper.scrapePhagesFromPet();
+  //     return formatPetPhages(phages);
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  //   return phages;
+  // }
+  // // eslint-disable
 
   updatePetDbPhages = async genus => {
     try {
-      const phages = await this.scrapePhageFromPet(genus);
-      await Promise.all(phages.map(async phage =>
-        this.savePhageToDb(`${phage.genus}PetPhages`, phage)));
+      await scraper.openGenus(genus);
+      const phages = await scraper.scrapePhagesFromPet(genus);
+      // await Promise.all(phages.map(async phage => {
+      //   // this.savePhageToDb(`${phage.genus}PetPhages`, phage);
+      //   const phageName = await database(`${phage.genus}PetPhages`)
+      //     .where({ phage_name: phage.phage_name })
+      //     .select('phage_name');
+      //   console.log(phageName);
+      //   console.log(phage);
+      //   if (phageName.length === 0) {
+      //     database(`${phage.genus}PetPhages`)
+      //       .insert(phage)
+      //       .then(console.log)
+      //       .catch(console.error);
+      //   } else {
+      //     console.log(`WHAT THE FUCK HOW ${phageName}`);
+      //   }
+      // }));
     } catch (e) {
       console.error(e);
     }
@@ -68,17 +76,7 @@ class HomePage extends Component {
   };
 
   // eslint-disable-next-line class-methods-use-this
-  async savePhageToDb(tableName, phage) {
-    const phageName = await database(tableName)
-      .where({ phage_name: phage.phage_name })
-      .select('phage_name');
-    if (phageName.length === 0) {
-      database(tableName)
-        .insert(phage)
-        .then(console.log)
-        .catch(console.error);
-    }
-  }
+  async savePhageToDb(tableName, phage) {}
   // eslint-enable
 
   // eslint-disable-next-line class-methods-use-this
