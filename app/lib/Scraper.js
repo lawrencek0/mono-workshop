@@ -1,5 +1,6 @@
 import { Chromeless } from 'chromeless';
 import { PET_URL } from '../constants';
+import { formatPetPhages } from '../utils/PhageFormatter';
 
 class Scraper {
   constructor() {
@@ -56,7 +57,8 @@ class Scraper {
     try {
       let phages = await this.chromeless.evaluate(() =>
         [...document.querySelectorAll('tr[id^="phage"]')].map(el =>
-          el.innerText.trim()));
+          el.innerText.trim().split('\t')));
+      phages = formatPetPhages(phages);
       const hasNext = await this.chromeless.exists('a#cutTable_next.disabled');
       if (!hasNext) {
         await this.chromeless
