@@ -7,7 +7,7 @@ import database from '../database';
 import scraper from '../lib/Scraper';
 import { GENERA } from '../constants';
 import { formatPhageDbPhages } from '../utils/PhageFormatter';
-import getPetCreds from '../utils/Misc';
+import { savePhageToDb, getPetCreds } from '../utils/Misc';
 
 class HomePage extends Component {
   componentDidMount() {
@@ -32,7 +32,7 @@ class HomePage extends Component {
       await scraper.openGenus(genus);
       const phages = await scraper.scrapePhagesFromPet(genus);
       await Promise.all(phages.map(async phage => {
-        this.savePhageToDb(`${phage.genus}PetPhages`, phage);
+        savePhageToDb(`${phage.genus}PetPhages`, phage);
       }));
     } catch (e) {
       console.error(e);
@@ -48,20 +48,6 @@ class HomePage extends Component {
       console.error(e);
     }
   };
-
-  // eslint-disable-next-line class-methods-use-this
-  async savePhageToDb(tableName, phage) {
-    const phageName = await database(`${phage.genus}PetPhages`)
-      .where({ phage_name: phage.phage_name })
-      .select('phage_name');
-
-    if (phageName.length === 0) {
-      database(`${phage.genus}PetPhages`)
-        .insert(phage)
-        .then(console.log)
-        .catch(console.error);
-    }
-  }
 
   fetchPhagesDbPhages = async genus => database(`${genus}PhagesDb`).select();
 
