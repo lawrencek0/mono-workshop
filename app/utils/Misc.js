@@ -90,3 +90,17 @@ export async function updateAllPetDbPhages(scraper) {
     console.error(e);
   }
 }
+
+export function compareTables(baseTable, compareToTable) {
+  return database
+    .select()
+    .from(baseTable)
+    .leftJoin(
+      compareToTable,
+      `${baseTable}.phage_name`,
+      `${compareToTable}.phage_name`
+    )
+    .whereNull(`${compareToTable}.phage_name`)
+    .then(console.log)
+    .catch(console.error);
+}
