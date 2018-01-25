@@ -19,13 +19,13 @@ GENERA.map(({ name: genus }) => {
     .then(exists => {
       if (!exists) {
         return database.schema.createTable(`${genus}PhagesDb`, t => {
-          t.string('phage_name').primary();
-          t.string('old_names');
+          t.string('phageName').primary();
+          t.string('oldNames');
           t.string('genus', 32);
           t.string('cluster', 16);
           t.string('subcluster', 8);
-          t.string('end_type', 64);
-          t.string('fasta_file');
+          t.string('endType', 64);
+          t.string('fastaFile');
         });
       }
     })
@@ -36,7 +36,7 @@ GENERA.map(({ name: genus }) => {
     .then(exists => {
       if (!exists) {
         return database.schema.createTable(`${genus}PetPhages`, t => {
-          t.string('phage_name').primary();
+          t.string('phageName').primary();
           t.string('genus', 32);
           t.string('cluster', 16);
           t.string('subcluster', 8);

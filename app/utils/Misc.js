@@ -28,8 +28,8 @@ export async function fetchAllPhagesFromDb(phageSource) {
 
 export async function savePhageToDb(tableName, phage) {
   const phageName = await database(tableName)
-    .where({ phage_name: phage.phage_name })
-    .select('phage_name');
+    .where({ phageName: phage.phageName })
+    .select('phageName');
 
   if (phageName.length === 0) {
     database(tableName)
@@ -101,7 +101,7 @@ export function compareTables(baseTable, compareToTable) {
   //     `${compareToTable}.phage_name`
   //   )
   //   .whereNull(`${compareToTable}.phage_name`);
-  return database.raw(`select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phage_name = t2.phage_name where t2.phage_name is null`);
+  return database.raw(`select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phageName = t2.phageName where t2.phageName is null`);
 }
 
 export async function compareAllTables() {
