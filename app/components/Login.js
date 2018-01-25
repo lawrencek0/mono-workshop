@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { ipcRenderer } from 'electron';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import scraper from '../lib/Scraper';
 import { savePetCreds } from '../utils/Misc';
 
