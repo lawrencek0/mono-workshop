@@ -47,6 +47,8 @@ GENERA.map(({ name: genus }) => {
 });
 /* eslint-enable */
 
-Promise.all(tables).catch(console.error);
+export function createTables() {
+  return Promise.all(tables).catch(console.error);
+}
 
 export default database;
