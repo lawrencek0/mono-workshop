@@ -72,7 +72,6 @@ export async function updatePetDbPhages(scraper, genus) {
   try {
     await scraper.openGenus(genus);
     const phages = await scraper.scrapePhagesFromPet(genus);
-    console.log(phages);
     await Promise.all(phages.map(phage => savePhageToDb(`${phage.genus}PetPhages`, phage)));
   } catch (e) {
     console.error(e);
@@ -92,15 +91,26 @@ export async function updateAllPetDbPhages(scraper) {
 }
 
 export function compareTables(baseTable, compareToTable) {
-  return database
-    .select()
-    .from(baseTable)
-    .leftJoin(
-      compareToTable,
-      `${baseTable}.phage_name`,
-      `${compareToTable}.phage_name`
-    )
-    .whereNull(`${compareToTable}.phage_name`)
-    .then(console.log)
-    .catch(console.error);
+  // @FIXME: knex is not working??
+  // return database
+  //   .select()
+  //   .from(baseTable)
+  //   .leftJoin(
+  //     compareToTable,
+  //     `${baseTable}.phage_name`,
+  //     `${compareToTable}.phage_name`
+  //   )
+  //   .whereNull(`${compareToTable}.phage_name`);
+  return database.raw(`select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phage_name = t2.phage_name where t2.phage_name is null`);
+}
+
+export async function compareAllTables() {
+  return Promise.all(GENERA.map(({ name }) =>
+    Promise.all([
+      compareTables(`${name}PetPhages`, `${name}PhagesDb`),
+      compareTables(`${name}PhagesDb`, `${name}PetPhages`)
+    ]).then(([petPhages, phagesDbPhages]) => ({
+      phagesDbPhages,
+      petPhages
+    }))));
 }
