@@ -105,12 +105,23 @@ export function compareTables(baseTable, compareToTable) {
 }
 
 export async function compareAllTables() {
-  return Promise.all(GENERA.map(({ name }) =>
+  const p = await Promise.all(GENERA.map(({ name }) =>
     Promise.all([
       compareTables(`${name}PetPhages`, `${name}PhagesDb`),
       compareTables(`${name}PhagesDb`, `${name}PetPhages`)
     ]).then(([petPhages, phagesDbPhages]) => ({
       phagesDbPhages,
       petPhages
-    }))));
+    })))).then(phages =>
+    phages.reduce(
+      (res, phage) => ({
+        phagesDbPhages: [...res.phagesDbPhages, ...phage.phagesDbPhages],
+        petPhages: [...res.petPhages, ...phage.petPhages]
+      }),
+      {
+        phagesDbPhages: [],
+        petPhages: []
+      }
+    ));
+  console.log(p);
 }
