@@ -3,9 +3,22 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import Home from '../components/Home';
 import scraper from '../lib/Scraper';
-import { getPetCreds } from '../utils/Misc';
+import { getPetCreds, compareAllTables } from '../utils/Misc';
 
 class HomePage extends Component {
+  state = { phagesDbPhages: [], petPhages: [] };
+
+  componentDidMount() {
+    this.updateAllPhages();
+  }
+
+  updateAllPhages = async () => {
+    const { phagesDbPhages, petPhages } = await compareAllTables();
+    this.setState({
+      phagesDbPhages,
+      petPhages
+    });
+  };
   async loginToPet() {
     const [creds] = await getPetCreds();
     if (!creds) {
