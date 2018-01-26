@@ -1,11 +1,11 @@
 import React from 'react';
 import { Table, Header } from 'semantic-ui-react';
 
-const Phage = ({ phage }) => (
+const Phage = ({ phage, viewPhage }) => (
   <Table.Row>
     <Table.Cell>
       <Header as="h4">
-        <Header.Content>
+        <Header.Content onClick={viewPhage(phage.phageName)}>
           {phage.phageName}
           {phage.oldNames && (
             <Header.Subheader>Old Names: {phage.oldNames}</Header.Subheader>

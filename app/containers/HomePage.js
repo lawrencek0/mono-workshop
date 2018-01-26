@@ -1,7 +1,8 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Container } from 'semantic-ui-react';
+import { shell } from 'electron';
+import { Container, Tab } from 'semantic-ui-react';
 import Home from '../components/Home';
 import PhageList from '../components/PhageList';
 import scraper from '../lib/Scraper';
@@ -11,6 +12,7 @@ import {
   updateAllPhagesDbPhages,
   updateAllPetDbPhages
 } from '../utils/Misc';
+import { PHAGES_DB_BASE_URL } from '../constants';
 
 class HomePage extends Component {
   state = { phagesDbPhages: [], petPhages: [] };
@@ -46,14 +48,40 @@ class HomePage extends Component {
     }
   }
 
+  viewPhage = phageName => {
+    shell.openExternal(`${PHAGES_DB_BASE_URL}/phages/${phageName}`);
+  };
+
   render() {
+    const panes = [
+      {
+        menuItem: 'Phages DB',
+        render: () => (
+          <Tab.Pane attached={false}>
+            <PhageList
+              heading="New Phages in Phages DB"
+              phages={this.state.phagesDbPhages}
+              viewPhage={this.viewPhage}
+            />
+          </Tab.Pane>
+        )
+      },
+      {
+        menuItem: 'PET',
+        render: () => (
+          <Tab.Pane attached={false}>
+            <PhageList
+              heading="New Phages in PET"
+              phages={this.state.petPhages}
+              viewPhage={this.viewPhage}
+            />
+          </Tab.Pane>
+        )
+      }
+    ];
     return (
       <Container>
-        <PhageList
-          heading="New Phages in PhagesDB"
-          phages={this.state.phagesDbPhages}
-        />
-        <PhageList heading="New Phages in PET" phages={this.state.petPhages} />
+        <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
       </Container>
     );
   }

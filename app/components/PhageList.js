@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { Header, Table } from 'semantic-ui-react';
 import Phage from './Phage';
 
-const PhageList = ({ heading, phages }) => (
+const PhageList = ({ heading, phages, viewPhage }) => (
   <Fragment>
     <Header as="h2" textAlign="center">
       {heading} ({phages.length})
@@ -17,7 +17,9 @@ const PhageList = ({ heading, phages }) => (
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {phages.map(phage => <Phage phage={phage} key={phage.phageName} />)}
+        {phages.map(phage => (
+          <Phage key={phage.phageName} phage={phage} viewPhage={viewPhage} />
+        ))}
       </Table.Body>
     </Table>
   </Fragment>
