@@ -2,8 +2,15 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { shell } from 'electron';
-import { Container, Tab } from 'semantic-ui-react';
-import Home from '../components/Home';
+import {
+  Container,
+  Tab,
+  Icon,
+  Header,
+  Segment,
+  Loader,
+  Dimmer
+} from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
 import scraper from '../lib/Scraper';
 import {
@@ -15,24 +22,23 @@ import {
 import { PHAGES_DB_BASE_URL } from '../constants';
 
 class HomePage extends Component {
-  state = { phagesDbPhages: [], petPhages: [] };
+  state = { phagesDbPhages: [], petPhages: [], loading: true };
 
   async componentDidMount() {
-    // const [creds] = await getPetCreds();
-    // if (!creds) {
-    //   this.props.history.push('/login');
-    // } else {
-    //   await this.loginToPet();
-    //   await
-    // }
-    this.updateAllPhages();
+    const [creds] = await getPetCreds();
+    if (!creds) {
+      this.props.history.push('/login');
+    } else {
+      await this.updateAllPhages();
+    }
   }
 
   updateAllPhages = async () => {
     const { phagesDbPhages, petPhages } = await compareAllTables();
     this.setState({
       phagesDbPhages,
-      petPhages
+      petPhages,
+      loading: false
     });
   };
   async loginToPet() {
@@ -53,6 +59,7 @@ class HomePage extends Component {
   };
 
   render() {
+    const { phagesDbPhages, petPhages, loading } = this.state;
     const panes = [
       {
         menuItem: 'Phages DB',
@@ -60,7 +67,7 @@ class HomePage extends Component {
           <Tab.Pane attached={false}>
             <PhageList
               heading="New Phages in Phages DB"
-              phages={this.state.phagesDbPhages}
+              phages={phagesDbPhages}
               viewPhage={this.viewPhage}
             />
           </Tab.Pane>
@@ -72,13 +79,33 @@ class HomePage extends Component {
           <Tab.Pane attached={false}>
             <PhageList
               heading="New Phages in PET"
-              phages={this.state.petPhages}
+              phages={petPhages}
               viewPhage={this.viewPhage}
             />
           </Tab.Pane>
         )
       }
     ];
+
+    if (loading) {
+      return (
+        <Segment>
+          <Dimmer active>
+            <Loader content="Updating Phages..." />
+          </Dimmer>
+        </Segment>
+      );
+    }
+    if (phagesDbPhages.length === 0 && petPhages.length === 0) {
+      return (
+        <Fragment>
+          <Header as="h2" icon textAlign="center">
+            <Icon name="lab" size="massive" circular inverted />
+            <Header.Content>No New Phages Found!</Header.Content>
+          </Header>
+        </Fragment>
+      );
+    }
     return (
       <Container>
         <Tab menu={{ secondary: true, pointing: true }} panes={panes} />

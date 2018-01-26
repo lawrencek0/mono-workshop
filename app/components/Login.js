@@ -15,13 +15,10 @@ class Login extends Component {
   };
 
   componentDidMount() {
-    document.body.classList.add('center-container');
     document.body.style.setProperty('--background-primary-color', '#ffa500');
   }
 
   componentWillUnmount() {
-    console.log('un,ounting...');
-    document.body.classList.remove('center-container');
     document.body.style.setProperty('--background-primary-color', '#f9f9f9');
   }
 
