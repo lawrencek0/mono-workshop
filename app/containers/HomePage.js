@@ -1,6 +1,7 @@
 // @flow
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
 import Home from '../components/Home';
 import PhageList from '../components/PhageList';
 import scraper from '../lib/Scraper';
@@ -47,13 +48,13 @@ class HomePage extends Component {
 
   render() {
     return (
-      <Fragment>
+      <Container>
         <PhageList
           heading="New Phages in PhagesDB"
           phages={this.state.phagesDbPhages}
         />
         <PhageList heading="New Phages in PET" phages={this.state.petPhages} />
-      </Fragment>
+      </Container>
     );
   }
 }
