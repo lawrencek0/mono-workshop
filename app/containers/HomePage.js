@@ -1,14 +1,27 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import Home from '../components/Home';
+import PhageList from '../components/PhageList';
 import scraper from '../lib/Scraper';
-import { getPetCreds, compareAllTables } from '../utils/Misc';
+import {
+  getPetCreds,
+  compareAllTables,
+  updateAllPhagesDbPhages,
+  updateAllPetDbPhages
+} from '../utils/Misc';
 
 class HomePage extends Component {
   state = { phagesDbPhages: [], petPhages: [] };
 
-  componentDidMount() {
+  async componentDidMount() {
+    // const [creds] = await getPetCreds();
+    // if (!creds) {
+    //   this.props.history.push('/login');
+    // } else {
+    //   await this.loginToPet();
+    //   await
+    // }
     this.updateAllPhages();
   }
 
@@ -33,7 +46,15 @@ class HomePage extends Component {
   }
 
   render() {
-    return <Home />;
+    return (
+      <Fragment>
+        <PhageList
+          heading="New Phages in PhagesDB"
+          phages={this.state.phagesDbPhages}
+        />
+        <PhageList heading="New Phages in PET" phages={this.state.petPhages} />
+      </Fragment>
+    );
   }
 }
 
