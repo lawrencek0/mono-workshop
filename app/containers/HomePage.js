@@ -138,7 +138,7 @@ class HomePage extends Component {
     }
 
     return (
-      <Container style={{ marginTop: '3rem' }}>
+      <Container fluid style={{ marginTop: '3rem' }}>
         <Tab
           renderActiveOnly={false}
           menu={{ secondary: true, pointing: true, vertical: true }}
