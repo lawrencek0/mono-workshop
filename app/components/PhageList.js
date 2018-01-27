@@ -16,7 +16,6 @@ const PhageList = ({ heading, phages, viewPhage }) => {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Phage</Table.HeaderCell>
-                    <Table.HeaderCell>Genus</Table.HeaderCell>
                     <Table.HeaderCell>Cluster</Table.HeaderCell>
                     <Table.HeaderCell>Subcluster</Table.HeaderCell>
                   </Table.Row>

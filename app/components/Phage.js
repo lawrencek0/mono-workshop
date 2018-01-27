@@ -18,7 +18,6 @@ const Phage = ({ phage, viewPhage }) => {
           </Header.Content>
         </Header>
       </Table.Cell>
-      <Table.Cell>{phage.genus}</Table.Cell>
       <Table.Cell>{phage.cluster}</Table.Cell>
       <Table.Cell>{phage.subcluster}</Table.Cell>
     </Table.Row>
