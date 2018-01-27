@@ -139,6 +139,24 @@ class HomePage extends Component {
 
     return (
       <Container fluid style={{ marginTop: '3rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '2rem'
+          }}
+        >
+          <UpdateButton updateAllPhages={this.updateAllPhages} />
+          <Button
+            basic
+            color="green"
+            size="big"
+            onClick={this.updateAllPhages}
+            disabled={phagesDbPhages.length === 0}
+          >
+            Update PET
+          </Button>
+        </div>
         <Tab
           renderActiveOnly={false}
           menu={{ secondary: true, pointing: true, vertical: true }}
