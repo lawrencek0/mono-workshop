@@ -10,6 +10,7 @@ const keytar = remote.require('keytar');
 const { app } = remote;
 
 // FROM https://stackoverflow.com/a/44695617/8705692
+// @TODO: rewwrite this to be more friendlier
 const responseToReadable = response => {
   const reader = response.body.getReader();
   const rs = new Readable();
@@ -34,7 +35,6 @@ export const saveFastaFile = async (fileName, url) => {
 };
 
 export async function getPetCreds() {
-  console.log(app.getPath('appData'));
   return keytar.findCredentials('PetUpdater');
 }
 
@@ -79,6 +79,7 @@ export async function getPhagesFromPhagesDbApi(pk, pageNum = 1, phages = []) {
   return allPhages;
 }
 
+// @FIXME: we wont need all of the phages' fasta files so save only those that are not in PET
 export async function updatePhagesDbPhages(genus) {
   try {
     const { value } = GENERA.find(({ name }) => name === genus);
