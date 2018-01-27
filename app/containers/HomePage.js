@@ -88,8 +88,8 @@ class HomePage extends Component {
     const panes = [
       {
         menuItem: 'Phages DB',
-        render: () => (
-          <Tab.Pane attached={false}>
+        pane: (
+          <Tab.Pane attached={false} key="phagesDB">
             <PhageList
               heading="New Phages in Phages DB"
               phages={phagesDbPhages}
@@ -100,8 +100,8 @@ class HomePage extends Component {
       },
       {
         menuItem: 'PET',
-        render: () => (
-          <Tab.Pane attached={false}>
+        pane: (
+          <Tab.Pane attached={false} key="petPhages">
             <PhageList
               heading="New Phages in PET"
               phages={petPhages}
@@ -139,7 +139,11 @@ class HomePage extends Component {
 
     return (
       <Container>
-        <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+        <Tab
+          renderActiveOnly={false}
+          menu={{ secondary: true, pointing: true }}
+          panes={panes}
+        />
       </Container>
     );
   }
