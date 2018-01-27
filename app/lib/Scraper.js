@@ -73,6 +73,32 @@ class Scraper {
       console.error(e);
     }
   };
+
+  async addPhage(phage) {
+    const endType = phage.endType === 'circle' ? endType : 'linear';
+    try {
+      await this.chromeless
+        .wait('ul.nav-sidebar')
+        .click('a[href="modify_phage_data"]')
+        .clearInput('input[name="phage_name"]')
+        .type(phage.phageName, 'input[name="phage_name"]')
+        .click(`input[value="${endType}"]`)
+        .click('select#genus')
+        .evaluate(({ genus }) => {
+          document.querySelector(`select#genus option[value=${genus}]`).selected = true;
+        }, phage)
+        .click('select#cluster')
+        .evaluate(({ cluster }) => {
+          document.querySelector(`select#cluster option[value=${cluster}]`).selected = true;
+        }, phage)
+        .click('select#subcluster')
+        .evaluate(({ subcluster }) => {
+          document.querySelector(`select#subcluster option[value=${subcluster}]`).selected = true;
+        }, phage);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }
 
 export default new Scraper();
