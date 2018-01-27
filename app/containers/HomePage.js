@@ -104,7 +104,7 @@ class HomePage extends Component {
     if (loading) {
       return (
         <Dimmer active inverted>
-          <Loader content="Updating Phages..." />
+          <Loader content="This might take a while." />
         </Dimmer>
       );
     }
