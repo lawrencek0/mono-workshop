@@ -65,6 +65,16 @@ class HomePage extends Component {
     });
   };
 
+  insertAllPhages = async () => {
+    this.setState({
+      loading: true
+    });
+
+    await this.loginToPet();
+    await scraper.addAllPhages(this.state.phagesDbPhages);
+    await this.fetchAllNewPhages();
+  };
+
   async loginToPet() {
     const [creds] = await getPetCreds();
 
@@ -151,7 +161,7 @@ class HomePage extends Component {
             basic
             color="green"
             size="big"
-            onClick={this.updateAllPhages}
+            onClick={this.insertAllPhages}
             disabled={phagesDbPhages.length === 0}
           >
             Update PET

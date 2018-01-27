@@ -28,7 +28,7 @@ const responseToReadable = response => {
 export const saveFastaFile = async (fileName, url) => {
   try {
     const res = await fetch(url);
-    await responseToReadable(res).pipe(fs.createWriteStream(path.join(app.getPath('appData'), fileName)));
+    await responseToReadable(res).pipe(fs.createWriteStream(path.join(app.getPath('appData'), `${fileName}.fasta`)));
   } catch (e) {
     console.error(e);
   }

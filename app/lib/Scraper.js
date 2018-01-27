@@ -1,7 +1,10 @@
 import { Chromeless } from 'chromeless';
+import { remote } from 'electron';
+import path from 'path';
 import { PET_URL } from '../constants';
 import { formatPetPhages } from '../utils/PhageFormatter';
 
+const { app } = remote;
 class Scraper {
   constructor() {
     this.chromeless = new Chromeless();
@@ -74,15 +77,66 @@ class Scraper {
     }
   };
 
-  async addPhage(phage) {
+  modifyCluster = async cluster => {
+    await this.chromeless
+      .click('li a[href="#view#4"]')
+      .wait('#ui-id-1')
+      .click('#ui-id-1')
+      .insert(cluster, '#add_cluster')
+      .click('button[value="add_cluster"]')
+      .exists('p[style="color: green;"]');
+  };
+
+  modifySubcluster = async (cluster, subclusterNumber) => {
+    await this.chromeless
+      .click('li a[href="#view#4"]')
+      .wait('#ui-id-3')
+      .click('#ui-id-3')
+      .click('add_subcluster_cluster')
+      .evaluate(cluster => {
+        document.querySelector(`add_subcluster_cluster option[value="${cluster}"]`).selected = true;
+      }, cluster)
+      .insert(subclusterNumber, 'add_subcluster_subcluster')
+      .click('button[value="add_cluster"]')
+      .exists('p[style="color: green;"]');
+  };
+
+  addPhage = async phage => {
     const endType = phage.endType === 'circle' ? endType : 'linear';
+    console.log(phage);
     try {
-      await this.chromeless
+      const hasCluster = await this.chromeless
         .wait('ul.nav-sidebar')
         .click('a[href="modify_phage_data"]')
+        .wait('select#cluster')
+        .exists(`select#cluster option[value=${phage.cluster}]`);
+
+      if (!hasCluster) {
+        await this.modifyCluster(phage.cluster);
+      }
+
+      const hasSubcluster = await this.chromeless
+        .wait('ul.nav-sidebar')
+        .click('a[href="modify_phage_data"]')
+        .wait('select#subcluster')
+        .exists(`select#subcluster option[value=${phage.subcluster}]`);
+
+      if (!hasSubcluster) {
+        const subclusterNumber = phage.subcluster.match(/\d+/);
+        await this.modifySubcluster(phage.cluster, subclusterNumber);
+      }
+
+      let success = await this.chromeless
+        .wait('ul.nav-sidebar')
+        .click('a[href="modify_phage_data"]')
+        .wait('input[name="phage_name"]')
         .clearInput('input[name="phage_name"]')
         .type(phage.phageName, 'input[name="phage_name"]')
         .click(`input[value="${endType}"]`)
+        .setFileInput(
+          'input[type="file"]',
+          path.join(app.getPath('appData'), `${phage.phageName}.fasta`)
+        )
         .click('select#genus')
         .evaluate(({ genus }) => {
           document.querySelector(`select#genus option[value=${genus}]`).selected = true;
@@ -95,9 +149,28 @@ class Scraper {
         .evaluate(({ subcluster }) => {
           document.querySelector(`select#subcluster option[value=${subcluster}]`).selected = true;
         }, phage);
+
+      success = await this.chromeless
+        .wait(2000)
+        .click('button[value="upload"]')
+        .exists('span[style="color: green; ]"');
+
+      await this.chromeless
+        .wait(5000)
+        .scrollToElement('button[value="commit"]')
+        .click('button[value="commit"]')
+        .exists('style="color: green; "');
     } catch (e) {
       console.error(e);
     }
+  };
+
+  async addAllPhages(phages) {
+    /* eslint-disable no-restricted-syntax, no-await-in-loop */
+    for (const phage of phages) {
+      await this.addPhage(phage);
+    }
+    /* eslint-enable */
   }
 }
 
