@@ -91,7 +91,7 @@ class HomePage extends Component {
         pane: (
           <Tab.Pane attached={false} key="phagesDB">
             <PhageList
-              heading="New Phages in Phages DB"
+              heading="PhagesDB"
               phages={phagesDbPhages}
               viewPhage={this.viewPhage}
             />
@@ -103,7 +103,7 @@ class HomePage extends Component {
         pane: (
           <Tab.Pane attached={false} key="petPhages">
             <PhageList
-              heading="New Phages in PET"
+              heading="PET"
               phages={petPhages}
               viewPhage={this.viewPhage}
             />
