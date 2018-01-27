@@ -26,3 +26,7 @@ input {
 .login-form.card {
   width: 25rem;
 }
+
+.segment.segment--big {
+  padding: 3.5rem 7rem;
+}
