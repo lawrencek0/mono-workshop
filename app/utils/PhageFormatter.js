@@ -16,7 +16,10 @@ export function formatPhageDbPhages(phages) {
     }) => ({
       phageName,
       oldNames,
-      genus: isolation_host.genus,
+      genus:
+          isolation_host.genus === 'Mycobacterium'
+            ? 'Mycobacteriophage'
+            : isolation_host.genus,
       cluster: pcluster ? pcluster.cluster : 'Unclustered',
       subcluster: psubcluster ? psubcluster.subcluster : 'None',
       endType: end_type === 'CIRC' ? 'circular' : end_type,
