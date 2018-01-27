@@ -18,7 +18,8 @@ import {
   getPetCreds,
   compareAllTables,
   updateAllPhagesDbPhages,
-  updateAllPetDbPhages
+  updateAllPetDbPhages,
+  updatePetDbPhages
 } from '../utils/Misc';
 import { PHAGES_DB_BASE_URL } from '../constants';
 
@@ -37,6 +38,11 @@ class HomePage extends Component {
     this.setState({
       loading: true
     });
+    await this.loginToPet();
+    await Promise.all([
+      updateAllPetDbPhages(scraper),
+      updateAllPhagesDbPhages()
+    ]);
 
     const { phagesDbPhages, petPhages } = await compareAllTables();
     if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
@@ -114,9 +120,7 @@ class HomePage extends Component {
             <Icon name="lab" size="massive" circular inverted />
             <Header.Content>No New Phages Found!</Header.Content>
           </Header>
-          <Button basic color="green" size="big">
-            Check for Updates
-          </Button>
+          <UpdateButton updateAllPhages={this.updateAllPhages} />
         </Segment>
       );
     }
@@ -129,3 +133,9 @@ class HomePage extends Component {
 }
 
 export default withRouter(HomePage);
+
+const UpdateButton = ({ updateAllPhages }) => (
+  <Button basic color="green" size="big" onClick={updateAllPhages}>
+    Check for Updates
+  </Button>
+);
