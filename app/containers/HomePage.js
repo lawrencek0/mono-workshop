@@ -9,7 +9,8 @@ import {
   Header,
   Segment,
   Loader,
-  Dimmer
+  Dimmer,
+  Button
 } from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
 import scraper from '../lib/Scraper';
@@ -22,19 +23,26 @@ import {
 import { PHAGES_DB_BASE_URL } from '../constants';
 
 class HomePage extends Component {
-  state = { phagesDbPhages: [], petPhages: [], loading: true };
+  state = { phagesDbPhages: [], petPhages: [], loading: false };
 
   async componentDidMount() {
     const [creds] = await getPetCreds();
+    document.body.classList.add('center-container');
     if (!creds) {
       this.props.history.push('/login');
-    } else {
-      await this.updateAllPhages();
     }
   }
 
   updateAllPhages = async () => {
+    this.setState({
+      loading: true
+    });
+
     const { phagesDbPhages, petPhages } = await compareAllTables();
+    if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
+      document.body.classList.remove('center-container');
+    }
+
     this.setState({
       phagesDbPhages,
       petPhages,
@@ -89,21 +97,27 @@ class HomePage extends Component {
 
     if (loading) {
       return (
-        <Segment>
-          <Dimmer active>
-            <Loader content="Updating Phages..." />
-          </Dimmer>
-        </Segment>
+        <Dimmer active inverted>
+          <Loader content="Updating Phages..." />
+        </Dimmer>
       );
     }
     if (phagesDbPhages.length === 0 && petPhages.length === 0) {
       return (
-        <Fragment>
+        <Segment
+          size="big"
+          color="green"
+          textAlign="center"
+          className="segment--big"
+        >
           <Header as="h2" icon textAlign="center">
             <Icon name="lab" size="massive" circular inverted />
             <Header.Content>No New Phages Found!</Header.Content>
           </Header>
-        </Fragment>
+          <Button basic color="green" size="big">
+            Check for Updates
+          </Button>
+        </Segment>
       );
     }
     return (
