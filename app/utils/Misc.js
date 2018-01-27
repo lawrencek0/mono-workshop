@@ -1,11 +1,40 @@
 import { remote } from 'electron';
+import { Readable } from 'stream';
+import fs from 'fs';
+import path from 'path';
 import database from '../database';
 import { formatPhageDbPhages } from '../utils/PhageFormatter';
 import { GENERA } from '../constants';
 
 const keytar = remote.require('keytar');
+const { app } = remote;
+
+// FROM https://stackoverflow.com/a/44695617/8705692
+const responseToReadable = response => {
+  const reader = response.body.getReader();
+  const rs = new Readable();
+  rs._read = async () => {
+    const result = await reader.read();
+    if (!result.done) {
+      rs.push(Buffer.from(result.value));
+    } else {
+      rs.push(null);
+    }
+  };
+  return rs;
+};
+
+export const saveFastaFile = async (fileName, url) => {
+  try {
+    const res = await fetch(url);
+    await responseToReadable(res).pipe(fs.createWriteStream(path.join(app.getPath('appData'), fileName)));
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 export async function getPetCreds() {
+  console.log(app.getPath('appData'));
   return keytar.findCredentials('PetUpdater');
 }
 
@@ -54,7 +83,11 @@ export async function updatePhagesDbPhages(genus) {
   try {
     const { value } = GENERA.find(({ name }) => name === genus);
     const phages = await getPhagesFromPhagesDbApi(value);
-    await Promise.all(phages.map(phage => savePhageToDb(`${genus}PhagesDb`, phage)));
+    await Promise.all(phages.map(phage =>
+      Promise.all[
+        (saveFastaFile(phage.phageName, phage.fastaFile),
+          savePhageToDb(`${genus}PhagesDb`, phage))
+      ]));
   } catch (e) {
     console.error(e);
   }
