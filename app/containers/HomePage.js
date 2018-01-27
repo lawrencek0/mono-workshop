@@ -23,7 +23,7 @@ import {
 import { PHAGES_DB_BASE_URL } from '../constants';
 
 class HomePage extends Component {
-  state = { phagesDbPhages: [], petPhages: [], loading: false };
+  state = { phagesDbPhages: [], petPhages: [], loading: true };
 
   async componentDidMount() {
     document.body.classList.add('center-container');
@@ -32,6 +32,8 @@ class HomePage extends Component {
 
     if (!creds) {
       this.props.history.push('/login');
+    } else {
+      this.fetchAllNewPhages();
     }
   }
 
@@ -46,6 +48,10 @@ class HomePage extends Component {
       updateAllPhagesDbPhages()
     ]);
 
+    await this.fetchAllNewPhages();
+  };
+
+  fetchAllNewPhages = async () => {
     const { phagesDbPhages, petPhages } = await compareAllTables();
 
     if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
