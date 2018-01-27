@@ -141,7 +141,7 @@ class HomePage extends Component {
       <Container>
         <Tab
           renderActiveOnly={false}
-          menu={{ secondary: true, pointing: true }}
+          menu={{ secondary: true, pointing: true, vertical: true }}
           panes={panes}
         />
       </Container>
