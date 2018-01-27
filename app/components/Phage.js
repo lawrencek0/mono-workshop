@@ -8,7 +8,7 @@ const Phage = ({ phage, viewPhage }) => {
 
   return (
     <Table.Row>
-      <Table.Cell>
+      <Table.Cell selectable>
         <Header as="h4">
           <Header.Content onClick={openPhage}>
             {phage.phageName}

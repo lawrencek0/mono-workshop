@@ -12,10 +12,10 @@ const PhageList = ({ heading, phages, viewPhage }) => {
           menuItem: name,
           pane: (
             <Tab.Pane attached={false} key={heading + name}>
-              <Table basic="very" celled unstackable fixed>
+              <Table basic="very" celled unstackable>
                 <Table.Header>
                   <Table.Row>
-                    <Table.HeaderCell>Phage</Table.HeaderCell>
+                    <Table.HeaderCell width={5}>Phage</Table.HeaderCell>
                     <Table.HeaderCell>Cluster</Table.HeaderCell>
                     <Table.HeaderCell>Subcluster</Table.HeaderCell>
                   </Table.Row>
