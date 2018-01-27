@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { shell } from 'electron';
 import {
@@ -18,8 +18,7 @@ import {
   getPetCreds,
   compareAllTables,
   updateAllPhagesDbPhages,
-  updateAllPetDbPhages,
-  updatePetDbPhages
+  updateAllPetDbPhages
 } from '../utils/Misc';
 import { PHAGES_DB_BASE_URL } from '../constants';
 
@@ -27,8 +26,10 @@ class HomePage extends Component {
   state = { phagesDbPhages: [], petPhages: [], loading: false };
 
   async componentDidMount() {
-    const [creds] = await getPetCreds();
     document.body.classList.add('center-container');
+
+    const [creds] = await getPetCreds();
+
     if (!creds) {
       this.props.history.push('/login');
     }
@@ -38,6 +39,7 @@ class HomePage extends Component {
     this.setState({
       loading: true
     });
+
     await this.loginToPet();
     await Promise.all([
       updateAllPetDbPhages(scraper),
@@ -45,6 +47,7 @@ class HomePage extends Component {
     ]);
 
     const { phagesDbPhages, petPhages } = await compareAllTables();
+
     if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
       document.body.classList.remove('center-container');
     }
@@ -55,8 +58,10 @@ class HomePage extends Component {
       loading: false
     });
   };
+
   async loginToPet() {
     const [creds] = await getPetCreds();
+
     if (!creds) {
       this.props.history.push('/login');
     } else {
@@ -108,6 +113,7 @@ class HomePage extends Component {
         </Dimmer>
       );
     }
+
     if (phagesDbPhages.length === 0 && petPhages.length === 0) {
       return (
         <Segment
@@ -124,6 +130,7 @@ class HomePage extends Component {
         </Segment>
       );
     }
+
     return (
       <Container>
         <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
