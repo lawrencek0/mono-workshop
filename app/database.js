@@ -2,57 +2,48 @@ import knex from 'knex';
 import path from 'path';
 import { remote } from 'electron';
 import 'sqlite3';
-import { GENERA } from './constants';
 
 const { app } = remote;
 
 const database = knex({
   client: 'sqlite3',
   connection: {
-    filename: path.join(app.getPath('appData'), 'pet-updater.sqlite')
+    filename: path.join(app.getPath('userData'), 'pet-updater.sqlite')
   },
   useNullAsDefault: true
 });
 
-const tables = [];
+/* eslint-disable promise/always-return */
+database.schema
+  .hasTable('PhagesDb')
+  .then(exists => {
+    if (!exists) {
+      return database.schema.createTable('PhagesDb', t => {
+        t.string('phageName').primary();
+        t.string('oldNames');
+        t.string('genus', 32);
+        t.string('cluster', 16);
+        t.string('subcluster', 8);
+        t.string('endType', 64);
+        t.string('fastaFile');
+      });
+    }
+  })
+  .catch(console.error);
 
-/* eslint-disable array-callback-return, promise/catch-or-return, promise/always-return */
-GENERA.map(({ name: genus }) => {
-  tables.push(database.schema
-    .hasTable(`${genus}PhagesDb`)
-    .then(exists => {
-      if (!exists) {
-        return database.schema.createTable(`${genus}PhagesDb`, t => {
-          t.string('phageName').primary();
-          t.string('oldNames');
-          t.string('genus', 32);
-          t.string('cluster', 16);
-          t.string('subcluster', 8);
-          t.string('endType', 64);
-          t.string('fastaFile');
-        });
-      }
-    })
-    .catch(console.error));
-
-  tables.push(database.schema
-    .hasTable(`${genus}PetPhages`)
-    .then(exists => {
-      if (!exists) {
-        return database.schema.createTable(`${genus}PetPhages`, t => {
-          t.string('phageName').primary();
-          t.string('genus', 32);
-          t.string('cluster', 16);
-          t.string('subcluster', 8);
-        });
-      }
-    })
-    .catch(console.error));
-});
-/* eslint-enable */
-
-export function createTables() {
-  return Promise.all(tables).catch(console.error);
-}
+database.schema
+  .hasTable('PetPhages')
+  .then(exists => {
+    if (!exists) {
+      return database.schema.createTable('PetPhages', t => {
+        t.string('phageName').primary();
+        t.string('genus', 32);
+        t.string('cluster', 16);
+        t.string('subcluster', 8);
+      });
+    }
+  })
+  .catch(console.error);
+// eslint-enable
 
 export default database;
