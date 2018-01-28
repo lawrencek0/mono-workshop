@@ -13,7 +13,7 @@ import {
   Button
 } from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
-import { startScraper, loginToPet, closeScraper } from '../lib/Puppeteer';
+import * as scraper from '../lib/Puppeteer';
 import {
   getPetCreds,
   compareAllTables,
@@ -83,12 +83,13 @@ class HomePage extends Component {
     } else {
       const { account, password } = creds;
 
-      await startScraper();
+      await scraper.startScraper();
 
-      const isLoggedIn = await loginToPet(account, password);
+      const isLoggedIn = await scraper.loginToPet(account, password);
 
       if (!isLoggedIn) {
-        closeScraper();
+        scraper.closeScraper();
+
         this.props.history.push('/login');
       }
     }
