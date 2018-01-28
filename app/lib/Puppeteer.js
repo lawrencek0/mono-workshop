@@ -9,14 +9,13 @@ export const startScraper = async () => {
   page = await browser.newPage();
 };
 
-// tries to log in the user with given creds
+// tries to log in the user with given creds and checks if page is logged in by checking if sidebar is loaded
 // returns Boolean value to indicate login status
 export const loginToPet = async (email, password) => {
   const USERNAME_SELECTOR = '#inputEmail';
   const PASSWORD_SELECTOR = '#inputPassword';
   const SIGN_IN_BTN_SELECTOR = '#inputPassword + button.btn';
-  const ERROR_MSG_SELECTOR = 'span[style="color: red; "]';
-
+  const NAV_SIDEBAR_SELECTOR = 'ul.nav-sidebar';
   try {
     await page.goto(PET_URL);
 
@@ -30,7 +29,9 @@ export const loginToPet = async (email, password) => {
 
     await page.waitFor(2000);
 
-    return Boolean(page.$(ERROR_MSG_SELECTOR));
+    const el = await page.$(NAV_SIDEBAR_SELECTOR);
+
+    return await Boolean(el);
   } catch (e) {
     console.error(e);
   }
