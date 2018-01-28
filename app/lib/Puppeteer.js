@@ -5,13 +5,12 @@ let browser = null;
 let page = null;
 
 export const startScraper = async () => {
-  browser = await puppeteer.launch({ headless: false, slowMo: 250 });
+  browser = await puppeteer.launch({ headless: false });
   page = await browser.newPage();
 };
 
 // tries to log in the user with given creds
-// returns null when successfully signed in
-// returns a selector when error happens
+// returns Boolean value to indicate login status
 export const loginToPet = async (email, password) => {
   const USERNAME_SELECTOR = '#inputEmail';
   const PASSWORD_SELECTOR = '#inputPassword';
@@ -31,7 +30,7 @@ export const loginToPet = async (email, password) => {
 
     await page.waitFor(2000);
 
-    return page.$(ERROR_MSG_SELECTOR);
+    return Boolean(page.$(ERROR_MSG_SELECTOR));
   } catch (e) {
     console.error(e);
   }
