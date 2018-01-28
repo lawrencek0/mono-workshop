@@ -69,6 +69,31 @@ export const openGenus = async genus => {
   }
 };
 
+export const scrapePhages = async () => {
+  const TABLE_PHAGE_SELECTOR = 'tr[id^="phage"]';
+  const NEXT_PAGE_SELECTOR = 'a#cutTable_next';
+  const NEXT_PAGE_DISABLED_SELECTOR = 'a#cutTable_next.disabled';
+
+  try {
+    let phages = await page.evaluate(
+      sel =>
+        [...document.querySelectorAll(sel)].map(el =>
+          el.innerText.trim().split('\t')),
+      TABLE_PHAGE_SELECTOR
+    );
+    const hasNext = await page.$(NEXT_PAGE_DISABLED_SELECTOR);
+
+    if (!hasNext) {
+      await page.click(NEXT_PAGE_SELECTOR);
+      const otherPhages = await scrapePhages();
+      phages = phages.concat(otherPhages);
+    }
+    return phages;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 export const closeScraper = async () => {
   await browser.close();
 };
