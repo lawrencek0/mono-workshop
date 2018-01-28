@@ -15,7 +15,6 @@ import keytar from 'keytar';
 import Nightmare from './lib/Nightmare';
 import MenuBuilder from './menu';
 import { PET_URL, GENERA } from './constants';
-import { createTables } from './database';
 
 let mainWindow = null;
 let nightmare = null;
@@ -71,8 +70,6 @@ app.on('ready', async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-
-  createTables();
 
   // start a nightmare window to go to the phages page
 
