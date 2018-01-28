@@ -36,3 +36,7 @@ export const loginToPet = async (email, password) => {
     console.error(e);
   }
 };
+
+export const closeScraper = async () => {
+  await browser.close();
+};
