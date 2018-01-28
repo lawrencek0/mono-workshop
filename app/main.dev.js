@@ -17,7 +17,7 @@ import MenuBuilder from './menu';
 import { PET_URL, GENERA } from './constants';
 
 let mainWindow = null;
-let nightmare = null;
+const nightmare = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -95,100 +95,3 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 });
-
-const startNightmare = async () => {
-  nightmare = Nightmare({
-    show: true,
-    electronPath: require('./node_modules/electron')
-  });
-  await nightmare.goto(PET_URL);
-};
-
-const loginToPet = async (email, password) => {
-  try {
-    const res = await nightmare
-      .wait('input#inputEmail')
-      .insert('input#inputEmail', email)
-      .insert('input#inputPassword', password)
-      .click('input#inputPassword + button.btn')
-      .wait(500)
-      .exists('span[style="color: red; "]');
-    return !res;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const openGenus = async genus => {
-  try {
-    await nightmare
-      .wait('ul.nav-sidebar')
-      .click('a[href="known_phage_visualization"]')
-      .wait('ul.tabs')
-      .click('input[placeholder="Search Genera"]')
-      .wait('li[id$="-Actinoplanes"]')
-      // eslint-disable-next-line no-shadow
-      .evaluate(genus => {
-        const el = document.querySelector(`li[id$="-${genus}"]`);
-        el.scrollIntoView();
-      }, genus)
-      .realClick(`li[id$="-${genus}"]`)
-      .click('input[placeholder="Search Enzymes"]')
-      .wait('li[id$="-AanI"]')
-      .realClick('li[id$="-AanI"]')
-      .click('button#submit')
-      .wait('table#cutTable')
-      .scrollTo(500, 0)
-      .select('#cutTable_length select[name="cutTable_length"]', '100');
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const scrapePhagesFromPet = async () => {
-  let phages = [];
-  // TODO: how to make this function recursive?
-  async function scrapePhage() {
-    const data = await nightmare.evaluate(() =>
-      [...document.querySelectorAll('tr[id^="phage"]')].map(el =>
-        el.innerText.trim()));
-    const hasNext = await nightmare.exists('a#cutTable_next.disabled');
-    phages = [...phages, ...data];
-    /* eslint-disable promise/always-return */
-    await nightmare.then(async () => {
-      if (!hasNext) {
-        await nightmare.click('a#cutTable_next');
-        await scrapePhage();
-      }
-    });
-    /* eslint-enable */
-  }
-  // FIXME: last page wont work! Better scrape the final page number
-  await scrapePhage();
-  return formatPetPhages(phages);
-};
-
-const scrapeAllPhagesFromPet = async () => {
-  // TODO: maybe send reply from renderer when all is good?
-  // create a for-of-loop and get data from all the phages and save to nedb?
-  /* eslint-disable no-restricted-syntax, no-await-in-loop */
-  for (const genus of GENERA) {
-    await openGenus(genus.name);
-    const gen = await scrapePhagesFromPet();
-    console.log(gen);
-  }
-  /* eslint-enable */
-};
-
-function formatPetPhages(phages) {
-  return phages.map(phage => {
-    const values = phage.split('\t');
-    return ['phage_name', 'genus', 'cluster', 'subcluster'].reduce(
-      (accumulator, curr, i) =>
-        Object.assign(accumulator, {
-          [curr]: values[i]
-        }),
-      {}
-    );
-  });
-}
