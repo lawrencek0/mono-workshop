@@ -13,7 +13,7 @@ import {
   Button
 } from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
-import scraper from '../lib/Scraper';
+import { startScraper, loginToPet, closeScraper } from '../lib/Puppeteer';
 import {
   getPetCreds,
   compareAllTables,
@@ -33,7 +33,7 @@ class HomePage extends Component {
     if (!creds) {
       this.props.history.push('/login');
     } else {
-      this.fetchAllNewPhages();
+      this.loginToPet();
     }
   }
 
@@ -52,15 +52,15 @@ class HomePage extends Component {
   };
 
   fetchAllNewPhages = async () => {
-    const { phagesDbPhages, petPhages } = await compareAllTables();
+    // const { phagesDbPhages, petPhages } = await compareAllTables();
 
-    if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
-      document.body.classList.remove('center-container');
-    }
+    // if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
+    //   document.body.classList.remove('center-container');
+    // }
 
     this.setState({
-      phagesDbPhages,
-      petPhages,
+      phagesDbPhages: [],
+      petPhages: [],
       loading: false
     });
   };
@@ -82,8 +82,13 @@ class HomePage extends Component {
       this.props.history.push('/login');
     } else {
       const { account, password } = creds;
-      const isLoggedIn = await scraper.loginToPet(account, password);
+
+      await startScraper();
+
+      const isLoggedIn = await loginToPet(account, password);
+
       if (!isLoggedIn) {
+        closeScraper();
         this.props.history.push('/login');
       }
     }

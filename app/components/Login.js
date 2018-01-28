@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form, Card, Message } from 'semantic-ui-react';
-import scraper from '../lib/Scraper';
 import { savePetCreds } from '../utils/Misc';
+import { loginToPet, startScraper, closeScraper } from '../lib/Puppeteer';
 
 class Login extends Component {
   state = {
@@ -30,21 +30,30 @@ class Login extends Component {
 
   handleSubmit = async event => {
     event.preventDefault();
-    const { email, password } = this.state;
+
     this.setState({ loading: true });
-    const canLogIn = await scraper.loginToPet(email, password);
+
+    await startScraper();
+
+    const { email, password } = this.state;
+
+    const canLogIn = await loginToPet(email, password);
+
     if (!canLogIn) {
-      this.setState({ error: true });
       document.body.style.setProperty('--background-primary-color', '#ff4444');
+      this.setState({ error: true, loading: false });
     } else {
-      this.setState({ error: false, success: true });
-      await savePetCreds(email, password);
       document.body.style.setProperty('--background-primary-color', '#00c851');
+      this.setState({ error: false, success: true, loading: false });
+
+      await savePetCreds(email, password);
+
       setTimeout(() => {
         this.props.history.push('/');
       }, 800);
     }
-    this.setState({ loading: false });
+
+    await closeScraper();
   };
 
   render() {
