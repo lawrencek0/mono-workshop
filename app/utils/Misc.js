@@ -39,15 +39,14 @@ export const saveFastaFile = async (url, filePath) => {
 
 const getFastaFile = async ({ phageName, fastaFile }) => {
   const filePath = path.join(app.getPath('appData'), `${phageName}.fasta`);
-
+  let fileExists;
   try {
-    const fileExists = await stat(filePath);
-
-    if (!fileExists) {
-      await saveFastaFile(fastaFile, filePath);
-    }
+    fileExists = await stat(filePath);
   } catch (e) {
-    console.error(e);
+    console.log('File not found');
+  }
+  if (!fileExists) {
+    await saveFastaFile(fastaFile, filePath);
   }
 };
 
