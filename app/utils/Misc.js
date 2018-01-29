@@ -101,9 +101,7 @@ export async function updatePhagesDbPhages(genus) {
     const { value } = GENERA.find(({ name }) => name === genus);
     const phages = await getPhagesFromPhagesDbApi(value);
     await Promise.all(phages.map(phage =>
-      Promise.all[
-        (getFastaFile(phage), savePhageToDb(`${genus}PhagesDb`, phage))
-      ]));
+      Promise.all[(getFastaFile(phage), savePhageToDb('PhagesDb', phage))]));
   } catch (e) {
     console.error(e);
   }
