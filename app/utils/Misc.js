@@ -69,31 +69,31 @@ export async function savePhageToDb(tableName, phage) {
   }
 }
 
-// export async function getPhagesFromPhagesDbApi(pk, pageNum = 1, phages = []) {
-//   const res = await fetch(`http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`);
-//   const { next, results } = await res.json();
-//   const allPhages = phages.concat(...formatPhageDbPhages(results));
-//   if (next) {
-//     const num = pageNum + 1;
-//     return getPhagesFromPhagesDbApi(pk, num, allPhages);
-//   }
-//   return allPhages;
-// }
+export async function getPhagesFromPhagesDbApi(pk, pageNum = 1, phages = []) {
+  const res = await fetch(`http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`);
+  const { next, results } = await res.json();
+  const allPhages = phages.concat(...formatPhageDbPhages(results));
+  if (next) {
+    const num = pageNum + 1;
+    return getPhagesFromPhagesDbApi(pk, num, allPhages);
+  }
+  return allPhages;
+}
 
-// // @FIXME: we wont need all of the phages' fasta files so save only those that are not in PET
-// export async function updatePhagesDbPhages(genus) {
-//   try {
-//     const { value } = GENERA.find(({ name }) => name === genus);
-//     const phages = await getPhagesFromPhagesDbApi(value);
-//     await Promise.all(phages.map(phage =>
-//       Promise.all[
-//         (saveFastaFile(phage.phageName, phage.fastaFile),
-//           savePhageToDb(`${genus}PhagesDb`, phage))
-//       ]));
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
+// @FIXME: we wont need all of the phages' fasta files so save only those that are not in PET
+export async function updatePhagesDbPhages(genus) {
+  try {
+    const { value } = GENERA.find(({ name }) => name === genus);
+    const phages = await getPhagesFromPhagesDbApi(value);
+    await Promise.all(phages.map(phage =>
+      Promise.all[
+        (saveFastaFile(phage.phageName, phage.fastaFile),
+          savePhageToDb(`${genus}PhagesDb`, phage))
+      ]));
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 // export async function updateAllPhagesDbPhages() {
 //   try {
