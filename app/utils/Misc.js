@@ -28,10 +28,10 @@ const responseToReadable = response => {
   return rs;
 };
 
-export const saveFastaFile = async (fileName, url) => {
+export const saveFastaFile = async (url, filePath) => {
   try {
     const res = await fetch(url);
-    await responseToReadable(res).pipe(fs.createWriteStream(path.join(app.getPath('appData'), `${fileName}.fasta`)));
+    await responseToReadable(res).pipe(fs.createWriteStream(filePath));
   } catch (e) {
     console.error(e);
   }
@@ -96,7 +96,6 @@ export async function getPhagesFromPhagesDbApi(pk, pageNum = 1, phages = []) {
   return allPhages;
 }
 
-// @FIXME: we wont need all of the phages' fasta files so save only those that are not in PET
 export async function updatePhagesDbPhages(genus) {
   try {
     const { value } = GENERA.find(({ name }) => name === genus);
