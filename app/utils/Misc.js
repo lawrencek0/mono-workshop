@@ -107,13 +107,13 @@ export async function updatePhagesDbPhages(genus) {
   }
 }
 
-// export async function updateAllPhagesDbPhages() {
-//   try {
-//     await Promise.all(GENERA.map(({ name }) => updatePhagesDbPhages(name)));
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
+export async function updateAllPhagesDbPhages() {
+  try {
+    await Promise.all(GENERA.map(({ name }) => updatePhagesDbPhages(name)));
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 export async function updatePetPhages(genus) {
   try {
