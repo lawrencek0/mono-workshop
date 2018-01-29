@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer';
 import { PET_URL } from '../constants';
+import { getFastaFilePath } from '../utils/Misc';
 
 let browser = null;
 let page = null;
@@ -89,6 +90,131 @@ export const scrapePhages = async () => {
       phages = phages.concat(otherPhages);
     }
     return phages;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const modifyCluster = async cluster => {
+  const MODIFY_PHAGE_SIDEBAR_SELECTOR = 'a[href="modify_phage_data"]';
+  const CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR = 'a[href="#view4"]';
+  const ADD_CLUSTER_ACCORDION_SELECTOR = '#ui-id-1';
+  const ADD_CLUSTER_INPUT_SELECTOR = '#add_cluster';
+  const ADD_CLUSTER_BTN_SELECTOR = 'button[value="add_cluster"]';
+  try {
+    await page.click(CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR);
+
+    await page.waitForSelector(ADD_CLUSTER_ACCORDION_SELECTOR);
+
+    await page.click(ADD_CLUSTER_ACCORDION_SELECTOR);
+    await page.type(ADD_CLUSTER_INPUT_SELECTOR, cluster);
+    await page.click(ADD_CLUSTER_BTN_SELECTOR);
+
+    await page.waitFor(1500);
+    await page.click(MODIFY_PHAGE_SIDEBAR_SELECTOR);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const modifySubCluster = async (cluster, subcluster) => {
+  const MODIFY_PHAGE_SIDEBAR_SELECTOR = 'a[href="modify_phage_data"]';
+  const CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR = 'a[href="#view4"]';
+  const ADD_SUBCLUSTER_ACCORDION_SELECTOR = '#ui-id-3';
+  const ADD_CLUSTER_SUBCLUSTER_SELECT_SELECTOR = '#add_subcluster_cluster';
+  const ADD_SUBCLUSTER_INPUT_SELECTOR = '#add_subcluster_subcluster';
+
+  const subclusterNumber = subcluster.match(/\d+/);
+
+  try {
+    await page.waitFor(1000);
+
+    await page.click(CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR);
+
+    await page.waitFor(ADD_SUBCLUSTER_ACCORDION_SELECTOR);
+
+    await page.click(ADD_SUBCLUSTER_ACCORDION_SELECTOR);
+    await page.select(ADD_CLUSTER_SUBCLUSTER_SELECT_SELECTOR, cluster);
+
+    const addSubclusterInputEl = await page.$(ADD_SUBCLUSTER_INPUT_SELECTOR);
+    await addSubclusterInputEl.type(subclusterNumber);
+    await addSubclusterInputEl.press('Enter');
+
+    await page.waitFor(1500);
+    await page.click(MODIFY_PHAGE_SIDEBAR_SELECTOR);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const insertPhage = async phage => {
+  const endType = phage.endType === 'circle' ? endType : 'linear';
+
+  const MODIFY_PHAGE_SIDEBAR_SELECTOR = 'a[href="modify_phage_data"]';
+  const PHAGE_NAME_INPUT_SELECTOR = 'input[name="phage_name"]';
+  const END_TYPE_INPUT_SELECTOR = `input[value="${endType}"]`;
+  const FILE_INPUT_SELECTOR = 'input[type="file"]';
+  const COMMIT_PHAGE_BTN_SELECTOR = 'button[value="commit"]';
+  const GENUS_SELECT_SELECTOR = '#genus';
+  const CLUSTER_SELECT_SELECTOR = '#cluster';
+  const CLUSTER_SELECT_OPTION_VALUE_SELECTOR = `option[value="${
+    phage.cluster
+  }"]`;
+  const SUBCLUSTER_SELECT_SELECTOR = '#subcluster';
+  const SUBCLUSTER_SELECT_OPTION_VALUE_SELECTOR = `option[value="${
+    phage.subcluster
+  }"]`;
+  const SUCCESS_MSG_SPAN_SELECTOR = 'span[style="color: green; "]';
+  const fastaFilePath = getFastaFilePath(phage.phageName);
+  try {
+    await page.click(MODIFY_PHAGE_SIDEBAR_SELECTOR);
+    await page.waitForSelector(CLUSTER_SELECT_SELECTOR);
+
+    const hasCluster = await page.$(`${CLUSTER_SELECT_SELECTOR} ${CLUSTER_SELECT_OPTION_VALUE_SELECTOR}`);
+
+    if (hasCluster === null) await modifyCluster(phage.cluster);
+    await page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    await page.waitForSelector(SUBCLUSTER_SELECT_SELECTOR);
+
+    const hasSubcluster = await page.$(`${SUBCLUSTER_SELECT_SELECTOR} ${SUBCLUSTER_SELECT_OPTION_VALUE_SELECTOR}`);
+
+    if (hasSubcluster === null) {
+      await modifySubCluster(phage.cluster, phage.subcluster);
+      await page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    await page.waitForSelector(PHAGE_NAME_INPUT_SELECTOR);
+
+    await page.$eval(PHAGE_NAME_INPUT_SELECTOR, input => {
+      input.value = '';
+    });
+
+    await page.click(END_TYPE_INPUT_SELECTOR);
+    await page.select(GENUS_SELECT_SELECTOR, phage.genus);
+    await page.select(SUBCLUSTER_SELECT_SELECTOR, phage.subcluster);
+
+    const fastaFileUploadBtnEl = await page.$(FILE_INPUT_SELECTOR);
+    await fastaFileUploadBtnEl.uploadFile(fastaFilePath);
+
+    const phageNameInputEl = await page.$(PHAGE_NAME_INPUT_SELECTOR);
+    await phageNameInputEl.type(phage.phageName);
+    await phageNameInputEl.press('Enter');
+
+    await page.waitForSelector(COMMIT_PHAGE_BTN_SELECTOR);
+
+    // Normal page.click is not working for the buttons in this page
+    await page.$eval(COMMIT_PHAGE_BTN_SELECTOR, btn => btn.click());
+
+    await page.waitForSelector(SUCCESS_MSG_SPAN_SELECTOR);
   } catch (e) {
     console.error(e);
   }
