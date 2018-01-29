@@ -108,8 +108,7 @@ export async function updatePetPhages(genus) {
     await scraper.openGenus(genus);
     const phages = await scraper.scrapePhages(genus);
     const formattedPhages = formatPetPhages(phages);
-    await Promise.all(formattedPhages.map(phage =>
-      savePhageToDb(`${phage.genus}PetPhages`, phage)));
+    await Promise.all(formattedPhages.map(phage => savePhageToDb('PetPhages', phage)));
   } catch (e) {
     console.error(e);
   }
