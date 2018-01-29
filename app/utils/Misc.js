@@ -1,8 +1,8 @@
 import { remote } from 'electron';
-import { Readable } from 'stream';
+import promisify from 'util.promisify';
 import fs from 'fs';
 import path from 'path';
-import { promisify } from 'util';
+import { Readable } from 'stream';
 import * as scraper from '../lib/Puppeteer';
 import database from '../database';
 import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
@@ -157,21 +157,15 @@ export function compareTables(baseTable, compareToTable) {
 }
 
 export async function compareAllTables() {
-  return Promise.all(Promise.all([
-    compareTables('PetPhages', 'PhagesDb'),
-    compareTables('PhagesDb', 'PetPhages')
-  ]).then(([petPhages, phagesDbPhages]) => ({
-    phagesDbPhages,
-    petPhages
-  }))).then(phages =>
-    phages.reduce(
-      (res, phage) => ({
-        phagesDbPhages: [...res.phagesDbPhages, ...phage.phagesDbPhages],
-        petPhages: [...res.petPhages, ...phage.petPhages]
-      }),
-      {
-        phagesDbPhages: [],
-        petPhages: []
-      }
-    ));
+  try {
+    return await Promise.all([
+      compareTables('PetPhages', 'PhagesDb'),
+      compareTables('PhagesDb', 'PetPhages')
+    ]).then(([petPhages, phagesDbPhages]) => ({
+      phagesDbPhages,
+      petPhages
+    }));
+  } catch (e) {
+    console.error(e);
+  }
 }
