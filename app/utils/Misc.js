@@ -2,6 +2,7 @@ import { remote } from 'electron';
 import { Readable } from 'stream';
 import fs from 'fs';
 import path from 'path';
+import { promisify } from 'util';
 import * as scraper from '../lib/Puppeteer';
 import database from '../database';
 import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
@@ -9,6 +10,7 @@ import { GENERA } from '../constants';
 
 const keytar = remote.require('keytar');
 const { app } = remote;
+const stat = promisify(fs.stat);
 
 // FROM https://stackoverflow.com/a/44695617/8705692
 // @TODO: rewwrite this to be more friendlier
@@ -30,6 +32,18 @@ export const saveFastaFile = async (fileName, url) => {
   try {
     const res = await fetch(url);
     await responseToReadable(res).pipe(fs.createWriteStream(path.join(app.getPath('appData'), `${fileName}.fasta`)));
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const getFastaFile = async ({ phageName, fastaFile }) => {
+  const filePath = path.join(app.getPath('appData'), `${phageName}.fasta`);
+  try {
+    const fileExists = await stat(filePath);
+    if (!fileExists) {
+      await saveFastaFile(fastaFile, filePath);
+    }
   } catch (e) {
     console.error(e);
   }
@@ -87,8 +101,7 @@ export async function updatePhagesDbPhages(genus) {
     const phages = await getPhagesFromPhagesDbApi(value);
     await Promise.all(phages.map(phage =>
       Promise.all[
-        (saveFastaFile(phage.phageName, phage.fastaFile),
-          savePhageToDb(`${genus}PhagesDb`, phage))
+        (getFastaFile(phage), savePhageToDb(`${genus}PhagesDb`, phage))
       ]));
   } catch (e) {
     console.error(e);
