@@ -152,23 +152,22 @@ export function compareTables(baseTable, compareToTable) {
   return database.raw(`select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phageName = t2.phageName where t2.phageName is null`);
 }
 
-// export async function compareAllTables() {
-//   return Promise.all(GENERA.map(({ name }) =>
-//     Promise.all([
-//       compareTables(`${name}PetPhages`, `${name}PhagesDb`),
-//       compareTables(`${name}PhagesDb`, `${name}PetPhages`)
-//     ]).then(([petPhages, phagesDbPhages]) => ({
-//       phagesDbPhages,
-//       petPhages
-//     })))).then(phages =>
-//     phages.reduce(
-//       (res, phage) => ({
-//         phagesDbPhages: [...res.phagesDbPhages, ...phage.phagesDbPhages],
-//         petPhages: [...res.petPhages, ...phage.petPhages]
-//       }),
-//       {
-//         phagesDbPhages: [],
-//         petPhages: []
-//       }
-//     ));
-// }
+export async function compareAllTables() {
+  return Promise.all(Promise.all([
+    compareTables('PetPhages', 'PhagesDb'),
+    compareTables('PhagesDb', 'PetPhages')
+  ]).then(([petPhages, phagesDbPhages]) => ({
+    phagesDbPhages,
+    petPhages
+  }))).then(phages =>
+    phages.reduce(
+      (res, phage) => ({
+        phagesDbPhages: [...res.phagesDbPhages, ...phage.phagesDbPhages],
+        petPhages: [...res.petPhages, ...phage.petPhages]
+      }),
+      {
+        phagesDbPhages: [],
+        petPhages: []
+      }
+    ));
+}
