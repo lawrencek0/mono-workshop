@@ -59,9 +59,11 @@ export async function savePetCreds(email, password) {
   await keytar.setPassword('PetUpdater', email, password);
 }
 
-// export async function fetchPhagesFromDb(tableName) {
-//   return database(tableName).select();
-// }
+export async function fetchPhagesWithGenus(tableName, genus) {
+  return database(tableName)
+    .select()
+    .where('genus', genus);
+}
 
 // export async function fetchAllPhagesFromDb(phageSource) {
 //   try {
