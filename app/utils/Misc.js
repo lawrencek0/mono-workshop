@@ -12,6 +12,9 @@ const keytar = remote.require('keytar');
 const { app } = remote;
 const stat = promisify(fs.stat);
 
+export const getFastaFilePath = fileName =>
+  path.join(app.getPath('appData'), `${fileName}.fasta`);
+
 // FROM https://stackoverflow.com/a/44695617/8705692
 // @TODO: rewwrite this to be more friendlier
 const responseToReadable = response => {
@@ -38,7 +41,7 @@ export const saveFastaFile = async (url, filePath) => {
 };
 
 const getFastaFile = async ({ phageName, fastaFile }) => {
-  const filePath = path.join(app.getPath('appData'), `${phageName}.fasta`);
+  const filePath = getFastaFilePath(phageName);
   let fileExists;
   try {
     fileExists = await stat(filePath);
