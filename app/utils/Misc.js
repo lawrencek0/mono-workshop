@@ -2,8 +2,9 @@ import { remote } from 'electron';
 import { Readable } from 'stream';
 import fs from 'fs';
 import path from 'path';
+import * as scraper from '../lib/Puppeteer';
 import database from '../database';
-import { formatPhageDbPhages } from '../utils/PhageFormatter';
+import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
 import { GENERA } from '../constants';
 
 const keytar = remote.require('keytar');
@@ -11,36 +12,36 @@ const { app } = remote;
 
 // FROM https://stackoverflow.com/a/44695617/8705692
 // @TODO: rewwrite this to be more friendlier
-// const responseToReadable = response => {
-//   const reader = response.body.getReader();
-//   const rs = new Readable();
-//   rs._read = async () => {
-//     const result = await reader.read();
-//     if (!result.done) {
-//       rs.push(Buffer.from(result.value));
-//     } else {
-//       rs.push(null);
-//     }
-//   };
-//   return rs;
-// };
+const responseToReadable = response => {
+  const reader = response.body.getReader();
+  const rs = new Readable();
+  rs._read = async () => {
+    const result = await reader.read();
+    if (!result.done) {
+      rs.push(Buffer.from(result.value));
+    } else {
+      rs.push(null);
+    }
+  };
+  return rs;
+};
 
-// export const saveFastaFile = async (fileName, url) => {
-//   try {
-//     const res = await fetch(url);
-//     await responseToReadable(res).pipe(fs.createWriteStream(path.join(app.getPath('appData'), `${fileName}.fasta`)));
-//   } catch (e) {
-//     console.error(e);
-//   }
-// };
+export const saveFastaFile = async (fileName, url) => {
+  try {
+    const res = await fetch(url);
+    await responseToReadable(res).pipe(fs.createWriteStream(path.join(app.getPath('appData'), `${fileName}.fasta`)));
+  } catch (e) {
+    console.error(e);
+  }
+};
 
-// export async function getPetCreds() {
-//   return keytar.findCredentials('PetUpdater');
-// }
+export async function getPetCreds() {
+  return keytar.findCredentials('PetUpdater');
+}
 
-// export async function savePetCreds(email, password) {
-//   await keytar.setPassword('PetUpdater', email, password);
-// }
+export async function savePetCreds(email, password) {
+  await keytar.setPassword('PetUpdater', email, password);
+}
 
 // export async function fetchPhagesFromDb(tableName) {
 //   return database(tableName).select();
@@ -55,18 +56,18 @@ const { app } = remote;
 //   }
 // }
 
-// export async function savePhageToDb(tableName, phage) {
-//   const phageName = await database(tableName)
-//     .where({ phageName: phage.phageName })
-//     .select('phageName');
+export async function savePhageToDb(tableName, phage) {
+  const phageName = await database(tableName)
+    .where({ phageName: phage.phageName })
+    .select('phageName');
 
-//   if (phageName.length === 0) {
-//     database(tableName)
-//       .insert(phage)
-//       .then(console.log)
-//       .catch(console.error);
-//   }
-// }
+  if (phageName.length === 0) {
+    database(tableName)
+      .insert(phage)
+      .then(console.log)
+      .catch(console.error);
+  }
+}
 
 // export async function getPhagesFromPhagesDbApi(pk, pageNum = 1, phages = []) {
 //   const res = await fetch(`http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`);
@@ -102,15 +103,17 @@ const { app } = remote;
 //   }
 // }
 
-// export async function updatePetDbPhages(scraper, genus) {
-//   try {
-//     await scraper.openGenus(genus);
-//     const phages = await scraper.scrapePhagesFromPet(genus);
-//     await Promise.all(phages.map(phage => savePhageToDb(`${phage.genus}PetPhages`, phage)));
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
+export async function updatePetPhages(genus) {
+  try {
+    await scraper.openGenus(genus);
+    const phages = await scraper.scrapePhages(genus);
+    const formattedPhages = formatPetPhages(phages);
+    await Promise.all(formattedPhages.map(phage =>
+      savePhageToDb(`${phage.genus}PetPhages`, phage)));
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 // export async function updateAllPetDbPhages(scraper) {
 //   try {
