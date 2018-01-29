@@ -65,14 +65,16 @@ export async function fetchPhagesWithGenus(tableName, genus) {
     .where('genus', genus);
 }
 
-// export async function fetchAllPhagesFromDb(phageSource) {
-//   try {
-//     return Promise.all(GENERA.map(({ name }) =>
-//       this.fetchPhagesDbPhages(`${name}${phageSource}`)));
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
+export async function fetchAllPhagesFromDb() {
+  try {
+    return await Promise.all([
+      database('PetPhages').select(),
+      database('PhagesDb').select()
+    ]);
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 export async function savePhageToDb(tableName, phage) {
   const phageName = await database(tableName)
