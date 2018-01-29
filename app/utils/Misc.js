@@ -114,7 +114,7 @@ export async function updatePetPhages(genus) {
   }
 }
 
-export async function updateAllPetDbPhages() {
+export async function updateAllPetPhages() {
   try {
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const genus of GENERA) {
