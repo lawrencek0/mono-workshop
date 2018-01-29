@@ -138,19 +138,19 @@ export async function updateAllPetPhages() {
   }
 }
 
-// export function compareTables(baseTable, compareToTable) {
-//   // @FIXME: knex is not working??
-//   // return database
-//   //   .select()
-//   //   .from(baseTable)
-//   //   .leftJoin(
-//   //     compareToTable,
-//   //     `${baseTable}.phage_name`,
-//   //     `${compareToTable}.phage_name`
-//   //   )
-//   //   .whereNull(`${compareToTable}.phage_name`);
-//   return database.raw(`select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phageName = t2.phageName where t2.phageName is null`);
-// }
+export function compareTables(baseTable, compareToTable) {
+  // @FIXME: knex is not working??
+  // return database
+  //   .select()
+  //   .from(baseTable)
+  //   .leftJoin(
+  //     compareToTable,
+  //     `${baseTable}.phage_name`,
+  //     `${compareToTable}.phage_name`
+  //   )
+  //   .whereNull(`${compareToTable}.phage_name`);
+  return database.raw(`select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phageName = t2.phageName where t2.phageName is null`);
+}
 
 // export async function compareAllTables() {
 //   return Promise.all(GENERA.map(({ name }) =>
