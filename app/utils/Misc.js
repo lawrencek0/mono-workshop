@@ -115,17 +115,17 @@ export async function updatePetPhages(genus) {
   }
 }
 
-// export async function updateAllPetDbPhages(scraper) {
-//   try {
-//     /* eslint-disable no-restricted-syntax, no-await-in-loop */
-//     for (const genus of GENERA) {
-//       await updatePetDbPhages(scraper, genus.name);
-//     }
-//     /* eslint-enable */
-//   } catch (e) {
-//     console.error(e);
-//   }
-// }
+export async function updateAllPetDbPhages() {
+  try {
+    /* eslint-disable no-restricted-syntax, no-await-in-loop */
+    for (const genus of GENERA) {
+      await updatePetPhages(genus.name);
+    }
+    /* eslint-enable */
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 // export function compareTables(baseTable, compareToTable) {
 //   // @FIXME: knex is not working??
