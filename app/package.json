@@ -15,10 +15,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "chromeless": "^1.5.0",
     "keytar": "^4.1.0",
     "knex": "^0.14.2",
-    "nightmare": "^2.10.0",
     "puppeteer": "^1.0.0",
     "sqlite3": "^3.1.13"
   }

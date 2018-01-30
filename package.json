@@ -193,8 +193,6 @@
     "devtron": "^1.4.0",
     "electron-debug": "^1.5.0",
     "font-awesome": "^4.7.0",
-    "nightmare-real-mouse": "^1.0.0",
-    "nightmare-upload": "^0.1.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hot-loader": "3.1.3",
