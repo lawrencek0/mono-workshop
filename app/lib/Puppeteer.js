@@ -1,3 +1,5 @@
+// @TODO: Need better error handling! Maybe throw an error and have React catch it?
+
 import puppeteer from 'puppeteer';
 import { PET_URL } from '../constants';
 import { getFastaFilePath } from '../utils/Misc';
@@ -6,7 +8,7 @@ let browser = null;
 let page = null;
 
 export const startScraper = async () => {
-  browser = await puppeteer.launch({ headless: false });
+  browser = await puppeteer.launch();
   page = await browser.newPage();
 };
 
