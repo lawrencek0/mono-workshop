@@ -3,7 +3,7 @@ import promisify from 'util.promisify';
 import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
-import * as scraper from '../lib/Puppeteer';
+import * as scraper from '../lib/Scraper';
 import database from '../database';
 import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
 import { GENERA } from '../constants';

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form, Card, Message } from 'semantic-ui-react';
 import { savePetCreds } from '../utils/Misc';
-import { loginToPet, startScraper, closeScraper } from '../lib/Puppeteer';
+import { loginToPet, startScraper, closeScraper } from '../lib/Scraper';
 
 class Login extends Component {
   state = {
