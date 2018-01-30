@@ -13,12 +13,12 @@ import {
   Button
 } from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
-import * as scraper from '../lib/Puppeteer';
+import * as scraper from '../lib/Scraper';
 import {
   getPetCreds,
   compareAllTables,
   updateAllPhagesDbPhages,
-  updateAllPetDbPhages
+  updateAllPetPhages
 } from '../utils/Misc';
 import { PHAGES_DB_BASE_URL } from '../constants';
 
@@ -33,7 +33,7 @@ class HomePage extends Component {
     if (!creds) {
       this.props.history.push('/login');
     } else {
-      this.loginToPet();
+      this.fetchAllNewPhages();
     }
   }
 
@@ -43,24 +43,24 @@ class HomePage extends Component {
     });
 
     await this.loginToPet();
-    await Promise.all([
-      updateAllPetDbPhages(scraper),
-      updateAllPhagesDbPhages()
-    ]);
+    await Promise.all([updateAllPetPhages(), updateAllPhagesDbPhages()]);
 
     await this.fetchAllNewPhages();
+    await scraper.closeScraper();
   };
 
   fetchAllNewPhages = async () => {
-    // const { phagesDbPhages, petPhages } = await compareAllTables();
+    const { phagesDbPhages, petPhages } = await compareAllTables();
 
-    // if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
-    //   document.body.classList.remove('center-container');
-    // }
+    if (phagesDbPhages.length !== 0 || petPhages.length !== 0) {
+      document.body.classList.remove('center-container');
+    } else {
+      document.body.classList.add('center-container');
+    }
 
     this.setState({
-      phagesDbPhages: [],
-      petPhages: [],
+      phagesDbPhages,
+      petPhages,
       loading: false
     });
   };
@@ -71,7 +71,7 @@ class HomePage extends Component {
     });
 
     await this.loginToPet();
-    await scraper.addAllPhages(this.state.phagesDbPhages);
+    await scraper.insertPhages(this.state.phagesDbPhages);
     await this.fetchAllNewPhages();
   };
 
