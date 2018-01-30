@@ -6,7 +6,7 @@ let browser = null;
 let page = null;
 
 export const startScraper = async () => {
-  browser = await puppeteer.launch({ headless: false });
+  browser = await puppeteer.launch();
   page = await browser.newPage();
 };
 
@@ -96,11 +96,13 @@ export const scrapePhages = async () => {
 };
 
 const modifyCluster = async cluster => {
-  const MODIFY_PHAGE_SIDEBAR_SELECTOR = 'a[href="modify_phage_data"]';
+  const UPLOAD_PHAGE_TAB_SELECTOR = 'a[href="#view1"]';
   const CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR = 'a[href="#view4"]';
   const ADD_CLUSTER_ACCORDION_SELECTOR = '#ui-id-1';
   const ADD_CLUSTER_INPUT_SELECTOR = '#add_cluster';
   const ADD_CLUSTER_BTN_SELECTOR = 'button[value="add_cluster"]';
+  const SUCCESS_MSG_PARA_SELECTOR = 'p[style="color: green;"]';
+
   try {
     await page.click(CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR);
 
@@ -110,38 +112,38 @@ const modifyCluster = async cluster => {
     await page.type(ADD_CLUSTER_INPUT_SELECTOR, cluster);
     await page.click(ADD_CLUSTER_BTN_SELECTOR);
 
-    await page.waitFor(1500);
-    await page.click(MODIFY_PHAGE_SIDEBAR_SELECTOR);
+    await page.waitFor(SUCCESS_MSG_PARA_SELECTOR);
+
+    await page.click(UPLOAD_PHAGE_TAB_SELECTOR);
   } catch (e) {
     console.error(e);
   }
 };
 
 const modifySubCluster = async (cluster, subcluster) => {
-  const MODIFY_PHAGE_SIDEBAR_SELECTOR = 'a[href="modify_phage_data"]';
+  const UPLOAD_PHAGE_TAB_SELECTOR = 'a[href="#view1"]';
   const CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR = 'a[href="#view4"]';
   const ADD_SUBCLUSTER_ACCORDION_SELECTOR = '#ui-id-3';
   const ADD_CLUSTER_SUBCLUSTER_SELECT_SELECTOR = '#add_subcluster_cluster';
   const ADD_SUBCLUSTER_INPUT_SELECTOR = '#add_subcluster_subcluster';
+  const ADD_SUBCLUSTER_BTN_SELECTOR = 'button[value="add_subcluster"]';
+  const SUCCESS_MSG_PARA_SELECTOR = 'p[style="color: green;"]';
 
   const subclusterNumber = subcluster.match(/\d+/);
 
   try {
-    await page.waitFor(1000);
-
     await page.click(CLUSTER_SUBCLUSTER_EDIT_TAB_SELECTOR);
 
     await page.waitFor(ADD_SUBCLUSTER_ACCORDION_SELECTOR);
 
     await page.click(ADD_SUBCLUSTER_ACCORDION_SELECTOR);
     await page.select(ADD_CLUSTER_SUBCLUSTER_SELECT_SELECTOR, cluster);
+    await page.type(ADD_SUBCLUSTER_INPUT_SELECTOR, subclusterNumber);
+    await page.$eval(ADD_SUBCLUSTER_BTN_SELECTOR, btn => btn.click());
 
-    const addSubclusterInputEl = await page.$(ADD_SUBCLUSTER_INPUT_SELECTOR);
-    await addSubclusterInputEl.type(subclusterNumber);
-    await addSubclusterInputEl.press('Enter');
+    await page.waitForSelector(SUCCESS_MSG_PARA_SELECTOR);
 
-    await page.waitFor(1500);
-    await page.click(MODIFY_PHAGE_SIDEBAR_SELECTOR);
+    await page.click(UPLOAD_PHAGE_TAB_SELECTOR);
   } catch (e) {
     console.error(e);
   }
@@ -173,6 +175,8 @@ export const insertPhage = async phage => {
     const hasCluster = await page.$(`${CLUSTER_SELECT_SELECTOR} ${CLUSTER_SELECT_OPTION_VALUE_SELECTOR}`);
 
     if (hasCluster === null) await modifyCluster(phage.cluster);
+
+    await page.waitForSelector(CLUSTER_SELECT_SELECTOR);
     await page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
   } catch (e) {
     console.error(e);
