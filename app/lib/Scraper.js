@@ -2,7 +2,7 @@
 
 import puppeteer from 'puppeteer';
 import { PET_URL } from '../constants';
-import { getFastaFilePath } from '../utils/Misc';
+import { getFastaFilePath, deleteFastaFile } from '../utils/Misc';
 
 let browser = null;
 let page = null;
@@ -225,6 +225,7 @@ const insertPhage = async phage => {
     await page.$eval(COMMIT_PHAGE_BTN_SELECTOR, btn => btn.click());
 
     await page.waitForSelector(SUCCESS_MSG_SPAN_SELECTOR);
+    await deleteFastaFile(phage.phageName);
   } catch (e) {
     console.error(`Unable to add phage ${JSON.stringify(phage)}`);
     console.error(e);

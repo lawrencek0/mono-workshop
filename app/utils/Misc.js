@@ -11,6 +11,10 @@ import { GENERA } from '../constants';
 const keytar = remote.require('keytar');
 const { app } = remote;
 const stat = promisify(fs.stat);
+const unlink = promisify(fs.unlink);
+
+export const deleteFastaFile = async fileName =>
+  unlink(getFastaFilePath(fileName));
 
 export const getFastaFilePath = fileName =>
   path.join(app.getPath('appData'), `${fileName}.fasta`);
@@ -88,6 +92,8 @@ export async function savePhageToDb(tableName, phage) {
       .insert(phage)
       .then(console.log)
       .catch(console.error);
+
+    if (tableName === 'PhagesDB') getFastaFile(phage);
   }
 }
 
@@ -106,8 +112,7 @@ export async function updatePhagesDbPhages(genus) {
   try {
     const { value } = GENERA.find(({ name }) => name === genus);
     const phages = await getPhagesFromPhagesDbApi(value);
-    await Promise.all(phages.map(phage =>
-      Promise.all[(getFastaFile(phage), savePhageToDb('PhagesDb', phage))]));
+    await Promise.all(phages.map(phage => savePhageToDb('PhagesDb', phage)));
   } catch (e) {
     console.error(e);
   }
