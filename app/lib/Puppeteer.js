@@ -6,7 +6,7 @@ let browser = null;
 let page = null;
 
 export const startScraper = async () => {
-  browser = await puppeteer.launch();
+  browser = await puppeteer.launch({ headless: false });
   page = await browser.newPage();
 };
 
@@ -34,6 +34,7 @@ export const loginToPet = async (email, password) => {
 
     return await Boolean(el);
   } catch (e) {
+    console.error('Unable to login to PET with given creds');
     console.error(e);
   }
 };
@@ -66,6 +67,7 @@ export const openGenus = async genus => {
 
     await page.select(CUT_TABLE_LENGTH_SELECT_SELECTOR, CUT_TABLE_LENGTH_VALUE);
   } catch (e) {
+    console.error(`Unable to open genus ${genus}`);
     console.error(e);
   }
 };
@@ -91,7 +93,7 @@ export const scrapePhages = async () => {
     }
     return phages;
   } catch (e) {
-    console.error(e);
+    console.error(`Unable to scrape phage ${e}`);
   }
 };
 
@@ -110,13 +112,13 @@ const modifyCluster = async cluster => {
 
     await page.click(ADD_CLUSTER_ACCORDION_SELECTOR);
     await page.type(ADD_CLUSTER_INPUT_SELECTOR, cluster);
-    await page.click(ADD_CLUSTER_BTN_SELECTOR);
+    await page.$eval(ADD_CLUSTER_BTN_SELECTOR, btn => btn.click());
 
     await page.waitFor(SUCCESS_MSG_PARA_SELECTOR);
 
     await page.click(UPLOAD_PHAGE_TAB_SELECTOR);
   } catch (e) {
-    console.error(e);
+    throw new Error(`Unable to modify cluster ${cluster}: ${e}`);
   }
 };
 
@@ -145,11 +147,11 @@ const modifySubCluster = async (cluster, subcluster) => {
 
     await page.click(UPLOAD_PHAGE_TAB_SELECTOR);
   } catch (e) {
-    console.error(e);
+    throw new Error(`Unable to modify subcluster${subcluster}: ${e}`);
   }
 };
 
-export const insertPhage = async phage => {
+const insertPhage = async phage => {
   const endType = phage.endType === 'circle' ? endType : 'linear';
 
   const MODIFY_PHAGE_SIDEBAR_SELECTOR = 'a[href="modify_phage_data"]';
@@ -179,6 +181,7 @@ export const insertPhage = async phage => {
     await page.waitForSelector(CLUSTER_SELECT_SELECTOR);
     await page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
   } catch (e) {
+    console.error(`Unable to add/find cluster for ${phage}`);
     console.error(e);
   }
 
@@ -192,6 +195,7 @@ export const insertPhage = async phage => {
       await page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
     }
   } catch (e) {
+    console.error(`Unable to add/find subcluster for ${phage}`);
     console.error(e);
   }
 
@@ -220,8 +224,18 @@ export const insertPhage = async phage => {
 
     await page.waitForSelector(SUCCESS_MSG_SPAN_SELECTOR);
   } catch (e) {
+    console.error(`Unable to add phage ${phage}`);
     console.error(e);
   }
+};
+
+export const insertPhages = async phages => {
+  /* eslint-disable no-restricted-syntax, no-await-in-loop */
+  for (const phage of phages) {
+    await insertPhage(phage);
+  }
+  /* eslint-enable */
+  await closeScraper();
 };
 
 export const closeScraper = async () => {
