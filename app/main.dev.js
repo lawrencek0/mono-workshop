@@ -10,14 +10,10 @@
  *
  * @flow
  */
-import { app, BrowserWindow, ipcMain } from 'electron';
-import keytar from 'keytar';
-import Nightmare from './lib/Nightmare';
+import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
-import { PET_URL, GENERA } from './constants';
 
 let mainWindow = null;
-const nightmare = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -52,7 +48,6 @@ app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
-  // await nightmare.end();
 });
 
 app.on('ready', async () => {
@@ -70,8 +65,6 @@ app.on('ready', async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-
-  // start a nightmare window to go to the phages page
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
