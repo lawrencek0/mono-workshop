@@ -183,7 +183,7 @@ const insertPhage = async phage => {
     await page.waitForSelector(CLUSTER_SELECT_SELECTOR);
     await page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
   } catch (e) {
-    console.error(`Unable to add/find cluster for ${phage}`);
+    console.error(`Unable to add/find cluster for ${JSON.stringify(phage)}`);
     console.error(e);
   }
 
@@ -197,7 +197,7 @@ const insertPhage = async phage => {
       await page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
     }
   } catch (e) {
-    console.error(`Unable to add/find subcluster for ${phage}`);
+    console.error(`Unable to add/find subcluster for ${JSON.stringify(phage)}`);
     console.error(e);
   }
 
@@ -226,7 +226,7 @@ const insertPhage = async phage => {
 
     await page.waitForSelector(SUCCESS_MSG_SPAN_SELECTOR);
   } catch (e) {
-    console.error(`Unable to add phage ${phage}`);
+    console.error(`Unable to add phage ${JSON.stringify(phage)}`);
     console.error(e);
   }
 };
