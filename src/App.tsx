@@ -1,10 +1,15 @@
 import * as React from 'react';
+import Header from './components/Header';
+import SideBar from './components/SideBar';
+import Movies from './components/Movies';
 
 class App extends React.Component {
   render() {
     return (
       <div>
-      Hello World  
+        <Header />
+        <SideBar />
+        <Movies />
       </div>
     );
   }
