@@ -29,15 +29,7 @@ class MovieList extends React.Component<{}, MovieListState> {
           title,
           vote_average,
           release_date
-        }: {
-          vote_count: number;
-          id: number;
-          genre_ids: number[];
-          poster_path: string;
-          title: string;
-          vote_average: number;
-          release_date: number;
-        }) => ({
+        }: MovieProps) => ({
           vote_count,
           id,
           genre_ids,
