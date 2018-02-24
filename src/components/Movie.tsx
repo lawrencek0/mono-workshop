@@ -1,9 +1,12 @@
 import * as React from 'react';
 
-class Movies extends React.Component {
+interface MovieProps {
+  title: String;
+}
+class Movie extends React.Component<MovieProps> {
   render() {
-    return <div>Movies!</div>;
+    return <div>{this.props.title}</div>;
   }
 }
 
-export default Movies;
+export default Movie;
