@@ -50,9 +50,9 @@ class MovieList extends React.Component<{}, MovieListState> {
       return <span>Loading</span>;
     }
     return (
-      <div>
+      <ul>
         {this.state.movies.map(movie => <Movie key={movie.id} {...movie} />)}
-      </div>
+      </ul>
     );
   }
 }

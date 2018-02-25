@@ -11,7 +11,7 @@ export interface MovieProps extends JSX.IntrinsicAttributes {
 }
 class Movie extends React.Component<MovieProps> {
   render() {
-    return <div>{this.props.title}</div>;
+    return <li>{this.props.title}</li>;
   }
 }
 
