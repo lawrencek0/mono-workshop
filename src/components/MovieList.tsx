@@ -1,11 +1,16 @@
 import * as React from 'react';
+import styled from '../theme';
 import Movie, { MovieProps } from './Movie';
 
 interface MovieListState {
   movies: MovieProps[];
 }
 
-class MovieList extends React.Component<{}, MovieListState> {
+interface MovieListProps {
+  className?: string;
+}
+
+class MovieList extends React.Component<MovieListProps, MovieListState> {
   state: MovieListState = { movies: [] };
 
   componentDidMount() {
@@ -50,11 +55,20 @@ class MovieList extends React.Component<{}, MovieListState> {
       return <span>Loading</span>;
     }
     return (
-      <ul>
+      <ul className={this.props.className}>
         {this.state.movies.map(movie => <Movie key={movie.id} {...movie} />)}
       </ul>
     );
   }
 }
 
-export default MovieList;
+// @TODO: add @support query for grid
+const StyledMovieList = styled(MovieList)`
+  flex-basis: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px 0;
+  list-style: none;
+`;
+
+export default StyledMovieList;
