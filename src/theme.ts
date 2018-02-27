@@ -17,7 +17,8 @@ const {
 
 export const dayTheme = {
   primaryColor: '#FFE519',
-  secondaryColor: '#6F4C30'
+  secondaryColor: '#6F4C30',
+  bodyColor: '#FFF'
 };
 
 export const nightTheme = {
