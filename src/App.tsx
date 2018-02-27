@@ -6,13 +6,13 @@ import MovieList from './components/MovieList';
 class App extends React.Component {
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Header />
         <div>
           <SideBar />
           <MovieList />
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
