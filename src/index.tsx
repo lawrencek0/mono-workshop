@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { injectGlobal, ThemeProvider, dayTheme } from './theme';
+import store from './store';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -26,9 +28,11 @@ injectGlobal`
 `;
 
 ReactDOM.render(
-  <ThemeProvider theme={dayTheme}>
-    <App />
-  </ThemeProvider>,
+  <Provider store={store}>
+    <ThemeProvider theme={dayTheme}>
+      <App />
+    </ThemeProvider>
+  </Provider>,
   document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();
