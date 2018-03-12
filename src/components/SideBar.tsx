@@ -14,6 +14,8 @@ const StyledBar = styled(SideBar)`
   min-width: 300px;
   flex-basis: 20%;
   padding: 1.275rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 export default StyledBar;
