@@ -2,14 +2,15 @@ import { combineReducers } from 'redux';
 import { getType } from 'typesafe-actions';
 import { moviesActions } from './actions';
 
+// @FIXME: underscore_case cause of the api any workarounds? reselct?
 export interface Movie {
   id: number;
   title: string;
-  genreIds: number[];
-  voteCount: number;
-  voteAverage: number;
-  releaseDate: string;
-  posterPath: string;
+  genre_ids: number[];
+  vote_count: number;
+  vote_average: number;
+  release_date: string;
+  poster_path: string;
   className?: string;
 }
 
