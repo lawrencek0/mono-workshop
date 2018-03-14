@@ -15,19 +15,29 @@ interface AppProps {
   // tslint:disable-next-line:no-any
   fetchMovies: () => any;
   movies: Movie[];
+  loading: boolean;
+  errMessage: string | null;
 }
+
 class App extends React.Component<AppProps> {
   componentDidMount() {
     this.props.fetchMovies();
   }
 
   render() {
+    const { loading, movies } = this.props;
+
+    // @TODO: better styles, how to handle errors? errorboundary?
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+
     return (
       <React.Fragment>
         <Header />
         <StyledMain>
           <SideBar />
-          <MovieList movies={this.props.movies} />
+          <MovieList movies={movies} />
         </StyledMain>
       </React.Fragment>
     );
@@ -35,7 +45,9 @@ class App extends React.Component<AppProps> {
 }
 
 const mapStateToProps = (state: RootState) => ({
-  movies: state.movies.movies
+  movies: state.movies.movies,
+  loading: state.movies.isFetching,
+  errMessage: state.movies.errMessage
 });
 
 const connectedApp = connect(mapStateToProps, {
