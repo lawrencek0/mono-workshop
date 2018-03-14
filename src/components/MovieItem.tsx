@@ -1,24 +1,21 @@
 import * as React from 'react';
 import styled from '../theme';
 import { TMDB_IMG_BASE_URL, TMDB_IMG_FILE_SIZE } from '../constants';
-export interface MovieProps extends JSX.IntrinsicAttributes {
-  id: number;
-  title: string;
-  genre_ids: number[];
-  vote_count: number;
-  vote_average: number;
-  release_date: string;
-  poster_path: string;
-  className?: string;
-}
-class Movie extends React.Component<MovieProps> {
+import { Movie } from '../redux/movies/reducer';
+
+class MovieItem extends React.Component<Movie> {
   render() {
     const imgUrl = `${TMDB_IMG_BASE_URL}/${TMDB_IMG_FILE_SIZE}/${
       this.props.poster_path
     }`;
 
-    const { title, className, release_date, vote_average } = this.props;
-    const year = release_date.substring(0, 4);
+    const {
+      title,
+      className,
+      release_date: releaseDate,
+      vote_average: voteAverage
+    } = this.props;
+    const year = releaseDate.substring(0, 4);
 
     return (
       <li className={className}>
@@ -32,7 +29,7 @@ class Movie extends React.Component<MovieProps> {
             </div>
             <div className="movie-rating">
               <span className="title">Rating</span>
-              <span>{vote_average}</span>
+              <span>{voteAverage}</span>
             </div>
           </div>
         </div>
@@ -43,7 +40,7 @@ class Movie extends React.Component<MovieProps> {
 
 // @TODO: GRIDIFY ME!!
 // @FIXME: UGLY AF!!
-const StyledMovie = styled(Movie)`
+const StyledMovieItem = styled(MovieItem)`
   flex-basis: 22%;
   display: flex;
   flex-direction: column;
@@ -89,4 +86,4 @@ const StyledMovie = styled(Movie)`
   }
 `;
 
-export default StyledMovie;
+export default StyledMovieItem;
