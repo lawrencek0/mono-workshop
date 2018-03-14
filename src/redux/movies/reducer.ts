@@ -27,6 +27,10 @@ export type RootState = {
 export const moviesReducer = combineReducers<MoviesState>({
   isFetching: (state = false, action) => {
     switch (action.type) {
+      case getType(moviesActions.fetchMovies):
+        return true;
+      case getType(moviesActions.fetchMoviesFullFilled):
+        return false;
       default:
         return state;
     }
