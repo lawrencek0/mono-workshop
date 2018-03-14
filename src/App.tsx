@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { moviesActions } from './redux/movies';
+import { moviesActions, Movie } from './redux/movies';
 import styled from './theme';
 import Header from './components/Header';
 import SideBar from './components/SideBar';
 import MovieList from './components/MovieList';
+import { RootState } from './redux';
 
 const StyledMain = styled.div`
   display: flex;
@@ -13,26 +14,31 @@ const StyledMain = styled.div`
 interface AppProps {
   // tslint:disable-next-line:no-any
   fetchMovies: () => any;
+  movies: Movie[];
 }
-
 class App extends React.Component<AppProps> {
   componentDidMount() {
     this.props.fetchMovies();
   }
+
   render() {
     return (
       <React.Fragment>
         <Header />
         <StyledMain>
           <SideBar />
-          <MovieList />
+          <MovieList movies={this.props.movies} />
         </StyledMain>
       </React.Fragment>
     );
   }
 }
 
-const connectedApp = connect(null, {
+const mapStateToProps = (state: RootState) => ({
+  movies: state.movies.movies
+});
+
+const connectedApp = connect(mapStateToProps, {
   fetchMovies: moviesActions.fetchMovies
 })(App);
 
