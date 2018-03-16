@@ -1,7 +1,9 @@
 import * as React from 'react';
 import styled from '../theme';
+import { Genre } from '../redux/genres';
 
 interface SideBarProps {
+  genres: Genre[];
   className?: string;
 }
 class SideBar extends React.Component<SideBarProps> {
