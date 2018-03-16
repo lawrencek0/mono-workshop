@@ -1,2 +1,2 @@
-export const FETCH_GENRES = '@@genres/FETCH_GENRE';
-export const FETCH_GENRES_FULFILLED = '@@genres/FETCH_GENRE_FULFILLED';
+export const FETCH_GENRES = '@@genres/FETCH_GENRES';
+export const FETCH_GENRES_FULFILLED = '@@genres/FETCH_GENRES_FULFILLED';
