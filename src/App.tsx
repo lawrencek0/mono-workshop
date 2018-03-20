@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { RootState } from './redux';
 import { moviesActions, Movie } from './redux/movies';
 import { genresActions, Genre } from './redux/genres';
+import { SliderData, navigationActions } from './redux/navigation';
+
 import styled from './theme';
 import Header from './components/Header';
 import SideBar from './components/SideBar';
@@ -16,9 +18,19 @@ interface AppProps {
   // tslint:disable:no-any
   fetchMovies: () => any;
   fetchGenres: () => any;
+  onGenreChange: () => any;
+  onYearSliderChange: () => any;
+  onRatingSliderChange: () => any;
+  onRuntimeSliderChange: () => any;
   // tslint-enable
   movies: Movie[];
-  genres: Genre[];
+  navigation: {
+    genres: Genre[];
+    selectedGenre: string;
+    year: SliderData;
+    rating: SliderData;
+    runtime: SliderData;
+  };
   loading: boolean;
   errMessage: string | null;
 }
@@ -30,7 +42,15 @@ class App extends React.Component<AppProps> {
   }
 
   render() {
-    const { loading, movies, genres } = this.props;
+    const {
+      loading,
+      movies,
+      navigation,
+      onGenreChange,
+      onRatingSliderChange,
+      onRuntimeSliderChange,
+      onYearSliderChange
+    } = this.props;
 
     // @TODO: better styles, how to handle errors? errorboundary?
     if (loading) {
@@ -41,7 +61,13 @@ class App extends React.Component<AppProps> {
       <React.Fragment>
         <Header />
         <StyledMain>
-          <SideBar genres={genres} />
+          <SideBar
+            {...navigation}
+            onGenreChange={onGenreChange}
+            onRatingSliderChange={onRatingSliderChange}
+            onRuntimeSliderChange={onRuntimeSliderChange}
+            onYearSliderChange={onYearSliderChange}
+          />
           <MovieList movies={movies} />
         </StyledMain>
       </React.Fragment>
@@ -53,12 +79,16 @@ const mapStateToProps = (state: RootState) => ({
   movies: state.movies.movies,
   loading: state.movies.isFetching,
   errMessage: state.movies.errMessage,
-  genres: state.genres.genres
+  navigation: { ...state.navigation, genres: state.genres.genres }
 });
 
 const connectedApp = connect(mapStateToProps, {
   fetchMovies: moviesActions.fetchMovies,
-  fetchGenres: genresActions.fetchGenres
+  fetchGenres: genresActions.fetchGenres,
+  onGenreChange: navigationActions.updateSelectedGenre,
+  onYearSliderChange: navigationActions.updateYearSlider,
+  onRatingSliderChange: navigationActions.updateRatingSlider,
+  onRuntimeSliderChange: navigationActions.updateRuntimeSlider
 })(App);
 
 export default connectedApp;
