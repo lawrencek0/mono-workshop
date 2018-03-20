@@ -39,7 +39,7 @@ export const navigationReducer = combineReducers<NavigationState>({
   year: (state = config.DEFAULT_YEAR_CONFIG, action) => {
     switch (action.type) {
       case getType(navigationActions.updateYearSlider):
-        return [...state, action.payload];
+        return { ...state, value: action.payload };
       default:
         return state;
     }
@@ -47,7 +47,7 @@ export const navigationReducer = combineReducers<NavigationState>({
   rating: (state = config.DEFAULT_RATING_CONFIG, action) => {
     switch (action.type) {
       case getType(navigationActions.updateRatingSlider):
-        return [...state, action.payload];
+        return { ...state, value: action.payload };
       default:
         return state;
     }
@@ -55,7 +55,7 @@ export const navigationReducer = combineReducers<NavigationState>({
   runtime: (state = config.DEFAULT_RUNTIME_CONFIG, action) => {
     switch (action.type) {
       case getType(navigationActions.updateRuntimeSlider):
-        return [...state, action.payload];
+        return { ...state, value: action.payload };
       default:
         return state;
     }
