@@ -5,7 +5,7 @@ import { Genre } from '../redux/genres';
 interface SelectionProps {
   genres: Genre[];
   selectedGenre: string;
-  onGenreChange: (event: React.FormEvent<HTMLSelectElement>) => void;
+  onGenreChange: (genre: string) => void;
 }
 
 const Label = styled.label`
@@ -27,17 +27,22 @@ const Selection: React.SFC<SelectionProps> = ({
   genres,
   selectedGenre,
   onGenreChange
-}) => (
-  <FlexWrapper>
-    <Label>Genre</Label>
-    <Select value={selectedGenre} onChange={onGenreChange}>
-      {genres.map(genre => (
-        <option key={genre.id} value={genre.name}>
-          {genre.name}
-        </option>
-      ))}
-    </Select>
-  </FlexWrapper>
-);
+}) => {
+  const onChange = (event: React.FormEvent<HTMLSelectElement>) => {
+    onGenreChange(event.currentTarget.value);
+  };
+  return (
+    <FlexWrapper>
+      <Label>Genre</Label>
+      <Select value={selectedGenre} onChange={onChange}>
+        {genres.map(genre => (
+          <option key={genre.id} value={genre.name}>
+            {genre.name}
+          </option>
+        ))}
+      </Select>
+    </FlexWrapper>
+  );
+};
 
 export default Selection;
