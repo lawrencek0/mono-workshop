@@ -8,7 +8,7 @@ interface MovieListProps {
   className?: string;
 }
 
-class MovieList extends React.Component<MovieListProps> {
+class MovieList extends React.PureComponent<MovieListProps> {
   render() {
     return (
       <ul className={this.props.className}>
