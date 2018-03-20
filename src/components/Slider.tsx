@@ -2,10 +2,10 @@ import * as React from 'react';
 import InputRange from 'react-input-range';
 import styled from '../theme';
 import 'react-input-range/lib/css/index.css';
-import { SliderData, RangeData, SliderLabel } from './SideBar';
+import { SliderData, RangeData } from './SideBar';
 
 interface SliderProps extends SliderData {
-  onSliderChange: (label: SliderLabel, type: RangeData) => void;
+  onSliderChange: (range: RangeData) => void;
 }
 
 const Wrapper = styled.div`
@@ -56,7 +56,7 @@ const InputRangeWrapper = styled.div`
 
 class Slider extends React.Component<SliderProps> {
   onChange = (range: RangeData) => {
-    this.props.onSliderChange(this.props.label, range);
+    this.props.onSliderChange(range);
   };
 
   shouldComponentUpdate(nextProps: SliderProps) {
