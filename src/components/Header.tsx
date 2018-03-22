@@ -1,26 +1,23 @@
 import * as React from 'react';
-import styled, { ThemeInterface } from '../theme';
+import styled from '../theme';
 
-interface HeaderProps {
-  theme?: ThemeInterface;
-  className?: string;
-}
-
-// @TODO: after adding React-Router make this button navigate to home
-const Header: React.StatelessComponent<HeaderProps> = props => (
-  <header className={props.className}>
-    <h1>Sweeet Pumpkins (TX)</h1>
-  </header>
-);
-
-const StyledHeader = styled(Header)`
+const Wrapper = styled.header`
   background-color: ${props => props.theme.primaryColor};
   font-family: 'Amatic SC', cursive;
-  font-size: 1.75rem;
-  height: 5.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
+  font-size: 1.875rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 `;
 
-export default StyledHeader;
+const Title = styled.h1`
+  margin: 0;
+`;
+
+const Header: React.SFC = props => (
+  <Wrapper>
+    <Title>Sweeet Pumpkins (TX)</Title>
+  </Wrapper>
+);
+
+export default Header;
