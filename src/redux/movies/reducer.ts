@@ -47,7 +47,7 @@ export const moviesReducer = combineReducers<MoviesState>({
         return state;
 
       case getType(moviesActions.fetchMoviesFullFilled): {
-        return [...state, ...action.payload.results];
+        return action.payload.results;
       }
       default:
         return state;
