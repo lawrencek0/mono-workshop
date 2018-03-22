@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RootState } from './redux';
-import { moviesActions, Movie } from './redux/movies';
+import { moviesActions, Movie, TmdbApiParams } from './redux/movies';
 import { genresActions, Genre } from './redux/genres';
 import { SliderData, navigationActions } from './redux/navigation';
 
@@ -16,7 +16,7 @@ const StyledMain = styled.div`
 
 interface AppProps {
   // tslint:disable:no-any
-  fetchMovies: () => any;
+  fetchMovies: (params: TmdbApiParams) => any;
   fetchGenres: () => any;
   onGenreChange: () => any;
   onYearSliderChange: () => any;
@@ -37,8 +37,28 @@ interface AppProps {
 
 class App extends React.Component<AppProps> {
   componentDidMount() {
-    this.props.fetchMovies();
     this.props.fetchGenres();
+    this.getMoviesFromApi();
+  }
+
+  getMoviesFromApi() {
+    const {
+      navigation: { genres, selectedGenre, year, rating, runtime },
+      fetchMovies
+    } = this.props;
+
+    let genreId = 28;
+
+    if (genres.length > 0) {
+      genreId = genres.find(genre => genre.name === selectedGenre)!.id;
+    }
+
+    fetchMovies({
+      genreId,
+      year: year.value,
+      rating: rating.value,
+      runtime: runtime.value
+    });
   }
 
   render() {
