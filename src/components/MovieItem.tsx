@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from '../theme';
-import { TMDB_IMG_BASE_URL, TMDB_IMG_FILE_SIZE } from '../constants';
+import { IMG_PATH_BASE, DEFAULT_IMG_FILE_SIZE } from '../constants';
 import { Movie } from '../redux/movies/reducer';
 
 class MovieItem extends React.Component<Movie> {
   render() {
-    const imgUrl = `${TMDB_IMG_BASE_URL}/${TMDB_IMG_FILE_SIZE}/${
+    const imgUrl = `${IMG_PATH_BASE}/${DEFAULT_IMG_FILE_SIZE}/${
       this.props.poster_path
     }`;
 
