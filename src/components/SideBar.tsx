@@ -63,7 +63,7 @@ const SideBar: React.SFC<SideBarProps> = ({
   );
 };
 
-const StyledBar = styled(SideBar)`
+const StyledSideBar = styled(SideBar)`
   min-width: 300px;
   flex-basis: 20%;
   padding: 1.275rem;
@@ -71,4 +71,4 @@ const StyledBar = styled(SideBar)`
   flex-direction: column;
 `;
 
-export default StyledBar;
+export default StyledSideBar;
