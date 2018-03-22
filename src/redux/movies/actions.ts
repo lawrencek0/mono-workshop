@@ -10,7 +10,7 @@ export interface TmdbApiParams {
 }
 
 export const moviesActions = {
-  fetchMovies: createAction(FETCH_MOVIES, (payload: TmdbApiParams) => ({
+  fetchMovies: createAction(FETCH_MOVIES, payload => ({
     type: FETCH_MOVIES,
     payload
   })),
