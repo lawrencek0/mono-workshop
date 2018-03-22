@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import * as api from './constants';
 import { RootState } from './redux';
 import { moviesActions, Movie, TmdbApiParams } from './redux/movies';
 import { genresActions, Genre } from './redux/genres';
@@ -16,7 +17,7 @@ const StyledMain = styled.div`
 
 interface AppProps {
   // tslint:disable:no-any
-  fetchMovies: (params: TmdbApiParams) => any;
+  fetchMovies: (url: string) => any;
   fetchGenres: () => any;
   onGenreChange: () => any;
   onYearSliderChange: () => any;
@@ -35,31 +36,58 @@ interface AppProps {
   errMessage: string | null;
 }
 
-class App extends React.Component<AppProps> {
+const generateUrl = ({ genreId, year, rating, runtime }: TmdbApiParams) =>
+  `${api.PATH_BASE}${api.PATH_DISCOVER}${api.PATH_MOVIE}?` +
+  `${api.PARAM_API_KEY}=${process.env.REACT_APP_TMDB_API_KEY}&` +
+  `${api.PARAM_LANGUAGE}=${api.DEFAULT_LANGUAGE}&` +
+  `${api.PARAM_SORT_BY}=${api.DEFAULT_SORT_BY}&` +
+  `${api.PARAM_WITH_GENRES}=${genreId}&` +
+  `${api.PARAM_PRIMARY_RELEASE_DATE}.${api.MODIFIER_GREATER_THAN}=${
+    year.min
+  }-01-01&` +
+  `${api.PARAM_PRIMARY_RELEASE_DATE}.${api.MODIFIER_LESS_THAN}=${
+    year.max
+  }-12-31&` +
+  `${api.PARAM_VOTE_AVERAGE}.${api.MODIFIER_GREATER_THAN}=${rating.min}&` +
+  `${api.PARAM_VOTE_AVERAGE}.${api.MODIFIER_LESS_THAN}=${rating.max}&` +
+  `${api.PARAM_WITH_RUNTIME}.${api.MODIFIER_GREATER_THAN}=${runtime.min}&` +
+  `${api.PARAM_WITH_RUNTIME}.${api.MODIFIER_LESS_THAN}=${runtime.max}&` +
+  `${api.PARAM_PAGE}=${api.DEFAULT_PAGE}&`;
+
+interface AppState {
+  apiUrl: string;
+}
+
+class App extends React.Component<AppProps, AppState> {
+  state = {
+    apiUrl: api.DEFAULT_URL
+  };
+
   componentDidMount() {
     this.props.fetchGenres();
-    this.getMoviesFromApi();
+    this.props.fetchMovies(this.state.apiUrl);
   }
 
-  getMoviesFromApi() {
+  getMoviesFromApi = () => {
     const {
       navigation: { genres, selectedGenre, year, rating, runtime },
       fetchMovies
     } = this.props;
 
-    let genreId = 28;
+    const genreId = genres.find(genre => genre.name === selectedGenre)!.id;
 
-    if (genres.length > 0) {
-      genreId = genres.find(genre => genre.name === selectedGenre)!.id;
-    }
-
-    fetchMovies({
+    const url = generateUrl({
       genreId,
       year: year.value,
       rating: rating.value,
       runtime: runtime.value
     });
-  }
+
+    if (url !== this.state.apiUrl) {
+      this.setState({ apiUrl: url });
+      fetchMovies(url);
+    }
+  };
 
   render() {
     const {
@@ -83,6 +111,7 @@ class App extends React.Component<AppProps> {
         <StyledMain>
           <SideBar
             {...navigation}
+            getMovies={this.getMoviesFromApi}
             onGenreChange={onGenreChange}
             onRatingSliderChange={onRatingSliderChange}
             onRuntimeSliderChange={onRuntimeSliderChange}
