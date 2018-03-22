@@ -3,6 +3,7 @@ import styled from '../theme';
 import { Genre } from '../redux/genres';
 import Selection from './Selection';
 import Slider from './Slider';
+import SearchButton from './SearchButton';
 
 export type SliderLabel = 'year' | 'rating' | 'runtime';
 
@@ -24,6 +25,7 @@ interface SideBarProps {
   year: SliderData;
   rating: SliderData;
   runtime: SliderData;
+  getMovies: () => void;
   // tslint:disable:no-any
   onGenreChange: () => any;
   onYearSliderChange: () => any;
@@ -45,6 +47,7 @@ class SideBar extends React.Component<SideBarProps> {
       onYearSliderChange,
       onRatingSliderChange,
       onRuntimeSliderChange,
+      getMovies,
       className
     } = this.props;
     return (
@@ -57,6 +60,7 @@ class SideBar extends React.Component<SideBarProps> {
         <Slider {...year} onSliderChange={onYearSliderChange} />
         <Slider {...rating} onSliderChange={onRatingSliderChange} />
         <Slider {...runtime} onSliderChange={onRuntimeSliderChange} />
+        <SearchButton onClick={getMovies}>Click me!</SearchButton>
       </div>
     );
   }
