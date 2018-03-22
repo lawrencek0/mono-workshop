@@ -1,6 +1,6 @@
 import { SliderLabel, SliderData } from './reducer';
 
-export const DEFAULT_GENRE = 'action';
+export const DEFAULT_GENRE = 'Action';
 export const DEFAULT_YEAR_CONFIG = {
   label: 'year' as SliderLabel,
   min: 1990,
