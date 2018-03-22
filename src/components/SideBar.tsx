@@ -35,36 +35,33 @@ interface SideBarProps {
   className?: string;
 }
 
-class SideBar extends React.Component<SideBarProps> {
-  render() {
-    const {
-      genres,
-      selectedGenre,
-      year,
-      rating,
-      runtime,
-      onGenreChange,
-      onYearSliderChange,
-      onRatingSliderChange,
-      onRuntimeSliderChange,
-      getMovies,
-      className
-    } = this.props;
-    return (
-      <div className={className}>
-        <Selection
-          genres={genres}
-          selectedGenre={selectedGenre}
-          onGenreChange={onGenreChange}
-        />
-        <Slider {...year} onSliderChange={onYearSliderChange} />
-        <Slider {...rating} onSliderChange={onRatingSliderChange} />
-        <Slider {...runtime} onSliderChange={onRuntimeSliderChange} />
-        <SearchButton onClick={getMovies}>Click me!</SearchButton>
-      </div>
-    );
-  }
-}
+const SideBar: React.SFC<SideBarProps> = ({
+  genres,
+  selectedGenre,
+  year,
+  rating,
+  runtime,
+  onGenreChange,
+  onYearSliderChange,
+  onRatingSliderChange,
+  onRuntimeSliderChange,
+  getMovies,
+  className
+}) => {
+  return (
+    <div className={className}>
+      <Selection
+        genres={genres}
+        selectedGenre={selectedGenre}
+        onGenreChange={onGenreChange}
+      />
+      <Slider {...year} onSliderChange={onYearSliderChange} />
+      <Slider {...rating} onSliderChange={onRatingSliderChange} />
+      <Slider {...runtime} onSliderChange={onRuntimeSliderChange} />
+      <SearchButton onClick={getMovies}>Click me!</SearchButton>
+    </div>
+  );
+};
 
 const StyledBar = styled(SideBar)`
   min-width: 300px;
