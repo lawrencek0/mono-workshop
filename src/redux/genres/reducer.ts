@@ -36,11 +36,8 @@ export const genresReducer = combineReducers<GenresState>({
   },
   genres: (state = [], action) => {
     switch (action.type) {
-      case getType(genresActions.fetchGenres):
-        return state;
-
       case getType(genresActions.fetchGenresFulfilled): {
-        return [...state, ...action.payload.genres];
+        return action.payload;
       }
       default:
         return state;

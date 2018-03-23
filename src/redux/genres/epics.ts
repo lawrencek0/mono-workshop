@@ -14,7 +14,7 @@ const fetchGenre: Epic<RootAction, RootState> = (action$, store) =>
         process.env.REACT_APP_TMDB_API_KEY
       }&language=en-US`,
       crossDomain: true
-    }).map(res => genresActions.fetchGenresFulfilled(res.response))
+    }).map(res => genresActions.fetchGenresFulfilled(res.response.genres))
   );
 
 export const epics = combineEpics(fetchGenre);
