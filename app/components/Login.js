@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form, Card, Message } from 'semantic-ui-react';
 import { savePetCreds } from '../utils/Misc';
-import Scraper from '../lib/Scraper';
+import { PetScraper } from '../lib/Scraper';
 
 class Login extends Component {
   constructor() {
     super();
-    this.petScraper = new Scraper();
+    this.petScraper = new PetScraper();
   }
 
   state = {

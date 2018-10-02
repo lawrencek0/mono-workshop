@@ -13,7 +13,7 @@ import {
   Button
 } from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
-import Scraper from '../lib/Scraper';
+import { PetScraper } from '../lib/Scraper';
 import {
   getPetCreds,
   compareAllTables,
@@ -25,7 +25,7 @@ import { PHAGES_DB_BASE_URL } from '../constants';
 class HomePage extends Component {
   constructor() {
     super();
-    this.petScraper = new Scraper();
+    this.petScraper = new PetScraper();
   }
 
   state = { phagesDbPhages: [], petPhages: [], loading: true };
