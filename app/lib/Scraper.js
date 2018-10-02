@@ -15,6 +15,12 @@ class Scraper {
     this.page = await this.browser.newPage();
   }
 
+  async closeScraper() {
+    await this.browser.close();
+  }
+}
+
+export class PetScraper extends Scraper {
   async login(email, password) {
     const USERNAME_SELECTOR = '#inputEmail';
     const PASSWORD_SELECTOR = '#inputPassword';
@@ -236,10 +242,4 @@ class Scraper {
     /* eslint-enable */
     await this.closeScraper();
   }
-
-  async closeScraper() {
-    await this.browser.close();
-  }
 }
-
-export default Scraper;
