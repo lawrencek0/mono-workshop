@@ -3,9 +3,14 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Form, Card, Message } from 'semantic-ui-react';
 import { savePetCreds } from '../utils/Misc';
-import { loginToPet, startScraper, closeScraper } from '../lib/Scraper';
+import Scraper from '../lib/Scraper';
 
 class Login extends Component {
+  constructor() {
+    super();
+    this.petScraper = new Scraper();
+  }
+
   state = {
     email: '',
     password: '',
@@ -33,11 +38,9 @@ class Login extends Component {
 
     this.setState({ loading: true });
 
-    await startScraper();
-
     const { email, password } = this.state;
 
-    const canLogIn = await loginToPet(email, password);
+    const canLogIn = await this.petScraper.login(email, password);
 
     if (!canLogIn) {
       document.body.style.setProperty('--background-primary-color', '#ff4444');
@@ -53,7 +56,7 @@ class Login extends Component {
       }, 800);
     }
 
-    await closeScraper();
+    await this.petScraper.closeScraper();
   };
 
   render() {

@@ -3,7 +3,6 @@ import promisify from 'util.promisify';
 import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
-import * as scraper from '../lib/Scraper';
 import database from '../database';
 import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
 import { GENERA } from '../constants';
@@ -126,7 +125,7 @@ export async function updateAllPhagesDbPhages() {
   }
 }
 
-export async function updatePetPhages(genus) {
+export async function updatePetPhages(scraper, genus) {
   try {
     await scraper.openGenus(genus);
     const phages = await scraper.scrapePhages(genus);
@@ -137,11 +136,11 @@ export async function updatePetPhages(genus) {
   }
 }
 
-export async function updateAllPetPhages() {
+export async function updateAllPetPhages(scraper) {
   try {
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const genus of GENERA) {
-      await updatePetPhages(genus.name);
+      await updatePetPhages(scraper, genus.name);
     }
     /* eslint-enable */
   } catch (e) {

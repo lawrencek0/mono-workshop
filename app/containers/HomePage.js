@@ -13,7 +13,7 @@ import {
   Button
 } from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
-import * as scraper from '../lib/Scraper';
+import Scraper from '../lib/Scraper';
 import {
   getPetCreds,
   compareAllTables,
@@ -23,7 +23,13 @@ import {
 import { PHAGES_DB_BASE_URL } from '../constants';
 
 class HomePage extends Component {
+  constructor() {
+    super();
+    this.petScraper = new Scraper();
+  }
+
   state = { phagesDbPhages: [], petPhages: [], loading: true };
+
 
   async componentDidMount() {
     document.body.classList.add('center-container');
@@ -43,10 +49,10 @@ class HomePage extends Component {
     });
 
     await this.loginToPet();
-    await Promise.all([updateAllPetPhages(), updateAllPhagesDbPhages()]);
+    await Promise.all([updateAllPetPhages(this.petScraper), updateAllPhagesDbPhages()]);
 
     await this.fetchAllNewPhages();
-    await scraper.closeScraper();
+    await this.petScraper.closeScraper();
   };
 
   fetchAllNewPhages = async () => {
@@ -71,7 +77,7 @@ class HomePage extends Component {
     });
 
     await this.loginToPet();
-    await scraper.insertPhages(this.state.phagesDbPhages);
+    await this.petScraper.insertPhages(this.state.phagesDbPhages);
     await this.fetchAllNewPhages();
   };
 
@@ -83,12 +89,10 @@ class HomePage extends Component {
     } else {
       const { account, password } = creds;
 
-      await scraper.startScraper();
-
-      const isLoggedIn = await scraper.loginToPet(account, password);
+      const isLoggedIn = await this.petScraper.login(account, password);
 
       if (!isLoggedIn) {
-        scraper.closeScraper();
+        await this.petScraper.closeScraper();
 
         this.props.history.push('/login');
       }
