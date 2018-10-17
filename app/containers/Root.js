@@ -1,19 +1,19 @@
 // @flow
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import HomePage from './HomePage';
-import Login from '../components/Login';
-import App from './App';
+import React, { Component } from 'react';
+import { ConnectedRouter } from 'connected-react-router';
+import Routes from '../Routes';
 
-export default function Root() {
-  return (
-    <App>
-      <Router>
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/" component={HomePage} />
-        </Switch>
-      </Router>
-    </App>
-  );
+type Props = {
+  history: {}
+};
+
+export default class Root extends Component<Props> {
+  render() {
+    const { history } = this.props;
+    return (
+      <ConnectedRouter history={history}>
+        <Routes />
+      </ConnectedRouter>
+    );
+  }
 }
