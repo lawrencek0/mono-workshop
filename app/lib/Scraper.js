@@ -74,7 +74,10 @@ export class PetScraper extends Scraper {
 
       await this.page.waitForSelector(CUT_TABLE_LENGTH_SELECT_SELECTOR);
 
-      await this.page.select(CUT_TABLE_LENGTH_SELECT_SELECTOR, CUT_TABLE_LENGTH_VALUE);
+      await this.page.select(
+        CUT_TABLE_LENGTH_SELECT_SELECTOR,
+        CUT_TABLE_LENGTH_VALUE
+      );
     } catch (e) {
       console.error(`Unable to open genus ${genus}`, e);
     }
@@ -87,7 +90,10 @@ export class PetScraper extends Scraper {
 
     try {
       let phages = await this.page.evaluate(
-        sel => [...document.querySelectorAll(sel)].map(el => el.innerText.trim().split('\t')),
+        sel =>
+          [...document.querySelectorAll(sel)].map(el =>
+            el.innerText.trim().split('\t')
+          ),
         TABLE_PHAGE_SELECTOR
       );
       const hasNext = await this.page.$(NEXT_PAGE_DISABLED_SELECTOR);
@@ -167,9 +173,13 @@ export class PetScraper extends Scraper {
     const COMMIT_PHAGE_BTN_SELECTOR = 'button[value="commit"]';
     const GENUS_SELECT_SELECTOR = '#genus';
     const CLUSTER_SELECT_SELECTOR = '#cluster';
-    const CLUSTER_SELECT_OPTION_VALUE_SELECTOR = `option[value="${phage.cluster}"]`;
+    const CLUSTER_SELECT_OPTION_VALUE_SELECTOR = `option[value="${
+      phage.cluster
+    }"]`;
     const SUBCLUSTER_SELECT_SELECTOR = '#subcluster';
-    const SUBCLUSTER_SELECT_OPTION_VALUE_SELECTOR = `option[value="${phage.subcluster}"]`;
+    const SUBCLUSTER_SELECT_OPTION_VALUE_SELECTOR = `option[value="${
+      phage.subcluster
+    }"]`;
     const SUCCESS_MSG_SPAN_SELECTOR = 'span[style="color: green; "]';
     const fastaFilePath = getFastaFilePath(phage.phageName);
     try {
@@ -201,14 +211,19 @@ export class PetScraper extends Scraper {
         await this.page.select(CLUSTER_SELECT_SELECTOR, phage.cluster);
       }
     } catch (e) {
-      console.error(`Unable to add/find subcluster for ${JSON.stringify(phage)}`, e);
+      console.error(
+        `Unable to add/find subcluster for ${JSON.stringify(phage)}`,
+        e
+      );
     }
 
     try {
       await this.page.waitForSelector(PHAGE_NAME_INPUT_SELECTOR);
 
       await this.page.$eval(PHAGE_NAME_INPUT_SELECTOR, input => {
+        // eslint-disable-next-line no-param-reassign
         input.value = '';
+        // eslint-enable
       });
 
       await this.page.click(END_TYPE_INPUT_SELECTOR);
@@ -243,3 +258,5 @@ export class PetScraper extends Scraper {
     await this.closeScraper();
   }
 }
+
+export class BacilusScraper extends Scraper {}
