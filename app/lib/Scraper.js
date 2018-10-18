@@ -5,10 +5,9 @@ import { PET_URL } from '../constants';
 import { getFastaFilePath, deleteFastaFile } from '../utils/Misc';
 
 class Scraper {
-  constructor() {
-    this.browser = null;
-    this.page = null;
-  }
+  browser = null;
+
+  page = null;
 
   async start() {
     this.browser = await puppeteer.launch({ headless: false });
