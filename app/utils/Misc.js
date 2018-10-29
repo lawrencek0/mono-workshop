@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
 import database from '../database';
-import { formatPhageDbPhages, formatPetPhages } from '../utils/PhageFormatter';
+import { formatPhageDbPhages, formatPetPhages } from './PhageFormatter';
 import { GENERA } from '../constants';
 
 const keytar = remote.require('keytar');
@@ -18,11 +18,10 @@ export const deleteFastaFile = async fileName =>
 export const getFastaFilePath = fileName =>
   path.join(app.getPath('appData'), `${fileName}.fasta`);
 
-// FROM https://stackoverflow.com/a/44695617/8705692
-// @TODO: rewwrite this to be more friendlier
 const responseToReadable = response => {
   const reader = response.body.getReader();
   const rs = new Readable();
+  // eslint-disable-next-line
   rs._read = async () => {
     const result = await reader.read();
     if (!result.done) {
@@ -97,7 +96,9 @@ export async function savePhageToDb(tableName, phage) {
 }
 
 export async function getPhagesFromPhagesDbApi(pk, pageNum = 1, phages = []) {
-  const res = await fetch(`http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`);
+  const res = await fetch(
+    `http://phagesdb.org/api/host_genera/${pk}/phagelist/?page=${pageNum}`
+  );
   const { next, results } = await res.json();
   const allPhages = phages.concat(...formatPhageDbPhages(results));
   if (next) {
@@ -130,7 +131,9 @@ export async function updatePetPhages(scraper, genus) {
     await scraper.openGenus(genus);
     const phages = await scraper.scrapePhages(genus);
     const formattedPhages = formatPetPhages(phages);
-    await Promise.all(formattedPhages.map(phage => savePhageToDb('PetPhages', phage)));
+    await Promise.all(
+      formattedPhages.map(phage => savePhageToDb('PetPhages', phage))
+    );
   } catch (e) {
     console.error(e);
   }
@@ -159,7 +162,9 @@ export function compareTables(baseTable, compareToTable) {
   //     `${compareToTable}.phage_name`
   //   )
   //   .whereNull(`${compareToTable}.phage_name`);
-  return database.raw(`select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phageName = t2.phageName where t2.phageName is null`);
+  return database.raw(
+    `select t1.* from ${baseTable} t1 left join ${compareToTable} t2 on t1.phageName = t2.phageName where t2.phageName is null`
+  );
 }
 
 export async function compareAllTables() {
