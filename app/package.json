@@ -17,7 +17,7 @@
   "dependencies": {
     "keytar": "^4.1.0",
     "knex": "^0.14.2",
-    "puppeteer": "^1.0.0",
+    "puppeteer": "^1.9.0",
     "sqlite3": "^3.1.13"
   }
 }
