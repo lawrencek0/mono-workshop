@@ -258,4 +258,57 @@ export class PetScraper extends Scraper {
   }
 }
 
-export class BacilusScraper extends Scraper {}
+export class BacillusScraper extends Scraper {
+  async gotoBacillusDb() {
+    const BACILLUS_URL = 'http://bacillus.phagesdb.org/phages/';
+
+    try {
+      await this.start();
+      await this.page.goto(BACILLUS_URL);
+    } catch (e) {
+      console.error('An error occured while going to bacillusdb', e);
+    }
+  }
+
+  async scrape() {
+    try {
+      const VIEW_ALL_BTN_SELECTOR = 'a[href="javascript:sorter.showall()"]';
+      const PHAGE_TABLE_SELECTOR = '#allphages';
+      const PHAGE_NAME_SORT_SELECTOR = `${PHAGE_TABLE_SELECTOR} > thead th:first-of-type h3`;
+      const PHAGE_TABLE_ROW_SELECTOR = `${PHAGE_TABLE_SELECTOR} > tbody tr`;
+      const phageTableDataSelectorCreator = num => `td:nth-of-type(${num})`;
+      await this.gotoBacillusDb();
+      await this.page.waitFor(VIEW_ALL_BTN_SELECTOR);
+      await this.page.click(VIEW_ALL_BTN_SELECTOR);
+      await this.page.click(PHAGE_NAME_SORT_SELECTOR);
+      const phageEls = await this.page.$$(PHAGE_TABLE_ROW_SELECTOR);
+      const phages = [];
+      /* eslint-disable no-restricted-syntax, no-await-in-loop */
+      for (const phageEl of phageEls) {
+        const phageName = await phageEl.$eval(
+          phageTableDataSelectorCreator(1),
+          el => el.innerText.trim()
+        );
+        const cluster = await phageEl.$eval(
+          phageTableDataSelectorCreator(2),
+          el => (el.innerText.trim() ? el.innerText.trim() : 'Unclustered')
+        );
+        const subcluster = await phageEl.$eval(
+          phageTableDataSelectorCreator(3),
+          el => (el.innerText.trim() ? el.innerText.trim() : 'None')
+        );
+
+        phages.push({
+          phageName,
+          cluster,
+          subcluster,
+          genus: 'Bacillus'
+        });
+      }
+      /* eslint-enable */
+      return phages;
+    } catch (e) {
+      console.log('There was a problem scraping bacillus', e);
+    }
+  }
+}
