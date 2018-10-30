@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import type { RouterHistory } from 'react-router-dom';
 import { shell } from 'electron';
 import {
   Container,
@@ -13,35 +14,39 @@ import {
   Button
 } from 'semantic-ui-react';
 import PhageList from '../components/PhageList';
-import { PetScraper } from '../lib/Scraper';
+import { PetScraper, BacillusScraper } from '../lib/Scraper';
 import {
   getPetCreds,
   compareAllTables,
   updateAllPhagesDbPhages,
-  updateAllPetPhages
+  updateAllPetPhages,
+  comparePhages
 } from '../utils/Misc';
 import { PHAGES_DB_BASE_URL } from '../constants';
 
-class HomePage extends Component {
-  constructor() {
-    super();
-    this.petScraper = new PetScraper();
-  }
-
+type Props = {
+  history: RouterHistory
+};
+class HomePage extends Component<Props> {
   state = { phagesDbPhages: [], petPhages: [], loading: true };
 
-
   async componentDidMount() {
+    const { history } = this.props;
     document.body.classList.add('center-container');
-
+    const a = await comparePhages();
+    await console.log(a);
     const [creds] = await getPetCreds();
 
     if (!creds) {
-      this.props.history.push('/login');
+      history.push('/login');
     } else {
       this.fetchAllNewPhages();
     }
   }
+
+  petScraper = new PetScraper();
+
+  bacillusScraper = new BacillusScraper();
 
   updateAllPhages = async () => {
     this.setState({
@@ -49,7 +54,10 @@ class HomePage extends Component {
     });
 
     await this.loginToPet();
-    await Promise.all([updateAllPetPhages(this.petScraper), updateAllPhagesDbPhages()]);
+    await Promise.all([
+      updateAllPetPhages(this.petScraper),
+      updateAllPhagesDbPhages()
+    ]);
 
     await this.fetchAllNewPhages();
     await this.petScraper.closeScraper();
@@ -76,16 +84,19 @@ class HomePage extends Component {
       loading: true
     });
 
+    const { phagesDbPhages } = this.state;
+
     await this.loginToPet();
-    await this.petScraper.insertPhages(this.state.phagesDbPhages);
+    await this.petScraper.insertPhages(phagesDbPhages);
     await this.fetchAllNewPhages();
   };
 
   async loginToPet() {
+    const { history } = this.props;
     const [creds] = await getPetCreds();
 
     if (!creds) {
-      this.props.history.push('/login');
+      history.push('/login');
     } else {
       const { account, password } = creds;
 
@@ -94,7 +105,7 @@ class HomePage extends Component {
       if (!isLoggedIn) {
         await this.petScraper.closeScraper();
 
-        this.props.history.push('/login');
+        history.push('/login');
       }
     }
   }
@@ -194,7 +205,11 @@ class HomePage extends Component {
 
 export default withRouter(HomePage);
 
-const UpdateButton = ({ updateAllPhages }) => (
+type UpdateButtonProps = {
+  updateAllPhages: () => void
+};
+
+const UpdateButton = ({ updateAllPhages }: UpdateButtonProps) => (
   <Button basic color="green" size="big" onClick={updateAllPhages}>
     Check for Updates
   </Button>
