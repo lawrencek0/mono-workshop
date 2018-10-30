@@ -180,3 +180,17 @@ export async function compareAllTables() {
     console.error(e);
   }
 }
+
+export async function comparePhages() {
+  try {
+    return database.raw(
+      `select t1.* , t2.phageName 'PhagesDB PhageName', t2.genus 'PhagesDB Genus', t2.cluster 'PhagesDB Cluster', t2.subcluster 'PhagesDB Subcluster'
+        from PetPhages t1 join PhagesDb t2 on t1.phageName = t2.phageName
+        where t1.genus != t2.genus
+        or t1.cluster != t2.cluster
+        or t1.subcluster != t2.subcluster`
+    );
+  } catch (e) {
+    console.error('Error comparing clusters', e);
+  }
+}
