@@ -259,6 +259,9 @@
     "electron-log": "^2.2.17",
     "electron-updater": "^3.1.6",
     "history": "^4.7.2",
+    "keytar": "^4.3.0",
+    "knex": "^0.15.2",
+    "puppeteer": "^1.10.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-hot-loader": "^4.3.4",
@@ -266,6 +269,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.82.5",
     "source-map-support": "^0.5.6",
+    "sqlite3": "^4.0.3",
     "util.promisify": "^1.0.0"
   },
   "devEngines": {
