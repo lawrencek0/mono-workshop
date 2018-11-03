@@ -249,11 +249,9 @@ export class PetScraper extends Scraper {
   }
 
   async insertPhages(phages) {
-    /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const phage of phages) {
       await this.insertPhage(phage);
     }
-    /* eslint-enable */
     await this.closeScraper();
   }
 }
@@ -283,7 +281,6 @@ export class BacillusScraper extends Scraper {
       await this.page.click(PHAGE_NAME_SORT_SELECTOR);
       const phageEls = await this.page.$$(PHAGE_TABLE_ROW_SELECTOR);
       const phages = [];
-      /* eslint-disable no-restricted-syntax, no-await-in-loop */
       for (const phageEl of phageEls) {
         const phageName = await phageEl.$eval(
           phageTableDataSelectorCreator(1),
@@ -305,7 +302,6 @@ export class BacillusScraper extends Scraper {
           genus: 'Bacillus'
         });
       }
-      /* eslint-enable */
       return phages;
     } catch (e) {
       console.log('There was a problem scraping bacillus', e);

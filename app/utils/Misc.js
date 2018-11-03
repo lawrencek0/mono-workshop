@@ -141,11 +141,9 @@ export async function updatePetPhages(scraper, genus) {
 
 export async function updateAllPetPhages(scraper) {
   try {
-    /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const genus of GENERA) {
       await updatePetPhages(scraper, genus.name);
     }
-    /* eslint-enable */
   } catch (e) {
     console.error(e);
   }
