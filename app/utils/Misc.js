@@ -181,13 +181,24 @@ export async function compareAllTables() {
 
 export async function comparePhages() {
   try {
-    return database.raw(
-      `select t1.* , t2.phageName 'PhagesDB PhageName', t2.genus 'PhagesDB Genus', t2.cluster 'PhagesDB Cluster', t2.subcluster 'PhagesDB Subcluster'
-        from PetPhages t1 join PhagesDb t2 on t1.phageName = t2.phageName
-        where t1.genus != t2.genus
-        or t1.cluster != t2.cluster
-        or t1.subcluster != t2.subcluster`
-    );
+    /* eslint-disable func-names */
+    return database('petphages')
+      .join('phagesdb', function() {
+        this.on('petphages.phageName', '=', 'phagesdb.phageName').on(
+          function() {
+            this.on('petPhages.genus', '<>', 'phagesdb.genus')
+              .orOn('petPhages.cluster', '<>', 'phagesdb.cluster')
+              .orOn('petPhages.subcluster', '<>', 'phagesdb.subcluster');
+          }
+        );
+      })
+      .select(
+        'petphages.*',
+        'phagesdb.genus as newGenus',
+        'phagesdb.cluster as newCluster',
+        'phagesdb.subcluster as newSubcluster'
+      );
+    /* eslint-enable */
   } catch (e) {
     console.error('Error comparing clusters', e);
   }
