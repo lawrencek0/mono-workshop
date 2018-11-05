@@ -171,24 +171,21 @@ export async function compareAllTables() {
 
 export async function comparePhages() {
   try {
-    /* eslint-disable func-names */
     return database('petphages')
-      .join('phagesdb', function() {
-        this.on('petphages.phageName', '=', 'phagesdb.phageName').on(
-          function() {
-            this.on('petPhages.genus', '<>', 'phagesdb.genus')
-              .orOn('petPhages.cluster', '<>', 'phagesdb.cluster')
-              .orOn('petPhages.subcluster', '<>', 'phagesdb.subcluster');
-          }
-        );
-      })
+      .join('phagesdb', db =>
+        db.on('petphages.phageName', '=', 'phagesdb.phageName').on(nestedDb =>
+          nestedDb
+            .on('petPhages.genus', '<>', 'phagesdb.genus')
+            .orOn('petPhages.cluster', '<>', 'phagesdb.cluster')
+            .orOn('petPhages.subcluster', '<>', 'phagesdb.subcluster')
+        )
+      )
       .select(
         'petphages.*',
         'phagesdb.genus as newGenus',
         'phagesdb.cluster as newCluster',
         'phagesdb.subcluster as newSubcluster'
       );
-    /* eslint-enable */
   } catch (e) {
     console.error('Error comparing clusters', e);
   }
