@@ -254,6 +254,65 @@ export class PetScraper extends Scraper {
     }
     await this.closeScraper();
   }
+
+  /*
+  some select options have the value " PhageName"
+  */
+  async updatePhage(phage) {
+    const MODIFY_PHAGE_SIDEBAR_SELECTOR = 'a[href="modify_phage_data"]';
+    const MODIFY_PHAGE_TAB_SELECTOR = 'a[href="#view3"]';
+    const SELECT_PHAGES_SELECTOR = 'select#select_modify_phage';
+    const SELECT_PHAGE_BTN_SELECTOR = 'button[value="select_modify_phage"]';
+    const SELECT_GENUS_SELECTOR = 'select#genus';
+    const SELECT_CLUSTER_SELECTOR = 'select#modify_cluster';
+    const SELECT_SUBCLUSTER_SELECTOR = 'select#modify_subcluster';
+    const UPDATE_PHAGE_BTN_SELECTOR = 'button[value="commit_modify_phage"]';
+    const PHAGE_UPDATE_SUCCESS_SELECTOR = 'p[style="color: blue; "]';
+
+    const goToPhage = async () => {
+      await this.page.click(MODIFY_PHAGE_SIDEBAR_SELECTOR);
+      await this.page.waitFor(MODIFY_PHAGE_TAB_SELECTOR);
+      await this.page.click(MODIFY_PHAGE_TAB_SELECTOR);
+      await this.page.waitFor(SELECT_PHAGES_SELECTOR);
+      const selectionRes = await this.page.select(
+        SELECT_PHAGES_SELECTOR,
+        phage.phageName
+      );
+      if (selectionRes.length === 0) {
+        await this.page.select(SELECT_PHAGES_SELECTOR, ` ${phage.phageName}`);
+      }
+      await this.page.$eval(SELECT_PHAGE_BTN_SELECTOR, btn => btn.click());
+      await this.page.waitFor(SELECT_GENUS_SELECTOR);
+    };
+
+    try {
+      await goToPhage();
+      const clusterSelRes = await this.page.select(
+        SELECT_CLUSTER_SELECTOR,
+        phage.newCluster
+      );
+
+      if (clusterSelRes.length === 0) {
+        await this.modifyCluster(phage.newCluster);
+        await goToPhage();
+      }
+
+      const subClusterSelRes = await this.page.select(
+        SELECT_SUBCLUSTER_SELECTOR,
+        phage.newSubcluster
+      );
+
+      if (subClusterSelRes.length === 0) {
+        await this.modifySubCluster(phage.newCluster, phage.newSubcluster);
+        await goToPhage();
+      }
+
+      await this.page.$eval(UPDATE_PHAGE_BTN_SELECTOR, btn => btn.click());
+      await this.page.waitFor(PHAGE_UPDATE_SUCCESS_SELECTOR);
+    } catch (e) {
+      console.error(`Error while updating: ${phage.phageName}`, e);
+    }
+  }
 }
 
 export class BacillusScraper extends Scraper {
