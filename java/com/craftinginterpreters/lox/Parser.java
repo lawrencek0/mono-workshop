@@ -197,6 +197,36 @@ class Parser {
       return new Expr.Grouping(expr);
     }
     
+    if (match(COMMA)) {
+      error(previous(), "Missing left-hand operand.");
+      comma();
+      return null;
+    }
+    
+    if (match(EQUAL_EQUAL, BANG_EQUAL)) {
+      error(previous(), "Missing left-hand operand.");
+      equality();
+      return null;
+    }
+    
+    if (match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+      error(previous(), "MIssing left-hand operand.");
+      comparision();
+      return null;
+    }
+    
+    if (match(PLUS, MINUS)) {
+      error(previous(), "Missing left-hand operand.");
+      addition();
+      return null;
+    }
+    
+    if (match(STAR, SLASH)) {
+      error(previous(), "Missing left-hand operand.");
+      multiplication();
+      return null;
+    }
+    
     throw error(peek(), "Expect expression");
   }
 }
