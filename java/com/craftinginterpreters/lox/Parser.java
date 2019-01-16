@@ -104,12 +104,27 @@ class Parser {
     
     while(match(COMMA)) {
       Token operator = previous();
-      Expr right = comparision();
+      Expr right = equality();
       expr = new Expr.Binary(expr, operator, right);
     }
     
     return expr;
   }
+  
+  /* private Expr ternary() {
+    Expr expr = equality();
+    
+    if (match(QUESTION)) {
+      Token operator = previous();
+      Expr trueCase = expression();
+      consume(COLON, "Expect ':' between the cases of ternary operation.");
+      Expr falseCase = equality();
+      expr = new Expr.Binary(expr, trueCase, falseCase);
+    }
+    
+    return expr;
+  } */
+    
   
   private Expr equality() {
     Expr expr = comparision();
