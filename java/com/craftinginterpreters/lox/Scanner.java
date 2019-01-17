@@ -197,6 +197,7 @@ class Scanner {
   
   List<Token> scanTokens() {
     while(!isAtEnd()) {
+      start = current;
       scanToken();
     }
     
