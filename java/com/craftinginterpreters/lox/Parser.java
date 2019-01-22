@@ -123,13 +123,13 @@ class Parser {
     }
     
     Expr condition = null;
-    if (check(SEMICOLON)) {
+    if (!check(SEMICOLON)) {
       condition = expression();
     }
     consume(SEMICOLON, "Expect ';' after loop condition.");
     
     Expr increment = null;
-    if (check(RIGHT_PAREN)) {
+    if (!check(RIGHT_PAREN)) {
       increment = expression();
     }
     consume(RIGHT_PAREN, "Expect ')' after for clauses.");
