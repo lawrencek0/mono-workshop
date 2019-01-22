@@ -54,6 +54,8 @@ class Parser {
   
   private Stmt declaration() {
     try {
+      if (match(FUN)) return function("function");
+      
       if (match(VAR)) {
         return varDeclaration();
       }
@@ -89,7 +91,7 @@ class Parser {
   
   private Stmt statement() {
     if (match(FOR)) return forStatement();
-    
+    if (match(RETURN)) return returnStatement();
     if (match(PRINT)) {
       return printStatement();
     }
@@ -173,11 +175,44 @@ class Parser {
     return new Stmt.Print(expr);
   }
   
+  private Stmt returnStatement() {
+    Token keyword = previous();
+    Expr value = null;
+    
+    if (!check(SEMICOLON)) {
+      value = expression();
+    }
+    
+    consume(SEMICOLON, "Expect ';' after return value.");
+    return new Stmt.Return(keyword, value);
+  }
+  
   private Stmt expressionStatement() {
     Expr expr = expression();
     consume(SEMICOLON, "Expect ';' after value.");
     return new Stmt.Expression(expr);
   }
+  
+  private Stmt.Function function(String kind) {
+    Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
+    consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+    List<Token> parameters = new ArrayList<>();
+    
+    if (!check(RIGHT_PAREN)) {
+      do {
+        if (parameters.size() >= 8) {
+          error(peek(), "Cannot have more than 8 parameters.");
+	}
+	      
+        parameters.add(consume(IDENTIFIER, "Expect parameter name."));
+      } while(match(COMMA));
+    }
+    
+    consume(RIGHT_PAREN, "Expect ')' after parameters");
+    consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
+    List<Stmt> body = block();
+    return new Stmt.Function(name, parameters, body);
+  } 
   
   private List<Stmt> block() {
     List<Stmt> statements = new ArrayList<>();
@@ -368,8 +403,39 @@ class Parser {
       expr = new Expr.Unary(operator, expr);
     }
     
-    return primary();
+    return call();
   }
+  
+  private Expr finishCall(Expr callee) {
+    List<Expr> arguments = new ArrayList<>();
+    
+    if (!check(RIGHT_PAREN)) {
+      do {
+        if (arguments.size() >= 8) {                          
+          error(peek(), "Cannot have more than 8 arguments.");
+        }  
+        arguments.add(expression());
+      } while (match(COMMA));
+    }
+    
+    Token paren = consume(RIGHT_PAREN, "Expect ')' after arguments.");
+    
+    return new Expr.Call(callee, paren, arguments);
+  }
+  
+  private Expr call() {
+    Expr expr = primary();
+    
+    while(true) {
+      if (match(LEFT_PAREN)) {
+        expr = finishCall(expr);
+      } else {
+        break;
+      }
+   }
+   
+   return expr;
+  }    
   
   private Expr primary() {
     if (match(FALSE)) return new Expr.Literal(false);
