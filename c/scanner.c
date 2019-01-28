@@ -13,8 +13,8 @@ typedef struct {
 Scanner scanner;
 
 void initScanner(const char* source) {
-  scanner.start = 0;
-  scanner.current = 0;
+  scanner.start = source;
+  scanner.current = source;
   scanner.line = 1;
 }
 
@@ -66,7 +66,7 @@ static Token errorToken(const char* message) {
   Token token;
   token.type = TOKEN_ERROR;
   token.start = message;
-  token.length = (int)(strlen(message));
+  token.length = (int)strlen(message);
   token.line = scanner.line;
   
   return token;
@@ -80,6 +80,10 @@ static void skipWhitespace() {
       case '\r':              
       case '\t':              
         advance();            
+        break;
+      case '\n':
+        scanner.line++;
+        advance();
         break;
       case '/':                                          
         if (peekNext() == '/') {                         
@@ -158,7 +162,7 @@ static Token number() {
 
 static Token string() {
   while (peek() != '"' && !isAtEnd()) {
-    if (peek() != '\n') scanner.line++;
+    if (peek() == '\n') scanner.line++;
     advance();
   }
   
