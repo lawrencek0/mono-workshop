@@ -30,9 +30,11 @@ static void runtimeError(const char* format, ...) {
 
 void initVM() {
   resetStack();
+  initTable(&vm.strings);
 }
 
 void freeVM() {
+  freeTable(&vm.strings);
   freeObjects();
 }
 
