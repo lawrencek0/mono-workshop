@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Build
+dist/**/*
+public/css/main.css
+
+# API keys and secrets
+.env
