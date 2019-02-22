@@ -1,0 +1,3 @@
+@function v($propertyName) {
+    @return var(--#{$propertyName});
+}
