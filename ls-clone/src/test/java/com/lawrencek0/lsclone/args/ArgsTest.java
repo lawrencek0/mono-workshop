@@ -32,10 +32,11 @@ class ArgsTest {
     @Test
     void testDirectoryValidation() {
         Args args = new Args();
-        Assertions.assertThrows(ParameterException.class, () -> {
-            String[] argv = {"/tmp/___args_test___"};
-            JCommander.newBuilder().addObject(args).build().parse(argv);
-        });
+        ParameterException exception = Assertions.assertThrows(ParameterException.class, () ->
+                JCommander.newBuilder().addObject(args).build().parse("/tmp/___args_test___")
+        );
+
+        Assertions.assertTrue(exception.getMessage().contains("No such file or directory"));
     }
 
 }
