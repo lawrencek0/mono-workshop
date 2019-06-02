@@ -6,6 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 class Args {
-    @Parameter(description = "Directory", validateWith = ValidDirectory.class, converter = PathConverter.class)
-    Path directory = Paths.get(".");
+    @Parameter(description = "Directory", validateWith = ValidPath.class, converter = PathConverter.class)
+    Path path = Paths.get(".");
 }

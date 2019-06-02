@@ -7,12 +7,12 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ValidDirectory implements IParameterValidator {
+public class ValidPath implements IParameterValidator {
     @Override
     public void validate(String name, String value) throws ParameterException {
         Path file = new File(value).toPath();
         if (!(Files.isDirectory(file) || Files.isRegularFile(file))) {
-            throw new ParameterException("cannot access '" + value + "': No such file or directory");
+            throw new ParameterException("cannot access '" + value + "': No such file or path");
         }
     }
 }

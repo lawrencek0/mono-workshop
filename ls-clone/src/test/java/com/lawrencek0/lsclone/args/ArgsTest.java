@@ -18,7 +18,7 @@ class ArgsTest {
     void testDefaultParameters() {
         Args args = new Args();
         JCommander.newBuilder().addObject(args).build().parse();
-        Assertions.assertEquals(Paths.get("."), args.directory);
+        Assertions.assertEquals(Paths.get("."), args.path);
     }
 
     @Test
@@ -26,7 +26,7 @@ class ArgsTest {
         Assertions.assertTrue(Files.isDirectory(tempDir));
         Args args = new Args();
         JCommander.newBuilder().addObject(args).build().parse(tempDir.toString());
-        Assertions.assertEquals(tempDir, args.directory);
+        Assertions.assertEquals(tempDir, args.path);
     }
 
     @Test
@@ -36,7 +36,7 @@ class ArgsTest {
                 JCommander.newBuilder().addObject(args).build().parse("/tmp/___args_test___")
         );
 
-        Assertions.assertTrue(exception.getMessage().contains("No such file or directory"));
+        Assertions.assertTrue(exception.getMessage().contains("No such file or path"));
     }
 
 }
