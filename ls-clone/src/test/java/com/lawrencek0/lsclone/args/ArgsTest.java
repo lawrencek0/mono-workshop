@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,11 +32,13 @@ class ArgsTest {
 
     @Test
     @DisplayName("Tests when multiple Paths are passed in")
-    void testMultiplePaths(@TempDir Path tempDir1, @TempDir Path tempDir2) {
-        Assertions.assertTrue(() -> Files.isDirectory(tempDir1) && Files.isDirectory(tempDir2));
+    void testMultiplePaths(@TempDir Path tempDir) throws IOException {
+        Assertions.assertTrue(Files.isDirectory(tempDir));
+        Path childTempDir = Files.createTempDirectory(tempDir, null);
+        Assertions.assertTrue(Files.isDirectory(childTempDir));
         Args args = new Args();
-        JCommander.newBuilder().addObject(args).build().parse(tempDir1.toString(), tempDir2.toString());
-        Assertions.assertTrue(args.paths.stream().allMatch(p -> p.equals(tempDir1) || p.equals(tempDir2)));
+        JCommander.newBuilder().addObject(args).build().parse(tempDir.toString(), childTempDir.toString());
+        Assertions.assertTrue(args.paths.stream().allMatch(p -> p.equals(tempDir) || p.equals(childTempDir)));
     }
 
     @Test
