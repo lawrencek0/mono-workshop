@@ -1,0 +1,7 @@
+[package]
+name = "ls-clone"
+version = "0.1.0"
+authors = ["lawrencek0 <l.khadka@outlook.com>"]
+edition = "2018"
+
+[dependencies]
