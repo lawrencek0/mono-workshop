@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Args {
     @Parameter(description = "Directory", validateWith = ValidPath.class, converter = PathConverter.class)
-    public List<Path> paths = new ArrayList<>(Collections.singletonList(Paths.get(".")));
+    public List<Path> paths = new ArrayList<>(Collections.singletonList(Paths.get(".").toAbsolutePath()));
     @Parameter(names = {"-a", "--all"}, description = "do not ignore entries starting with .")
     public boolean all = false;
     @Parameter(names = {"-A", "--almost-all"}, description = "do not list implied . and ..")

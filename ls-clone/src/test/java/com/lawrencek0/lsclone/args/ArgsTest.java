@@ -21,7 +21,7 @@ class ArgsTest {
     void testDefaultParameters() {
         Args args = new Args();
         JCommander.newBuilder().addObject(args).build().parse();
-        assertEquals(List.of(Paths.get(".")), args.paths);
+        assertEquals(args.paths, List.of(Paths.get(".").toAbsolutePath()));
     }
 
     @Test
