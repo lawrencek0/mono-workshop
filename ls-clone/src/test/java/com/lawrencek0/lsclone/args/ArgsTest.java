@@ -51,7 +51,7 @@ class ArgsTest {
                 JCommander.newBuilder().addObject(args).build().parse("/tmp/___args_test___")
         );
 
-        assertTrue(exception.getMessage().contains("No such file or paths"));
+        assertTrue(exception.getMessage().contains("No such file or path"));
     }
 
 }
