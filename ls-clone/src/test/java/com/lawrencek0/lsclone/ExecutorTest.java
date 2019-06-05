@@ -16,18 +16,32 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ExecutorTest {
+
+    /**
+     * Creates a hidden file only in *nix systems
+     *
+     * @param dir the Temporary directory to store the hidden file
+     * @throws IOException
+     */
+    private void createHiddenFile(Path dir) throws IOException {
+        Path file = dir.resolve(".hidden");
+        Files.write(file, "Hidden".getBytes());
+        assertTrue(Files.isHidden(file));
+    }
+
     @Test
-    @DisplayName("Test with single Path")
+    @DisplayName("Single Path with defaults")
     void testSinglePath(@TempDir Path tempDir) throws IOException {
         Path file = tempDir.resolve("test.txt");
         Files.write(file, "Test".getBytes());
+        createHiddenFile(tempDir);
         Executor executor = new Executor.ExecutorBuilder().build();
         Map<String, Set<String>> entries = executor.executeArgs(List.of(tempDir));
         assertTrue(entries.containsKey(tempDir.toString()) && entries.containsValue(Set.of("test.txt")));
     }
 
     @Test
-    @DisplayName("Test with multiple Paths")
+    @DisplayName("Multiple Paths with defaults")
     void testMultiplePaths(@TempDir Path tempDir) throws IOException {
         assertTrue(Files.isDirectory(tempDir));
         Path childTempDir = Files.createTempDirectory(tempDir, null);
@@ -36,6 +50,7 @@ class ExecutorTest {
         Path file2 = childTempDir.resolve("test2.txt");
         Files.write(file1, "Test".getBytes());
         Files.write(file2, "Test".getBytes());
+        createHiddenFile(tempDir);
         Executor executor = new Executor.ExecutorBuilder().build();
         Map<String, Set<String>> entries = executor.executeArgs(List.of(tempDir, childTempDir));
         assertAll(() -> {
