@@ -1,5 +1,6 @@
 package com.lawrencek0.lsclone;
 
+import com.lawrencek0.lsclone.executor.Executor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -14,13 +15,13 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class RunTest {
+class ExecutorTest {
     @Test
     @DisplayName("Test with single Path")
     void testSinglePath(@TempDir Path tempDir) throws IOException {
         Path file = tempDir.resolve("test.txt");
         Files.write(file, "Test".getBytes());
-        Map<String, Set<String>> entries = Run.executeArgs(List.of(tempDir));
+        Map<String, Set<String>> entries = Executor.executeArgs(List.of(tempDir));
         assertTrue(entries.containsKey(tempDir.toString()) && entries.containsValue(Set.of("test.txt")));
     }
 
@@ -34,7 +35,7 @@ class RunTest {
         Path file2 = childTempDir.resolve("test2.txt");
         Files.write(file1, "Test".getBytes());
         Files.write(file2, "Test".getBytes());
-        Map<String, Set<String>> entries = Run.executeArgs(List.of(tempDir, childTempDir));
+        Map<String, Set<String>> entries = Executor.executeArgs(List.of(tempDir, childTempDir));
         assertAll(() -> {
             assertTrue(Set.of(tempDir.toString(), childTempDir.toString()).stream().allMatch(entries::containsKey));
             assertTrue(Set.of(Set.of("test1.txt", childTempDir.getFileName().toString()),

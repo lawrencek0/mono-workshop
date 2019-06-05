@@ -1,4 +1,4 @@
-package com.lawrencek0.lsclone;
+package com.lawrencek0.lsclone.executor;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,14 +13,14 @@ import java.util.stream.Stream;
 /**
  * Uses the args passed in to generate directory contents
  */
-public class Run {
+public class Executor {
     /**
      * Executes the passed in arguments
      *
      * @return The list of all entries in the given paths
      */
     public static Map<String, Set<String>> executeArgs(List<Path> paths) {
-        return paths.stream().map(p -> new AbstractMap.SimpleEntry<>(p.toString(), Run.fetchEntries(p)))
+        return paths.stream().map(p -> new AbstractMap.SimpleEntry<>(p.toString(), Executor.fetchEntries(p)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
