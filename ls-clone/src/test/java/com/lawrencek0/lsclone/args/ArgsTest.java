@@ -30,7 +30,7 @@ class ArgsTest {
         assertTrue(Files.isDirectory(tempDir));
         Args args = new Args();
         JCommander.newBuilder().addObject(args).build().parse(tempDir.toString());
-        assertTrue(args.paths.contains(tempDir));
+        assertEquals(args.paths, List.of(tempDir));
     }
 
     @Test
