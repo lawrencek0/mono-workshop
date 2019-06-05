@@ -14,13 +14,21 @@ import java.util.stream.Stream;
  * Uses the args passed in to generate directory contents
  */
 public class Executor {
+    private boolean all;
+    private boolean almostAll;
+
+    private Executor(ExecutorBuilder builder) {
+        this.all = builder.all;
+        this.almostAll = builder.almostAll;
+    }
+
     /**
      * Executes the passed in arguments
      *
      * @return The list of all entries in the given paths
      */
-    public static Map<String, Set<String>> executeArgs(List<Path> paths) {
-        return paths.stream().map(p -> new AbstractMap.SimpleEntry<>(p.toString(), Executor.fetchEntries(p)))
+    public Map<String, Set<String>> executeArgs(List<Path> paths) {
+        return paths.stream().map(p -> new AbstractMap.SimpleEntry<>(p.toString(), fetchEntries(p)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -30,12 +38,31 @@ public class Executor {
      * @param path The paths to get the entries from
      * @return The list of all entries in the given paths
      */
-    private static Set<String> fetchEntries(Path path) {
+    private Set<String> fetchEntries(Path path) {
         try (Stream<Path> paths = Files.list(path)) {
             return paths.map(p -> p.getFileName().toString()).collect(Collectors.toSet());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Set.of(path.toString());
+    }
+
+    public static class ExecutorBuilder {
+        private boolean all;
+        private boolean almostAll;
+
+        public ExecutorBuilder setAll(boolean all) {
+            this.all = all;
+            return this;
+        }
+
+        public ExecutorBuilder setAlmostAll(boolean almostAll) {
+            this.almostAll = almostAll;
+            return this;
+        }
+
+        public Executor build() {
+            return new Executor(this);
+        }
     }
 }

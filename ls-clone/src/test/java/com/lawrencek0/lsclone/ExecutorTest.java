@@ -21,7 +21,8 @@ class ExecutorTest {
     void testSinglePath(@TempDir Path tempDir) throws IOException {
         Path file = tempDir.resolve("test.txt");
         Files.write(file, "Test".getBytes());
-        Map<String, Set<String>> entries = Executor.executeArgs(List.of(tempDir));
+        Executor executor = new Executor.ExecutorBuilder().build();
+        Map<String, Set<String>> entries = executor.executeArgs(List.of(tempDir));
         assertTrue(entries.containsKey(tempDir.toString()) && entries.containsValue(Set.of("test.txt")));
     }
 
@@ -35,7 +36,8 @@ class ExecutorTest {
         Path file2 = childTempDir.resolve("test2.txt");
         Files.write(file1, "Test".getBytes());
         Files.write(file2, "Test".getBytes());
-        Map<String, Set<String>> entries = Executor.executeArgs(List.of(tempDir, childTempDir));
+        Executor executor = new Executor.ExecutorBuilder().build();
+        Map<String, Set<String>> entries = executor.executeArgs(List.of(tempDir, childTempDir));
         assertAll(() -> {
             assertTrue(Set.of(tempDir.toString(), childTempDir.toString()).stream().allMatch(entries::containsKey));
             assertTrue(Set.of(Set.of("test1.txt", childTempDir.getFileName().toString()),
