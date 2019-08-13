@@ -1,6 +1,7 @@
 use fantoccini::{error, Client, Locator};
 use futures::future::Future;
 
+/// Logs into PET with the given credentials
 // TODO: handle login failure
 pub fn login(
     client: Box<impl Future<Item = Client, Error = error::CmdError>>,

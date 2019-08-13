@@ -2,6 +2,7 @@ use super::common;
 use fantoccini::{error, Client, Locator};
 use futures::future::Future;
 
+/// Opens the page containing all the phages for the given genus
 pub fn open_genus<'a>(
     client: Box<impl Future<Item = Client, Error = error::CmdError>>,
     genus: common::Genera,
