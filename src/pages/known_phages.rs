@@ -27,7 +27,6 @@ pub fn open_genus<'a>(
             .and_then(|mut c| c.find(Locator::Css("#submit")))
             .and_then(|e| e.click())
             .and_then(|c| c.wait_for_find(Locator::Css(r#"select[name="cutTable_length"]"#)))
-            .and_then(|e| e.select_by_value("100"))
-            .and_then(|c| client_wait(c, 3000)),
+            .and_then(|e| e.select_by_value("100")),
     )
 }
