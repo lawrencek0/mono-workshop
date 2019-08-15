@@ -1,7 +1,8 @@
+#![recursion_limit = "128"]
 mod pages;
 
 fn main() {
-    let email = String::from("GET_EMAIL_FROM_FILE?");
-    let password = String::from("GET_PASSWORD_FROM_ENV?");
+    let email = String::from("email");
+    let password = String::from("password");
     pages::run(email, password);
 }
