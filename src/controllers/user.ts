@@ -3,7 +3,7 @@ import { check, sanitize, validationResult, body } from 'express-validator';
 import db from '../database';
 
 export const validateLogin = [
-    check('username', 'Invalid username').isEmail(),
+    check('username', 'Invalid username').not().isEmpty(),
     check('password', 'Invalid password')
         .not()
         .isEmpty()
