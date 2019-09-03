@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, sanitize, validationResult, body } from 'express-validator';
-import User from '../models/User';
+import db from '../database';
 
 export const validateLogin = [
     check('username', 'Invalid username').isEmail(),
@@ -21,24 +21,43 @@ export const postLogin = async (req: Request, res: Response) => {
     }
 
     // @TODO: connect with aws congito
+    const [user] = await db.query(
+        'SELECT * FROM users WHERE `username`= ?',
+        req.body.username
+    );
+
     return res
         .status(200)
-        .json({ message: 'success', token: 'eferfjdkfdsalkfj' });
+        .json({ message: 'success', token: 'eferfjdkfdsalkfj', user });
 };
 
 /**
  * POST /signup
  * Create a new local account.
  */
-export const postSignup = (req: Request, res: Response, next: NextFunction) => {
+export const postSignup = async (req: Request, res: Response) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
         return res.status(422).json(errors.array());
     }
 
-    const user = new User(req.body.email, req.body.password);
+    const [user] = await db.query(
+        'SELECT * FROM users WHERE `username`= ?',
+        req.body.username
+    );
 
-    //@TODO: save
-    return res.status(200).json({ message: 'success', user });
+    if (user && Array.isArray(user) && user.length > 0) {
+        return res
+            .status(422)
+            .json({ type: 'error', message: 'Username is already taken' });
+    }
+
+    // @TODO: hash the password!
+    const [newUser] = await db.query(
+        'INSERT INTO users (username, password) VALUES (?, ?)',
+        [req.body.username, req.body.password]
+    );
+
+    return res.status(200).json({ message: 'success', user: newUser });
 };
