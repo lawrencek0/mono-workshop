@@ -37,7 +37,7 @@ const Login: React.FC<{}> = () => {
             <pre>{res}</pre>
             <form onSubmit={handleSubmit}>
                 <fieldset>
-                    <legend className="ph0 mh0 fw6 clip">Login</legend>
+                    <legend className="ph0 mh0 fw6">Login</legend>
                     <div className="mt3">
                         <label className="db fw4 lh-copy f6" htmlFor="username">
                             username
