@@ -14,7 +14,9 @@
     "styled-components": "^4.3.2",
     "styled-theming": "^2.2.0",
     "tachyons": "^4.11.1",
-    "typescript": "3.5.3"
+    "typescript": "3.5.3",
+    "typography": "^0.16.19",
+    "typography-theme-noriega": "^0.16.19"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,6 +43,7 @@
   "devDependencies": {
     "@types/react": "^16.9.2",
     "@types/styled-components": "^4.1.18",
+    "@types/typography": "^0.16.2",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "eslint": "^6.2.2",
