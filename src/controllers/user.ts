@@ -26,6 +26,10 @@ export const postLogin = async (req: Request, res: Response) => {
         req.body.username
     );
 
+    if (user && Array.isArray(user) && user.length == 0) {
+        return res.status(422).json({ type: 'error', message: 'Invalid username/password' });
+    }
+
     return res
         .status(200)
         .json({ message: 'success', token: 'eferfjdkfdsalkfj', user });
