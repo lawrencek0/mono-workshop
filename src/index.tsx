@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components/macro';
 import Typography from 'typography';
 import noriegaTheme from 'typography-theme-noriega';
 import 'tachyons';
