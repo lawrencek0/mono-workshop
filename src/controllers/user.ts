@@ -21,9 +21,9 @@ export const postLogin = async (req: Request, res: Response) => {
     }
 
     // @TODO: connect with aws congito
-    const [user] = await db.query(
+    const user = await db.query(
         'SELECT * FROM users WHERE `username`= ?',
-        req.body.username
+        [req.body.username]
     );
 
     if (user && Array.isArray(user) && user.length == 0) {
@@ -46,9 +46,9 @@ export const postSignup = async (req: Request, res: Response) => {
         return res.status(422).json(errors.array());
     }
 
-    const [user] = await db.query(
+    const user = await db.query(
         'SELECT * FROM users WHERE `username`= ?',
-        req.body.username
+        [req.body.username]
     );
 
     if (user && Array.isArray(user) && user.length > 0) {
@@ -58,7 +58,7 @@ export const postSignup = async (req: Request, res: Response) => {
     }
 
     // @TODO: hash the password!
-    const [newUser] = await db.query(
+    const newUser = await db.query(
         'INSERT INTO users (username, password) VALUES (?, ?)',
         [req.body.username, req.body.password]
     );
