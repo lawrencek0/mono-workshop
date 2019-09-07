@@ -13,12 +13,12 @@ export const validateLogin = [
 
 export const validateSignup = [
     ...validateLogin,
-    check('first_name', `First Name can't be empty`).exists(),
-    check('last_name', `Last Name can't be empty`).exists(),
+    check('first_name', 'First Name can\'t be empty').exists(),
+    check('last_name', 'Last Name can\'t be empty').exists(),
     // @TODO: allow only warhawk.ulm.edu and ulm.edu emails!
     check('email')
         .exists()
-        .withMessage(`Email can't be empty`)
+        .withMessage('Email can\'t be empty')
         .bail()
         .isEmail()
         .withMessage('Invald Email')
@@ -26,13 +26,13 @@ export const validateSignup = [
         .normalizeEmail(),
     check('role')
         .exists()
-        .withMessage(`Role can't be empty`)
+        .withMessage('Role can\'t be empty')
         .bail()
         .isIn(['student', 'faculty', 'admin'])
         .withMessage('Invalid Role'),
     check('cwid', 'Invalid cwid')
         .exists()
-        .withMessage(`CWID can't be empty`)
+        .withMessage('CWID can\'t be empty')
         .bail()
         .isInt()
         .withMessage('Invalid CWID')
@@ -91,8 +91,8 @@ export const postSignup = async (req: Request, res: Response) => {
     const newUser = await User.save({
         username: req.body.username,
         password: req.body.password,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
+        firstName: req.body.first_name,
+        lastName: req.body.last_name,
         email: req.body.email,
         role: req.body.role,
         cwid: Number.parseInt(req.body.cwid, 10)

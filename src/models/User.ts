@@ -1,10 +1,10 @@
 import db from '../database';
 
-interface IUser {
+interface UserProps {
     username: string;
     password: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     role: 'student' | 'faculty' | 'admin';
     cwid: number;
@@ -19,15 +19,15 @@ class User {
         return db.query('SELECT * FROM users WHERE `username`= ?', [username]);
     }
 
-    public static save(user: IUser) {
+    public static save(user: UserProps) {
         // @TODO: hash the password before saving!!
         return db.query(
             'INSERT INTO users (username, password, first_name, last_name, email, role, cwid) VALUES(?, ?, ?, ?, ?, ?, ?)',
             [
                 user.username,
                 user.password,
-                user.first_name,
-                user.last_name,
+                user.firstName,
+                user.lastName,
                 user.email,
                 user.role,
                 user.cwid
