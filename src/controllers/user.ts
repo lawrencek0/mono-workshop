@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { check, sanitize, validationResult, body } from 'express-validator';
-import db from '../database';
+import { Request, Response } from 'express';
+import { check, validationResult } from 'express-validator';
+import User from '../models/User';
 
 export const validateLogin = [
     check('username', 'Invalid username')
@@ -9,6 +9,35 @@ export const validateLogin = [
     check('password', 'Invalid password')
         .not()
         .isEmpty()
+];
+
+export const validateSignup = [
+    ...validateLogin,
+    check('first_name', `First Name can't be empty`).exists(),
+    check('last_name', `Last Name can't be empty`).exists(),
+    // @TODO: allow only warhawk.ulm.edu and ulm.edu emails!
+    check('email')
+        .exists()
+        .withMessage(`Email can't be empty`)
+        .bail()
+        .isEmail()
+        .withMessage('Invald Email')
+        .bail()
+        .normalizeEmail(),
+    check('role')
+        .exists()
+        .withMessage(`Role can't be empty`)
+        .bail()
+        .isIn(['student', 'faculty', 'admin'])
+        .withMessage('Invalid Role'),
+    check('cwid', 'Invalid cwid')
+        .exists()
+        .withMessage(`CWID can't be empty`)
+        .bail()
+        .isInt()
+        .withMessage('Invalid CWID')
+        .bail()
+        .isLength({ min: 8, max: 8 })
 ];
 
 /**
@@ -23,15 +52,16 @@ export const postLogin = async (req: Request, res: Response) => {
     }
 
     // @TODO: connect with aws congito
-    const user = await db.query('SELECT * FROM users WHERE `username`= ?', [
-        req.body.username
-    ]);
+    const user = await User.getUserWithUsername(req.body.username);
 
+    // @TODO: move this check to the validators
     if (user && Array.isArray(user) && user.length == 0) {
         return res
             .status(422)
             .json({ type: 'error', message: 'Invalid username/password' });
     }
+
+    // @TODO: use bcrypt/argon2 to compare password hashes
 
     return res
         .status(200)
@@ -49,9 +79,7 @@ export const postSignup = async (req: Request, res: Response) => {
         return res.status(422).json(errors.array());
     }
 
-    const user = await db.query('SELECT * FROM users WHERE `username`= ?', [
-        req.body.username
-    ]);
+    const user = await User.getUserWithUsername(req.body.username);
 
     if (user && Array.isArray(user) && user.length > 0) {
         return res
@@ -60,10 +88,15 @@ export const postSignup = async (req: Request, res: Response) => {
     }
 
     // @TODO: hash the password!
-    const newUser = await db.query(
-        'INSERT INTO users (username, password) VALUES (?, ?)',
-        [req.body.username, req.body.password]
-    );
+    const newUser = await User.save({
+        username: req.body.username,
+        password: req.body.password,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        email: req.body.email,
+        role: req.body.role,
+        cwid: Number.parseInt(req.body.cwid, 10)
+    });
 
     return res.status(200).json({ message: 'success', user: newUser });
 };
