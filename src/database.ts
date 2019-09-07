@@ -29,8 +29,13 @@ class Database {
                     id int(10) unsigned NOT NULL AUTO_INCREMENT,
                     username varchar(255) NOT NULL,
                     password varchar(255) NOT NULL,
+                    first_name varchar(50) NOT NULL,
+                    last_name varchar(50) NOT NULL,
+                    email varchar(255) NOT NULL,
+                    role ENUM('student', 'faculty', 'admin'),
+                    cwid char(8) NOT NULL,
                     PRIMARY KEY (id),
-                    UNIQUE KEY username (username)
+                    UNIQUE (username, email, cwid)
                 )`);
         } catch (e) {
             logger.log(
