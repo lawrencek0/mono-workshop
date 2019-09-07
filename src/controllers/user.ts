@@ -3,7 +3,9 @@ import { check, sanitize, validationResult, body } from 'express-validator';
 import db from '../database';
 
 export const validateLogin = [
-    check('username', 'Invalid username').not().isEmpty(),
+    check('username', 'Invalid username')
+        .not()
+        .isEmpty(),
     check('password', 'Invalid password')
         .not()
         .isEmpty()
@@ -21,13 +23,14 @@ export const postLogin = async (req: Request, res: Response) => {
     }
 
     // @TODO: connect with aws congito
-    const user = await db.query(
-        'SELECT * FROM users WHERE `username`= ?',
-        [req.body.username]
-    );
+    const user = await db.query('SELECT * FROM users WHERE `username`= ?', [
+        req.body.username
+    ]);
 
     if (user && Array.isArray(user) && user.length == 0) {
-        return res.status(422).json({ type: 'error', message: 'Invalid username/password' });
+        return res
+            .status(422)
+            .json({ type: 'error', message: 'Invalid username/password' });
     }
 
     return res
@@ -46,10 +49,9 @@ export const postSignup = async (req: Request, res: Response) => {
         return res.status(422).json(errors.array());
     }
 
-    const user = await db.query(
-        'SELECT * FROM users WHERE `username`= ?',
-        [req.body.username]
-    );
+    const user = await db.query('SELECT * FROM users WHERE `username`= ?', [
+        req.body.username
+    ]);
 
     if (user && Array.isArray(user) && user.length > 0) {
         return res
