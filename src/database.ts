@@ -27,15 +27,14 @@ class Database {
             await this.query('USE system');
             await this.query(`CREATE TABLE IF NOT EXISTS users (
                     id int(10) unsigned NOT NULL AUTO_INCREMENT,
-                    username varchar(255) NOT NULL,
+                    username varchar(255) NOT NULL UNIQUE,
                     password varchar(255) NOT NULL,
                     first_name varchar(50) NOT NULL,
                     last_name varchar(50) NOT NULL,
-                    email varchar(255) NOT NULL,
-                    role ENUM('student', 'faculty', 'admin'),
-                    cwid int(8) NOT NULL,
-                    PRIMARY KEY (id),
-                    UNIQUE (username, email, cwid)
+                    email varchar(255) NOT NULL UNIQUE,
+                    role ENUM('student', 'faculty', 'admin') NOT NULL,
+                    cwid int(8) NOT NULL UNIQUE,
+                    PRIMARY KEY (id)
                 )`);
         } catch (e) {
             logger.log(
