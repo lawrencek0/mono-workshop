@@ -88,15 +88,20 @@ export const postSignup = async (req: Request, res: Response) => {
     }
 
     // @TODO: hash the password!
-    const newUser = await User.save({
-        username: req.body.username,
-        password: req.body.password,
-        firstName: req.body.first_name,
-        lastName: req.body.last_name,
-        email: req.body.email,
-        role: req.body.role,
-        cwid: Number.parseInt(req.body.cwid, 10)
-    });
-
-    return res.status(200).json({ message: 'success', user: newUser });
+    try {
+        const newUser = await User.save({
+            username: req.body.username,
+            password: req.body.password,
+            firstName: req.body.first_name,
+            lastName: req.body.last_name,
+            email: req.body.email,
+            role: req.body.role,
+            cwid: Number.parseInt(req.body.cwid, 10)
+        });
+        return res.status(200).json({ message: 'success', user: newUser });
+    } catch (e) {
+        return res
+            .status(422)
+            .json({ type: 'error', message: e.sqlMessage });
+    }
 };
