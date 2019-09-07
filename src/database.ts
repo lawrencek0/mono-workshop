@@ -33,7 +33,7 @@ class Database {
                     last_name varchar(50) NOT NULL,
                     email varchar(255) NOT NULL,
                     role ENUM('student', 'faculty', 'admin'),
-                    cwid char(8) NOT NULL,
+                    cwid int(8) NOT NULL,
                     PRIMARY KEY (id),
                     UNIQUE (username, email, cwid)
                 )`);
