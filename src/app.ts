@@ -18,6 +18,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
  * Primary app routes.
  */
 app.post("/login", userController.validateLogin, userController.postLogin);
-app.post("/signup", userController.postSignup);
+app.post("/signup", userController.validateSignup, userController.postSignup);
 
 export default app;
