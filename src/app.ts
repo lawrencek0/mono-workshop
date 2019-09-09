@@ -9,12 +9,10 @@ import * as userController from './controllers/user';
 const app = express();
 
 // Express configuration
-import routes from './routes';
 app.set('port', process.env.PORT || 8000);
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/', routes);
 /**
  * Primary app routes.
  */
