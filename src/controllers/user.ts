@@ -77,16 +77,15 @@ export const postLogin = async (req: Request, res: Response) => {
   const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
   cognitoUser.authenticateUser(authenticationDetails, {
-    onSuccess: function(result: {
-      getAccessToken: () => { getJwtToken: () => void };
-    }) {
-      const accesstoken = result.getAccessToken().getJwtToken();
-      return res.status(200).json({ type: 'success', accesstoken });
-    },
-    onFailure: function(err: any) {
+    onSuccess: result => {
+      const accessToken = result.getIdToken().getJwtToken();
+      const refreshToken = result.getRefreshToken().getToken();
       return res
-        .status(422)
-        .json({ type: 'error', message: 'Invalid username or password.' });
+        .status(200)
+        .json({ type: 'success', accessToken, refreshToken });
+    },
+    onFailure: err => {
+      return res.status(422).json({ type: 'error', message: err });
     }
   });
 };
@@ -105,20 +104,36 @@ export const postSignup = async (req: Request, res: Response) => {
   const name = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
-  const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [];
-
-  attributeList.push(
+  const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
     new AmazonCognitoIdentity.CognitoUserAttribute({
       Name: 'email',
       Value: email
+    }),
+    new AmazonCognitoIdentity.CognitoUserAttribute({
+      Name: 'name',
+      Value: req.body.first_name
+    }),
+    new AmazonCognitoIdentity.CognitoUserAttribute({
+      Name: 'family_name',
+      Value: req.body.last_name
+    }),
+    new AmazonCognitoIdentity.CognitoUserAttribute({
+      Name: 'custom:role',
+      Value: req.body.role
+    }),
+    new AmazonCognitoIdentity.CognitoUserAttribute({
+      Name: 'custom:cwid',
+      Value: req.body.cwid
+    }),
+    new AmazonCognitoIdentity.CognitoUserAttribute({
+      Name: 'preferred_username',
+      Value: req.body.username
     })
-  );
+  ];
 
   return userPool.signUp(name, password, attributeList, null, (err, result) => {
     if (err) {
-      return res
-        .status(422)
-        .json({ type: 'error', message: 'Username is already taken' });
+      return res.status(422).json({ type: 'error', message: err });
     }
     const cognitoUser = result.user;
     return res.status(200).json({ type: 'success', cognitoUser });
@@ -129,25 +144,26 @@ export const postSignup = async (req: Request, res: Response) => {
 const cognitoExpress = new CognitoExpress({
   region: authentic.AWS_COGNITO_POOL_REGION,
   cognitoUserPoolId: authentic.AWS_COGNITO_USER_USER_POOL_ID,
-  tokenUse: 'access',
-  toeknExpiration: 3600000 //this is measured in ms (this is 1 hour)
+  tokenUse: 'id',
+  tokenExpiration: 3600000 //this is measured in ms (this is 1 hour)
 });
 
 export const validate = (req: Request, res: Response, next: NextFunction) => {
-  
-	//I'm passing in the access token in header under key accessToken
-	const accessTokenFromClient = req.headers.accesstoken;
+  //I'm passing in the access token in header under key accessToken
+  const accessTokenFromClient = req.headers.idtoken;
 
-	//Fail if token not present in header. 
-	if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header');
+  //Fail if token not present in header.
+  if (!accessTokenFromClient)
+    return res.status(401).send('Access Token missing from header');
 
-	cognitoExpress.validate(accessTokenFromClient, (err: Error, response: Response) => {
-		
-		//If API is not authenticated, Return 401 with error message. 
-		if (err) return res.status(401).send(err);
-		
-		//Else API has been authenticated. Proceed.
-		res.locals.user = response;
-		next();
-	});
+  cognitoExpress.validate(
+    accessTokenFromClient,
+    (err: Error, response: Response) => {
+      //If API is not authenticated, Return 401 with error message.
+      if (err) return res.status(401).send(err);
+      //Else API has been authenticated. Proceed.
+      res.locals.user = response;
+      next();
+    }
+  );
 };
