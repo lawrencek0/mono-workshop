@@ -4,20 +4,16 @@
   "private": true,
   "proxy": "http://localhost:8000",
   "dependencies": {
-    "@reach/router": "^1.2.1",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.2",
     "@types/react-dom": "16.9.0",
-    "babel-plugin-macros": "^2.6.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1",
     "styled-components": "^4.3.2",
     "styled-theming": "^2.2.0",
     "tachyons": "^4.11.1",
-    "typescript": "3.5.3",
-    "typography": "^0.16.19",
-    "typography-theme-noriega": "^0.16.19"
+    "typescript": "3.5.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,7 +40,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.6.0",
     "@storybook/addon-actions": "^5.1.11",
     "@storybook/addon-info": "^5.1.11",
     "@storybook/addon-links": "^5.1.11",
