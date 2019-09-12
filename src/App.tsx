@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import * as theme from './theme';
 import Login from './login/Login';
 import SignUp from './login/Signup';
 
@@ -8,12 +9,19 @@ const App: React.FC = () => {
 
     return (
         <ThemeProvider theme={{ mode: theme }}>
-            <div className="App">
+            <Main>
                 <Login />
                 <SignUp />
-            </div>
+            </Main>
         </ThemeProvider>
     );
 };
+
+const Main = styled.main.attrs(() => ({
+    className: 'ma2',
+}))`
+    background-color: ${theme.backgroundColor};
+    color: ${theme.primaryTextColor};
+`;
 
 export default App;
