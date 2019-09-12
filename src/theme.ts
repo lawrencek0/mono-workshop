@@ -24,3 +24,5 @@ export const secondaryTextColor = theme('mode', {
     light: '#6D6C5F',
     dark: '#C3C3C3',
 });
+
+export type themes = 'light' | 'dark';
