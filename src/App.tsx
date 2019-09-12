@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components/macro';
 import * as theme from './theme';
 import Login from './login/Login';
 import SignUp from './login/Signup';
