@@ -78,11 +78,11 @@ export const postLogin = async (req: Request, res: Response) => {
 
   cognitoUser.authenticateUser(authenticationDetails, {
     onSuccess: result => {
-      const accessToken = result.getIdToken().getJwtToken();
+      const idToken = result.getIdToken().getJwtToken();
       const refreshToken = result.getRefreshToken().getToken();
       return res
         .status(200)
-        .json({ type: 'success', accessToken, refreshToken });
+        .json({ type: 'success', accessToken: idToken, refreshToken });
     },
     onFailure: err => {
       return res.status(422).json({ type: 'error', message: err });
