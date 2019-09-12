@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
-import request from 'request';
-import jwkToPem from 'jwk-to-pem';
-import jwt from 'jsonwebtoken';
 import { authentic } from '../util/secrets';
 
+//eslint-disable-next-line @typescript-eslint/no-var-requires
+const CognitoExpress = require('cognito-express');
 (global as any).fetch = require('node-fetch');
 (global as any).navigator = (): null => null;
 
@@ -126,53 +125,29 @@ export const postSignup = async (req: Request, res: Response) => {
   });
 };
 
+//Configures the cognito-express constructor
+const cognitoExpress = new CognitoExpress({
+  region: authentic.AWS_COGNITO_POOL_REGION,
+  cognitoUserPoolId: authentic.AWS_COGNITO_USER_USER_POOL_ID,
+  tokenUse: 'access',
+  toeknExpiration: 3600000 //this is measured in ms (this is 1 hour)
+});
+
 export const validate = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers['authorization'];
-  request(
-    {
-      url: `https://cognitoidp.${authentic.AWS_COGNITO_POOL_REGION}.amazonaws.com/${authentic.AWS_COGNITO_USER_USER_POOL_ID}/.well-known/jwks.json`,
-      json: true
-    },
-    (error, response, body) => {
-      if (!error && response.statusCode === 200) {
-        const pems: { [s: string]: string } = {};
-        const keys = body['keys'];
-        for (let i = 0; i < keys.length; i++) {
-          const keyId = keys[i].kid;
-          const modulus = keys[i].n;
-          const exponent = keys[i].e;
-          const keyType = keys[i].kty;
-          const jwk = { kty: keyType, n: modulus, e: exponent };
-          const pem = jwkToPem(jwk);
-          pems[keyId] = pem;
-        }
-        const decodedJwt = jwt.decode(token, { complete: true });
-        if (!decodedJwt) {
-          return res
-            .status(401)
-            .json({ type: 'error', message: 'Invalid token' });
-        }
-        const kid = (decodedJwt as any).header.kid;
-        const pem = pems[kid];
-        if (!pem) {
-          return res
-            .status(401)
-            .json({ type: 'error', message: 'Invalid token' });
-        }
-        jwt.verify(token, pem, function(err: any, payload: any) {
-          if (err) {
-            return res
-              .status(401)
-              .json({ type: 'error', message: 'Invalid token' });
-          } else {
-            return next();
-          }
-        });
-      } else {
-        return res
-          .status(500)
-          .json({ type: 'error', message: 'Error! Unable to download JWKs' });
-      }
-    }
-  );
+  
+	//I'm passing in the access token in header under key accessToken
+	const accessTokenFromClient = req.headers.accesstoken;
+
+	//Fail if token not present in header. 
+	if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header');
+
+	cognitoExpress.validate(accessTokenFromClient, (err: Error, response: Response) => {
+		
+		//If API is not authenticated, Return 401 with error message. 
+		if (err) return res.status(401).send(err);
+		
+		//Else API has been authenticated. Proceed.
+		res.locals.user = response;
+		next();
+	});
 };
