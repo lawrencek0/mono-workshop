@@ -22,7 +22,7 @@ export const database = {
 
 //exports the aws user pool id and the aws client id
 export const authentic = {
-  AWS_COGNITO_USER_USER_POOL_ID: process.env['AWS_COGNITO_USER_USER_POOL_ID'],
+  AWS_COGNITO_USER_POOL_ID: process.env['AWS_COGNITO_USER_POOL_ID'],
   AWS_COGNITO_CLIENT_ID: process.env['AWS_COGNITO_CLIENT_ID'],
   AWS_COGNITO_POOL_REGION: process.env['AWS_COGNITO_POOL_REGION']
 };

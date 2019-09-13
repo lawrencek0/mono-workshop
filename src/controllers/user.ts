@@ -48,7 +48,7 @@ export const validateSignup = [
 
 const userPool = new AmazonCognitoIdentity.CognitoUserPool({
   ClientId: authentic.AWS_COGNITO_CLIENT_ID,
-  UserPoolId: authentic.AWS_COGNITO_USER_USER_POOL_ID
+  UserPoolId: authentic.AWS_COGNITO_USER_POOL_ID
 });
 
 /**
@@ -143,7 +143,7 @@ export const postSignup = async (req: Request, res: Response) => {
 //Configures the cognito-express constructor
 const cognitoExpress = new CognitoExpress({
   region: authentic.AWS_COGNITO_POOL_REGION,
-  cognitoUserPoolId: authentic.AWS_COGNITO_USER_USER_POOL_ID,
+  cognitoUserPoolId: authentic.AWS_COGNITO_USER_POOL_ID,
   tokenUse: 'id',
   tokenExpiration: 3600000 //this is measured in ms (this is 1 hour)
 });
