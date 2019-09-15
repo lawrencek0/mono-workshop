@@ -1,5 +1,14 @@
 import theme from 'styled-theming';
 
+// Used to genereate media query min-width rules
+export const mediaQueryFactory = (minWidth: number): string => `@media (min-width: ${minWidth}em)`;
+
+// The media query break points for tablet (48em/768px) and desktop (64em/1024px)
+export const media = {
+    tablet: mediaQueryFactory(48),
+    desktop: mediaQueryFactory(64),
+};
+
 // The primary color of the app representing "TEAM YELLOW"
 export const primaryColor = '#F6EC15';
 
