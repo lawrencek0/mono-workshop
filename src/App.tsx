@@ -43,7 +43,7 @@ const Main = styled.main.attrs(() => ({
 `;
 
 const Wrapper = styled.div.attrs(() => ({
-    className: 'flex flex-column vh-100-l',
+    className: 'flex flex-column-reverse vh-100-l',
 }))`
     ${media.desktop} {
         display: grid;

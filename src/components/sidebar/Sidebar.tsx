@@ -21,14 +21,14 @@ export const Sidebar: React.FC<Props> = ({ routes, variant }) => {
 };
 
 const StyledLinks = styled.ul.attrs(() => ({
-    className: 'flex justify-around flex-column-l list pl0 ma0-l h-100-l',
+    className: 'flex justify-around flex-column-l list mv0 pl0 ma0-l h-100-l',
 }))`
     position: sticky;
     top: 0;
 `;
 
 const StyledNav = styled.nav.attrs(() => ({
-    className: 'h-100-l',
+    className: 'fixed bottom-0 w-100 static-l h-100-l',
 }))<{ variant: BaseVariant }>`
     background-color: ${sidebarBackgroundColor};
     color: ${sidebarColor};
