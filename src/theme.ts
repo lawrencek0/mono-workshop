@@ -37,3 +37,20 @@ export const secondaryTextColor = theme('mode', {
 export type themes = 'light' | 'dark';
 
 export type BaseVariant = 'primary' | 'secondary';
+
+export const dayColors = {
+    darkGrey: '#48483C',
+    lighterDarkGrey: '#6D6C5F',
+    grey: '#F3F3F1',
+    white: '#FFF',
+    lighterPrimary: '#FFF96F',
+};
+
+export const nightColors = {
+    backgroundDark: '#212121',
+    backgroundGrey: '#303030',
+    backgroundGreyLighter: '#6C6C6C',
+    cardGrey: '#424242',
+    white: '#FFF',
+    grey: '#C3C3C3',
+};
