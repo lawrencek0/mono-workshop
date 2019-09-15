@@ -5,15 +5,14 @@ import { NavItem, NavItemProps } from './NavItem';
 import { sidebarBackgroundColor, sidebarColor } from './theme';
 interface Props {
     routes: NavItemProps[];
-    variant: BaseVariant;
 }
 
-export const Sidebar: React.FC<Props> = ({ routes, variant }) => {
+export const PrimarySidebar: React.FC<Props> = ({ routes }) => {
     return (
-        <StyledNav variant={variant}>
+        <StyledNav variant="primary">
             <StyledLinks>
                 {routes.map((route, i) => (
-                    <NavItem key={i} {...route} variant={variant} />
+                    <NavItem key={i} {...route} variant="primary" />
                 ))}
             </StyledLinks>
         </StyledNav>

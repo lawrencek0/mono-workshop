@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from 'styled-components/macro';
 import Login from 'login/Login';
 import SignUp from 'login/Signup';
 import { routes } from 'routes';
-import { Sidebar } from 'components/sidebar/Sidebar';
+import { PrimarySidebar } from 'components/sidebar/Sidebar';
 import { themes, backgroundColor, primaryTextColor, media } from 'theme';
 
 const App: React.FC = () => {
@@ -21,7 +21,7 @@ const App: React.FC = () => {
         // ThemeProvider provides the theme for all our components
         <ThemeProvider theme={{ mode: theme }}>
             <Wrapper>
-                <Sidebar variant="primary" routes={routes} />
+                <PrimarySidebar routes={routes} />
                 <Main>
                     <button onClick={toggleTheme}>Toggle Theme</button>
                     <Login />
