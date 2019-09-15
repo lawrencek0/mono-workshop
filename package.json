@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:8000",
   "dependencies": {
+    "@reach/router": "^1.2.1",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.2",
     "@types/react-dom": "16.9.0",
@@ -47,6 +48,7 @@
     "@storybook/addon-links": "^5.1.11",
     "@storybook/addons": "^5.1.11",
     "@storybook/react": "^5.1.11",
+    "@types/reach__router": "^1.2.4",
     "@types/react": "^16.9.2",
     "@types/storybook__react": "^4.0.2",
     "@types/styled-components": "^4.1.18",
@@ -76,7 +78,7 @@
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "eslint --fix",
-      "npm run lint:css",
+      "stylelint",
       "git add"
     ]
   }
