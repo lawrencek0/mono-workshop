@@ -34,7 +34,7 @@ const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false,
 };
 
 const StyledLink = styled(Link).attrs(props => ({
-    className: `${props.className} flex flex-column items-center no-underline`,
+    className: `${props.className} flex flex-column items-center no-underline ph1-l`,
 }))<{ className?: string; variant: Variant }>`
     ${navItemStyles};
 `;

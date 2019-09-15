@@ -21,7 +21,7 @@ export const Sidebar: React.FC<Props> = ({ routes, variant }) => {
 };
 
 const StyledLinks = styled.ul.attrs(() => ({
-    className: 'flex justify-around flex-column-l list pl0 ma0-l mh1-l h-100-l',
+    className: 'flex justify-around flex-column-l list pl0 ma0-l h-100-l',
 }))`
     position: sticky;
     top: 0;
