@@ -35,3 +35,5 @@ export const secondaryTextColor = theme('mode', {
 });
 
 export type themes = 'light' | 'dark';
+
+export type BaseVariant = 'primary' | 'secondary';
