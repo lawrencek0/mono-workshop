@@ -1,18 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
+import { BaseVariant } from 'theme';
 import { NavItem, NavItemProps } from './NavItem';
-import { primaryColor } from 'theme';
-
+import { sidebarBackgroundColor, sidebarColor } from './theme';
 interface Props {
     routes: NavItemProps[];
+    variant: BaseVariant;
 }
 
-export const Sidebar: React.FC<Props> = ({ routes }) => {
+export const Sidebar: React.FC<Props> = ({ routes, variant }) => {
     return (
-        <StyledNav>
+        <StyledNav variant={variant}>
             <StyledLinks>
                 {routes.map((route, i) => (
-                    <NavItem key={i} {...route} />
+                    <NavItem key={i} {...route} variant={variant} />
                 ))}
             </StyledLinks>
         </StyledNav>
@@ -28,6 +29,7 @@ const StyledLinks = styled.ul.attrs(() => ({
 
 const StyledNav = styled.nav.attrs(() => ({
     className: 'h-100-l',
-}))`
-    background-color: ${primaryColor};
+}))<{ variant: BaseVariant }>`
+    background-color: ${sidebarBackgroundColor};
+    color: ${sidebarColor};
 `;

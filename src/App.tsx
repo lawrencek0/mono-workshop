@@ -21,7 +21,7 @@ const App: React.FC = () => {
         // ThemeProvider provides the theme for all our components
         <ThemeProvider theme={{ mode: theme }}>
             <Wrapper>
-                <Sidebar routes={routes} />
+                <Sidebar variant="primary" routes={routes} />
                 <Main>
                     <button onClick={toggleTheme}>Toggle Theme</button>
                     <Login />

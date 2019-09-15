@@ -2,16 +2,19 @@ import React from 'react';
 import { Link, Match } from '@reach/router';
 import { IconType } from 'react-icons/lib/cjs';
 import styled from 'styled-components/macro';
-import { primaryTextColor, secondaryTextColor, primaryColor, media } from 'theme';
+import { navItemStyles, media, BaseVariant } from './theme';
+
+type Variant = BaseVariant | 'active';
 
 export type NavItemProps = {
     title?: string;
     to: string;
     Icon: IconType | React.FC<{}>;
     isSecondary?: boolean;
+    variant?: Variant;
 };
 
-const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false }) => {
+const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false, variant = 'primary' }) => {
     const StyledIcon = styled(Icon)`
         font-size: 2em;
     `;
@@ -20,7 +23,7 @@ const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false 
         <StyledList isSecondary={isSecondary}>
             <Match path={to}>
                 {({ match }) => (
-                    <StyledLink to={to} className={match ? 'active' : ''}>
+                    <StyledLink to={to} className={match ? 'active' : ''} variant={match ? 'active' : variant}>
                         <StyledIcon />
                         {title}
                     </StyledLink>
@@ -32,13 +35,8 @@ const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false 
 
 const StyledLink = styled(Link).attrs(props => ({
     className: `${props.className} flex flex-column items-center no-underline`,
-}))<{ className?: string }>`
-    background-color: ${primaryColor};
-    color: ${secondaryTextColor};
-
-    &.active {
-        color: ${primaryTextColor};
-    }
+}))<{ className?: string; variant: Variant }>`
+    ${navItemStyles};
 `;
 
 const StyledList = styled.li.attrs(() => ({
