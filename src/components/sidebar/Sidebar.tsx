@@ -9,26 +9,46 @@ interface Props {
 
 export const PrimarySidebar: React.FC<Props> = ({ routes }) => {
     return (
-        <StyledNav variant="primary">
+        <StyledPrimaryNav variant="primary">
             <StyledLinks>
                 {routes.map((route, i) => (
                     <NavItem key={i} {...route} variant="primary" />
                 ))}
             </StyledLinks>
+        </StyledPrimaryNav>
+    );
+};
+
+export const SecondarySidebar: React.FC<Props> = ({ routes }) => {
+    return (
+        <StyledNav variant="secondary">
+            <StyledSecondaryLinks>
+                {routes.map((route, i) => (
+                    <NavItem key={i} {...route} variant="secondary" />
+                ))}
+            </StyledSecondaryLinks>
         </StyledNav>
     );
 };
 
 const StyledLinks = styled.ul.attrs(() => ({
-    className: 'flex justify-around flex-column-l list mv0 pl0 ma0-l h-100-l',
+    className: 'flex justify-around justify-start-l flex-column-l list mv0 pl0 ma0-l h-100-l',
 }))`
     position: sticky;
     top: 0;
 `;
 
 const StyledNav = styled.nav.attrs(() => ({
-    className: 'fixed bottom-0 w-100 static-l h-100-l',
+    className: 'h-100-l',
 }))<{ variant: BaseVariant }>`
     background-color: ${sidebarBackgroundColor};
     color: ${sidebarColor};
 `;
+
+const StyledPrimaryNav = styled(StyledNav).attrs(() => ({
+    className: 'fixed bottom-0 w-100 static-l',
+}))``;
+
+const StyledSecondaryLinks = styled(StyledLinks).attrs(props => ({
+    className: `${props.className} justify-end-l`,
+}))``;

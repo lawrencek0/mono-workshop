@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Match } from '@reach/router';
 import { IconType } from 'react-icons/lib/cjs';
 import styled from 'styled-components/macro';
-import { navItemStyles, media, BaseVariant } from './theme';
+import { navItemStyles, BaseVariant } from './theme';
 
 type Variant = BaseVariant | 'active';
 
@@ -10,20 +10,19 @@ export type NavItemProps = {
     title?: string;
     to: string;
     Icon: IconType | React.FC<{}>;
-    isSecondary?: boolean;
     variant?: Variant;
 };
 
-const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false, variant = 'primary' }) => {
-    const StyledIcon = styled(Icon)`
-        font-size: 2em;
-    `;
+export const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, variant = 'primary' }) => {
+    const StyledIcon = styled(Icon).attrs(() => ({
+        className: 'f2',
+    }))``;
 
     return (
-        <StyledList isSecondary={isSecondary}>
+        <StyledList>
             <Match path={to}>
                 {({ match }) => (
-                    <StyledLink to={to} className={match ? 'active' : ''} variant={match ? 'active' : variant}>
+                    <StyledLink to={to} variant={match ? 'active' : variant}>
                         <StyledIcon />
                         {title}
                     </StyledLink>
@@ -33,21 +32,16 @@ const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false,
     );
 };
 
-const StyledLink = styled(Link).attrs(props => ({
-    className: `${props.className} flex flex-column items-center no-underline pv2 ph4 ph1-l`,
-}))<{ className?: string; variant: Variant }>`
+const StyledLink = styled(Link).attrs(() => ({
+    className: 'flex flex-column items-center no-underline pv2 ph4 ph1-l',
+}))<{ variant: Variant }>`
     ${navItemStyles};
+
+    &:hover {
+        transition: background-color 0.15s ease-in;
+    }
 `;
 
 const StyledList = styled.li.attrs(() => ({
     className: 'mt2-l mb3-l',
-}))<{ isSecondary: boolean }>`
-    display: ${props => props.isSecondary && 'none'};
-
-    ${media.desktop} {
-        margin-top: ${props => props.isSecondary && 'auto'};
-        display: initial;
-    }
-`;
-
-export { NavItem };
+}))``;
