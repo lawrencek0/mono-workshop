@@ -17,20 +17,36 @@ export const navItemStyles = theme.variants('mode', 'variant', {
         light: css`
             background-color: transparent;
             color: ${dayColors.darkGrey};
+
+            &:hover {
+                background-color: ${dayColors.lighterPrimary};
+            }
         `,
         dark: css`
             background-color: transparent;
             color: ${nightColors.grey};
+
+            &:hover {
+                background-color: ${nightColors.backgroundGreyLighter};
+            }
         `,
     },
     secondary: {
         light: css`
             background-color: transparent;
-            color: ${dayColors.grey};
+            color: ${dayColors.darkGrey};
+
+            &:hover {
+                background-color: ${dayColors.white};
+            }
         `,
         dark: css`
             background-color: transparent;
             color: ${nightColors.grey};
+
+            &:hover {
+                background-color: ${nightColors.backgroundGreyLighter};
+            }
         `,
     },
     active: {
