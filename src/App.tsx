@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components/macro';
 import Login from 'login/Login';
 import SignUp from 'login/Signup';
-import { routes } from 'routes';
-import { PrimarySidebar } from 'components/sidebar/Sidebar';
+import { primaryRoutes, secondayRoutes } from 'routes';
+import { PrimarySidebar, SecondarySidebar } from 'components/sidebar/Sidebar';
 import { themes, backgroundColor, primaryTextColor, media } from 'theme';
 
 const App: React.FC = () => {
@@ -21,12 +21,13 @@ const App: React.FC = () => {
         // ThemeProvider provides the theme for all our components
         <ThemeProvider theme={{ mode: theme }}>
             <Wrapper>
-                <PrimarySidebar routes={routes} />
+                <PrimarySidebar routes={primaryRoutes} />
                 <Main>
                     <button onClick={toggleTheme}>Toggle Theme</button>
                     <Login />
                     <SignUp />
                 </Main>
+                <SecondarySidebar routes={secondayRoutes} />
             </Wrapper>
         </ThemeProvider>
     );

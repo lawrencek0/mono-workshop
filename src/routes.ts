@@ -1,4 +1,4 @@
-import { MdHome, MdEvent, MdGroup, MdSettings } from 'react-icons/md';
+import { MdHome, MdEvent, MdGroup, MdSettings, MdNotifications, MdExitToApp, MdAccountCircle } from 'react-icons/md';
 import { IconType } from 'react-icons/lib/cjs';
 
 // Represents commonly included properties with the routes
@@ -9,7 +9,7 @@ export type Route = {
     isSecondary?: boolean;
 };
 
-export const routes: Route[] = [
+export const primaryRoutes: Route[] = [
     {
         to: '/',
         title: 'Home',
@@ -29,6 +29,24 @@ export const routes: Route[] = [
         to: '/settings',
         title: 'Settings',
         Icon: MdSettings,
+        isSecondary: true,
+    },
+];
+
+export const secondayRoutes: Route[] = [
+    {
+        to: '/notifications',
+        Icon: MdNotifications,
+        isSecondary: true,
+    },
+    {
+        to: '/logout',
+        Icon: MdExitToApp,
+        isSecondary: true,
+    },
+    {
+        to: '/profile',
+        Icon: MdAccountCircle,
         isSecondary: true,
     },
 ];
