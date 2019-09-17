@@ -3,11 +3,12 @@ import { Link, Match } from '@reach/router';
 import { IconType } from 'react-icons/lib/cjs';
 import styled from 'styled-components/macro';
 import { navItemStyles, BaseVariant } from './theme';
+import { RouteTitles } from 'routes';
 
 type Variant = BaseVariant | 'active';
 
 export type NavItemProps = {
-    title?: string;
+    title: RouteTitles;
     to: string;
     Icon: IconType | React.FC<{}>;
     variant?: Variant;

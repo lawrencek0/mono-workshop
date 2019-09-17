@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { BaseVariant } from 'theme';
-import { NavItem, NavItemProps } from './NavItem';
+import { NavItem } from './NavItem';
 import { sidebarBackgroundColor, sidebarColor } from './theme';
+import { Route } from 'routes';
 interface Props {
-    routes: NavItemProps[];
+    routes: readonly Route[];
 }
 
 export const PrimarySidebar: React.FC<Props> = ({ routes }) => {
