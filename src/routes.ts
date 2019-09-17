@@ -3,13 +3,13 @@ import { IconType } from 'react-icons/lib/cjs';
 
 // Represents commonly included properties with the routes
 export type Route = {
-    title?: string;
+    title: RouteTitles;
     to: string;
     Icon: IconType | React.FC<{}>;
     isSecondary?: boolean;
 };
 
-export const primaryRoutes: Route[] = [
+export const primaryRoutes = [
     {
         to: '/',
         title: 'Home',
@@ -31,22 +31,27 @@ export const primaryRoutes: Route[] = [
         Icon: MdSettings,
         isSecondary: true,
     },
-];
+] as const;
 
-export const secondayRoutes: Route[] = [
+export const secondayRoutes = [
     {
         to: '/notifications',
+        title: 'Notifications',
         Icon: MdNotifications,
         isSecondary: true,
     },
     {
         to: '/logout',
+        title: 'Logout',
         Icon: MdExitToApp,
         isSecondary: true,
     },
     {
         to: '/profile',
+        title: 'Profile',
         Icon: MdAccountCircle,
         isSecondary: true,
     },
-];
+] as const;
+
+export type RouteTitles = (typeof primaryRoutes[number])['title'] | (typeof secondayRoutes[number])['title'];
