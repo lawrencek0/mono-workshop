@@ -3,7 +3,7 @@ import styled, { ThemeProvider } from 'styled-components/macro';
 import Login from 'login/Login';
 import SignUp from 'login/Signup';
 import { primaryRoutes, secondayRoutes } from 'routes';
-import { PrimarySidebar, SecondarySidebar } from 'components/sidebar/Sidebar';
+import { PrimarySidebar, SecondarySidebar } from 'components/navigation/Sidebar';
 import { themes, backgroundColor, primaryTextColor, media } from 'theme';
 
 const App: React.FC = () => {
