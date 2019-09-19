@@ -5,7 +5,7 @@ import styled from 'styled-components/macro';
 import { navItemStyles, BaseVariant } from './theme';
 import { RouteTitles } from 'routes';
 
-type Variant = BaseVariant | 'active';
+export type Variant = BaseVariant | 'active';
 
 export type NavItemProps = {
     title: RouteTitles;

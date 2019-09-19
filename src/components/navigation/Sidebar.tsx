@@ -32,14 +32,14 @@ export const SecondarySidebar: React.FC<Props> = ({ routes }) => {
     );
 };
 
-const StyledLinks = styled.ul.attrs(() => ({
+export const StyledLinks = styled.ul.attrs(() => ({
     className: 'flex justify-around justify-start-l flex-column-l list mv0 pl0 ma0-l h-100-l',
 }))`
     position: sticky;
     top: 0;
 `;
 
-const StyledNav = styled.nav.attrs(() => ({
+export const StyledNav = styled.nav.attrs(() => ({
     className: 'h-100-l',
 }))<{ variant: BaseVariant }>`
     background-color: ${sidebarBackgroundColor};
