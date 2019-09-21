@@ -69,13 +69,20 @@ export const postLogin = async (req: Request, res: Response) => {
     };
     const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
-    cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: result => {
+    return cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: async result => {
+            const { id, ...user } = await UserService.findUserWithEmail(email);
+            const hashedId = hashids.encode(id);
             const idToken = result.getIdToken().getJwtToken();
             const refreshToken = result.getRefreshToken().getToken();
-            return res
-                .status(200)
-                .json({ type: 'success', accessToken: idToken, refreshToken });
+
+            return res.status(200).json({
+                type: 'success',
+                accessToken: idToken,
+                refreshToken,
+                id: hashedId,
+                ...user
+            });
         },
         onFailure: err => {
             return res.status(422).json({ type: 'error', message: err });
@@ -129,7 +136,6 @@ export const postSignup = async (req: Request, res: Response) => {
                 return res.status(422).json({ type: 'error', message: err });
             }
             const cognitoUser = result.user;
-            console.log(cognitoUser);
             return res.status(200).json({ type: 'success', cognitoUser });
         }
     );
