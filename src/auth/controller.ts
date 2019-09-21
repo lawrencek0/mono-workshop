@@ -1,18 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
-import { authentic, salt } from '../util/secrets';
+import { authentic } from '../util/secrets';
 import * as UserService from '../users/service';
+import hashids from '../util/hasher';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Hashids = require('hashids/cjs'); //...
 
 //eslint-disable-next-line @typescript-eslint/no-var-requires
 const CognitoExpress = require('cognito-express');
 (global as any).fetch = require('node-fetch');
 (global as any).navigator = (): null => null;
-
-const hashids = new Hashids(salt, 8);
 
 export const validateLogin = [
     check('username', 'Invalid username')
@@ -60,16 +58,15 @@ export const postLogin = async (req: Request, res: Response) => {
         return res.status(422).json({ error: errors.array() });
     }
 
-    const userName = req.body.username;
-    const password = req.body.password;
+    const { email, password } = req.body;
     const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(
         {
-            Username: userName,
+            Username: email,
             Password: password
         }
     );
     const userData = {
-        Username: userName,
+        Username: email,
         Pool: userPool
     };
     const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
