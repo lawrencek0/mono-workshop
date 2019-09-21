@@ -10,12 +10,16 @@ type databaseUser = {
     role: Role;
 };
 
-export const parseResult = (user: databaseUser): UserModel => ({
-    id: user.user_id,
-    firstName: user.first_name,
-    lastName: user.last_name,
-    ...user
-});
+export const parseResult = (user: databaseUser): UserModel => {
+    const {
+        user_id: id,
+        first_name: firstName,
+        last_name: lastName,
+        ...rest
+    } = user;
+
+    return { id, firstName, lastName, ...rest };
+};
 
 export const findUser = (id: number) => {
     return db.query('SELECT * FROM User WHERE `user_id` = ?', [id]);
