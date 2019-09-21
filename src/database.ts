@@ -25,34 +25,29 @@ class Database {
         try {
             await this.query('CREATE DATABASE IF NOT EXISTS system');
             await this.query('USE system');
-            await this.query(`CREATE TABLE IF NOT EXISTS users (
-                    id int(10) unsigned NOT NULL AUTO_INCREMENT,
-                    username varchar(255) NOT NULL UNIQUE,
-                    password varchar(255) NOT NULL,
-                    first_name varchar(50) NOT NULL,
-                    last_name varchar(50) NOT NULL,
-                    email varchar(255) NOT NULL UNIQUE,
-                    role ENUM('student', 'faculty', 'admin') NOT NULL,
-                    cwid int(8) NOT NULL UNIQUE,
-                    PRIMARY KEY (id)
-                )`);
+            await this.query(`CREATE TABLE IF NOT EXISTS User (
+                user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                first_name VARCHAR(50) NOT NULL,
+                last_name VARCHAR(50) NOT NULL,
+                email VARCHAR(100) NOT NULL,
+                username VARCHAR(50) NOT NULL,
+                role ENUM('student', 'faculty', 'admin') NOT NULL,
+                PRIMARY KEY (user_id),
+                UNIQUE (email),
+                UNIQUE (username)
+            );`);
         } catch (e) {
-            logger.log(
-                'error',
-                'An error occured while setting up MySQL Connection ' + e
-            );
+            logger.log('error', 'An error occured while setting up MySQL Connection ' + e);
         }
     }
 }
-
 
 const db = new Database({
     connectionLimit: 10,
     host: database.MYSQL_HOSTNAME,
     user: database.MYSQL_USER,
     password: database.MYSQL_PASSWORD,
-    port: Number.parseInt(database.MYSQL_PORT, 10)
+    port: Number.parseInt(database.MYSQL_PORT, 10),
 });
-db.beforeAll();
 
 export default db;

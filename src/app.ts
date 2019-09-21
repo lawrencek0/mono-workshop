@@ -1,9 +1,8 @@
 import express from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
-
-// Controllers (route handlers)
-import * as userController from './controllers/user';
+import router from './router';
+import db from './database';
 
 // Create Express server
 const app = express();
@@ -13,10 +12,13 @@ app.set('port', process.env.PORT || 8000);
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// initialize db
+db.beforeAll();
+
 /**
- * Primary app routes.
+ * Primary app routes will be behind /api
  */
-app.post('/login', userController.validateLogin, userController.postLogin);
-app.post('/signup', userController.validateSignup, userController.postSignup);
+app.use('/api', router);
 
 export default app;
