@@ -7,9 +7,7 @@ import hashids from '../util/hasher';
 
 //eslint-disable-next-line @typescript-eslint/no-var-requires
 const CognitoExpress = require('cognito-express');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).fetch = require('node-fetch');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).navigator = (): null => null;
 
 export const validateLogin = [
