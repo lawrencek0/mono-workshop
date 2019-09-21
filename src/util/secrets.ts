@@ -14,7 +14,7 @@ export const database = {
     MYSQL_PORT: prod ? process.env['MYSQL_PORT'] : process.env['MYSQL_PORT_LOCAL'],
 };
 
-export const salt = process.env['SALT_SECRET'];
+export const hashidSalt = process.env['HASHID_SALT_SECRET'];
 
 //exports the aws user pool id and the aws client id
 export const authentic = {

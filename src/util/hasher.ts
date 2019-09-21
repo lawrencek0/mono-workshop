@@ -1,6 +1,6 @@
 import Hashids from 'hashids/cjs'; //...
-import { salt } from './secrets';
+import { hashidSalt } from './secrets';
 
-const hashids = new Hashids(salt, 8);
+const hashids = new Hashids(hashidSalt, 8);
 
 export default hashids;
