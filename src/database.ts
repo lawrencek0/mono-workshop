@@ -52,6 +52,5 @@ const db = new Database({
     password: database.MYSQL_PASSWORD,
     port: Number.parseInt(database.MYSQL_PORT, 10)
 });
-db.beforeAll();
 
 export default db;
