@@ -105,7 +105,7 @@ export const postSignup = async (req: Request, res: Response) => {
         email
     });
 
-    const { id } = await UserService.getUserByEmail(req.body.email);
+    const { id } = await UserService.findUserWithEmail(req.body.email);
     const hashedId = hashids.encode(id);
 
     const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
