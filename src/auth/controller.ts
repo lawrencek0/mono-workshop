@@ -97,7 +97,7 @@ export const postSignup = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    await UserService.save({
+    await UserService.saveUser({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         username: req.body.username,

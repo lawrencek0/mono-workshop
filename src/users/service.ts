@@ -17,22 +17,25 @@ export const parseResult = (user: databaseUser): UserModel => ({
     ...user
 });
 
-export const getUser = (id: number) => {
+export const findUser = (id: number) => {
     return db.query('SELECT * FROM User WHERE `user_id` = ?', [id]);
 };
 
-export const getUserByEmail = async (email: string): Promise<UserModel> => {
-    const rows = ((await db.query('SELECT * FROM User WHERE `email`= ?', [
-        email
-    ])) as unknown) as databaseUser[];
-    return parseResult(rows[0]);
+export const findUserWithEmail = async (email: string): Promise<UserModel> => {
+    const rows = await db.query('SELECT * FROM User WHERE `email`= ?', [email]);
+
+    if (Array.isArray(rows) && rows.length > 0) {
+        return parseResult(rows[0] as databaseUser);
+    }
+
+    throw Error(`User not found ${email}`);
 };
 
-export const getUserByUsername = (username: string) => {
+export const findUserWithUsername = (username: string) => {
     return db.query('SELECT * FROM User WHERE `username`= ?', [username]);
 };
 
-export const save = (user: Omit<UserModel, 'id'>) => {
+export const saveUser = (user: Omit<UserModel, 'id'>) => {
     return db.query(
         'INSERT INTO User (username, first_name, last_name, email, role) VALUES(?, ?, ?, ?, ?)',
         [user.username, user.firstName, user.lastName, user.email, user.role]
