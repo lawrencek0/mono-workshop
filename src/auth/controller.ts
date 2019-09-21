@@ -7,7 +7,9 @@ import hashids from '../util/hasher';
 
 //eslint-disable-next-line @typescript-eslint/no-var-requires
 const CognitoExpress = require('cognito-express');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).fetch = require('node-fetch');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).navigator = (): null => null;
 
 export const validateLogin = [
@@ -16,17 +18,17 @@ export const validateLogin = [
         .isEmpty(),
     check('password', 'Invalid password')
         .not()
-        .isEmpty()
+        .isEmpty(),
 ];
 
 export const validateSignup = [
     ...validateLogin,
-    check('firstName', 'First Name can\'t be empty').exists(),
-    check('lastName', 'Last Name can\'t be empty').exists(),
+    check('firstName', "First Name can't be empty").exists(),
+    check('lastName', "Last Name can't be empty").exists(),
     // @TODO: allow only warhawk.ulm.edu and ulm.edu emails!
     check('email')
         .exists()
-        .withMessage('Email can\'t be empty')
+        .withMessage("Email can't be empty")
         .bail()
         .isEmail()
         .withMessage('Invald Email')
@@ -34,15 +36,15 @@ export const validateSignup = [
         .normalizeEmail(),
     check('role')
         .exists()
-        .withMessage('Role can\'t be empty')
+        .withMessage("Role can't be empty")
         .bail()
         .isIn(['student', 'faculty', 'admin'])
-        .withMessage('Invalid Role')
+        .withMessage('Invalid Role'),
 ];
 
 const userPool = new AmazonCognitoIdentity.CognitoUserPool({
     ClientId: authentic.AWS_COGNITO_CLIENT_ID,
-    UserPoolId: authentic.AWS_COGNITO_USER_POOL_ID
+    UserPoolId: authentic.AWS_COGNITO_USER_POOL_ID,
 });
 
 /**
@@ -57,15 +59,13 @@ export const postLogin = async (req: Request, res: Response) => {
     }
 
     const { email, password } = req.body;
-    const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(
-        {
-            Username: email,
-            Password: password
-        }
-    );
+    const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
+        Username: email,
+        Password: password,
+    });
     const userData = {
         Username: email,
-        Pool: userPool
+        Pool: userPool,
     };
     const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
 
@@ -81,12 +81,12 @@ export const postLogin = async (req: Request, res: Response) => {
                 accessToken: idToken,
                 refreshToken,
                 id: hashedId,
-                ...user
+                ...user,
             });
         },
         onFailure: err => {
             return res.status(422).json({ type: 'error', message: err });
-        }
+        },
     });
 };
 
@@ -109,7 +109,7 @@ export const postSignup = async (req: Request, res: Response) => {
         lastName: req.body.lastName,
         username: req.body.username,
         role: req.body.role,
-        email
+        email,
     });
 
     const { id } = await UserService.findUserWithEmail(req.body.email);
@@ -118,27 +118,21 @@ export const postSignup = async (req: Request, res: Response) => {
     const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
         new AmazonCognitoIdentity.CognitoUserAttribute({
             Name: 'email',
-            Value: email
+            Value: email,
         }),
         new AmazonCognitoIdentity.CognitoUserAttribute({
             Name: 'custom:user_id',
-            Value: hashedId
-        })
+            Value: hashedId,
+        }),
     ];
 
-    return userPool.signUp(
-        email,
-        password,
-        attributeList,
-        null,
-        (err, result) => {
-            if (err) {
-                return res.status(422).json({ type: 'error', message: err });
-            }
-            const cognitoUser = result.user;
-            return res.status(200).json({ type: 'success', cognitoUser });
+    return userPool.signUp(email, password, attributeList, null, (err, result) => {
+        if (err) {
+            return res.status(422).json({ type: 'error', message: err });
         }
-    );
+        const cognitoUser = result.user;
+        return res.status(200).json({ type: 'success', cognitoUser });
+    });
 };
 
 //Configures the cognito-express constructor
@@ -146,7 +140,7 @@ const cognitoExpress = new CognitoExpress({
     region: authentic.AWS_COGNITO_POOL_REGION,
     cognitoUserPoolId: authentic.AWS_COGNITO_USER_POOL_ID,
     tokenUse: 'id',
-    tokenExpiration: 3600000 //this is measured in ms (this is 1 hour)
+    tokenExpiration: 3600000, //this is measured in ms (this is 1 hour)
 });
 
 export const validate = (req: Request, res: Response, next: NextFunction) => {
@@ -154,17 +148,13 @@ export const validate = (req: Request, res: Response, next: NextFunction) => {
     const accessTokenFromClient = req.headers.idtoken;
 
     //Fail if token not present in header.
-    if (!accessTokenFromClient)
-        return res.status(401).send('Access Token missing from header');
+    if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header');
 
-    cognitoExpress.validate(
-        accessTokenFromClient,
-        (err: Error, response: Response) => {
-            //If API is not authenticated, Return 401 with error message.
-            if (err) return res.status(401).send(err);
-            //Else API has been authenticated. Proceed.
-            res.locals.user = response;
-            next();
-        }
-    );
+    cognitoExpress.validate(accessTokenFromClient, (err: Error, response: Response) => {
+        //If API is not authenticated, Return 401 with error message.
+        if (err) return res.status(401).send(err);
+        //Else API has been authenticated. Proceed.
+        res.locals.user = response;
+        next();
+    });
 };

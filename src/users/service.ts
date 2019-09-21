@@ -11,12 +11,7 @@ type databaseUser = {
 };
 
 export const parseResult = (user: databaseUser): UserModel => {
-    const {
-        user_id: id,
-        first_name: firstName,
-        last_name: lastName,
-        ...rest
-    } = user;
+    const { user_id: id, first_name: firstName, last_name: lastName, ...rest } = user;
 
     return { id, firstName, lastName, ...rest };
 };
@@ -40,8 +35,11 @@ export const findUserWithUsername = (username: string) => {
 };
 
 export const saveUser = (user: Omit<UserModel, 'id'>) => {
-    return db.query(
-        'INSERT INTO User (username, first_name, last_name, email, role) VALUES(?, ?, ?, ?, ?)',
-        [user.username, user.firstName, user.lastName, user.email, user.role]
-    );
+    return db.query('INSERT INTO User (username, first_name, last_name, email, role) VALUES(?, ?, ?, ?, ?)', [
+        user.username,
+        user.firstName,
+        user.lastName,
+        user.email,
+        user.role,
+    ]);
 };

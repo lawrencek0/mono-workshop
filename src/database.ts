@@ -37,10 +37,7 @@ class Database {
                 UNIQUE (username)
             );`);
         } catch (e) {
-            logger.log(
-                'error',
-                'An error occured while setting up MySQL Connection ' + e
-            );
+            logger.log('error', 'An error occured while setting up MySQL Connection ' + e);
         }
     }
 }
@@ -50,7 +47,7 @@ const db = new Database({
     host: database.MYSQL_HOSTNAME,
     user: database.MYSQL_USER,
     password: database.MYSQL_PASSWORD,
-    port: Number.parseInt(database.MYSQL_PORT, 10)
+    port: Number.parseInt(database.MYSQL_PORT, 10),
 });
 
 export default db;
