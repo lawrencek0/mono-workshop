@@ -34,12 +34,11 @@ export const findUserWithUsername = (username: string) => {
     return db.query('SELECT * FROM User WHERE `username`= ?', [username]);
 };
 
-export const saveUser = (user: Omit<UserModel, 'id'>) => {
-    return db.query('INSERT INTO User (username, first_name, last_name, email, role) VALUES(?, ?, ?, ?, ?)', [
-        user.username,
-        user.firstName,
-        user.lastName,
-        user.email,
-        user.role,
-    ]);
+export const saveUser = async (user: Omit<UserModel, 'id'>): Promise<number> => {
+    const result = await db.query(
+        'INSERT INTO User (username, first_name, last_name, email, role) VALUES(?, ?, ?, ?, ?)',
+        [user.username, user.firstName, user.lastName, user.email, user.role],
+    );
+
+    return (result as any).insertId;
 };

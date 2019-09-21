@@ -102,35 +102,39 @@ export const postSignup = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    await UserService.saveUser({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        username: req.body.username,
-        role: req.body.role,
-        email,
-    });
+    try {
+        const id = await UserService.saveUser({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            username: req.body.username,
+            role: req.body.role,
+            email,
+        });
 
-    const { id } = await UserService.findUserWithEmail(req.body.email);
-    const hashedId = hashids.encode(id);
+        const hashedId = hashids.encode(id);
 
-    const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
-        new AmazonCognitoIdentity.CognitoUserAttribute({
-            Name: 'email',
-            Value: email,
-        }),
-        new AmazonCognitoIdentity.CognitoUserAttribute({
-            Name: 'custom:user_id',
-            Value: hashedId,
-        }),
-    ];
+        const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
+            new AmazonCognitoIdentity.CognitoUserAttribute({
+                Name: 'email',
+                Value: email,
+            }),
+            new AmazonCognitoIdentity.CognitoUserAttribute({
+                Name: 'custom:user_id',
+                Value: hashedId,
+            }),
+        ];
 
-    return userPool.signUp(email, password, attributeList, null, (err, result) => {
-        if (err) {
-            return res.status(422).json({ type: 'error', message: err });
-        }
-        const cognitoUser = result.user;
-        return res.status(200).json({ type: 'success', cognitoUser });
-    });
+        return userPool.signUp(email, password, attributeList, null, (err, result) => {
+            if (err) {
+                // @FIXME: what if it fails here? need a way to undo the query
+                return res.status(422).json({ type: 'error', message: err });
+            }
+            const cognitoUser = result.user;
+            return res.status(200).json({ type: 'success', cognitoUser });
+        });
+    } catch (e) {
+        return res.status(422).json({ type: 'error', message: e });
+    }
 };
 
 //Configures the cognito-express constructor
