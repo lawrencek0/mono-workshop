@@ -2,7 +2,7 @@ import React, { createContext, useReducer, useContext } from 'react';
 import { UserPayload } from '../login/types';
 import * as client from './client';
 import { localStorageKey } from '../utils/storage';
-import { redirectTo } from '@reach/router';
+import { navigate } from '@reach/router';
 
 type State = UserPayload;
 type Action = { type: 'login'; payload: UserPayload } | { type: 'logout' } | { type: 'refreshToken' };
@@ -17,7 +17,7 @@ const authReducer = (state: State, action: Action): State => {
             return { ...action.payload };
         }
         case 'logout': {
-            redirectTo('/login');
+            navigate('/login');
             return { accessToken: undefined };
         }
         case 'refreshToken': {
