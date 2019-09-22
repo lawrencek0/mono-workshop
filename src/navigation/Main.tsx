@@ -5,11 +5,11 @@ import styled from 'styled-components/macro';
 import { primaryRoutes, secondayRoutes } from 'routing/routes';
 import { PrimarySidebar, SecondarySidebar } from './Sidebar';
 
-export const Content: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({ children }) => {
+export const Main: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({ children }) => {
     return (
         <Wrapper>
             <PrimarySidebar routes={primaryRoutes} />
-            <Main>{children}</Main>
+            <Content>{children}</Content>
             <SecondarySidebar routes={secondayRoutes} />
         </Wrapper>
     );
@@ -18,7 +18,7 @@ export const Content: React.FC<{ children?: ReactNode } & RouteComponentProps> =
 // Use styled-componentes to generate the `Main` Component The attrs is used to
 // use Tachyon's styling. By using colors from the theme, this component becomes
 // flexible enough to switch between dark and nigh mode.
-const Main = styled.main.attrs(() => ({
+const Content = styled.main.attrs(() => ({
     className: 'mt2',
 }))`
     flex-grow: 1;
