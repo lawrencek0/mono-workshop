@@ -34,21 +34,21 @@ export const SecondarySidebar: React.FC<Props> = ({ routes }) => {
 };
 
 export const StyledLinks = styled.ul.attrs(() => ({
-    className: 'flex justify-around justify-start-l flex-column-l list mv0 pl0 ma0-l h-100-l',
+    className: 'flex justify-around justify-start-l flex-column-l list mv0 pl0 ma0-l min-vh-100-l',
 }))`
     position: sticky;
     top: 0;
 `;
 
 export const StyledNav = styled.nav.attrs(() => ({
-    className: 'h-100',
+    className: 'min-vh-100-l',
 }))<{ variant: BaseVariant }>`
     background-color: ${sidebarBackgroundColor};
     color: ${sidebarColor};
 `;
 
 const StyledPrimaryNav = styled(StyledNav).attrs(() => ({
-    className: 'fixed bottom-0 mw-100 mv-none-l static-l',
+    className: 'fixed bottom-0 mw-100 mw-none-l static-l',
 }))``;
 
 const StyledSecondaryLinks = styled(StyledLinks).attrs(props => ({

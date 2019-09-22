@@ -25,7 +25,7 @@ export const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, variant = 'pr
                 {({ match }) => (
                     <StyledLink to={to} variant={match ? 'active' : variant}>
                         <StyledIcon />
-                        {title}
+                        {variant !== 'secondary' && title}
                     </StyledLink>
                 )}
             </Match>
