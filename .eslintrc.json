@@ -19,7 +19,7 @@
             "warn",
             { "allowExpressions": true, "allowTypedFunctionExpressions": true }
         ],
-        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
         // @TODO add prop-types later for storybook
         "react/prop-types": "off"
     },
