@@ -11,7 +11,7 @@ const CognitoExpress = require('cognito-express');
 (global as any).navigator = (): null => null;
 
 export const validateLogin = [
-    check('username', 'Invalid username')
+    check('email', 'Invalid email')
         .not()
         .isEmpty(),
     check('password', 'Invalid password')
