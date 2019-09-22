@@ -1,29 +1,19 @@
-import React, { useState } from 'react';
-import styled, { ThemeProvider } from 'styled-components/macro';
-import * as theme from './theme';
-import Login from './login/Login';
-import SignUp from './login/Signup';
+import React from 'react';
+import styled from 'styled-components/macro';
+import Login from 'login/Login';
+import { useAuthState } from 'auth/hooks';
+import * as theme from 'theme';
 
 const App: React.FC = () => {
-    const [theme, setTheme] = useState<theme.themes>('light');
+    const { email } = useAuthState();
 
-    const toggleTheme = (): void => {
-        if (theme === 'light') {
-            setTheme('dark');
-        } else {
-            setTheme('light');
-        }
-    };
+    if (!email) {
+        return <Login />;
+    }
 
     return (
         // ThemeProvider provides the theme for all our components
-        <ThemeProvider theme={{ mode: theme }}>
-            <Main>
-                <button onClick={toggleTheme}>Toggle Theme</button>
-                <Login />
-                <SignUp />
-            </Main>
-        </ThemeProvider>
+        <Main>{email}</Main>
     );
 };
 
