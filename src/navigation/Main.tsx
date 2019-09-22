@@ -1,16 +1,19 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, lazy } from 'react';
 import { RouteComponentProps } from '@reach/router';
-import { backgroundColor, primaryTextColor, media } from 'theme';
+import { backgroundColor, primaryTextColor, media, useMediaQueryString } from 'theme';
 import styled from 'styled-components/macro';
 import { primaryRoutes, secondayRoutes } from 'routing/routes';
-import { PrimarySidebar, SecondarySidebar } from './Sidebar';
+import { PrimarySidebar } from './Sidebar';
 
 export const Main: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({ children }) => {
+    const match = useMediaQueryString('desktop');
+    const SecondaryNav = match ? lazy(() => import('./Sidebar')) : lazy(() => import('./AppBar'));
+
     return (
         <Wrapper>
             <PrimarySidebar routes={primaryRoutes} />
             <Content>{children}</Content>
-            <SecondarySidebar routes={secondayRoutes} />
+            <SecondaryNav routes={secondayRoutes} />
         </Wrapper>
     );
 };
@@ -19,7 +22,7 @@ export const Main: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({
 // use Tachyon's styling. By using colors from the theme, this component becomes
 // flexible enough to switch between dark and nigh mode.
 const Content = styled.main.attrs(() => ({
-    className: 'mt2',
+    className: 'mh2 mh0-l mt2',
 }))`
     flex-grow: 1;
     background-color: ${backgroundColor};
