@@ -18,7 +18,9 @@
         "@typescript-eslint/explicit-function-return-type": [
             "warn",
             { "allowExpressions": true, "allowTypedFunctionExpressions": true }
-        ]
+        ],
+        // @TODO add prop-types later for storybook
+        "react/prop-types": "off"
     },
     "settings": {
         "react": {
