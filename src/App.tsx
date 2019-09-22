@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from 'login/Login';
-import { Router, RouteComponentProps } from '@reach/router';
+import { Router, RouteComponentProps, Link } from '@reach/router';
 import { Dashboard } from 'dashboard/Dashboard';
 import { RouteGuard } from 'routing/PrivateRoute';
 
@@ -18,7 +18,9 @@ const NotFoundPage: React.FC<RouteComponentProps> = () => {
     return (
         <>
             <h1>Oh no!</h1>
-            <h3>You have stepped into the void!</h3>
+            <h3>
+                You have stepped into the void! <Link to="/">Quick over here</Link>
+            </h3>
         </>
     );
 };
