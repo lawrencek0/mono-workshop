@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Login from 'login/Login';
 import { Router, RouteComponentProps, Link } from '@reach/router';
 import { Dashboard } from 'dashboard/Dashboard';
@@ -7,12 +7,14 @@ import { Logout } from 'login/Logout';
 
 const App: React.FC = () => {
     return (
-        <Router>
-            <RouteGuard as={Dashboard} action="dashboard:visit" path="/" />
-            <RouteGuard as={Login} action="login" path="/login" />
-            <Logout path="/logout" />
-            <NotFoundPage path="*" />
-        </Router>
+        <Suspense fallback={<div>Loading...</div>}>
+            <Router>
+                <RouteGuard as={Dashboard} action="dashboard:visit" path="/" />
+                <RouteGuard as={Login} action="login" path="/login" />
+                <Logout path="/logout" />
+                <NotFoundPage path="*" />
+            </Router>
+        </Suspense>
     );
 };
 
