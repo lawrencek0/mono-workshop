@@ -2,13 +2,18 @@ import React, { useState, Fragment } from 'react';
 import { login, useAuthDispatch } from '../auth/hooks';
 import { UserPayload } from './types';
 import { RouteComponentProps, navigate } from '@reach/router';
+import { localStorageKey } from 'utils/storage';
 
 const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
     // @TODO: handle login failure
     const [inputs, setInputs] = useState({
-        email: '',
+        email: localStorage.getItem(localStorageKey('email')) || '',
         password: '',
     });
+    const [rememberUser, setRememberUser] = useState(
+        localStorage.getItem(localStorageKey('rememberMe')) === 'true' || false,
+    );
+
     const dispatch = useAuthDispatch();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
@@ -21,6 +26,13 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
         // @TODO need better error handling
         try {
             await login(dispatch, inputs);
+            if (rememberUser) {
+                localStorage.setItem(localStorageKey('email'), inputs.email);
+                localStorage.setItem(localStorageKey('rememberMe'), 'true');
+            } else {
+                localStorage.removeItem(localStorageKey('email'));
+                localStorage.removeItem(localStorageKey('rememberMe'));
+            }
             navigate(to, { replace });
         } catch (e) {
             throw new Error(`There was a error logging in: ${e}`);
@@ -29,6 +41,10 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
 
     const handleInputChange = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
         setInputs(inputs => ({ ...inputs, [currentTarget.name]: currentTarget.value }));
+    };
+
+    const handleCheckboxChange = (_: React.ChangeEvent<HTMLInputElement>): void => {
+        setRememberUser(!rememberUser);
     };
 
     return (
@@ -61,6 +77,18 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                             value={inputs.password}
                             onChange={handleInputChange}
                         />
+                    </div>
+                    <div className="mt3">
+                        <input
+                            type="checkbox"
+                            name="rememberMe"
+                            id="rememberMe"
+                            checked={rememberUser}
+                            onChange={handleCheckboxChange}
+                        />
+                        <label htmlFor="rememberMe" className="ml2 fw4 lh-copy-f6">
+                            Remember Me
+                        </label>
                     </div>
                     <div className="mt3">
                         <input
