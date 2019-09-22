@@ -33,7 +33,9 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                 localStorage.removeItem(localStorageKey('email'));
                 localStorage.removeItem(localStorageKey('rememberMe'));
             }
-            navigate(to, { replace });
+            if (!to.includes('login')) {
+                navigate(to, { replace });
+            }
         } catch (e) {
             throw new Error(`There was a error logging in: ${e}`);
         }
