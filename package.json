@@ -77,7 +77,7 @@
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "eslint --fix",
-      "npm run lint:css",
+      "stylelint './src/**/*.{js,ts,tsx}'",
       "git add"
     ]
   }

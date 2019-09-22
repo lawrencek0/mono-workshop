@@ -1,30 +1,41 @@
 import React, { useState, Fragment } from 'react';
+import { login, useAuthDispatch } from '../auth/hooks';
+import { UserPayload } from './types';
+import { RouteComponentProps, navigate } from '@reach/router';
+import { localStorageKey } from 'utils/storage';
 
-const Login: React.FC<{}> = () => {
+const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
+    // @TODO: handle login failure
     const [inputs, setInputs] = useState({
-        username: '',
+        email: localStorage.getItem(localStorageKey('email')) || '',
         password: '',
     });
-    const [res, setRes] = useState('');
+    const [rememberUser, setRememberUser] = useState(
+        localStorage.getItem(localStorageKey('rememberMe')) === 'true' || false,
+    );
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const dispatch = useAuthDispatch();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
         if (e) {
             e.preventDefault();
         }
 
-        if (inputs.username === '' || inputs.password === '') return;
+        if (inputs.email === '' || inputs.password === '') return;
 
-        const res = await fetch('/login/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(inputs),
-        });
-        const msg = await res.json();
-
-        if (msg && msg.token) {
-            setRes("Successfully logged in. Here's your token " + msg.token);
-        } else {
-            setRes('FAILED TO LOGIN ' + JSON.stringify(msg));
+        // @TODO need better error handling
+        try {
+            await login(dispatch, inputs);
+            if (rememberUser) {
+                localStorage.setItem(localStorageKey('email'), inputs.email);
+                localStorage.setItem(localStorageKey('rememberMe'), 'true');
+            } else {
+                localStorage.removeItem(localStorageKey('email'));
+                localStorage.removeItem(localStorageKey('rememberMe'));
+            }
+            navigate(to, { replace });
+        } catch (e) {
+            throw new Error(`There was a error logging in: ${e}`);
         }
     };
 
@@ -32,22 +43,25 @@ const Login: React.FC<{}> = () => {
         setInputs(inputs => ({ ...inputs, [currentTarget.name]: currentTarget.value }));
     };
 
+    const handleCheckboxChange = (_: React.ChangeEvent<HTMLInputElement>): void => {
+        setRememberUser(!rememberUser);
+    };
+
     return (
         <Fragment>
-            <pre>{res}</pre>
             <form onSubmit={handleSubmit}>
                 <fieldset>
                     <legend className="ph0 mh0 fw6">Login</legend>
                     <div className="mt3">
-                        <label className="db fw4 lh-copy f6" htmlFor="username">
-                            username
+                        <label className="db fw4 lh-copy f6" htmlFor="email">
+                            Email
                         </label>
                         <input
                             className="pa2 input-reset ba bg-transparent w-100 measure"
-                            type="username"
-                            name="username"
-                            id="username"
-                            value={inputs.username}
+                            type="email"
+                            name="email"
+                            id="email"
+                            value={inputs.email}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -63,6 +77,18 @@ const Login: React.FC<{}> = () => {
                             value={inputs.password}
                             onChange={handleInputChange}
                         />
+                    </div>
+                    <div className="mt3">
+                        <input
+                            type="checkbox"
+                            name="rememberMe"
+                            id="rememberMe"
+                            checked={rememberUser}
+                            onChange={handleCheckboxChange}
+                        />
+                        <label htmlFor="rememberMe" className="ml2 fw4 lh-copy-f6">
+                            Remember Me
+                        </label>
                     </div>
                     <div className="mt3">
                         <input
