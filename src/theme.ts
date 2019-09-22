@@ -1,12 +1,31 @@
 import theme from 'styled-theming';
+import { useState, useEffect } from 'react';
 
 // Used to genereate media query min-width rules
 export const mediaQueryFactory = (minWidth: number): string => `@media (min-width: ${minWidth}em)`;
+
+export const mediaQueryString = (minWidth: number): string => `(min-width: ${minWidth}em)`;
 
 // The media query break points for tablet (48em/768px) and desktop (64em/1024px)
 export const media = {
     tablet: mediaQueryFactory(48),
     desktop: mediaQueryFactory(64),
+};
+
+export const queryString = {
+    tablet: mediaQueryString(48),
+    desktop: mediaQueryString(64),
+} as const;
+
+export const useMediaQueryString = (cond: keyof typeof queryString): boolean => {
+    const query = window.matchMedia(queryString[cond]);
+    const [match, setMatch] = useState(query.matches);
+    useEffect(() => {
+        const handleMatch = (q: MediaQueryListEvent): void => setMatch(q.matches);
+        query.addListener(handleMatch);
+        return () => query.removeListener(handleMatch);
+    });
+    return match;
 };
 
 // The primary color of the app representing "TEAM YELLOW"
