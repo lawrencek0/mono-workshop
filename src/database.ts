@@ -38,15 +38,10 @@ class Database {
             );`);
             await this.query(`CREATE TABLE IF NOT EXISTS Appointment (
                 appoint_id INT NOT NULL AUTO_INCREMENT,
-                student_id INT(8) UNSIGNED NULL,
                 name VARCHAR(50) NOT NULL,
                 appoint_date_start DATETIME NOT NULL,
-                faculty_id INT(8) UNSIGNED NOT NULL,
                 appoint_date_end DATETIME NOT NULL,
-                PRIMARY KEY (appoint_id),
-                FOREIGN KEY (student_id) REFERENCES User(user_id),
-                FOREIGN KEY (faculty_id) REFERENCES User(user_id),
-                UNIQUE (student_id, faculty_id)
+                PRIMARY KEY (appoint_id)
             );`);
             await this.query(`CREATE TABLE Appointment_User(
                 appointment_id INT NOT NULL AUTO_INCREMENT,
