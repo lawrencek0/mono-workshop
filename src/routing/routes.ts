@@ -38,19 +38,16 @@ export const secondayRoutes = [
         to: '/notifications',
         title: 'Notifications',
         Icon: MdNotifications,
-        isSecondary: true,
     },
     {
         to: '/logout',
         title: 'Logout',
         Icon: MdExitToApp,
-        isSecondary: true,
     },
     {
         to: '/profile',
         title: 'Profile',
         Icon: MdAccountCircle,
-        isSecondary: true,
     },
 ] as const;
 
