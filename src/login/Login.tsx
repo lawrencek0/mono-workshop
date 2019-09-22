@@ -1,14 +1,15 @@
 import React, { useState, Fragment } from 'react';
-import { login, useAuthProvider } from '../auth/hooks';
+import { login, useAuthDispatch } from '../auth/hooks';
 import { UserPayload } from './types';
+import { RouteComponentProps, navigate } from '@reach/router';
 
-const Login: React.FC<{}> = () => {
+const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
     // @TODO: handle login failure
     const [inputs, setInputs] = useState({
         email: '',
         password: '',
     });
-    const dispatch = useAuthProvider();
+    const dispatch = useAuthDispatch();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
         if (e) {
@@ -17,7 +18,13 @@ const Login: React.FC<{}> = () => {
 
         if (inputs.email === '' || inputs.password === '') return;
 
-        return login(dispatch, inputs);
+        // @TODO need better error handling
+        try {
+            await login(dispatch, inputs);
+            navigate(to, { replace });
+        } catch (e) {
+            throw new Error(`There was a error logging in: ${e}`);
+        }
     };
 
     const handleInputChange = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
