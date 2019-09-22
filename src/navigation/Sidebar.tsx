@@ -3,7 +3,8 @@ import styled from 'styled-components/macro';
 import { BaseVariant } from 'theme';
 import { NavItem } from './NavItem';
 import { sidebarBackgroundColor, sidebarColor } from './theme';
-import { Route } from 'routes';
+import { Route } from 'routing/routes';
+
 interface Props {
     routes: readonly Route[];
 }
@@ -40,14 +41,14 @@ export const StyledLinks = styled.ul.attrs(() => ({
 `;
 
 export const StyledNav = styled.nav.attrs(() => ({
-    className: 'h-100-l',
+    className: 'h-100',
 }))<{ variant: BaseVariant }>`
     background-color: ${sidebarBackgroundColor};
     color: ${sidebarColor};
 `;
 
 const StyledPrimaryNav = styled(StyledNav).attrs(() => ({
-    className: 'fixed bottom-0 w-100 static-l',
+    className: 'fixed bottom-0 mw-100 mv-none-l static-l',
 }))``;
 
 const StyledSecondaryLinks = styled(StyledLinks).attrs(props => ({

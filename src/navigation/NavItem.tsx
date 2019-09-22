@@ -3,7 +3,7 @@ import { Link, Match } from '@reach/router';
 import { IconType } from 'react-icons/lib/cjs';
 import styled from 'styled-components/macro';
 import { navItemStyles, BaseVariant } from './theme';
-import { RouteTitles } from 'routes';
+import { RouteTitles } from 'routing/routes';
 
 export type Variant = BaseVariant | 'active';
 
