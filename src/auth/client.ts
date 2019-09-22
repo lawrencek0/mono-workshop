@@ -20,6 +20,7 @@ const login = async ({ email, password }: Credentials): Promise<Required<UserPay
 const logout = async (): Promise<void> => {
     localStorage.removeItem(localStorageKey('accessToken'));
     localStorage.removeItem(localStorageKey('refreshToken'));
+    localStorage.removeItem(localStorageKey('user'));
     // @TODO: call api endpoint
 };
 
