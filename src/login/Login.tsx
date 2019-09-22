@@ -1,31 +1,23 @@
 import React, { useState, Fragment } from 'react';
+import { login, useAuthProvider } from '../auth/hooks';
+import { UserPayload } from './types';
 
 const Login: React.FC<{}> = () => {
+    // @TODO: handle login failure
     const [inputs, setInputs] = useState({
-        username: '',
+        email: '',
         password: '',
     });
-    const [res, setRes] = useState('');
+    const dispatch = useAuthProvider();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
         if (e) {
             e.preventDefault();
         }
 
-        if (inputs.username === '' || inputs.password === '') return;
+        if (inputs.email === '' || inputs.password === '') return;
 
-        const res = await fetch('/login/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(inputs),
-        });
-        const msg = await res.json();
-
-        if (msg && msg.token) {
-            setRes("Successfully logged in. Here's your token " + msg.token);
-        } else {
-            setRes('FAILED TO LOGIN ' + JSON.stringify(msg));
-        }
+        return login(dispatch, inputs);
     };
 
     const handleInputChange = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
@@ -34,20 +26,19 @@ const Login: React.FC<{}> = () => {
 
     return (
         <Fragment>
-            <pre>{res}</pre>
             <form onSubmit={handleSubmit}>
                 <fieldset>
                     <legend className="ph0 mh0 fw6">Login</legend>
                     <div className="mt3">
-                        <label className="db fw4 lh-copy f6" htmlFor="username">
-                            username
+                        <label className="db fw4 lh-copy f6" htmlFor="email">
+                            Email
                         </label>
                         <input
                             className="pa2 input-reset ba bg-transparent w-100 measure"
-                            type="username"
-                            name="username"
-                            id="username"
-                            value={inputs.username}
+                            type="email"
+                            name="email"
+                            id="email"
+                            value={inputs.email}
                             onChange={handleInputChange}
                         />
                     </div>
