@@ -64,7 +64,7 @@ const useAuthState = (): State => {
     return state;
 };
 
-const useAuthProvider = (): Dispatch => {
+const useAuthDispatch = (): Dispatch => {
     const dispatch = useContext(AuthDispatchContext);
 
     if (dispatch === undefined) {
@@ -74,4 +74,4 @@ const useAuthProvider = (): Dispatch => {
     return dispatch;
 };
 
-export { AuthProvider, useAuthState, useAuthProvider, login, logout };
+export { AuthProvider, useAuthState, useAuthDispatch, login, logout };
