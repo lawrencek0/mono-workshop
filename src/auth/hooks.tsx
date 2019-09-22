@@ -54,15 +54,24 @@ const logout = (dispatch: Dispatch): Promise<void> => {
     });
 };
 
-const useAuth = (): [UserPayload, Dispatch] => {
+const useAuthState = (): State => {
     const state = useContext(AuthStateContext);
-    const dispatch = useContext(AuthDispatchContext);
 
-    if (state === undefined || dispatch === undefined) {
-        throw new Error('useAuth must be used within a AuthProvider');
+    if (state === undefined) {
+        throw new Error('useAuthState must be used within a AuthProvider');
     }
 
-    return [state, dispatch];
+    return state;
 };
 
-export { AuthProvider, useAuth, login, logout };
+const useAuthProvider = (): Dispatch => {
+    const dispatch = useContext(AuthDispatchContext);
+
+    if (dispatch === undefined) {
+        throw new Error('useAuthProvider must be used within a AuthProvider');
+    }
+
+    return dispatch;
+};
+
+export { AuthProvider, useAuthState, useAuthProvider, login, logout };
