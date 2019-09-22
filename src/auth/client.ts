@@ -7,7 +7,7 @@ export type Credentials = {
     password: string;
 };
 
-const login = async ({ email, password }: Credentials): Promise<UserPayload> => {
+const login = async ({ email, password }: Credentials): Promise<Required<UserPayload>> => {
     const { accessToken, refreshToken, ...user }: Required<UserPayload> = await apiClient('auth/login', {
         body: { email, password },
     });
