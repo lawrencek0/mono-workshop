@@ -9,7 +9,7 @@ interface Props {
     routes: readonly Route[];
 }
 
-export const PrimarySidebar: React.FC<Props> = ({ routes }) => {
+const PrimarySidebar: React.FC<Props> = ({ routes }) => {
     return (
         <StyledPrimaryNav variant="primary">
             <StyledLinks>
@@ -21,7 +21,7 @@ export const PrimarySidebar: React.FC<Props> = ({ routes }) => {
     );
 };
 
-export const SecondarySidebar: React.FC<Props> = ({ routes }) => {
+const SecondarySidebar: React.FC<Props> = ({ routes }) => {
     return (
         <StyledNav variant="secondary">
             <StyledSecondaryLinks>
@@ -33,14 +33,14 @@ export const SecondarySidebar: React.FC<Props> = ({ routes }) => {
     );
 };
 
-export const StyledLinks = styled.ul.attrs(() => ({
+const StyledLinks = styled.ul.attrs(() => ({
     className: 'flex justify-around justify-start-l flex-column-l list mv0 pl0 ma0-l min-vh-100-l',
 }))`
     position: sticky;
     top: 0;
 `;
 
-export const StyledNav = styled.nav.attrs(() => ({
+const StyledNav = styled.nav.attrs(() => ({
     className: 'min-vh-100-l',
 }))<{ variant: BaseVariant }>`
     background-color: ${sidebarBackgroundColor};
@@ -54,3 +54,5 @@ const StyledPrimaryNav = styled(StyledNav).attrs(() => ({
 const StyledSecondaryLinks = styled(StyledLinks).attrs(props => ({
     className: `${props.className} justify-end-l`,
 }))``;
+
+export { PrimarySidebar, SecondarySidebar as default, StyledLinks, StyledNav };
