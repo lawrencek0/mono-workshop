@@ -1,4 +1,32 @@
 import theme from 'styled-theming';
+import { useState, useEffect } from 'react';
+
+// Used to genereate media query min-width rules
+export const mediaQueryFactory = (minWidth: number): string => `@media (min-width: ${minWidth}em)`;
+
+export const mediaQueryString = (minWidth: number): string => `(min-width: ${minWidth}em)`;
+
+// The media query break points for tablet (48em/768px) and desktop (64em/1024px)
+export const media = {
+    tablet: mediaQueryFactory(48),
+    desktop: mediaQueryFactory(64),
+};
+
+export const queryString = {
+    tablet: mediaQueryString(48),
+    desktop: mediaQueryString(64),
+} as const;
+
+export const useMediaQueryString = (cond: keyof typeof queryString): boolean => {
+    const query = window.matchMedia(queryString[cond]);
+    const [match, setMatch] = useState(query.matches);
+    useEffect(() => {
+        const handleMatch = (q: MediaQueryListEvent): void => setMatch(q.matches);
+        query.addListener(handleMatch);
+        return () => query.removeListener(handleMatch);
+    });
+    return match;
+};
 
 // The primary color of the app representing "TEAM YELLOW"
 export const primaryColor = '#F6EC15';
@@ -26,3 +54,22 @@ export const secondaryTextColor = theme('mode', {
 });
 
 export type themes = 'light' | 'dark';
+
+export type BaseVariant = 'primary' | 'secondary';
+
+export const dayColors = {
+    darkGrey: '#48483C',
+    lighterDarkGrey: '#6D6C5F',
+    grey: '#F3F3F1',
+    white: '#FFF',
+    lighterPrimary: '#FFF96F',
+};
+
+export const nightColors = {
+    backgroundDark: '#212121',
+    backgroundGrey: '#303030',
+    backgroundGreyLighter: '#6C6C6C',
+    cardGrey: '#424242',
+    white: '#FFF',
+    grey: '#C3C3C3',
+};

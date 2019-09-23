@@ -17,7 +17,7 @@ const authReducer = (state: State, action: Action): State => {
             return { ...action.payload };
         }
         case 'logout': {
-            navigate('/login');
+            navigate('/login', { replace: true });
             return { accessToken: undefined };
         }
         case 'refreshToken': {
