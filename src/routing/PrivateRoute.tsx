@@ -20,16 +20,20 @@ const can = (action: string, role?: Role): boolean => {
     return false;
 };
 
-type Props = RouteComponentProps & {
-    as: React.ComponentType;
-    action: string;
-};
+type Props<P> = RouteComponentProps &
+    P & {
+        as: React.FC<P>;
+        action: string;
+    };
 
-const RouteGuard: React.FC<Props> = ({ as: Component, action, location, ...props }) => {
+const RouteGuard = <P extends {}>(props: Props<P>): JSX.Element => {
+    // variadic spread: https://github.com/microsoft/TypeScript/issues/5453
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { as: Component, action, location, ...rest } = props as any;
     const { role } = useAuthState();
 
     if (can(action, role)) {
-        return <Component {...props} />;
+        return <Component {...rest} />;
     }
 
     if (role) {
