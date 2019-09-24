@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 import db from '../database';
 import { appointmentModel } from './model';
+import hashids from '../util/hasher';
 
 export const validateAppointment = [
     check('appointName', 'Invalid appointment name')
@@ -50,8 +51,17 @@ export const findOne = async (req: Request, res: Response) => {
 };
 
 export const findAll = async (req: Request, res: Response) => {
-    const result = await db.query(`SELECT * FROM Appointment`);
+    console.log(res.locals.user);
+    const maskedId = res.locals.user['custom:user_id'];
+    const userId = hashids.decode(maskedId);
+
+    // this gives appointment_ids
+    const appointmentIds = await db.query('SELECT * FROM Appointment_User WHERE `user_id`= ?', [userId]);
+    const appointments = await db.query('SELECT * FROM Appointment WHERE `appoint_id` in ' + `${appointmentIds}`);
+    //if (Array.isArray(rows) && rows.length > 0) {
+    //    return parseResult(rows[0])
+    //}
     // Sends the found Appointment to the client
     // Returns an empty array if nothing was found
-    res.send(result);
+    res.send(appointments);
 };
