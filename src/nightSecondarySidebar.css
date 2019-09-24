@@ -1,0 +1,95 @@
+function nightSecondarySidebar{
+/* Secondary Sidebar (Dark) */
+
+position: relative;
+width: 72px;
+height: 1024px;
+
+
+
+/* Secondary Sidebar */
+
+position: absolute;
+width: 72px;
+height: 1024px;
+left: 0px;
+top: 0px;
+
+background: #212121;
+
+
+/* User Avatar */
+
+position: absolute;
+height: 40px;
+left: 16px;
+right: 16px;
+bottom: 16px;
+
+
+
+/* face */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: url(face8.png);
+
+
+/* Navbar Item */
+
+position: absolute;
+height: 40px;
+left: 16px;
+right: 16px;
+bottom: 74px;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 12.5%;
+right: 12.5%;
+top: 12.5%;
+bottom: 12.5%;
+
+/* Navbar Text */
+background: #C3C3C3;
+
+
+/* Navbar Item */
+
+position: absolute;
+width: 40px;
+height: 40px;
+left: 16px;
+top: 861px;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 16.67%;
+right: 16.67%;
+top: 10.42%;
+bottom: 8.33%;
+
+/* Navbar Text */
+background: #C3C3C3;
+
+}
