@@ -43,7 +43,7 @@ class Database {
                 appoint_date_end DATETIME NOT NULL,
                 PRIMARY KEY (appoint_id)
             );`);
-            await this.query(`CREATE TABLE Appointment_User(
+            await this.query(`CREATE TABLE IF NOT EXISTS Appointment_User(
                 appointment_id INT NOT NULL AUTO_INCREMENT,
                 user_id INT(8) UNSIGNED NOT NULL,
                 FOREIGN KEY (appointment_id) REFERENCES appointment(appoint_id),
