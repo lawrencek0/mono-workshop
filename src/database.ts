@@ -37,19 +37,31 @@ class Database {
                 UNIQUE (username)
             );`);
             await this.query(`CREATE TABLE IF NOT EXISTS Appointment (
-                appoint_id INT NOT NULL AUTO_INCREMENT,
+                appoint_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                student_id INT UNSIGNED NULL,
+                faculty_id INT UNSIGNED NOT NULL,
                 name VARCHAR(50) NOT NULL,
                 appoint_date_start DATETIME NOT NULL,
                 appoint_date_end DATETIME NOT NULL,
-                PRIMARY KEY (appoint_id)
+                PRIMARY KEY (appoint_id),
+                FOREIGN KEY (student_id) REFERENCES User(user_id),
+                FOREIGN KEY (faculty_id) REFERENCES User(user_id)
             );`);
             await this.query(`CREATE TABLE IF NOT EXISTS Appointment_User(
-                appointment_id INT NOT NULL AUTO_INCREMENT,
-                user_id INT(8) UNSIGNED NOT NULL,
-                FOREIGN KEY (appointment_id) REFERENCES appointment(appoint_id),
-                FOREIGN KEY (user_id) REFERENCES User(user_id),
-                PRIMARY KEY (appointment_id, user_id)
+                appoint_id INT UNSIGNED NOT NULL,
+                student_id INT UNSIGNED NOT NULL,
+                faculty_id INT UNSIGNED NOT NULL,
+                FOREIGN KEY (appoint_id) REFERENCES Appointment(appoint_id),
+                FOREIGN KEY (student_id) REFERENCES User(user_id),
+                FOREIGN KEY (faculty_id) REFERENCES User(user_id),
+                PRIMARY KEY (appoint_id, student_id)
             );`);
+            await this.query(`CREATE TRIGGER appointment_insert 
+                BEFORE INSERT ON Appointment
+                FOR EACH ROW
+                    INSERT IGNORE INTO Appointment_User (appoint_id, student_id, faculty_id) 
+                    VALUES (NEW.appoint_id, NEW.student_id, NEW.faculty_id)
+            `);
         } catch (e) {
             logger.log('error', 'An error occured while setting up MySQL Connection ' + e);
         }
