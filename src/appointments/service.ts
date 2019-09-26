@@ -30,9 +30,11 @@ export const create = async (req: Request, res: Response) => {
         startDateTime: req.body.startDateTime,
         endDateTime: req.body.endDateTime,
     };
-    const result = await db.query(
-        `INSERT INTO Appointment (name, appoint_date_start, appoint_date_end) VALUES(${appointment.name}, ${appointment.startDateTime}, ${appointment.endDateTime})`,
-    );
+    const result = await db
+        .query(
+            `INSERT INTO Appointment (name, appoint_date_start, appoint_date_end) VALUES('${appointment.name}', '${appointment.startDateTime}', '${appointment.endDateTime}')`,
+        )
+        .catch(e => e);
     // Sends a response to the client
     // TODO: FIX THIS -> currently not sending the created appointment
     res.send(result);
@@ -66,8 +68,7 @@ export const findAll = async (req: Request, res: Response) => {
     res.send(appointments);
 };
 
-export const deleteAppointment = async (appointment: appointmentModel) => {
-    const result = await db.query('DELETE FROM appointment WHERE `appoint_id`=?', [appointment.appointId]);
-
-    return (result as any).insertId;
+export const deleteAppointment = async (req: Request, res: Response) => {
+    const result = await db.query(`DELETE FROM appointment WHERE appoint_id = ${req.params.id}`).catch(e => e);
+    res.send(result);
 };
