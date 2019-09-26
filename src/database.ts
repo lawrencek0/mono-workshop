@@ -56,12 +56,6 @@ class Database {
                 FOREIGN KEY (faculty_id) REFERENCES User(user_id),
                 PRIMARY KEY (appoint_id, student_id)
             );`);
-            await this.query(`CREATE TRIGGER appointment_insert 
-                BEFORE INSERT ON Appointment
-                FOR EACH ROW
-                    INSERT IGNORE INTO Appointment_User (appoint_id, student_id, faculty_id) 
-                    VALUES (NEW.appoint_id, NEW.student_id, NEW.faculty_id)
-            `);
         } catch (e) {
             logger.log('error', 'An error occured while setting up MySQL Connection ' + e);
         }
