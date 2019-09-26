@@ -23,8 +23,8 @@ class Database {
 
     async beforeAll() {
         try {
-            await this.query('CREATE DATABASE IF NOT EXISTS system');
-            await this.query('USE system');
+            await this.query('CREATE DATABASE IF NOT EXISTS capstone');
+            await this.query('USE capstone');
             await this.query(`CREATE TABLE IF NOT EXISTS User (
                 user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
                 first_name VARCHAR(50) NOT NULL,
