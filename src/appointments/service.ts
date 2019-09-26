@@ -52,22 +52,22 @@ export const findOne = async (req: Request, res: Response) => {
     res.send(result);
 };
 
+// export const findAllByUser = async (req: Request, res: Response) => {
+//     console.log(res.locals.user);
+//     const maskedId = res.locals.user['custom:user_id'];
+//     const userId = hashids.decode(maskedId);
+
+//     // this gives appointment_ids
+//     const appointmentIds = await db.query('SELECT * FROM Appointment_User WHERE `user_id`= ?', [userId]);
+//     const appointments = await db.query('SELECT * FROM Appointment WHERE `appoint_id` in ' + `${appointmentIds}`);
+
+//     res.send(appointments);
+// };
 export const findAll = async (req: Request, res: Response) => {
-    console.log(res.locals.user);
-    const maskedId = res.locals.user['custom:user_id'];
-    const userId = hashids.decode(maskedId);
+    const result = await db.query(`SELECT * FROM User WHERE role = 'student'`);
 
-    // this gives appointment_ids
-    const appointmentIds = await db.query('SELECT * FROM Appointment_User WHERE `user_id`= ?', [userId]);
-    const appointments = await db.query('SELECT * FROM Appointment WHERE `appoint_id` in ' + `${appointmentIds}`);
-    //if (Array.isArray(rows) && rows.length > 0) {
-    //    return parseResult(rows[0])
-    //}
-    // Sends the found Appointment to the client
-    // Returns an empty array if nothing was found
-    res.send(appointments);
+    res.send(result);
 };
-
 export const deleteAppointment = async (req: Request, res: Response) => {
     const result = await db.query(`DELETE FROM appointment WHERE appoint_id = ${req.params.id}`).catch(e => e);
     res.send(result);
