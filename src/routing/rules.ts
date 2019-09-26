@@ -4,7 +4,7 @@ const rules = {
         static: ['login'],
     },
     student: {
-        static: ['dashboard:visit', 'events:visit'],
+        static: ['dashboard:visit', 'events:visit', 'events:add'],
     },
     faculty: {
         static: ['dashboard:visit', 'events:visit', 'events:add'],
