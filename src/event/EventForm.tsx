@@ -4,6 +4,7 @@ import { DateRangePicker } from 'react-dates';
 import 'react-dates/initialize';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
+import { apiClient } from 'utils/api-client';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
@@ -37,6 +38,21 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
         title: '',
         description: '',
     });
+    const [students, setStudents] = useState<
+        {
+            id: string;
+            firstName: string;
+            lastName: string;
+            selected?: boolean;
+        }[]
+    >([
+        {
+            id: 'dfdas',
+            firstName: 'dfasd',
+            lastName: 'dfasda',
+        },
+        { id: 'afaf', firstName: 'dfasd', lastName: 'dfasda' },
+    ]);
     const [dateRanges, setDateRanges] = useState<DateTimeRange[]>([
         {
             id: id.current,
@@ -56,6 +72,21 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
             [id: string]: slot;
         };
     }>();
+
+    const handleStudentSelection = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
+        const n = students.map(student => {
+            if (student.id === currentTarget.name) {
+                const selected = student.selected === undefined ? true : student.selected ? false : true;
+
+                return {
+                    ...student,
+                    selected,
+                };
+            }
+            return student;
+        });
+        setStudents(n);
+    };
 
     const addDateRange = (): void => {
         id.current++;
@@ -124,22 +155,32 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
         );
         setSlots(dates);
     };
+    const [selectedStds, setSelectedStds] = useState<
+        {
+            id: string;
+            firstName: string;
+            lastName: string;
+        }[]
+    >([]);
 
-    const [values, setValues] = useState<string>('');
-    const handleSubmit = (): void => {
-        if (slots) {
-            const dates = {
-                ...inputs,
-                dates: Object.values(slots).flatMap(s =>
-                    Object.values(s).map(({ start, end }) => ({
-                        start: start && start.toDate(),
-                        end: end && end.toDate(),
-                    })),
-                ),
-            };
-            console.log(dates);
-            setValues(JSON.stringify(dates));
-        }
+    const submitStudents = (): void => {
+        const s = students
+            .filter(({ selected }) => selected)
+            .map(({ selected: _, ...rest }) => ({
+                ...rest,
+            }));
+        setSelectedStds(s);
+    };
+    const submitForm = async (): Promise<void> => {
+        const data = {
+            students: selectedStds,
+            dates: selectedStds,
+            ...inputs,
+        };
+        const a = await apiClient('/appointments', {
+            body: data,
+        });
+        console.log(a);
     };
 
     if (isNaN(step) || (step < 0 || step > 5)) {
@@ -152,6 +193,27 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                 {
                     1: <EventDetailStep {...inputs} onInputChange={handleInputChange} />,
                     2: (
+                        <>
+                            {students.map(student => (
+                                <div key={student.id}>
+                                    <label htmlFor={`student-${id}`}>
+                                        {student.firstName} {student.lastName}
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        name={student.id}
+                                        id={`student-${id}`}
+                                        onChange={handleStudentSelection}
+                                        checked={student.selected || false}
+                                    />
+                                </div>
+                            ))}
+                            <Link onClick={submitStudents} to="../3">
+                                Next
+                            </Link>
+                        </>
+                    ),
+                    3: (
                         <>
                             {dateRanges.map(date => (
                                 <Picker
@@ -174,7 +236,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                             </Link>
                         </>
                     ),
-                    3: (
+                    4: (
                         <>
                             Review Your Plan
                             {slots &&
@@ -192,12 +254,11 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                                         })}
                                     </div>
                                 ))}
-                            <Link to="../4" onClick={handleSubmit}>
+                            <Link to="/events" onClick={submitForm}>
                                 Submit
                             </Link>
                         </>
                     ),
-                    4: <pre>{values}</pre>,
                 }[step]
             }
         </>
