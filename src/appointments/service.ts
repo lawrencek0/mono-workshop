@@ -65,3 +65,9 @@ export const findAll = async (req: Request, res: Response) => {
     // Returns an empty array if nothing was found
     res.send(appointments);
 };
+
+export const deleteAppointment = async (appointment: appointmentModel) => {
+    const result = await db.query('DELETE FROM appointment WHERE `appoint_id`=?', [appointment.appointId]);
+
+    return (result as any).insertId;
+};
