@@ -17,7 +17,7 @@ type DateTimeRange = {
     endDate: moment.Moment | null;
     length?: number;
 };
-type slot = {
+type Slot = {
     id?: string;
     start?: moment.Moment;
     end?: moment.Moment;
@@ -69,7 +69,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
     ]);
     const [slots, setSlots] = useState<{
         [key: string]: {
-            [id: string]: slot;
+            [id: string]: Slot;
         };
     }>();
 
@@ -127,7 +127,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                 if (startDate && endDate && startTime && endTime) {
                     const days = moment(endDate).diff(startDate, 'days') + 1;
                     const hours = moment(endTime).diff(startTime, 'hours');
-                    const slots = (start: moment.Moment): slot[] =>
+                    const slots = (start: moment.Moment): Slot[] =>
                         Array.from({ length: (hours * 60) / length }, (_, i) => {
                             const starting = moment(start).add(i * length, 'm');
                             const ending = moment(starting).add(length, 'm');
