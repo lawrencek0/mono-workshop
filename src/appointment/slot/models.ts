@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTabl
 import { Detail } from '../detail/models';
 import { User } from '../../user/model';
 
-@Entity()
+@Entity('Appointment_slots')
 export class Slot {
     @PrimaryGeneratedColumn()
     id: number;

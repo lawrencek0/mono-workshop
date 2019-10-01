@@ -4,7 +4,7 @@ import { Detail } from '../appointment/detail/models';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
-@Entity()
+@Entity('User')
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
