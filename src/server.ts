@@ -4,6 +4,9 @@ import app from './app';
 import { createConnection } from 'typeorm';
 import { database } from './util/secrets';
 import logger from './util/logger';
+import { User } from './user/model';
+import { Slot } from './appointment/slot/models';
+import { Detail } from './appointment/detail/models';
 
 createConnection({
     type: 'mysql',
@@ -12,9 +15,9 @@ createConnection({
     username: database.MYSQL_USER,
     password: database.MYSQL_PASSWORD,
     database: database.DATABASE,
-    entities: [],
+    entities: [User, Slot, Detail],
     synchronize: true,
-    logging: false,
+    logging: true,
 })
     .then(async () => {
         /**

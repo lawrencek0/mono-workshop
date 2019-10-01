@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { Detail } from '../detail/models';
 import { User } from '../../user/model';
-import { type } from 'os';
 
 @Entity()
 export class Slot {
