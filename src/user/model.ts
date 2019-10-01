@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Slot } from '../appointment/slot/models';
+import { Detail } from '../appointment/detail/models';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -37,4 +38,7 @@ export class User {
     @ManyToMany(type => Slot, Slot => Slot.User)
     @JoinTable()
     Slot: Slot[];
+
+    @OneToMany(type => Detail, Detail => Detail.User)
+    Detail: Detail[];
 }

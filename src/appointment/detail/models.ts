@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Slot } from '../slot/models';
+import { User } from '../../user/model';
 
 @Entity()
 export class Detail {
@@ -11,4 +12,7 @@ export class Detail {
 
     @OneToMany(type => Slot, Slot => Slot.Detail)
     Slot: Slot[];
+
+    @ManyToOne(type => User, User => User.Detail)
+    User: User[];
 }
