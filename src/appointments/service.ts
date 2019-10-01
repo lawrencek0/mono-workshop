@@ -1,8 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
 import db from '../database';
 import { appointmentModel } from './model';
-import hashids from '../util/hasher';
 
 export const validateAppointment = [
     check('appointName', 'Invalid appointment name')
