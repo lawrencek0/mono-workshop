@@ -31,8 +31,7 @@ type PickerProps = DateTimeRange & {
     removeDateRange: (id: number) => void;
 };
 
-const Page: React.FC<Props> = ({ location, step = 1 }) => {
-    console.log('HMMM', location);
+const Page: React.FC<Props> = ({ step = 1 }) => {
     const id = useRef(0);
 
     const [inputs, setInputs] = useState({
@@ -165,12 +164,13 @@ const Page: React.FC<Props> = ({ location, step = 1 }) => {
     >([]);
 
     const submitStudents = (): void => {
-        const s = students
-            .filter(({ selected }) => selected)
-            .map(({ selected: _, ...rest }) => ({
-                ...rest,
-            }));
-        setSelectedStds(s);
+        setSelectedStds(
+            students
+                .filter(({ selected }) => selected)
+                .map(({ selected: _, ...rest }) => ({
+                    ...rest,
+                })),
+        );
     };
     const submitForm = async (): Promise<void> => {
         const data = {
@@ -184,24 +184,27 @@ const Page: React.FC<Props> = ({ location, step = 1 }) => {
         console.log(a);
     };
 
-    console.log('hmm');
-
     if (isNaN(step) || (step < 0 || step > 5)) {
         navigate('./1');
     }
 
     return (
         <>
+            <div className="f1">Add Appointment</div>
             {
                 {
                     1: <EventDetailStep {...inputs} onInputChange={handleInputChange} />,
                     2: (
                         <>
+                            <div className="f3">Select Students</div>
+                            <input
+                                type="text"
+                                name="search"
+                                disabled={true}
+                                placeholder="Search Students with ElasticSearch (Coming Soon)"
+                            />
                             {students.map(student => (
                                 <div key={student.id}>
-                                    <label htmlFor={`student-${id}`}>
-                                        {student.firstName} {student.lastName}
-                                    </label>
                                     <input
                                         type="checkbox"
                                         name={student.id}
@@ -209,6 +212,9 @@ const Page: React.FC<Props> = ({ location, step = 1 }) => {
                                         onChange={handleStudentSelection}
                                         checked={student.selected || false}
                                     />
+                                    <label htmlFor={`student-${id}`}>
+                                        {student.firstName} {student.lastName}
+                                    </label>
                                 </div>
                             ))}
                             <Link onClick={submitStudents} to="../3">
@@ -234,7 +240,7 @@ const Page: React.FC<Props> = ({ location, step = 1 }) => {
                             {dateRanges[dateRanges.length - 1].endDate && (
                                 <button onClick={addDateRange}>Add Date</button>
                             )}
-                            <Link onClick={submitDates} to="../3">
+                            <Link onClick={submitDates} to="../4">
                                 Next
                             </Link>
                         </>
@@ -355,7 +361,7 @@ export const EventDetailStep: React.FC<{
     };
     return (
         <fieldset>
-            <legend className="ph0 mh0 fw6">Fill Event Details</legend>
+            <legend className="ph0 mh0 fw6">Fill Appointment Details</legend>
             <div className="mt3">
                 <label className="db fw4 lh-copy f6" htmlFor="title">
                     Title
