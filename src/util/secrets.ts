@@ -8,6 +8,7 @@ export const ENVIRONMENT = process.env.NODE_ENV;
 const prod = ENVIRONMENT === 'production'; // Anything else is treated as 'dev'
 
 export const database = {
+    DATABASE: process.env['DATABASE'],
     MYSQL_HOSTNAME: prod ? process.env['MYSQL_HOSTNAME'] : process.env['MYSQL_HOSTNAME_LOCAL'],
     MYSQL_USER: prod ? process.env['MYSQL_USER'] : process.env['MYSQL_USER_LOCAL'],
     MYSQL_PASSWORD: prod ? process.env['MYSQL_PASSWORD'] : process.env['MYSQL_PASSWORD_LOCAL'],

@@ -1,9 +1,10 @@
-import { Router } from 'express';
-import * as userController from './controller';
+export default {};
+// import { Router } from 'express';
+// import * as userController from './controller';
 
-const router = Router();
+// const router = Router();
 
-router.post('/login', userController.validateLogin, userController.postLogin);
-router.post('/signup', userController.validateSignup, userController.postSignup);
+// router.post('/login', userController.validateLogin, userController.postLogin);
+// router.post('/signup', userController.validateSignup, userController.postSignup);
 
-export { router as AuthRouter };
+// export { router as AuthRouter };
