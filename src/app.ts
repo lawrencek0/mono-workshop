@@ -3,6 +3,7 @@ import compression from 'compression';
 import bodyParser from 'body-parser';
 import router from './router';
 import db from './database';
+import 'reflect-metadata';
 
 // Create Express server
 const app = express();
