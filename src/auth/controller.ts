@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { authentic } from '../util/secrets';
-import * as UserService from '../users/service';
+import * as UserService from '../user/service';
 import hashids from '../util/hasher';
 
 //eslint-disable-next-line @typescript-eslint/no-var-requires
