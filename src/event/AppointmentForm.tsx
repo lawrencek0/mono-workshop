@@ -31,7 +31,8 @@ type PickerProps = DateTimeRange & {
     removeDateRange: (id: number) => void;
 };
 
-const Page: React.FC<Props> = ({ step = 1 }) => {
+const Page: React.FC<Props> = ({ location, step = 1 }) => {
+    console.log('HMMM', location);
     const id = useRef(0);
 
     const [inputs, setInputs] = useState({
@@ -182,6 +183,8 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
         });
         console.log(a);
     };
+
+    console.log('hmm');
 
     if (isNaN(step) || (step < 0 || step > 5)) {
         navigate('./1');
