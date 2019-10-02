@@ -24,16 +24,17 @@ type Props<P> = RouteComponentProps &
     P & {
         as: React.FC<P>;
         action: string;
+        children?: JSX.Element;
     };
 
 const RouteGuard = <P extends {}>(props: Props<P>): JSX.Element => {
     // variadic spread: https://github.com/microsoft/TypeScript/issues/5453
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { as: Component, action, location, ...rest } = props as any;
+    const { as: Component, action, location, children, ...rest } = props as any;
     const { role } = useAuthState();
 
     if (can(action, role)) {
-        return <Component {...rest} />;
+        return <Component {...rest}>{children}</Component>;
     }
 
     if (role) {
