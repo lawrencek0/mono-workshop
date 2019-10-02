@@ -69,7 +69,6 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                             const starting = moment(start).add(i * length, 'm');
                             const ending = moment(starting).add(length, 'm');
                             return {
-                                id: starting.toLocaleString(),
                                 start: starting.toDate(),
                                 end: ending.toDate(),
                             };

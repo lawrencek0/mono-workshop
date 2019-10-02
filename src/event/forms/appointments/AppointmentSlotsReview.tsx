@@ -3,7 +3,6 @@ import { Link } from '@reach/router';
 import moment from 'moment';
 
 export type Slot = {
-    id?: string;
     start?: Date;
     end?: Date;
 };
@@ -25,10 +24,10 @@ const Review: React.FC<Props> = ({ slots, onSubmit }) => {
                 Object.keys(slots).map(slotId => (
                     <div key={slotId}>
                         {slotId}
-                        {Object.values(slots[slotId]).map(({ start, id, end }) => {
-                            if (start && id && end) {
+                        {Object.values(slots[slotId]).map(({ start, end }) => {
+                            if (start && end) {
                                 return (
-                                    <div key={id}>
+                                    <div key={start.toLocaleTimeString()}>
                                         {moment(start).format('h:mm a')} - {moment(end).format('h:mm a')}
                                     </div>
                                 );
