@@ -114,11 +114,13 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
             startTime: moment()
                 .hours(9)
                 .minute(0)
-                .second(0),
+                .second(0)
+                .millisecond(0),
             endTime: moment()
                 .hours(17)
                 .minute(0)
-                .second(0),
+                .second(0)
+                .millisecond(0),
             startDate: null,
             endDate: null,
             length: 20,
