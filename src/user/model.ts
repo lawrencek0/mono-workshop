@@ -24,7 +24,7 @@ export class User {
 
     @Column({
         type: 'enum',
-        enum: ['student', 'editor', 'ghost'],
+        enum: ['student', 'faculty', 'admin'],
         default: 'student',
     })
     role: Role;
@@ -35,7 +35,7 @@ export class User {
     @Column('text')
     bio: string;
 
-    @ManyToMany(() => Slot, Slot => Slot.users)
+    @ManyToMany(() => Slot, Slot => Slot.User)
     @JoinTable()
     Slot: Slot[];
 

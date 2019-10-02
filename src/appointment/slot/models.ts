@@ -8,15 +8,15 @@ export class Slot {
     id: number;
 
     @Column()
-    startDateTime: Date;
+    start: Date;
 
     @Column()
-    endDateTime: Date;
-
-    @ManyToOne(() => Detail, Detail => Detail.slots)
-    detail: Detail;
+    end: Date;
 
     @ManyToMany(() => User, User => User.Slot)
     @JoinTable()
-    users: User[];
+    User: User[];
+
+    @ManyToOne(() => Detail, Detail => Detail.slots)
+    detail: Detail;
 }
