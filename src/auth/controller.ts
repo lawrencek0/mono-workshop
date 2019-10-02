@@ -108,11 +108,13 @@ export const postSignup = async (req: Request, res: Response) => {
     try {
         const user: User = await getConnection()
             .getRepository(User)
-            .create({
+            .save({
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 role: req.body.role,
                 email,
+                picUrl: req.body.picUrl,
+                bio: req.body.bio,
             });
 
         const hashedId = hashids.encode(user.id);
