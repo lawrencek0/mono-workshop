@@ -70,8 +70,8 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                             const ending = moment(starting).add(length, 'm');
                             return {
                                 id: starting.toLocaleString(),
-                                start: starting,
-                                end: ending,
+                                start: starting.toDate(),
+                                end: ending.toDate(),
                             };
                         });
                     return Array(days)
@@ -83,7 +83,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                                 a[day.toLocaleString()] = slots(day);
                                 return a;
                             },
-                            {} as any,
+                            {} as SlotsByDate,
                         );
                 }
                 return {};
@@ -102,7 +102,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
     const handleFormSubmit = async (): Promise<void> => {
         const data = {
             students: selectedStudents,
-            dates: selectedStudents,
+            dates: slots,
             ...inputs,
         };
         const a = await apiClient('/appointments', {

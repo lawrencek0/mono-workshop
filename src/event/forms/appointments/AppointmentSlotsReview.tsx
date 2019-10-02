@@ -4,14 +4,12 @@ import moment from 'moment';
 
 export type Slot = {
     id?: string;
-    start?: moment.Moment;
-    end?: moment.Moment;
+    start?: Date;
+    end?: Date;
 };
 
 export type SlotsByDate = {
-    [key: string]: {
-        [id: string]: Slot;
-    };
+    [key: string]: Slot[];
 };
 
 type Props = {
@@ -31,7 +29,7 @@ const Review: React.FC<Props> = ({ slots, onSubmit }) => {
                             if (start && id && end) {
                                 return (
                                     <div key={id}>
-                                        {start.format('h:mm a')} - {end.format('h:mm a')}
+                                        {moment(start).format('h:mm a')} - {moment(end).format('h:mm a')}
                                     </div>
                                 );
                             }
