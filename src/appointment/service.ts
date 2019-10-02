@@ -4,12 +4,12 @@ import { getConnection } from 'typeorm';
 import { Slot } from './slot/models';
 
 export const create = async (req: Request, res: Response) => {
-    const slots = getConnection()
+    const slots = await getConnection()
         .getRepository(Slot)
-        .create(req.body.dates);
-    const detail = getConnection()
+        .save(req.body.dates);
+    const detail = await getConnection()
         .getRepository(Detail)
-        .create({ title: req.body.title, description: req.body.description, slots });
+        .save({ title: req.body.title, description: req.body.description, slots });
 
     res.send({ detail });
 };
