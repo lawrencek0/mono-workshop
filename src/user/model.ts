@@ -30,13 +30,13 @@ export class User {
     role: Role;
 
     @Column()
-    pic_url: string;
+    picUrl: string;
 
     @Column('text')
     bio: string;
 
     @ManyToMany(() => Slot, Slot => Slot.User)
-    @JoinTable()
+    @JoinTable({ name: 'appointment_slots_users' })
     Slot: Slot[];
 
     @OneToMany(() => Detail, Detail => Detail.user)
