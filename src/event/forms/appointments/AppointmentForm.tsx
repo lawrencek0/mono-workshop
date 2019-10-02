@@ -90,6 +90,8 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
             },
             {},
         );
+        // @TODO: remove only for demoing to the backend team!
+        console.log(dates);
         setSlots(dates);
     };
 
