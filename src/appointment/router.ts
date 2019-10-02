@@ -1,12 +1,11 @@
-export default {};
-// import { Router } from 'express';
+import { Router } from 'express';
 // import { create, findOne, findAll, deleteAppointment } from './service';
+import { create } from './service';
+const router = Router();
 
-// const router = Router();
-
-// // Creates an appointment
-// router.post('/', create);
-// //find one appointment by appointment id
+// Creates an appointment
+router.post('/', create);
+//find one appointment by appointment id
 // router.get('/:id', findOne);
 
 // //find all appointments that the user(currently loged in) made
@@ -16,4 +15,4 @@ export default {};
 // router.get('/', findAll);
 // //delete appointment by appointment id(appointId)
 // router.delete('/:id', deleteAppointment);
-// export { router as AppointmentRouter };
+export { router as AppointmentRouter };
