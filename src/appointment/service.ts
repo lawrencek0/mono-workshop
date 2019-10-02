@@ -15,7 +15,7 @@ export const create = async (req: Request, res: Response) => {
 };
 
 export const findAll = async (req: Request, res: Response) => {
-    const array = await getConnection().query('SELECT DATE(start) FROM appointment_slots ORDER BY DATE(start)');
+    const array = await getConnection().query('SELECT * FROM appointment_slots ORDER BY start');
 
     res.send({ array });
 };
