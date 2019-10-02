@@ -7,12 +7,15 @@ export class Detail {
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Column()
+    title: string;
+
     @Column('text')
     description: string;
 
-    @OneToMany(type => Slot, Slot => Slot.Detail)
-    Slot: Slot[];
+    @OneToMany(type => Slot, Slot => Slot.detail)
+    slots: Slot[];
 
     @ManyToOne(type => User, User => User.Detail)
-    User: User[];
+    user: User;
 }
