@@ -35,10 +35,10 @@ export class User {
     @Column('text')
     bio: string;
 
-    @ManyToMany(type => Slot, Slot => Slot.users)
+    @ManyToMany(() => Slot, Slot => Slot.users)
     @JoinTable()
     Slot: Slot[];
 
-    @OneToMany(type => Detail, Detail => Detail.user)
+    @OneToMany(() => Detail, Detail => Detail.user)
     Detail: Detail[];
 }

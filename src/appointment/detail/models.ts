@@ -13,9 +13,9 @@ export class Detail {
     @Column('text')
     description: string;
 
-    @OneToMany(type => Slot, Slot => Slot.detail)
+    @OneToMany(() => Slot, Slot => Slot.detail)
     slots: Slot[];
 
-    @ManyToOne(type => User, User => User.Detail)
+    @ManyToOne(() => User, User => User.Detail)
     user: User;
 }

@@ -13,10 +13,10 @@ export class Slot {
     @Column()
     endDateTime: Date;
 
-    @ManyToOne(type => Detail, Detail => Detail.slots)
+    @ManyToOne(() => Detail, Detail => Detail.slots)
     detail: Detail;
 
-    @ManyToMany(type => User, User => User.Slot)
+    @ManyToMany(() => User, User => User.Slot)
     @JoinTable()
     users: User[];
 }
