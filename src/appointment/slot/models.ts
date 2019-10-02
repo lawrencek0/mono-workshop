@@ -14,7 +14,6 @@ export class Slot {
     end: Date;
 
     @ManyToMany(() => User, User => User.Slot)
-    @JoinTable()
     User: User[];
 
     @ManyToOne(() => Detail, Detail => Detail.slots)
