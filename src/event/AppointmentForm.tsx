@@ -5,6 +5,9 @@ import 'react-dates/initialize';
 import moment from 'moment';
 import 'react-dates/lib/css/_datepicker.css';
 import { apiClient } from 'utils/api-client';
+import styled from 'styled-components';
+import { media } from 'theme';
+import { Stepper } from './Stepper';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
@@ -190,89 +193,110 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
 
     return (
         <>
-            <div className="f1">Add Appointment</div>
-            {
+            <div className="f3">Create New Appointment</div>
+            <Wrapper>
+                <Stepper
+                    steps={[
+                        'Fill Appointment Details',
+                        'Select Students',
+                        'Select the Date Range',
+                        'Review the Details',
+                    ]}
+                    activeStep={step as number}
+                />
                 {
-                    1: <EventDetailStep {...inputs} onInputChange={handleInputChange} />,
-                    2: (
-                        <>
-                            <div className="f3">Select Students</div>
-                            <input
-                                type="text"
-                                name="search"
-                                disabled={true}
-                                placeholder="Search Students with ElasticSearch (Coming Soon)"
-                            />
-                            {students.map(student => (
-                                <div key={student.id}>
-                                    <input
-                                        type="checkbox"
-                                        name={student.id}
-                                        id={`student-${id}`}
-                                        onChange={handleStudentSelection}
-                                        checked={student.selected || false}
-                                    />
-                                    <label htmlFor={`student-${id}`}>
-                                        {student.firstName} {student.lastName}
-                                    </label>
-                                </div>
-                            ))}
-                            <Link onClick={submitStudents} to="../3">
-                                Next
-                            </Link>
-                        </>
-                    ),
-                    3: (
-                        <>
-                            {dateRanges.map(date => (
-                                <Picker
-                                    key={date.id}
-                                    startId="startDate"
-                                    endId="endDate"
-                                    handleDateChanges={onDatesChanges(date.id)}
-                                    onInputTimeChanges={onInputTimeChanges(date.id)}
-                                    canDelete={dateRanges.length > 1}
-                                    removeDateRange={removeDateRange}
-                                    id={id.current}
-                                    {...date}
+                    {
+                        1: <EventDetailStep {...inputs} onInputChange={handleInputChange} />,
+                        2: (
+                            <>
+                                <div className="f3">Select Students</div>
+                                <input
+                                    type="text"
+                                    name="search"
+                                    disabled={true}
+                                    placeholder="Search Students with ElasticSearch (Coming Soon)"
                                 />
-                            ))}
-                            {dateRanges[dateRanges.length - 1].endDate && (
-                                <button onClick={addDateRange}>Add Date</button>
-                            )}
-                            <Link onClick={submitDates} to="../4">
-                                Next
-                            </Link>
-                        </>
-                    ),
-                    4: (
-                        <>
-                            Review Your Plan
-                            {slots &&
-                                Object.keys(slots).map(slotId => (
-                                    <div key={slotId}>
-                                        {slotId}
-                                        {Object.values(slots[slotId]).map(({ start, id, end }) => {
-                                            if (start && id && end) {
-                                                return (
-                                                    <div key={id}>
-                                                        {start.format('h:mm a')} - {end.format('h:mm a')}
-                                                    </div>
-                                                );
-                                            }
-                                        })}
+                                {students.map(student => (
+                                    <div key={student.id}>
+                                        <input
+                                            type="checkbox"
+                                            name={student.id}
+                                            id={`student-${id}`}
+                                            onChange={handleStudentSelection}
+                                            checked={student.selected || false}
+                                        />
+                                        <label htmlFor={`student-${id}`}>
+                                            {student.firstName} {student.lastName}
+                                        </label>
                                     </div>
                                 ))}
-                            <Link to="/events" onClick={submitForm}>
-                                Submit
-                            </Link>
-                        </>
-                    ),
-                }[step]
-            }
+                                <Link onClick={submitStudents} to="../3">
+                                    Next
+                                </Link>
+                            </>
+                        ),
+                        3: (
+                            <>
+                                {dateRanges.map(date => (
+                                    <Picker
+                                        key={date.id}
+                                        startId="startDate"
+                                        endId="endDate"
+                                        handleDateChanges={onDatesChanges(date.id)}
+                                        onInputTimeChanges={onInputTimeChanges(date.id)}
+                                        canDelete={dateRanges.length > 1}
+                                        removeDateRange={removeDateRange}
+                                        id={id.current}
+                                        {...date}
+                                    />
+                                ))}
+                                {dateRanges[dateRanges.length - 1].endDate && (
+                                    <button onClick={addDateRange}>Add Date</button>
+                                )}
+                                <Link onClick={submitDates} to="../4">
+                                    Next
+                                </Link>
+                            </>
+                        ),
+                        4: (
+                            <>
+                                Review Your Plan
+                                {slots &&
+                                    Object.keys(slots).map(slotId => (
+                                        <div key={slotId}>
+                                            {slotId}
+                                            {Object.values(slots[slotId]).map(({ start, id, end }) => {
+                                                if (start && id && end) {
+                                                    return (
+                                                        <div key={id}>
+                                                            {start.format('h:mm a')} - {end.format('h:mm a')}
+                                                        </div>
+                                                    );
+                                                }
+                                            })}
+                                        </div>
+                                    ))}
+                                <Link to="/events" onClick={submitForm}>
+                                    Submit
+                                </Link>
+                            </>
+                        ),
+                    }[step]
+                }
+            </Wrapper>
         </>
     );
 };
+
+const Wrapper = styled.div.attrs(() => ({
+    className: 'center w-90',
+}))`
+    ${media.desktop} {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 3rem;
+    }
+`;
 
 const Picker: React.FC<PickerProps> = ({
     handleDateChanges,
