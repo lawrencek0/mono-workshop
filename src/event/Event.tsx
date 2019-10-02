@@ -3,7 +3,7 @@ import { RouteComponentProps, Link, Router } from '@reach/router';
 import { Main } from 'navigation/Main';
 import { RouteGuard } from 'routing/PrivateRoute';
 
-const EventForm = lazy(() => import('./AppointmentForm'));
+const EventForm = lazy(() => import('./forms/appointments/AppointmentForm'));
 
 const Dropdown: React.FC<{ className?: string }> = ({ className }) => {
     const node = useRef<HTMLDivElement>(null);
