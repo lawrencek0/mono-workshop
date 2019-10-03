@@ -19,7 +19,7 @@ export const apiClient = async <T>(
         body: JSON.stringify(body),
     };
 
-    const res = await fetch(`api/${endpoint}`, config);
+    const res = await fetch(`/api/${endpoint}`, config);
 
     if (!res.ok) {
         throw new Error(res.statusText);
