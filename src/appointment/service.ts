@@ -33,9 +33,6 @@ export const create = async (req: Request, res: Response) => {
 //     res.send(slots);
 // };
 
-// testMethod: make appointments with 1,2 student id, signup 123 login as 1
-//go to get appointment check if it shows all appointment(should show all). login as 3 and check if it shows
-//appointment or not(should not show)
 //This findAll list all appointments for user who is currently login
 export const findAll = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
@@ -46,17 +43,3 @@ export const findAll = async (req: Request, res: Response) => {
 
     res.send(userWithSlots);
 };
-
-// export const selectAppointment = async (req: Request, res: Response) => {
-//     const maskedId = res.locals.user['custom:user_id'];
-//     const userId = (hashids.decode(maskedId) as unknown) as number;
-//     const user: User = await getConnection()
-//         .getRepository(User)
-//         .findOne(userId);
-//     user.Slot = req.body.slotId;
-//     const updatedUser: User = await getConnection()
-//         .getRepository(User)
-//         .save(user);
-
-//     res.send(updatedUser);
-// };
