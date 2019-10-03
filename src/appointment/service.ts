@@ -40,7 +40,7 @@ export const findAll = async (req: Request, res: Response) => {
 
 export const findByFacultyId = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
-    const id = (hashids.decode(maskedId) as unknown) as number;
+    const id = (hashids.decode(maskedId)[0] as unknown) as number;
     const appointments = await getConnection()
         .getRepository(Detail)
         .find({ where: { user: id } });
