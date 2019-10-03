@@ -50,3 +50,23 @@ export const findAll = async (req: Request, res: Response) => {
 
     res.send(userWithSlots);
 };
+
+//post this when you test it. { "slotId": 3, "detailId": 1 }
+export const selectAppointment = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const userId = (hashids.decode(maskedId)[0] as unknown) as number;
+    const slot: Slot = await getConnection()
+        .getRepository(Slot)
+        .findOne(req.body.slotId);
+
+    const student: User = await getConnection()
+        .getRepository(User)
+        .findOne(userId);
+
+    slot.student = student;
+    const updatedSlot: Slot = await getConnection()
+        .getRepository(Slot)
+        .save(slot);
+
+    res.send(updatedSlot);
+};
