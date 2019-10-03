@@ -18,11 +18,14 @@ const slotsFromRanges = (dateRanges: DateTimeRange[]): Slot[][] => {
         if (startDate && endDate && startTime && endTime && length) {
             const days = moment(endDate).diff(startDate, 'days') + 1;
             const hours = moment(endTime).diff(startTime, 'hours');
+            const startHour = moment(startTime).get('hours');
             const numOfSlots = Math.ceil((hours * 60) / length);
             Array(days)
                 .fill(0)
                 .forEach((_, i) => {
-                    const day = moment(startDate).add(i, 'days');
+                    const day = moment(startDate)
+                        .add(i, 'days')
+                        .add(startHour, 'hours');
                     const slots = generateSlots(day, numOfSlots, length);
                     acc.push(slots);
                 });
@@ -35,6 +38,9 @@ const slotsFromRanges = (dateRanges: DateTimeRange[]): Slot[][] => {
 const slotsByDay = (allSlots: Slot[][]): SlotsByDate => {
     return allSlots.reduce<SlotsByDate>((acc, slots) => {
         const start = moment(slots[0].start).format('YYYY/MM/DD');
+        if (!acc[start]) {
+            acc[start] = [];
+        }
         acc[start] = [...acc[start], ...slots];
         return acc;
     }, {});

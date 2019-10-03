@@ -146,7 +146,12 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
         startDate,
         endDate,
     }: Pick<DateTimeRange, 'startDate' | 'endDate'>): void => {
-        setDateRanges(dateRanges.map(range => (range.id === id ? { ...range, startDate, endDate } : range)));
+        const start = startDate ? moment(startDate).startOf('day') : null;
+        const end = endDate ? moment(endDate).endOf('day') : null;
+
+        setDateRanges(
+            dateRanges.map(range => (range.id === id ? { ...range, startDate: start, endDate: end } : range)),
+        );
     };
 
     const onInputTimeChanges = (id: number) => (
