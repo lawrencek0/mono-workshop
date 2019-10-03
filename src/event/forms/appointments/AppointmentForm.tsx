@@ -8,7 +8,8 @@ import { Stepper } from './Stepper';
 import { AppointmentDetailsForm } from './AppointmentDetails';
 import { Student, StudentSelection } from './StudentSelection';
 import { DateTimeRange, RangePicker } from './RangePicker';
-import { AppointmentSlotsReview, SlotsByDate, Slot } from './AppointmentSlotsReview';
+import { AppointmentSlotsReview, SlotsByDate } from './AppointmentSlotsReview';
+import { slotsFromRanges, slotsByDay } from './helpers';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
@@ -59,36 +60,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
     };
 
     const handleDatesSubmit = (dateRanges: DateTimeRange[]): void => {
-        const dates = dateRanges.reduce<typeof slots>(
-            (acc, { startDate, endDate, startTime, endTime, length = 20 }) => {
-                if (startDate && endDate && startTime && endTime) {
-                    const days = moment(endDate).diff(startDate, 'days') + 1;
-                    const hours = moment(endTime).diff(startTime, 'hours');
-                    const slots = (start: moment.Moment): Slot[] =>
-                        Array.from({ length: (hours * 60) / length }, (_, i) => {
-                            const starting = moment(start).add(i * length, 'm');
-                            const ending = moment(starting).add(length, 'm');
-                            return {
-                                start: starting.toDate(),
-                                end: ending.toDate(),
-                            };
-                        });
-                    return Array(days)
-                        .fill(0)
-                        .map((_, i) => i)
-                        .reduce(
-                            (a, i) => {
-                                const day = moment(startTime).add(i, 'd');
-                                a[day.toLocaleString()] = slots(day);
-                                return a;
-                            },
-                            {} as SlotsByDate,
-                        );
-                }
-                return {};
-            },
-            {},
-        );
+        const dates = slotsByDay(slotsFromRanges(dateRanges));
         // @TODO: remove only for demoing to the backend team!
         console.log(dates);
         setSlots(dates);
