@@ -61,6 +61,16 @@ const Picker: React.FC<PickerProps> = ({
         }
     };
 
+    const blockWeekends = (day: moment.Moment): boolean => {
+        const num = moment(day).weekday();
+
+        if (num === 0 || num === 6) {
+            return true;
+        }
+
+        return false;
+    };
+
     return (
         <>
             <DateRangePicker
@@ -72,6 +82,7 @@ const Picker: React.FC<PickerProps> = ({
                 onFocusChange={handleFocusChange}
                 focusedInput={focusedInput}
                 minimumNights={0}
+                isDayBlocked={blockWeekends}
             />
             <label htmlFor={`start-${id}`}>Start Time</label>
             <input
@@ -132,7 +143,7 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
         const entry = {
             ...dateRanges[dateRanges.length - 1],
             id: id.current,
-            startDate: prevEndDate ? moment(prevEndDate) : null,
+            startDate: prevEndDate ? moment(prevEndDate).add(1, 'day') : null,
             endDate: null,
         };
         setDateRanges([...dateRanges, entry]);
