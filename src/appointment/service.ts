@@ -3,6 +3,7 @@ import { Detail } from './detail/models';
 import { getConnection } from 'typeorm';
 import { Slot } from './slot/models';
 import { User } from '../user/model';
+import hashids from '../util/hasher';
 
 export const create = async (req: Request, res: Response) => {
     const slots = await getConnection()
@@ -30,6 +31,16 @@ export const findAll = async (req: Request, res: Response) => {
         .find({ order: { start: 'ASC' } });
 
     res.send(slots);
+};
+
+export const findByFacultyId = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const id = (hashids.decode(maskedId) as unknown) as number;
+    const appointments = await getConnection()
+        .getRepository(Detail)
+        .find({ where: { user: id } });
+
+    res.send({ appointments });
 };
 // export const findAll = async (req: Request, res: Response) => {
 //     const userWithSlots = await getConnection()
