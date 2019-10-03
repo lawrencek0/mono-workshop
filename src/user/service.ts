@@ -7,5 +7,5 @@ export const listAllUsers = async (req: Request, res: Response) => {
         .getRepository(User)
         .query('SELECT * FROM user');
 
-    res.send({ user });
+    res.send(user);
 };
