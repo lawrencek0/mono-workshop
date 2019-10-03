@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RouteComponentProps, navigate } from '@reach/router';
 import styled from 'styled-components';
-import moment from 'moment';
 import { apiClient } from 'utils/api-client';
 import { media } from 'theme';
 import { Stepper } from './Stepper';
@@ -10,6 +9,7 @@ import { Student, StudentSelection } from './StudentSelection';
 import { DateTimeRange, RangePicker } from './RangePicker';
 import { AppointmentSlotsReview, SlotsByDate } from './AppointmentSlotsReview';
 import { slotsFromRanges, slotsByDay } from './helpers';
+import { getAllStudents } from 'utils/students-client';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
@@ -20,14 +20,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
         title: '',
         description: '',
     });
-    const [students, setStudents] = useState<Student[]>([
-        {
-            id: 'dfdas',
-            firstName: 'dfasd',
-            lastName: 'dfasda',
-        },
-        { id: 'afaf', firstName: 'dfasd', lastName: 'dfasda' },
-    ]);
+    const [students, setStudents] = useState<Student[]>([]);
     const [selectedStudents, setSelectedStudents] = useState<
         {
             id: string;
@@ -39,12 +32,20 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
         navigate('./1');
     }
 
+    useEffect(() => {
+        const fetchData = async (): Promise<void> => {
+            const students = await getAllStudents();
+            setStudents(students);
+        };
+        fetchData();
+    }, []);
+
     const handleStudentSelection = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
         setStudents(
             students.map(student => {
-                if (student.id === currentTarget.name) {
+                // @FIXME: need to hashid on the backend
+                if (student.id == currentTarget.name) {
                     const selected = student.selected === undefined ? true : student.selected ? false : true;
-
                     return {
                         ...student,
                         selected,
