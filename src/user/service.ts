@@ -11,8 +11,8 @@ export const listAllUsers = async (req: Request, res: Response) => {
 };
 
 export const listAllStudents = async (req: Request, res: Response) => {
-    const student = await getConnection()
+    const students = await getConnection()
         .getRepository(User)
         .find({ role: 'student' });
-    res.send(student);
+    res.send({ students });
 };

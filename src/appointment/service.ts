@@ -6,6 +6,8 @@ import { User } from '../user/model';
 import hashids from '../util/hasher';
 
 export const create = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const id = (hashids.decode(maskedId)[0] as unknown) as number;
     const slots = await getConnection()
         .getRepository(Slot)
         .save(req.body.dates);
@@ -18,20 +20,25 @@ export const create = async (req: Request, res: Response) => {
             .getRepository(User)
             .save(user);
     });
+    const faculty = await getConnection()
+        .getRepository(User)
+        .findOne(id);
     const detail = await getConnection()
         .getRepository(Detail)
-        .save({ title: req.body.title, description: req.body.description, slots });
+        .save({ title: req.body.title, description: req.body.description, slots, user: faculty });
 
     res.send({ detail });
 };
-// //This findAll list all appointments doesn't care who is user
-// export const findAll = async (req: Request, res: Response) => {
-//     const slots = await getConnection()
-//         .getRepository(Slot)
-//         .find({ order: { start: 'ASC' } });
 
-//     res.send(slots);
-// };
+export const findByFacultyId = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const id = (hashids.decode(maskedId)[0] as unknown) as number;
+    const appointments = await getConnection()
+        .getRepository(Detail)
+        .find({ where: { user: id } });
+
+    res.send({ appointments });
+};
 
 //This findAll list all appointments for user who is currently login
 export const findAll = async (req: Request, res: Response) => {

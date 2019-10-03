@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+    web:
+        build:
+            context: .
+            target: prod
+        image: team-yellow-nodejs-server
+        command: node dist/server.js
+        environment:
+            NODE_ENV: production
