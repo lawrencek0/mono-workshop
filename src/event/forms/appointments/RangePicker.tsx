@@ -27,6 +27,7 @@ type RangePickerProps = {
     onSubmit: (dateRanges: DateTimeRange[]) => void;
 };
 
+// @FIXME: start date starts on the next day with multiple inputs
 const Picker: React.FC<PickerProps> = ({
     handleDateChanges,
     onInputTimeChanges,
@@ -84,33 +85,56 @@ const Picker: React.FC<PickerProps> = ({
                 minimumNights={0}
                 isDayBlocked={blockWeekends}
             />
-            <label htmlFor={`start-${id}`}>Start Time</label>
-            <input
-                type="time"
-                name="startTime"
-                id={`start-${id}`}
-                value={startTime.format('HH:mm')}
-                onChange={handleInputTimeChanges}
-            />
-            <label htmlFor={`end-${id}`}>End Time</label>
-            <input
-                type="time"
-                name="endTime"
-                id={`end-${id}`}
-                value={endTime.format('HH:mm')}
-                onChange={handleInputTimeChanges}
-            />
-            <label htmlFor={`length-${id}`}>Length</label>
-            <input
-                type="number"
-                min="0"
-                max="59"
-                name="length"
-                id={`length-${id}`}
-                value={length}
-                onChange={handleInputTimeChanges}
-            />
-            {canDelete && <button onClick={handleRemoveClick}>-</button>}
+            <div className="flex mt3">
+                <div className="mr3">
+                    <label className="db fw4 lh-copy f5" htmlFor={`start-${id}`}>
+                        Start Time
+                    </label>
+                    <input
+                        type="time"
+                        className="border-box pa2 input-reset ba bg-transparent"
+                        name="startTime"
+                        id={`start-${id}`}
+                        value={startTime.format('HH:mm')}
+                        onChange={handleInputTimeChanges}
+                    />
+                </div>
+                <div className="mr3">
+                    <label className="db fw4 lh-copy f5" htmlFor={`end-${id}`}>
+                        End Time
+                    </label>
+                    <input
+                        type="time"
+                        className="border-box pa2 input-reset ba bg-transparent"
+                        name="endTime"
+                        id={`end-${id}`}
+                        value={endTime.format('HH:mm')}
+                        onChange={handleInputTimeChanges}
+                    />
+                </div>
+            </div>
+            <div className="mt3">
+                <label className="db fw4 lh-copy f5" htmlFor={`length-${id}`}>
+                    Length (in minutes)
+                </label>
+                <input
+                    type="number"
+                    className="border-box pa2 input-reset ba bg-transparent w4"
+                    min="0"
+                    max="59"
+                    name="length"
+                    id={`length-${id}`}
+                    value={length}
+                    onChange={handleInputTimeChanges}
+                />
+            </div>
+            {canDelete && (
+                <div className="mv3">
+                    <button className="bn ph3 pv2 mb2 dib white bg-dark-red" onClick={handleRemoveClick}>
+                        Delete?
+                    </button>
+                </div>
+            )}
         </>
     );
 };
@@ -177,7 +201,8 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
     };
 
     return (
-        <div>
+        <article className="ba b--black-10 pa3 ma2">
+            <h1 className="f4 ttu tracked">Select the Date Range</h1>
             {dateRanges.map(date => (
                 <Picker
                     key={date.id}
@@ -191,11 +216,19 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
                     {...date}
                 />
             ))}
-            {dateRanges[dateRanges.length - 1].endDate && <button onClick={addDateRange}>Add Date</button>}
-            <Link onClick={handleSubmit} to="../4">
-                Next
-            </Link>
-        </div>
+            {dateRanges[dateRanges.length - 1].endDate && (
+                <div className="mv3">
+                    <button className="dib black" onClick={addDateRange}>
+                        Add Date Range
+                    </button>
+                </div>
+            )}
+            <div className="mt3">
+                <Link className="link underline-hover black" onClick={handleSubmit} to="../4">
+                    Next
+                </Link>
+            </div>
+        </article>
     );
 };
 

@@ -13,14 +13,14 @@ const AppointmentDetailsForm: React.FC<Props> = ({ title, description, onInputCh
     };
 
     return (
-        <fieldset>
-            <legend className="ph0 mh0 fw6">Fill Appointment Details</legend>
+        <article className="ba b--black-10 pa3 ma2">
+            <h1 className="f4 ttu tracked">Fill Appointment Details</h1>
             <div className="mt3">
-                <label className="db fw4 lh-copy f6" htmlFor="title">
+                <label className="db fw4 lh-copy f5" htmlFor="title">
                     Title
                 </label>
                 <input
-                    className="pa2 input-reset ba bg-transparent w-100 measure"
+                    className="border-box pa2 input-reset ba bg-transparent w-100 measure"
                     type="title"
                     name="title"
                     id="title"
@@ -29,7 +29,7 @@ const AppointmentDetailsForm: React.FC<Props> = ({ title, description, onInputCh
                 />
             </div>
             <div className="mt3">
-                <label className="db fw4 lh-copy f6" htmlFor="description">
+                <label className="db fw4 lh-copy f5" htmlFor="description">
                     Description
                 </label>
                 <textarea
@@ -41,9 +41,11 @@ const AppointmentDetailsForm: React.FC<Props> = ({ title, description, onInputCh
                 />
             </div>
             <div className="mt3">
-                <Link to="../2">Next</Link>
+                <Link className="link underline-hover black" to="../2">
+                    Next
+                </Link>
             </div>
-        </fieldset>
+        </article>
     );
 };
 

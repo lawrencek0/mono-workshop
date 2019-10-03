@@ -18,8 +18,8 @@ type Props = {
 
 const Review: React.FC<Props> = ({ slots, onSubmit }) => {
     return (
-        <div>
-            Review Your Plan
+        <article className="ba b--black-10 pa3 ma2">
+            <h1 className="f4 ttu tracked">Review Your Plan</h1>
             {slots &&
                 Object.keys(slots).map(slotId => (
                     <div key={slotId}>
@@ -35,10 +35,12 @@ const Review: React.FC<Props> = ({ slots, onSubmit }) => {
                         })}
                     </div>
                 ))}
-            <Link to="/events" onClick={onSubmit}>
-                Submit
-            </Link>
-        </div>
+            <div className="mt3">
+                <Link className="link underline-hover black" to="/events" onClick={onSubmit}>
+                    Submit
+                </Link>
+            </div>
+        </article>
     );
 };
 
