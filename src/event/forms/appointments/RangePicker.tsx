@@ -104,7 +104,6 @@ const Picker: React.FC<PickerProps> = ({
     );
 };
 
-// @FIXME: multiple time slots is broken
 const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
     const id = useRef(0);
 
@@ -129,10 +128,11 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
 
     const addDateRange = (): void => {
         id.current++;
+        const prevEndDate = dateRanges[dateRanges.length - 1].endDate;
         const entry = {
             ...dateRanges[dateRanges.length - 1],
             id: id.current,
-            startDate: dateRanges[dateRanges.length - 1].endDate,
+            startDate: prevEndDate ? moment(prevEndDate) : null,
             endDate: null,
         };
         setDateRanges([...dateRanges, entry]);
@@ -171,7 +171,7 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
                     onInputTimeChanges={onInputTimeChanges(date.id)}
                     canDelete={dateRanges.length > 1}
                     removeDateRange={removeDateRange}
-                    id={id.current}
+                    id={date.id}
                     {...date}
                 />
             ))}
