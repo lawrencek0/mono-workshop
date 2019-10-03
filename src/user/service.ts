@@ -5,7 +5,14 @@ import { getConnection } from 'typeorm';
 export const listAllUsers = async (req: Request, res: Response) => {
     const user = await getConnection()
         .getRepository(User)
-        .query('SELECT * FROM user');
+        .find();
 
-    res.send({ user });
+    res.send(user);
+};
+
+export const listAllStudents = async (req: Request, res: Response) => {
+    const students = await getConnection()
+        .getRepository(User)
+        .find({ role: 'student' });
+    res.send({ students });
 };

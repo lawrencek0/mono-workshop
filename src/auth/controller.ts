@@ -12,18 +12,6 @@ const CognitoExpress = require('cognito-express');
 (global as any).navigator = (): null => null;
 
 export const validateLogin = [
-    check('username', 'Invalid username')
-        .not()
-        .isEmpty(),
-    check('password', 'Invalid password')
-        .not()
-        .isEmpty(),
-];
-
-export const validateSignup = [
-    ...validateLogin,
-    check('firstName', "First Name can't be empty").exists(),
-    check('lastName', "Last Name can't be empty").exists(),
     // @TODO: allow only warhawk.ulm.edu and ulm.edu emails!
     check('email')
         .exists()
@@ -33,6 +21,15 @@ export const validateSignup = [
         .withMessage('Invald Email')
         .bail()
         .normalizeEmail(),
+    check('password', 'Invalid password')
+        .not()
+        .isEmpty(),
+];
+
+export const validateSignup = [
+    ...validateLogin,
+    check('firstName', "First Name can't be empty").exists(),
+    check('lastName', "Last Name can't be empty").exists(),
     check('role')
         .exists()
         .withMessage("Role can't be empty")
