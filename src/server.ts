@@ -1,11 +1,16 @@
 import errorHandler from 'errorhandler';
 
 import app from './app';
+import databaseConn from './loader/database';
 
 /**
  * Error Handler. Provides full stack - remove for production
  */
 app.use(errorHandler());
+/**
+ * Start Express server.
+ */
+databaseConn();
 
 /**
  * Start Express server.
