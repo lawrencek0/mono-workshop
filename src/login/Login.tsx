@@ -3,7 +3,23 @@ import { login, useAuthDispatch } from '../auth/hooks';
 import { UserPayload } from './types';
 import { RouteComponentProps, navigate } from '@reach/router';
 import { localStorageKey } from 'utils/storage';
+import { Formik, Form, Field } from 'formik';
 
+const validate = (values)
+{=>
+    let errors = {};
+  
+    if (!values.email) 
+    {
+      errors.email = 'Required';
+    } else if (!/^[A-Z0-9._%+-]+@[warhawks.ulm.edu]||[ulm.edu]/i.test(values.email)) {
+      errors.email = 'Invalid email address';
+    }
+  
+    //...
+  
+    return errors;
+  };
 const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
     // @TODO: handle login failure
     const [inputs, setInputs] = useState({
