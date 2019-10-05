@@ -11,7 +11,7 @@ router.post('/', create);
 //find all appointment
 router.get('/', findAll);
 
-router.post('/select', selectAppointment);
+router.put('/:detailId/:slotId', selectAppointment);
 
 // gets all appointments for the faculty
 router.get('/faculty', findByFacultyId);
