@@ -70,3 +70,17 @@ export const selectAppointment = async (req: Request, res: Response) => {
 
     res.send(updatedSlot);
 };
+
+//deselect student from an appointment
+export const deselectAppointment = async (req: Request, res: Response) => {
+    const slot: Slot = await getConnection()
+        .getRepository(Slot)
+        .findOne(req.body.slotId);
+
+    slot.student = null;
+    const updatedSlot: Slot = await getConnection()
+        .getRepository(Slot)
+        .save(slot);
+
+    res.send(updatedSlot);
+};

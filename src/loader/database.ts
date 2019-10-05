@@ -1,13 +1,11 @@
-import { createConnection, getConnection, Connection, DatabaseType, ConnectionOptions } from 'typeorm';
+import { createConnection } from 'typeorm';
 import { database } from '../util/secrets';
 import { User } from '../user/model';
 import { Slot } from '../appointment/slot/models';
 import { Detail } from '../appointment/detail/models';
 
-let conn: Connection;
-
 export default async () => {
-    conn = await createConnection({
+    await createConnection({
         type: 'mysql',
         host: database.MYSQL_HOSTNAME,
         port: parseInt(database.MYSQL_PORT),
