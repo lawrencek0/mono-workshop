@@ -51,24 +51,26 @@ export const findAll = async (req: Request, res: Response) => {
     res.send(userWithSlots);
 };
 
-//post this when you test it. { "slotId": 3, "detailId": 1 }
+//put this when you test it."PUT"     http://localhost:8000/api/appointments/1/24
 export const selectAppointment = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;
     const slot: Slot = await getConnection()
         .getRepository(Slot)
-        .findOne(req.body.slotId);
+        .findOne(req.params.slotId, { where: { detailId: req.params.detailId } })
+        .then(async slot => {
+            const student: User = await getConnection()
+                .getRepository(User)
+                .findOne(userId);
 
-    const student: User = await getConnection()
-        .getRepository(User)
-        .findOne(userId);
+            slot.student = student;
+            return await getConnection()
+                .getRepository(Slot)
+                .save(slot);
+        })
+        .catch(e => e);
 
-    slot.student = student;
-    const updatedSlot: Slot = await getConnection()
-        .getRepository(Slot)
-        .save(slot);
-
-    res.send(updatedSlot);
+    res.send(slot);
 };
 
 //deselect student from an appointment
