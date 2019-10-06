@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { sidebarBackgroundColor } from './theme';
-import { BaseVariant, primaryTextColor } from 'theme';
+import tw from 'tailwind.macro';
+import { primaryTextColor } from 'theme';
 import { MdMenu } from 'react-icons/md';
 import { Link } from '@reach/router';
 
 const AppBar: React.FC<{}> = () => {
     return (
-        <Header variant="primary">
+        <Header>
             <h1 className="f4">Team Yellow</h1>
             <Menu />
         </Header>
@@ -22,21 +22,18 @@ const Menu: React.FC<{}> = () => {
     );
 };
 
-const StyledLink = styled(Link).attrs(() => ({
-    className: 'ml-auto',
-}))`
+const StyledLink = styled(Link)`
+    ${tw`ml-auto`}
     color: ${primaryTextColor};
 `;
 
-const StyledIcon = styled(MdMenu).attrs(() => ({
-    className: 'f2',
-}))``;
+const StyledIcon = styled(MdMenu)`
+    ${tw`text-4xl`}
+`;
 
-const Header = styled.header.attrs(() => ({
-    className: 'flex items-center ph2 f4',
-}))<{ variant: Extract<BaseVariant, 'primary'> }>`
-    background-color: ${sidebarBackgroundColor};
+const Header = styled.header`
+    ${tw`flex bg-primary-400 items-center px-2 py-4 text-2xl`}
     color: ${primaryTextColor};
 `;
 
-export { AppBar as default };
+export default AppBar;

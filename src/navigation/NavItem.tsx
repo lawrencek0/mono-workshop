@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link, Match } from '@reach/router';
 import { IconType } from 'react-icons/lib/cjs';
-import styled from 'styled-components/macro';
-import { navItemStyles, BaseVariant } from './theme';
+import styled, { css } from 'styled-components/macro';
+import tw from 'tailwind.macro';
 import { RouteTitles } from 'routing/routes';
-import { media } from 'theme';
+import { media, useMediaQueryString } from 'theme';
+import theme from 'styled-theming';
 
-export type Variant = BaseVariant | 'active';
+export type Variant = 'active' | 'inactive';
 
 export type NavItemProps = {
     title: RouteTitles;
@@ -14,40 +15,60 @@ export type NavItemProps = {
     Icon: IconType | React.FC<{}>;
     variant?: Variant;
     isSecondary?: boolean;
+    isHome?: boolean;
 };
 
-export const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, variant = 'primary', isSecondary = false }) => {
-    const StyledIcon = styled(Icon).attrs(() => ({
-        className: 'f2',
-    }))``;
+export const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary = false, isHome = false }) => {
+    const isDesktop = useMediaQueryString('desktop');
+    const StyledIcon = styled(Icon)`
+        ${tw`text-4xl`}
+    `;
 
     return (
-        <StyledList isSecondary={isSecondary}>
+        <StyledListItem
+            isSecondary={isSecondary}
+            css={`
+                ${isHome && tw`lg:mb-auto`}
+            `}
+        >
             <Match path={to}>
                 {({ match }) => (
-                    <StyledLink to={to} variant={match ? 'active' : variant}>
-                        <StyledIcon />
-                        {variant !== 'secondary' && title}
+                    <StyledLink to={to} variant={match ? 'active' : 'inactive'}>
+                        <StyledIcon aria-label={title} />
+                        {!isDesktop && title}
                     </StyledLink>
                 )}
             </Match>
-        </StyledList>
+        </StyledListItem>
     );
 };
 
-const StyledLink = styled(Link).attrs(() => ({
-    className: 'flex flex-column items-center no-underline pv2 ph4 ph1-l',
-}))<{ variant: Variant }>`
-    ${navItemStyles};
+const navLinkStyles = theme.variants('mode', 'variant', {
+    inactive: {
+        light: css`
+            ${tw`hover:bg-primary-300`}
+        `,
+        dark: css`
+            ${tw`bg-transparent text-gray-500 hover:bg-gray-700`}
+        `,
+    },
+    active: {
+        light: css`
+            ${tw`bg-primary-200 text-gray-800`}
+        `,
+        dark: css`
+            ${tw`bg-gray-600 text-white`}
+        `,
+    },
+});
 
-    &:hover {
-        transition: background-color 0.15s ease-in;
-    }
+const StyledLink = styled(Link)<{ variant: Variant }>`
+    ${tw`flex flex-col items-center py-2 px-6`}
+    ${navLinkStyles};
 `;
 
-const StyledList = styled.li.attrs(() => ({
-    className: 'mt2-l mb3-l',
-}))<{ isSecondary: boolean }>`
+const StyledListItem = styled.li<{ isSecondary: boolean; css: string }>`
+    ${tw`md:mt-2 md:mb-4`}
     display: ${props => props.isSecondary && 'none'};
 
     ${media.desktop} {

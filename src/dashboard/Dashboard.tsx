@@ -8,17 +8,7 @@ import { Main } from 'navigation/Main';
 const Dashboard: React.FC<RouteComponentProps> = () => {
     const dispatch = useAuthDispatch();
 
-    return (
-        <Main>
-            <button
-                onClick={() => {
-                    logout(dispatch);
-                }}
-            >
-                logout
-            </button>
-        </Main>
-    );
+    return <Main>Your Content here</Main>;
 };
 
 export { Dashboard };
