@@ -14,6 +14,7 @@ export const primaryRoutes = [
         to: '/',
         title: 'Home',
         Icon: MdHome,
+        isHome: true,
     },
     {
         to: '/events',
