@@ -6,6 +6,7 @@ import theme from 'styled-theming';
 import tw from 'tailwind.macro';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
+import moment from 'moment';
 
 const Dashboard: React.FC<{}> = () => {
     const calendar = useRef<FullCalendar>(null);
@@ -33,6 +34,12 @@ const Dashboard: React.FC<{}> = () => {
                 height={height}
                 header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
                 titleFormat={{ year: 'numeric', month: 'long' }}
+                columnHeaderHtml={col => {
+                    if (moment(col).weekday() === moment().weekday()) {
+                        return `<span class="current-day">${moment(col).format('ddd')}</span>`;
+                    }
+                    return moment(col).format('ddd');
+                }}
                 defaultView="dayGridMonth"
                 plugins={[dayGridPlugin]}
             />
@@ -48,6 +55,21 @@ const fullCalendarStyles = theme('mode', {
                     text-gray-800 hover:text-gray-800 active:text-gray-800 
                     border-gray-400 hover:border-primary-400 focus:border-primary-200 
                     focus:shadow-outline py-2 px-8`}
+            }
+        }
+        .fc {
+            th {
+                ${tw`border-none py-8 uppercase text-2xl text-gray-500`}
+
+                .current-day {
+                    ${tw`text-primary-500 font-medium`}
+                    text-shadow: 0 1px 1px #f6e05e;
+                }
+            }
+            th,
+            td {
+                border-left: none;
+                border-right: none;
             }
         }
     `,
