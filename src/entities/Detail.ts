@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
-import { Slot } from '../slot/models';
-import { User } from '../../user/model';
+import { Slot } from './Slot';
+import { User } from './User';
 
 @Entity('Appointment_details')
 export class Detail {

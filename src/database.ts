@@ -1,8 +1,8 @@
 import { createConnection } from 'typeorm';
-import { database } from '../util/secrets';
-import { User } from '../user/model';
-import { Slot } from '../appointment/slot/models';
-import { Detail } from '../appointment/detail/models';
+import { database } from './util/secrets';
+import { User } from './entities/User';
+import { Slot } from './entities/Slot';
+import { Detail } from './entities/Detail';
 
 export default async () => {
     await createConnection({

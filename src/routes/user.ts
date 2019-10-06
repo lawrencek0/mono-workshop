@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as userService from './service';
+import * as userService from '../controllers/user';
 
 const router = Router();
 //list All users

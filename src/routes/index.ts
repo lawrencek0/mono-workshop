@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { AuthRouter } from './auth/router';
-import { AppointmentRouter } from './appointment/router';
-import { UserRouter } from './user/router';
-import { validate } from './auth/controller';
+import { AuthRouter } from './auth';
+import { AppointmentRouter } from './appointment';
+import { UserRouter } from './user';
+import { validate } from '../controllers/auth';
 
 // Route handlers
 

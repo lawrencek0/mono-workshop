@@ -1,7 +1,7 @@
 import errorHandler from 'errorhandler';
 
 import app from './app';
-import databaseConn from './loader/database';
+import databaseConn from './database';
 
 /**
  * Error Handler. Provides full stack - remove for production

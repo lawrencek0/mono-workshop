@@ -1,7 +1,7 @@
 import express from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
-import router from './router';
+import router from './routes/index';
 import 'reflect-metadata';
 
 // Create Express server

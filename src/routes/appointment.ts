@@ -1,6 +1,6 @@
 import { Router } from 'express';
 // import { create, findOne, findAll, deleteAppointment } from './service';
-import { create, findAll, findByFacultyId, selectAppointment } from './service';
+import { create, findAll, findByFacultyId, selectAppointment } from '../controllers/appointment';
 const router = Router();
 
 // Creates an appointment

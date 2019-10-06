@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { User } from './model';
+import { User } from '../entities/User';
 import { getConnection } from 'typeorm';
 
 export const listAllUsers = async (req: Request, res: Response) => {

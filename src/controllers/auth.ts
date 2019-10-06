@@ -4,7 +4,7 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { authentic } from '../util/secrets';
 import hashids from '../util/hasher';
 import { getConnection } from 'typeorm';
-import { User } from '../user/model';
+import { User } from '../entities/User';
 
 //eslint-disable-next-line @typescript-eslint/no-var-requires
 const CognitoExpress = require('cognito-express');

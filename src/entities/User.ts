@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { Slot } from '../appointment/slot/models';
-import { Detail } from '../appointment/detail/models';
+import { Slot } from './Slot';
+import { Detail } from './Detail';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
