@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { sidebarBackgroundColor } from './theme';
 import { BaseVariant, primaryTextColor } from 'theme';
 import { MdMenu } from 'react-icons/md';
 import { Link } from '@reach/router';
@@ -35,8 +34,7 @@ const StyledIcon = styled(MdMenu).attrs(() => ({
 const Header = styled.header.attrs(() => ({
     className: 'flex items-center ph2 f4',
 }))<{ variant: Extract<BaseVariant, 'primary'> }>`
-    background-color: ${sidebarBackgroundColor};
     color: ${primaryTextColor};
 `;
 
-export { AppBar as default };
+export { AppBar };

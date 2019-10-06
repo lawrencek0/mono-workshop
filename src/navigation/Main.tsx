@@ -1,19 +1,20 @@
 import React, { ReactNode, lazy } from 'react';
 import { RouteComponentProps } from '@reach/router';
-import { backgroundColor, primaryTextColor, media, useMediaQueryString } from 'theme';
+import tw from 'tailwind.macro';
+import { backgroundColor, primaryTextColor, media } from 'theme';
 import styled from 'styled-components/macro';
 import { primaryRoutes, secondayRoutes } from 'routing/routes';
-import { PrimarySidebar } from './Sidebar';
+import { Sidebar } from './Sidebar';
+import { AppBar } from './AppBar';
 
 export const Main: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({ children }) => {
-    const match = useMediaQueryString('desktop');
-    const SecondaryNav = match ? lazy(() => import('./Sidebar')) : lazy(() => import('./AppBar'));
-
     return (
         <Wrapper>
-            <PrimarySidebar routes={primaryRoutes} />
-            <Content>{children}</Content>
-            <SecondaryNav routes={secondayRoutes} />
+            <Sidebar routes={primaryRoutes} />
+            <div>
+                <StyledAppBar />
+                <Content>{children}</Content>
+            </div>
         </Wrapper>
     );
 };
@@ -29,13 +30,15 @@ const Content = styled.main.attrs(() => ({
     color: ${primaryTextColor};
 `;
 
+const StyledAppBar = styled(AppBar)``;
+
 const Wrapper = styled.div.attrs(() => ({
     className: 'flex flex-column-reverse flex-row-l',
 }))`
     @supports (display: grid) {
         ${media.desktop} {
             display: grid;
-            grid-template-columns: 100px 1fr 80px;
+            grid-template-columns: min-content 1fr;
             grid-gap: 1rem;
         }
     }

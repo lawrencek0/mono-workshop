@@ -1,58 +1,42 @@
 import React from 'react';
-import styled from 'styled-components/macro';
-import { BaseVariant } from 'theme';
+import styled, { css } from 'styled-components/macro';
+import tw from 'tailwind.macro';
 import { NavItem } from './NavItem';
-import { sidebarBackgroundColor, sidebarColor } from './theme';
 import { Route } from 'routing/routes';
+import theme from 'styled-theming';
 
 interface Props {
     routes: readonly Route[];
 }
 
-const PrimarySidebar: React.FC<Props> = ({ routes }) => {
+const Sidebar: React.FC<Props> = ({ routes }) => {
     return (
-        <StyledPrimaryNav variant="primary">
-            <StyledLinks>
+        <StyledNav>
+            <StyledList>
                 {routes.map((route, i) => (
-                    <NavItem key={i} {...route} variant="primary" />
+                    <NavItem key={i} {...route} />
                 ))}
-            </StyledLinks>
-        </StyledPrimaryNav>
-    );
-};
-
-const SecondarySidebar: React.FC<Props> = ({ routes }) => {
-    return (
-        <StyledNav variant="secondary">
-            <StyledSecondaryLinks>
-                {routes.map((route, i) => (
-                    <NavItem key={i} {...route} variant="secondary" />
-                ))}
-            </StyledSecondaryLinks>
+            </StyledList>
         </StyledNav>
     );
 };
 
-const StyledLinks = styled.ul.attrs(() => ({
-    className: 'flex justify-around justify-start-l flex-column-l list mv0 pl0 ma0-l min-vh-100-l',
-}))`
-    position: sticky;
-    top: 0;
+const navStyles = theme('mode', {
+    light: css`
+        ${tw`bg-primary-400 text-gray-900`}
+    `,
+    dark: css`
+        ${tw`bg-dark-4`}
+    `,
+});
+
+const StyledList = styled.ul`
+    ${tw`sticky top-0 flex justify-around list-none lg:justify-start lg:flex-col lg:min-h-screen`}
 `;
 
-const StyledNav = styled.nav.attrs(() => ({
-    className: 'min-vh-100-l',
-}))<{ variant: BaseVariant }>`
-    background-color: ${sidebarBackgroundColor};
-    color: ${sidebarColor};
+const StyledNav = styled.nav`
+    ${tw`w-full lg:w-auto fixed bottom-0 lg:static`}
+    ${navStyles}
 `;
 
-const StyledPrimaryNav = styled(StyledNav).attrs(() => ({
-    className: 'fixed bottom-0 mw-100 mw-none-l static-l',
-}))``;
-
-const StyledSecondaryLinks = styled(StyledLinks).attrs(props => ({
-    className: `${props.className} justify-end-l`,
-}))``;
-
-export { PrimarySidebar, SecondarySidebar as default, StyledLinks, StyledNav };
+export { Sidebar, StyledList, StyledNav };
