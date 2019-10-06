@@ -1,11 +1,17 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { MdSearch, MdNotifications } from 'react-icons/md';
+import { MdSearch } from 'react-icons/md';
+import { MdNotifications } from 'react-icons/md';
+import { MdAccountCircle } from 'react-icons/md';
+import { FaCaretDown } from 'react-icons/fa';
+import { Menu, MenuList, MenuButton, MenuLink } from '@reach/menu-button';
 import { useAuthState } from 'auth/hooks';
+import { Link } from '@reach/router';
+import '@reach/menu-button/styles.css';
 
 const Navbar: React.FC<{}> = () => {
-    const { firstName } = useAuthState();
+    const { firstName, lastName } = useAuthState();
 
     return (
         <StyledHeader>
@@ -14,13 +20,41 @@ const Navbar: React.FC<{}> = () => {
                 <StyledSearch disabled={false} placeholder="Search" />
             </SearchWrapper>
             <StyledIcon as={MdNotifications} css={tw`ml-auto`} />
-            <AvatarWrapper>{firstName}</AvatarWrapper>
+            <Menu>
+                <Avatar>
+                    <StyledIcon as={MdAccountCircle} css={tw`text-5xl mr-4`} />
+                    <div>
+                        {firstName} {lastName}
+                    </div>
+                    <StyledIcon as={FaCaretDown} aria-hidden css={tw`ml-2`} />
+                </Avatar>
+                <StyledMenuList>
+                    <MenuLink as={(Link as unknown) as string} to="/profile">
+                        Profile
+                    </MenuLink>
+                    <MenuLink as={(Link as unknown) as string} to="/logout">
+                        Logout
+                    </MenuLink>
+                </StyledMenuList>
+            </Menu>
         </StyledHeader>
     );
 };
 
-const AvatarWrapper = styled.div`
-    ${tw`ml-16 mr-8 text-gray-800`}
+const StyledMenuList = styled(MenuList)`
+    &[data-reach-menu-list] {
+        ${tw`border-gray-400 shadow-lg`}
+    }
+    & [data-reach-menu-item] {
+        ${tw`text-lg`}
+    }
+    & [data-reach-menu-item][data-selected] {
+        ${tw`bg-primary-400 text-gray-800`}
+    }
+`;
+
+const Avatar = styled(MenuButton)`
+    ${tw`flex items-center content-between text-xl ml-16 mr-8 text-gray-800`}
 `;
 
 const StyledHeader = styled.header`
