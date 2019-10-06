@@ -4,9 +4,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import styled, { css } from 'styled-components/macro';
 import theme from 'styled-theming';
 import tw from 'tailwind.macro';
+import moment from 'moment';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
-import moment from 'moment';
 
 const Dashboard: React.FC<{}> = () => {
     const calendar = useRef<FullCalendar>(null);
@@ -30,6 +30,7 @@ const Dashboard: React.FC<{}> = () => {
     return (
         <Wrapper ref={measuredRef}>
             <FullCalendar
+                events={[{ title: 'event 1', date: '2019-10-06' }, { title: 'event 2', date: '2019-10-02' }]}
                 ref={calendar}
                 height={height}
                 header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
@@ -58,18 +59,40 @@ const fullCalendarStyles = theme('mode', {
             }
         }
         .fc {
-            th {
-                ${tw`border-none py-8 uppercase text-2xl text-gray-500`}
-
-                .current-day {
-                    ${tw`text-primary-500 font-medium`}
-                    text-shadow: 0 1px 1px #f6e05e;
+            table {
+                th,
+                td {
+                    ${tw`border-none`}
                 }
-            }
-            th,
-            td {
-                border-left: none;
-                border-right: none;
+                .fc-head {
+                    th {
+                        ${tw`py-4 uppercase text-2xl text-gray-500`}
+
+                        .current-day {
+                            ${tw`text-primary-500 font-medium`}
+                            text-shadow: 0 1px 1px #f6e05e;
+                        }
+                    }
+                }
+                .fc-body {
+                    table {
+                        ${tw`border-separate`}
+                        border-spacing: 1em 0;
+
+                        td {
+                            ${tw`border-t-4 border-gray-300`}
+                        }
+                    }
+
+                    .fc-day,
+                    .fc-today {
+                        border-top-style: solid;
+                    }
+
+                    .fc-today {
+                        ${tw`bg-transparent border-primary-400 text-primary-600`}
+                    }
+                }
             }
         }
     `,
