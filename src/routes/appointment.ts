@@ -1,6 +1,6 @@
 import { Router } from 'express';
 // import { create, findOne, findAll, deleteAppointment } from './service';
-import { create, findAll, findByFacultyId, selectAppointment } from '../controllers/appointment';
+import { create, selectAppointment, findAll } from '../controllers/appointment';
 const router = Router();
 
 // Creates an appointment
@@ -12,8 +12,5 @@ router.post('/', create);
 router.get('/', findAll);
 
 router.put('/:detailId/:slotId', selectAppointment);
-
-// gets all appointments for the faculty
-router.get('/faculty', findByFacultyId);
 
 export { router as AppointmentRouter };

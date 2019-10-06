@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Detail } from '../entities/Detail';
-import { getConnection } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { Slot } from '../entities/Slot';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
@@ -8,65 +8,60 @@ import hashids from '../util/hasher';
 export const create = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const id = (hashids.decode(maskedId)[0] as unknown) as number;
-    const slots = await getConnection()
-        .getRepository(Slot)
-        .save(req.body.dates);
-    const user = await getConnection()
-        .getRepository(User)
-        .findByIds(req.body.students.map((student: User) => student.id));
+    const slots = await getRepository(Slot).save(req.body.dates);
+    const user = await getRepository(User).findByIds(req.body.students.map((student: User) => student.id));
     user.forEach((user: User) => {
         user.slots = slots;
-        getConnection()
-            .getRepository(User)
-            .save(user);
+        getRepository(User).save(user);
     });
-    const faculty = await getConnection()
-        .getRepository(User)
-        .findOne(id);
-    const detail = await getConnection()
-        .getRepository(Detail)
-        .save({ title: req.body.title, description: req.body.description, slots, user: faculty });
+    const faculty = await getRepository(User).findOne(id);
+    const detail = await getRepository(Detail).save({
+        title: req.body.title,
+        description: req.body.description,
+        slots,
+        faculty: faculty,
+    });
 
     res.send({ detail });
 };
 
-export const findByFacultyId = async (req: Request, res: Response) => {
-    const maskedId = res.locals.user['custom:user_id'];
-    const id = (hashids.decode(maskedId)[0] as unknown) as number;
-    const appointments: Detail[] = await getConnection()
-        .getRepository(Detail)
-        .find({ where: { faculty: id } });
+export const findByFacultyId = async (id: number) => {
+    const appointments: Detail[] = await getRepository(Detail).find({ where: { faculty: id }, relations: ['slots'] });
 
-    res.send({ appointments });
+    return appointments;
 };
 
 //This findAll list all appointments for user who is currently login
 export const findAll = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;
-    const userWithSlots = await getConnection()
-        .getRepository(User)
-        .findOne(userId, { relations: ['slots'] });
 
-    res.send(userWithSlots);
+    // Check if the user is a faculty
+    const user: User = await getRepository(User).findOne(userId);
+
+    if (user.role === 'faculty') {
+        let appointments: Detail[] = [];
+        appointments = await findByFacultyId(userId);
+        res.send(appointments);
+    } else if (user.role === 'student') {
+        let appointments: User[] = [];
+        appointments = await getRepository(User).find({ where: { id: userId }, relations: ['slots'] });
+        res.send(appointments);
+    }
+    //res.send(appointments);
 };
 
 //put this when you test it."PUT"     http://localhost:8000/api/appointments/1/24
 export const selectAppointment = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;
-    const slot: Slot = await getConnection()
-        .getRepository(Slot)
+    const slot: Slot = await getRepository(Slot)
         .findOne(req.params.slotId, { where: { detailId: req.params.detailId } })
         .then(async slot => {
-            const student: User = await getConnection()
-                .getRepository(User)
-                .findOne(userId);
+            const student: User = await getRepository(User).findOne(userId);
 
             slot.student = student;
-            return await getConnection()
-                .getRepository(Slot)
-                .save(slot);
+            return await getRepository(Slot).save(slot);
         })
         .catch(e => e);
 
@@ -75,14 +70,10 @@ export const selectAppointment = async (req: Request, res: Response) => {
 
 //deselect student from an appointment
 export const deselectAppointment = async (req: Request, res: Response) => {
-    const slot: Slot = await getConnection()
-        .getRepository(Slot)
-        .findOne(req.body.slotId);
+    const slot: Slot = await getRepository(Slot).findOne(req.body.slotId);
 
     slot.student = null;
-    const updatedSlot: Slot = await getConnection()
-        .getRepository(Slot)
-        .save(slot);
+    const updatedSlot: Slot = await getRepository(Slot).save(slot);
 
     res.send(updatedSlot);
 };
