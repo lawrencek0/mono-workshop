@@ -19,6 +19,7 @@ module.exports = {
             primary: colors.yellow,
             gray: colors.gray,
             white: colors.white,
+            transparent: colors.transparent,
         },
     },
     variants: {},
