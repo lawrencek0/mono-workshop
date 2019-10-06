@@ -16,6 +16,6 @@ export class Detail {
     @OneToMany(() => Slot, Slot => Slot.detail)
     slots: Slot[];
 
-    @ManyToOne(() => User, User => User.Detail)
-    user: User;
+    @ManyToOne(() => User, User => User.details)
+    faculty: User;
 }

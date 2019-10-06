@@ -36,12 +36,12 @@ export class User {
     bio: string;
 
     @OneToMany(() => Slot, Slot => Slot.student)
+    assignedSlots: Slot[];
+
+    @ManyToMany(() => Slot, Slot => Slot.students)
+    @JoinTable({ name: 'appointment_slots_users' })
     slots: Slot[];
 
-    @ManyToMany(() => Slot, Slot => Slot.User)
-    @JoinTable({ name: 'appointment_slots_users' })
-    Slot: Slot[];
-
-    @OneToMany(() => Detail, Detail => Detail.user)
-    Detail: Detail[];
+    @OneToMany(() => Detail, Detail => Detail.faculty)
+    details: Detail[];
 }

@@ -15,7 +15,7 @@ export const create = async (req: Request, res: Response) => {
         .getRepository(User)
         .findByIds(req.body.students.map((student: User) => student.id));
     user.forEach((user: User) => {
-        user.Slot = slots;
+        user.slots = slots;
         getConnection()
             .getRepository(User)
             .save(user);
@@ -33,9 +33,9 @@ export const create = async (req: Request, res: Response) => {
 export const findByFacultyId = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const id = (hashids.decode(maskedId)[0] as unknown) as number;
-    const appointments = await getConnection()
+    const appointments: Detail[] = await getConnection()
         .getRepository(Detail)
-        .find({ where: { user: id } });
+        .find({ where: { faculty: id } });
 
     res.send({ appointments });
 };
@@ -46,7 +46,7 @@ export const findAll = async (req: Request, res: Response) => {
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;
     const userWithSlots = await getConnection()
         .getRepository(User)
-        .findOne(userId, { relations: ['Slot'] });
+        .findOne(userId, { relations: ['slots'] });
 
     res.send(userWithSlots);
 };

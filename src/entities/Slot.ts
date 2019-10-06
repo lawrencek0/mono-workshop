@@ -13,8 +13,8 @@ export class Slot {
     @Column()
     end: Date;
 
-    @ManyToMany(() => User, User => User.Slot)
-    User: User[];
+    @ManyToMany(() => User, User => User.slots)
+    students: User[];
 
     @ManyToOne(() => User, User => User.slots)
     student: User;
