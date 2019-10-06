@@ -36,4 +36,4 @@ const Header = styled.header`
     color: ${primaryTextColor};
 `;
 
-export { AppBar };
+export default AppBar;

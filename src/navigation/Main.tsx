@@ -1,18 +1,20 @@
 import React, { ReactNode, lazy } from 'react';
 import { RouteComponentProps } from '@reach/router';
 import tw from 'tailwind.macro';
-import { backgroundColor, primaryTextColor, media } from 'theme';
+import { backgroundColor, primaryTextColor, media, useMediaQueryString } from 'theme';
 import styled from 'styled-components/macro';
 import { primaryRoutes } from 'routing/routes';
 import { Sidebar } from './Sidebar';
-import { AppBar } from './AppBar';
 
 export const Main: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({ children }) => {
+    const isDesktop = useMediaQueryString('desktop');
+    const Navigation = isDesktop ? lazy(() => import('./Navbar')) : lazy(() => import('./AppBar'));
+
     return (
         <Wrapper>
             <Sidebar routes={primaryRoutes} />
             <div>
-                <AppBar />
+                <Navigation />
                 <Content>{children}</Content>
             </div>
         </Wrapper>
@@ -31,7 +33,6 @@ const Wrapper = styled.div`
         ${media.desktop} {
             display: grid;
             grid-template-columns: min-content 1fr;
-            grid-gap: 1rem;
         }
     }
 `;
