@@ -8,6 +8,7 @@ import moment from 'moment';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 
+// @FIXME: can't automatically set parent height https://github.com/fullcalendar/fullcalendar/issues/4650
 const Dashboard: React.FC<{}> = () => {
     const calendar = useRef<FullCalendar>(null);
     const [height, setHeight] = useState(500);
