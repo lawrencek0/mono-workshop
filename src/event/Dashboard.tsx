@@ -45,9 +45,9 @@ const fullCalendarStyles = theme('mode', {
         .fc-toolbar {
             .fc-button.fc-button-primary {
                 ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
-                text-gray-800 hover:text-gray-800 active:text-gray-800 
-                border-gray-400 hover:border-primary-400 focus:border-primary-200 
-                focus:shadow-outline py-2 px-8`}
+                    text-gray-800 hover:text-gray-800 active:text-gray-800 
+                    border-gray-400 hover:border-primary-400 focus:border-primary-200 
+                    focus:shadow-outline py-2 px-8`}
             }
         }
     `,
