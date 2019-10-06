@@ -9,7 +9,7 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 
 // @FIXME: can't automatically set parent height https://github.com/fullcalendar/fullcalendar/issues/4650
-const Dashboard: React.FC<{}> = () => {
+const CalendarWrapper: React.FC<{}> = () => {
     const calendar = useRef<FullCalendar>(null);
     const [height, setHeight] = useState(500);
 
@@ -25,7 +25,8 @@ const Dashboard: React.FC<{}> = () => {
     /**
      * TODO:
      * 1. Different titles for different views: on day: Today, October 3, on week: 7-14 Oct, on month: October, 2019
-     *
+     * 2. Add and style more views
+     * 3. On day click, open a pop-up to create the event
      */
 
     return (
@@ -105,4 +106,4 @@ const Wrapper = styled.div`
     ${fullCalendarStyles}
 `;
 
-export default Dashboard;
+export default CalendarWrapper;
