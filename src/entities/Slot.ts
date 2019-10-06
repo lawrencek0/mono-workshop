@@ -16,7 +16,7 @@ export class Slot {
     @ManyToMany(() => User, User => User.slots)
     students: User[];
 
-    @ManyToOne(() => User, User => User.slots)
+    @ManyToOne(() => User, User => User.slots, { nullable: true })
     student: User;
 
     @ManyToOne(() => Detail, Detail => Detail.slots)
