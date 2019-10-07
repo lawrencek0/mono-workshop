@@ -1,7 +1,10 @@
 import React, { lazy, useRef, useState, useEffect } from 'react';
 import { RouteComponentProps, Link, Router } from '@reach/router';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
 import { Main } from 'navigation/Main';
 import { RouteGuard } from 'routing/PrivateRoute';
+import Dashboard from './dashboard/Dashboard';
 
 const EventForm = lazy(() => import('./forms/appointments/AppointmentForm'));
 
@@ -49,26 +52,19 @@ const Dropdown: React.FC<{ className?: string }> = ({ className }) => {
     );
 };
 
-const Page: React.FC<RouteComponentProps> = () => {
-    return (
-        <div className="flex">
-            <div className="f1">Events</div>
-            <div className="ml-auto">
-                <Dropdown />
-            </div>
-        </div>
-    );
-};
-
 const Event: React.FC<RouteComponentProps> = () => {
     return (
         <Main>
-            <Router>
-                <RouteGuard as={Page} action="events:visit" path="/"></RouteGuard>
-                <RouteGuard as={EventForm} action="events:add" path="add/appointment/:step"></RouteGuard>
-            </Router>
+            <StyledRouter>
+                <RouteGuard as={Dashboard} action="events:visit" path="/"></RouteGuard>
+                <RouteGuard as={EventForm} action="events:add" path="appointment/new/:step"></RouteGuard>
+            </StyledRouter>
         </Main>
     );
 };
+
+const StyledRouter = styled(Router)`
+    ${tw`h-full`}
+`;
 
 export default Event;
