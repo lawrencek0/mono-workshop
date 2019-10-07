@@ -13,18 +13,26 @@ export const Main: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({
     return (
         <Wrapper>
             <Sidebar routes={primaryRoutes} />
-            <div>
+            <ContentWrapper>
                 <Navigation />
                 <Content>{children}</Content>
-            </div>
+            </ContentWrapper>
         </Wrapper>
     );
 };
 
 const Content = styled.main`
-    ${tw`mx-2 mt-2`}
+    ${tw`mx-2 h-full`}
     background-color: ${backgroundColor};
     color: ${primaryTextColor};
+`;
+
+const ContentWrapper = styled.div`
+    @supports (display: grid) {
+        display: grid;
+        grid-template-rows: minmax(min-content, 75px) 1fr;
+        grid-gap: 1em;
+    }
 `;
 
 const Wrapper = styled.div`
