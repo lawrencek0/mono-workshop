@@ -5,11 +5,11 @@ export const apiClient = async <T>(
     endpoint: string,
     { body, ...customConfig }: Omit<RequestInit, 'body'> & { body?: unknown } = {},
 ): Promise<T> => {
-    const token = localStorage.getItem(localStorageKey('access_token'));
+    const token = localStorage.getItem(localStorageKey('accessToken'));
     const headers = new Headers({ 'Content-Type': 'application/json' });
 
     if (token) {
-        headers.append('Authorization', `Bearer ${token}`);
+        headers.append('idtoken', token);
     }
 
     const config: RequestInit = {
