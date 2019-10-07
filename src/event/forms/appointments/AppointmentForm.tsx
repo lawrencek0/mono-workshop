@@ -7,7 +7,7 @@ import { Stepper } from './Stepper';
 import { AppointmentDetailsForm } from './AppointmentDetails';
 import { Student, StudentSelection } from './StudentSelection';
 import { DateTimeRange, RangePicker } from './RangePicker';
-import { AppointmentSlotsReview, SlotsByDate } from './AppointmentSlotsReview';
+import { AppointmentSlotsReview, SlotsByDate, Slot } from './AppointmentSlotsReview';
 import { slotsFromRanges, slotsByDay } from './helpers';
 import { getAllStudents } from 'utils/students-client';
 
@@ -15,6 +15,8 @@ type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
 };
 
+// @FIXME: this is probably not the best way to distribute state
+// @TODO: Add a back button, ability to go to any valid step
 const Page: React.FC<Props> = ({ step = 1 }) => {
     const [inputs, setInputs] = useState({
         title: '',
@@ -26,7 +28,8 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
             id: string;
         }[]
     >([]);
-    const [slots, setSlots] = useState<SlotsByDate>({});
+    const [slots, setSlots] = useState<Slot[][]>([]);
+    const [slotsByDate, setSlotsByDate] = useState<SlotsByDate>({});
 
     if (isNaN(step) || (step < 0 || step > 5)) {
         navigate('./1');
@@ -61,10 +64,10 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
     };
 
     const handleDatesSubmit = (dateRanges: DateTimeRange[]): void => {
-        const dates = slotsByDay(slotsFromRanges(dateRanges));
-        // @TODO: remove only for demoing to the backend team!
-        console.log(dates);
-        setSlots(dates);
+        const slots = slotsFromRanges(dateRanges);
+        const dates = slotsByDay(slots);
+        setSlots(slots);
+        setSlotsByDate(dates);
     };
 
     const handleStudentsSubmit = (): void => {
@@ -107,7 +110,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                             />
                         ),
                         3: <RangePicker onSubmit={handleDatesSubmit} />,
-                        4: <AppointmentSlotsReview slots={slots} onSubmit={handleFormSubmit} />,
+                        4: <AppointmentSlotsReview slots={slotsByDate} onSubmit={handleFormSubmit} />,
                     }[step]
                 }
             </Wrapper>
