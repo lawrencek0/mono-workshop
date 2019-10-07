@@ -38,10 +38,6 @@ export class User {
     @OneToMany(() => Slot, Slot => Slot.student)
     assignedSlots: Slot[];
 
-    @ManyToMany(() => Slot, Slot => Slot.students)
-    @JoinTable({ name: 'appointment_slots_users' })
-    slots: Slot[];
-
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
 }

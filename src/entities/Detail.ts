@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { Slot } from './Slot';
 import { User } from './User';
 
@@ -18,4 +18,8 @@ export class Detail {
 
     @ManyToOne(() => User, User => User.details)
     faculty: User;
+
+    @ManyToMany(() => User)
+    @JoinTable({ name: 'appointment_details_users' })
+    students: User[];
 }
