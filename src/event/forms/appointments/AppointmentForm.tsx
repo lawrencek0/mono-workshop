@@ -28,7 +28,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
             id: string;
         }[]
     >([]);
-    const [slots, setSlots] = useState<Slot[][]>([]);
+    const [slots, setSlots] = useState<Slot[]>([]);
     const [slotsByDate, setSlotsByDate] = useState<SlotsByDate>({});
 
     if (isNaN(step) || (step < 0 || step > 5)) {
@@ -66,7 +66,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
     const handleDatesSubmit = (dateRanges: DateTimeRange[]): void => {
         const slots = slotsFromRanges(dateRanges);
         const dates = slotsByDay(slots);
-        setSlots(slots);
+        setSlots(slots.flat());
         setSlotsByDate(dates);
     };
 
