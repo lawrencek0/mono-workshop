@@ -13,10 +13,11 @@ type Slot = {
 
 type Faculty = Omit<Student, 'selected'>;
 
-type Props = Slot & {
+export type Props = Slot & {
     type: 'appointment';
     id: string;
     title: string;
+    description: string;
     faculty?: Faculty;
     location?: string;
     color?: string;
@@ -54,17 +55,18 @@ const renderTimeSlot = ({ start, end }: Slot): JSX.Element => {
     return <></>;
 };
 
-const Card: React.FC<Props> = ({ type, id, title, start, end, faculty, location, color }) => {
+const Card: React.FC<Props> = ({ type, id, title, description, start, end, faculty, location, color }) => {
     return (
         <Wrapper color={color}>
             <Title>{title}</Title>
             <Body>
+                {description}
                 {renderTimeSlot({ start, end })}
                 {location && <div>At: {location}</div>}
                 {faculty && renderFacultyAvatar(faculty)}
             </Body>
             <Footer>
-                <DetailsLink to={`/${type}/${id}`}>Details</DetailsLink>
+                <DetailsLink to={`${type}/${id}`}>Details</DetailsLink>
             </Footer>
         </Wrapper>
     );

@@ -5,6 +5,7 @@ import tw from 'tailwind.macro';
 import { Main } from 'navigation/Main';
 import { RouteGuard } from 'routing/PrivateRoute';
 import Dashboard from './dashboard/Dashboard';
+import Select from './appointment/Select';
 
 const EventForm = lazy(() => import('./forms/appointments/AppointmentForm'));
 
@@ -13,6 +14,7 @@ const Event: React.FC<RouteComponentProps> = () => {
         <Main>
             <StyledRouter>
                 <RouteGuard as={Dashboard} action="events:visit" path="/"></RouteGuard>
+                <RouteGuard as={Select} action="events:visit" path="appointment/:slotId"></RouteGuard>
                 <RouteGuard as={EventForm} action="events:add" path="appointment/new/:step"></RouteGuard>
             </StyledRouter>
         </Main>

@@ -7,13 +7,14 @@ import tw from 'tailwind.macro';
 import moment from 'moment';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
+import { State } from 'event/hooks';
 
-type Props = {
+type Props = Pick<State, 'selectedAppointment'> & {
     className?: string;
 };
 
 // @FIXME: can't automatically set parent height https://github.com/fullcalendar/fullcalendar/issues/4650
-const CalendarWrapper: React.FC<Props> = ({ className }) => {
+const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment }) => {
     const calendar = useRef<FullCalendar>(null);
     const [height, setHeight] = useState(500);
 
@@ -36,7 +37,7 @@ const CalendarWrapper: React.FC<Props> = ({ className }) => {
     return (
         <Wrapper className={className} ref={measuredRef}>
             <FullCalendar
-                events={[{ title: 'event 1', date: '2019-10-06' }, { title: 'event 2', date: '2019-10-02' }]}
+                events={selectedAppointment}
                 ref={calendar}
                 height={height}
                 header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}

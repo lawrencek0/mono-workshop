@@ -5,8 +5,10 @@ import { Menu, MenuLink, MenuButton } from '@reach/menu-button';
 import { StyledMenuList } from 'navigation/Navbar';
 import { Link } from '@reach/router';
 import { FaCaretDown } from 'react-icons/fa';
+import Card, { Props as Appointment } from './Card';
 
 type Props = {
+    appointments: Appointment[];
     className?: string;
 };
 
@@ -26,11 +28,15 @@ const NewEvent: React.FC<{}> = () => {
     );
 };
 
-const Sidebar: React.FC<Props> = ({ className }) => {
+const Sidebar: React.FC<Props> = ({ className, appointments }) => {
+    if (!appointments) return <>Loading</>;
     return (
         <Wrapper className={className}>
             <Title>Events</Title>
             <NewEvent />
+            {appointments.map(appointment => (
+                <Card key={appointment.id} {...appointment} />
+            ))}
         </Wrapper>
     );
 };
