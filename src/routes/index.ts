@@ -12,5 +12,5 @@ const router = Router();
 router.use('/auth', AuthRouter);
 router.use('/appointments', validate, AppointmentRouter);
 router.use('/users', UserRouter);
-router.use('/slots', SlotRouter);
+router.use('/slots', validate, SlotRouter);
 export default router;

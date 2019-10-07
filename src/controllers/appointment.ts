@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Detail } from '../entities/Detail';
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { Slot } from '../entities/Slot';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
@@ -37,13 +37,21 @@ export const findAll = async (req: Request, res: Response) => {
     if (user.role === 'faculty') {
         const appointments = await getRepository(Detail).find({
             where: { faculty: userId },
+            relations: ['slots', 'students'],
         });
-        res.send({ appointments });
+        const raw = await getManager().query(`SELECT * FROM Appointment_details INNER JOIN Appointment_slots ON 
+        Appointment_details.id = Appointment_slots.detailId AND facultyId = ${userId} AND studentId IS NOT NULL`);
+        res.send({ appointments, selectedAppointments: raw });
     } else if (user.role === 'student') {
         const appointments = await getRepository(Detail).find({
             where: { studentId: userId },
+            relations: ['slots'],
         });
-        res.send({ appointments });
+        const raw = await getManager().query(
+            `SELECT * FROM Appointment_slots INNER JOIN Appointment_details ON 
+            Appointment_details.id = Appointment_slots.detailId AND studentId = ${userId}`,
+        );
+        res.send({ appointments, selectedAppointments: raw });
     }
     //res.send(appointments);
 };
