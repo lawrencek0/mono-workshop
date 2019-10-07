@@ -41,7 +41,7 @@ const Navbar: React.FC<{}> = () => {
     );
 };
 
-const StyledMenuList = styled(MenuList)`
+export const StyledMenuList = styled(MenuList)`
     &[data-reach-menu-list] {
         ${tw`border-gray-400 shadow-lg`}
     }
