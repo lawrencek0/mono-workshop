@@ -8,8 +8,12 @@ import moment from 'moment';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 
+type Props = {
+    className?: string;
+};
+
 // @FIXME: can't automatically set parent height https://github.com/fullcalendar/fullcalendar/issues/4650
-const CalendarWrapper: React.FC<{}> = () => {
+const CalendarWrapper: React.FC<Props> = ({ className }) => {
     const calendar = useRef<FullCalendar>(null);
     const [height, setHeight] = useState(500);
 
@@ -30,7 +34,7 @@ const CalendarWrapper: React.FC<{}> = () => {
      */
 
     return (
-        <Wrapper ref={measuredRef}>
+        <Wrapper className={className} ref={measuredRef}>
             <FullCalendar
                 events={[{ title: 'event 1', date: '2019-10-06' }, { title: 'event 2', date: '2019-10-02' }]}
                 ref={calendar}
