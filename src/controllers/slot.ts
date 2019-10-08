@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Detail } from '../entities/Detail';
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { Slot } from '../entities/Slot';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
@@ -35,4 +35,11 @@ export const update = async (req: Request, res: Response) => {
         .catch(err => err);
 
     res.send(updated);
+};
+
+export const findTakenSlots = async (req: Request, res: Response) => {
+    const slots: Slot[] = await getManager().query(
+        `SELECT * FROM appointment_slots WHERE detailId = ${req.body.detailId} AND studentId IS NOT null`,
+    );
+    res.send({ slots });
 };
