@@ -3,25 +3,50 @@ import { login, useAuthDispatch } from '../auth/hooks';
 import { UserPayload } from './types';
 import { RouteComponentProps, navigate } from '@reach/router';
 import { localStorageKey } from 'utils/storage';
-import { Formik, Form, Field } from 'formik';
+import { useFormik, Formik, Form, Field } from 'formik';
 
-const validate = (values)
-{=>
-    let errors = {};
-  
-    if (!values.email) 
-    {
-      errors.email = 'Required';
+const validate = (values: any): any => {
+    const errors: any = {};
+
+    if (!values.email) {
+        errors.email = 'Required';
     } else if (!/^[A-Z0-9._%+-]+@[warhawks.ulm.edu]||[ulm.edu]/i.test(values.email)) {
-      errors.email = 'Invalid email address';
+        errors.email = 'Invalid email address';
     }
-  
-    //...
-  
+
+    // other code goes here
+
     return errors;
-  };
+};
 const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
     // @TODO: handle login failure
+    const { getFieldProps, handleSubmit, errors, touched } = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validate: (values: any): any => {
+            const errors = {
+                email: '',
+                password: '',
+            };
+
+            if (!values.email) {
+                errors.email = 'Required';
+            } else if (!/^[A-Z0-9._%+-]+@[warhawks.ulm.edu]||[ulm.edu]/i.test(values.email)) {
+                errors.email = 'Invalid email address';
+            }
+
+            // other code goes here
+
+            return errors;
+        },
+        onSubmit: (values: any) => {
+            console.log(values);
+        },
+    });
+    const [email, metadataEmail] = getFieldProps({ name: 'email', type: 'text' });
+    const [password, metadataPassword] = getFieldProps({ name: 'password', type: 'password' });
     const [inputs, setInputs] = useState({
         email: localStorage.getItem(localStorageKey('email')) || '',
         password: '',
@@ -32,7 +57,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
 
     const dispatch = useAuthDispatch();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
+    /*const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
         if (e) {
             e.preventDefault();
         }
@@ -55,7 +80,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
         } catch (e) {
             throw new Error(`There was a error logging in: ${e}`);
         }
-    };
+    };*/
 
     const handleInputChange = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
         setInputs(inputs => ({ ...inputs, [currentTarget.name]: currentTarget.value }));
@@ -87,6 +112,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                         <label className="db fw4 lh-copy f6" htmlFor="password">
                             Password
                         </label>
+                        <input {...email}></input>
                         <input
                             className="b pa2 input-reset ba bg-transparent"
                             type="password"
