@@ -1,9 +1,7 @@
 import { Router } from 'express';
-import { update, findTakenSlots } from '../controllers/slot';
+import { update } from '../controllers/slot';
 const router = Router();
 
-router.patch('/:id', update);
-
-router.get('/:id', findTakenSlots);
+router.patch('/:detailId/:id', update);
 
 export { router as SlotRouter };

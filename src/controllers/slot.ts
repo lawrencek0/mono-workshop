@@ -6,8 +6,8 @@ import { User } from '../entities/User';
 import hashids from '../util/hasher';
 
 export const update = async (req: Request, res: Response) => {
-    // const maskedId = res.locals.user['custom:user_id'];
-    // const userId = (hashids.decode(maskedId)[0] as unknown) as number;
+    const maskedId = res.locals.user['custom:user_id'];
+    const userId = (hashids.decode(maskedId)[0] as unknown) as number;
 
     let slot: Slot = new Slot();
 
@@ -18,11 +18,24 @@ export const update = async (req: Request, res: Response) => {
 
     // If an association is being updated, set the assocition
     // If null is sent for studentId "deselects" student id
-    if (req.body.studentId === null) slot.student = null;
-    if (req.body.studentId) {
-        const userId = (hashids.decode(req.body.studentId)[0] as unknown) as number;
-        slot.student = await getRepository(User).findOne(userId);
+
+    //gets the list of appointment that the student has taken for that detail
+    const studentSlots: Slot[] = await getManager().query(
+        `SELECT * FROM appointment_slots WHERE detailId = ${req.params.detailId} AND studentId = ${userId}`,
+    );
+
+    //if the student already has a slot for the detail it will set the old one to null
+    if (studentSlots.length > 0) {
+        const oldSlot: Slot = studentSlots[0];
+        oldSlot.student = null;
+
+        await getRepository(Slot)
+            .save(oldSlot)
+            .catch(err => err);
     }
+    //saves the studentId to the selected Slot
+    slot.student = await getRepository(User).findOne(userId);
+
     if (req.body.detailId) slot.detail = await getRepository(Detail).findOne(parseInt(req.body.detailId));
     if (req.body.students) slot.students = await getRepository(User).findByIds(req.body.students);
 
@@ -35,11 +48,4 @@ export const update = async (req: Request, res: Response) => {
         .catch(err => err);
 
     res.send(updated);
-};
-
-export const findTakenSlots = async (req: Request, res: Response) => {
-    const slots: Slot[] = await getManager().query(
-        `SELECT * FROM appointment_slots WHERE detailId = ${req.body.detailId} AND studentId IS NOT null`,
-    );
-    res.send({ slots });
 };
