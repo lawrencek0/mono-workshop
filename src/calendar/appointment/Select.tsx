@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components';
 import { RouteComponentProps, navigate } from '@reach/router';
-import { useEventState, SlotModel } from 'event/hooks';
+import { useEventState, SlotModel } from 'calendar/hooks';
 import moment from 'moment';
 import { useAuthState } from 'auth/hooks';
 import { apiClient } from 'utils/api-client';

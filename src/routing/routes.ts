@@ -17,8 +17,8 @@ export const primaryRoutes = [
         isHome: true,
     },
     {
-        to: '/events',
-        title: 'Events',
+        to: '/calendar',
+        title: 'Calendar',
         Icon: MdEvent,
     },
     {

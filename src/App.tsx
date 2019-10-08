@@ -5,14 +5,14 @@ import { Dashboard } from 'dashboard/Dashboard';
 import { RouteGuard } from 'routing/PrivateRoute';
 import { Logout } from 'login/Logout';
 
-const EventPage = lazy(() => import('event/Event'));
+const Calendar = lazy(() => import('calendar/Page'));
 
 const App: React.FC = () => {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Router>
                 <RouteGuard as={Dashboard} action="dashboard:visit" path="/" />
-                <RouteGuard as={EventPage} action="events:visit" path="events/*" />
+                <RouteGuard as={Calendar} action="events:visit" path="calendar/*" />
                 <RouteGuard as={Login} action="login" path="/login" />
                 <Logout path="/logout" />
                 <NotFoundPage path="*" />

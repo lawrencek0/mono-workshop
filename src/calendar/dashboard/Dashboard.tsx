@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
-import Calendar from 'calendar/Calendar';
+import Calendar from 'calendar/FullCalendarWrapper';
 import Sidebar from './Sidebar';
-import { useEventState, useEventDispatch, fetchAppointments } from 'event/hooks';
+import { useEventState, useEventDispatch, fetchAppointments } from 'calendar/hooks';
 
 const Dashboard: React.FC<{}> = () => {
     const { selectedAppointment, appointment } = useEventState();

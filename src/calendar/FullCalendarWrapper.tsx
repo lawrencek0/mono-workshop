@@ -7,7 +7,7 @@ import tw from 'tailwind.macro';
 import moment from 'moment';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
-import { State } from 'event/hooks';
+import { State } from 'calendar/hooks';
 
 type Props = Pick<State, 'selectedAppointment'> & {
     className?: string;

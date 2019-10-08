@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import moment from 'moment';
-import { Student } from 'event/forms/appointments/StudentSelection';
+import { Student } from 'calendar/forms/appointments/StudentSelection';
 import { FaBookReader } from 'react-icons/fa';
 import { Link } from '@reach/router';
 
