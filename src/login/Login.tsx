@@ -37,8 +37,6 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                 errors.email = 'Invalid email address';
             }
 
-            // other code goes here
-
             return errors;
         },
         onSubmit: (values: any) => {
@@ -99,28 +97,15 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                         <label className="db fw4 lh-copy f6" htmlFor="email">
                             Email
                         </label>
-                        <input
-                            className="pa2 input-reset ba bg-transparent w-100 measure"
-                            type="email"
-                            name="email"
-                            id="email"
-                            value={inputs.email}
-                            onChange={handleInputChange}
-                        />
+                        <input {...email}></input>
+                        {metadataEmail.touched && metadataEmail.error}
                     </div>
                     <div className="mt3">
                         <label className="db fw4 lh-copy f6" htmlFor="password">
                             Password
                         </label>
-                        <input {...email}></input>
-                        <input
-                            className="b pa2 input-reset ba bg-transparent"
-                            type="password"
-                            name="password"
-                            id="password"
-                            value={inputs.password}
-                            onChange={handleInputChange}
-                        />
+                        <input {...password}></input>
+                        {metadataPassword.touched && metadataPassword.error}
                     </div>
                     <div className="mt3">
                         <input
