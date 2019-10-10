@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components';
 import { RouteComponentProps, navigate } from '@reach/router';
-import { useEventState, SlotModel } from 'calendar/hooks';
+import { useEventState } from 'calendar/hooks';
 import moment from 'moment';
 import { useAuthState } from 'auth/hooks';
 import { apiClient } from 'utils/api-client';
+import { Slot } from 'calendar/types';
 
 type Props = RouteComponentProps & {
     slotId?: string;
 };
 
-const renderForFaculty = (slots: SlotModel[]): React.ReactNode => {
+const renderForFaculty = (slots: Slot[]): React.ReactNode => {
     return slots.map(slot => {
         return (
             <div key={slot.id}>
@@ -21,7 +22,7 @@ const renderForFaculty = (slots: SlotModel[]): React.ReactNode => {
     });
 };
 
-const StudentSelect: React.FC<{ slots: SlotModel[]; studentId?: string }> = ({ slots, studentId }) => {
+const StudentSelect: React.FC<{ slots: Slot[]; studentId?: string }> = ({ slots, studentId }) => {
     const [id, setId] = useState('');
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();

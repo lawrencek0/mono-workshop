@@ -7,9 +7,10 @@ import { Stepper } from './Stepper';
 import { AppointmentDetailsForm } from './AppointmentDetails';
 import { Student, StudentSelection } from './StudentSelection';
 import { DateTimeRange, RangePicker } from './RangePicker';
-import { AppointmentSlotsReview, SlotsByDate, Slot } from './AppointmentSlotsReview';
+import { AppointmentSlotsReview, SlotsByDate } from './AppointmentSlotsReview';
 import { slotsFromRanges, slotsByDay } from './helpers';
 import { getAllStudents } from 'utils/students-client';
+import { Slot } from 'calendar/types';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
@@ -110,7 +111,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                             />
                         ),
                         3: <RangePicker onSubmit={handleDatesSubmit} />,
-                        4: <AppointmentSlotsReview slots={slotsByDate} onSubmit={handleFormSubmit} />,
+                        4: <AppointmentSlotsReview slots={slotsByDate} handleSubmit={handleFormSubmit} />,
                     }[step]
                 }
             </Wrapper>

@@ -1,15 +1,11 @@
 import React, { createContext, useReducer, useContext } from 'react';
 import { Props } from './dashboard/Card';
 import * as client from './client';
-import { Slot } from './forms/appointments/AppointmentSlotsReview';
 import { Student } from 'utils/students-client';
-
-export type SlotModel = Required<Slot> & {
-    id: string;
-};
+import { Slot } from './types';
 
 export type Appointment = Props & {
-    slots: SlotModel[];
+    slots: Required<Slot>[];
     students?: Student[];
 };
 export type State = { appointment: Appointment[]; selectedAppointment: Appointment[] };

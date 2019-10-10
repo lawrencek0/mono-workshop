@@ -1,22 +1,18 @@
 import React from 'react';
 import { Link } from '@reach/router';
 import moment from 'moment';
-
-export type Slot = {
-    start?: Date;
-    end?: Date;
-};
+import { Slot } from 'calendar/types';
 
 export type SlotsByDate = {
-    [key: string]: Slot[];
+    [key: string]: Required<Omit<Slot, 'id'>>[];
 };
 
 type Props = {
     slots: SlotsByDate;
-    onSubmit: (e: React.MouseEvent) => void;
+    handleSubmit: (e: React.MouseEvent) => void;
 };
 
-const Review: React.FC<Props> = ({ slots, onSubmit }) => {
+const Review: React.FC<Props> = ({ slots, handleSubmit }) => {
     return (
         <article className="ba b--black-10 pa3 ma2">
             <h1 className="f4 ttu tracked">Review Your Plan</h1>
@@ -25,18 +21,16 @@ const Review: React.FC<Props> = ({ slots, onSubmit }) => {
                     <div key={slotId}>
                         {slotId}
                         {Object.values(slots[slotId]).map(({ start, end }) => {
-                            if (start && end) {
-                                return (
-                                    <div key={start.toLocaleTimeString()}>
-                                        {moment(start).format('h:mm a')} - {moment(end).format('h:mm a')}
-                                    </div>
-                                );
-                            }
+                            return (
+                                <div key={start.toLocaleString()}>
+                                    {moment(start).format('h:mm a')} - {moment(end).format('h:mm a')}
+                                </div>
+                            );
                         })}
                     </div>
                 ))}
             <div className="mt3">
-                <Link className="link underline-hover black" to="/events" onClick={onSubmit}>
+                <Link className="link underline-hover black" to="/events" onClick={handleSubmit}>
                     Submit
                 </Link>
             </div>

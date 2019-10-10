@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link } from '@reach/router';
+import { Detail } from 'calendar/types';
 
-type Props = {
-    title: string;
-    description: string;
-    onInputChange: (name: 'title' | 'description', value: string) => void;
+type Props = Detail & {
+    onInputChange: (name: keyof Omit<Detail, 'id'>, value: string) => void;
 };
 
 const AppointmentDetailsForm: React.FC<Props> = ({ title, description, onInputChange }) => {

@@ -5,15 +5,11 @@ import moment from 'moment';
 import { Student } from 'calendar/forms/appointments/StudentSelection';
 import { FaBookReader } from 'react-icons/fa';
 import { Link } from '@reach/router';
-
-type Slot = {
-    start?: moment.Moment;
-    end?: moment.Moment;
-};
+import { Slot } from 'calendar/types';
 
 type Faculty = Omit<Student, 'selected'>;
 
-export type Props = Slot & {
+export type Props = Required<Slot> & {
     type: 'appointment';
     id: string;
     title: string;
