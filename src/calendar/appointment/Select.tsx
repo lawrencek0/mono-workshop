@@ -16,7 +16,7 @@ const renderForFaculty = (slots: Slot[]): React.ReactNode => {
     return slots.map(slot => {
         return (
             <div key={slot.id}>
-                {moment(slot.start).toLocaleString()} - {moment(slot.end).toLocaleString()}
+                {moment(slot.start).format('hh:mm A')} - {moment(slot.end).format('hh:MM A')}
             </div>
         );
     });
@@ -47,7 +47,7 @@ const StudentSelect: React.FC<{ slots: Slot[]; studentId?: string }> = ({ slots,
                 <div key={slot.id}>
                     <input onChange={handleChange} type="radio" name="slot" value={slot.id} id={slot.id} />
                     <label htmlFor={slot.id}>
-                        {moment(slot.start).toLocaleString()} - {moment(slot.end).toLocaleString()}
+                        {moment(slot.start).format('hh:MM A')} - {moment(slot.end).format('hh:MM A')}
                     </label>
                 </div>
             ))}
@@ -63,8 +63,11 @@ const Select: React.FC<Props> = ({ slotId }) => {
     const { id, role } = useAuthState();
     return (
         <Wrapper>
-            {role === 'faculty' && renderForFaculty(slots)}
-            <StudentSelect studentId={id!.toLocaleString()} slots={slots} />
+            {role === 'faculty' ? (
+                renderForFaculty(slots)
+            ) : (
+                <StudentSelect studentId={id!.toLocaleString()} slots={slots} />
+            )}
         </Wrapper>
     );
 };
