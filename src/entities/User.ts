@@ -36,7 +36,7 @@ export class User {
     bio: string;
 
     @OneToMany(() => Slot, Slot => Slot.student)
-    assignedSlots: Slot[];
+    slots: Slot[];
 
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
