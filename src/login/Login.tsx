@@ -20,7 +20,7 @@ const validate = (values: any): any => {
 };
 const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
     // @TODO: handle login failure
-    const { getFieldProps, handleSubmit, errors, touched } = useFormik({
+    const { getFieldProps, submitForm, errors, touched } = useFormik({
         initialValues: {
             email: '',
             password: '',
@@ -55,7 +55,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
 
     const dispatch = useAuthDispatch();
 
-    /*const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
+    /*const submitForm = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
         if (e) {
             e.preventDefault();
         }
@@ -90,7 +90,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
 
     return (
         <Fragment>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={submitForm}>
                 <fieldset>
                     <legend className="ph0 mh0 fw6">Login</legend>
                     <div className="mt3">
