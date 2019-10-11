@@ -55,4 +55,5 @@ export const findAll = async (req: Request, res: Response) => {
         );
         res.send({ appointments });
     }
+    // @FIXME what if they aren't faculty or student
 };
