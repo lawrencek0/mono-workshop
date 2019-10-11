@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Detail } from '../entities/Detail';
-import { getRepository, getManager, getConnection } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { Slot } from '../entities/Slot';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
@@ -47,12 +47,12 @@ export const findAll = async (req: Request, res: Response) => {
 
         res.send(appointment);
     } else if (user.role === 'student') {
-        // const appointments: Detail[] = await getManager().query(
-        //     `SELECT id, title, description FROM appointment_details WHERE id IN
-        //     (SELECT appointmentDetailsId FROM appointment_details_users WHERE userId = ${userId})`,
-        // );
-        const raw = await getRepository(Slot).find({ where: { student: userId }, relations: ['detail'] });
-        res.send({ raw });
+        // @FIXME change to typeorm
+        const appointments = await getManager().query(
+            `SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM appointment_details d LEFT JOIN appointment_slots s ON d.id = s.detailId WHERE studentId = ?
+             UNION SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM appointment_details d RIGHT JOIN appointment_slots s ON s.detailId = d.id WHERE studentId = ?`,
+            [userId, userId],
+        );
+        res.send({ appointments });
     }
-    //res.send(appointments);
 };
