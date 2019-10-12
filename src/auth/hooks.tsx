@@ -18,7 +18,7 @@ const authReducer = (state: State, action: Action): State => {
         }
         case 'logout': {
             navigate('/login', { replace: true });
-            return;
+            return {} as State;
         }
         case 'refreshToken': {
             // @TODO: fetch the refresh token from localstorage and perform a request
