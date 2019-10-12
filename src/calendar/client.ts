@@ -1,7 +1,6 @@
 import { apiClient } from 'utils/api-client';
 import { Student } from 'utils/students-client';
-import { Slot } from './forms/appointments/AppointmentSlotsReview';
-import { Appointment, State } from './hooks';
+import { Slot, Appointment } from './types';
 
 type Payload = {
     students: Pick<Student, 'id'>[];
@@ -15,15 +14,14 @@ const createAppointment = async (payload: Payload): Promise<Payload> => {
     return res;
 };
 
-const fetchAppointments = async (): Promise<State> => {
-    const { selectedAppointments, appointments } = await apiClient('appointments');
-    return {
-        appointment: appointments.map((appointment: Appointment) => ({ ...appointment, type: 'appointment' })),
-        selectedAppointment: selectedAppointments.map((appointment: Appointment) => ({
-            ...appointment,
-            type: 'appointment',
-        })),
-    };
+const fetchAppointments = async (): Promise<Required<Appointment>[]> => {
+    const { selectedAppointments: appointments } = await apiClient('appointments');
+    return appointments;
 };
 
-export { createAppointment, fetchAppointments };
+const fetchSlots = async (detailId: string): Promise<Required<Slot>[]> => {
+    const { slots } = await apiClient(`slots/${detailId}`);
+    return slots;
+};
+
+export { createAppointment, fetchAppointments, fetchSlots };

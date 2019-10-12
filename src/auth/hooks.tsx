@@ -4,11 +4,11 @@ import * as client from './client';
 import { localStorageKey } from '../utils/storage';
 import { navigate } from '@reach/router';
 
-type State = UserPayload;
-type Action = { type: 'login'; payload: UserPayload } | { type: 'logout' } | { type: 'refreshToken' };
+type State = Required<UserPayload> | undefined;
+type Action = { type: 'login'; payload: Required<UserPayload> } | { type: 'logout' } | { type: 'refreshToken' };
 type Dispatch = (action: Action) => void;
 
-const AuthStateContext = createContext<UserPayload | undefined>(undefined);
+const AuthStateContext = createContext<State | undefined>(undefined);
 const AuthDispatchContext = createContext<Dispatch | undefined>(undefined);
 
 const authReducer = (state: State, action: Action): State => {
@@ -18,7 +18,7 @@ const authReducer = (state: State, action: Action): State => {
         }
         case 'logout': {
             navigate('/login', { replace: true });
-            return { accessToken: undefined };
+            return;
         }
         case 'refreshToken': {
             // @TODO: fetch the refresh token from localstorage and perform a request
@@ -54,7 +54,7 @@ const logout = (dispatch: Dispatch): Promise<void> => {
     });
 };
 
-const useAuthState = (): State => {
+const useAuthState = (): NonNullable<State> => {
     const state = useContext(AuthStateContext);
 
     if (state === undefined) {

@@ -4,15 +4,7 @@ import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-
-export type DateTimeRange = {
-    id: number;
-    startTime: moment.Moment;
-    endTime: moment.Moment;
-    startDate: moment.Moment | null;
-    endDate: moment.Moment | null;
-    length?: number;
-};
+import { DateTimeRange } from 'calendar/types';
 
 type PickerProps = DateTimeRange & {
     canDelete: boolean;

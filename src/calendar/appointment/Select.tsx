@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components';
 import { RouteComponentProps, navigate } from '@reach/router';
-import { useEventState } from 'calendar/hooks';
 import moment from 'moment';
 import { useAuthState } from 'auth/hooks';
 import { apiClient } from 'utils/api-client';
 import { Slot } from 'calendar/types';
+import { fetchSlots } from 'calendar/client';
 
 type Props = RouteComponentProps & {
     slotId?: string;
@@ -57,16 +57,27 @@ const StudentSelect: React.FC<{ slots: Slot[]; studentId?: string }> = ({ slots,
 };
 
 const Select: React.FC<Props> = ({ slotId }) => {
-    const {
-        appointment: [{ slots }],
-    } = useEventState();
     const { id, role } = useAuthState();
+    const [slots, setSlots] = useState<Required<Slot>[]>([]);
+
+    useEffect(() => {
+        if (slotId) {
+            const fetchData = async (): Promise<void> => {
+                const appointmentSlots = await fetchSlots(slotId);
+                setSlots(appointmentSlots);
+            };
+            fetchData();
+        } else {
+            navigate('./');
+        }
+    }, [slotId]);
+
     return (
         <Wrapper>
             {role === 'faculty' ? (
                 renderForFaculty(slots)
             ) : (
-                <StudentSelect studentId={id!.toLocaleString()} slots={slots} />
+                <StudentSelect studentId={id.toLocaleString()} slots={slots} />
             )}
         </Wrapper>
     );

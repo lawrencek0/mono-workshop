@@ -5,12 +5,12 @@ import { apiClient } from 'utils/api-client';
 import { media } from 'theme';
 import { Stepper } from './Stepper';
 import { AppointmentDetailsForm } from './AppointmentDetails';
-import { Student, StudentSelection } from './StudentSelection';
-import { DateTimeRange, RangePicker } from './RangePicker';
-import { AppointmentSlotsReview, SlotsByDate } from './AppointmentSlotsReview';
+import { StudentSelection } from './StudentSelection';
+import { RangePicker } from './RangePicker';
+import { AppointmentSlotsReview } from './AppointmentSlotsReview';
 import { slotsFromRanges, slotsByDay } from './helpers';
 import { getAllStudents } from 'utils/students-client';
-import { Slot } from 'calendar/types';
+import { Slot, SlotsByDate, DateTimeRange, Student } from 'calendar/types';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;

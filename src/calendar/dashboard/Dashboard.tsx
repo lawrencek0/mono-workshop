@@ -6,7 +6,7 @@ import Sidebar from './Sidebar';
 import { useEventState, useEventDispatch, fetchAppointments } from 'calendar/hooks';
 
 const Dashboard: React.FC<{}> = () => {
-    const { selectedAppointment, appointment } = useEventState();
+    const { events: selectedAppointment } = useEventState();
     const dispatch = useEventDispatch();
 
     useEffect(() => {
@@ -16,7 +16,7 @@ const Dashboard: React.FC<{}> = () => {
     return (
         <Wrapper>
             <StyledCalendar selectedAppointment={selectedAppointment} />
-            <StyledSidebar appointments={appointment} />
+            {/* <StyledSidebar appointments={selectedAppointment} /> */}
         </Wrapper>
     );
 };

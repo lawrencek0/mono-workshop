@@ -1,11 +1,7 @@
 import React from 'react';
 import { Link } from '@reach/router';
 import moment from 'moment';
-import { Slot } from 'calendar/types';
-
-export type SlotsByDate = {
-    [key: string]: Required<Omit<Slot, 'id'>>[];
-};
+import { SlotsByDate } from 'calendar/types';
 
 type Props = {
     slots: SlotsByDate;

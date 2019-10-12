@@ -1,7 +1,5 @@
 import moment from 'moment';
-import { SlotsByDate } from './AppointmentSlotsReview';
-import { DateTimeRange } from './RangePicker';
-import { Slot } from 'calendar/types';
+import { Slot, SlotsByDate, DateTimeRange } from 'calendar/types';
 
 const generateSlots = (start: moment.Moment, length: number, duration: number): Required<Omit<Slot, 'id'>>[] => {
     return Array.from({ length }, (_, i) => {

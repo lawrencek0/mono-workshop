@@ -2,12 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import moment from 'moment';
-import { Student } from 'calendar/forms/appointments/StudentSelection';
 import { FaBookReader } from 'react-icons/fa';
 import { Link } from '@reach/router';
-import { Slot } from 'calendar/types';
-
-type Faculty = Omit<Student, 'selected'>;
+import { Slot, Faculty } from 'calendar/types';
 
 export type Props = Required<Slot> & {
     type: 'appointment';

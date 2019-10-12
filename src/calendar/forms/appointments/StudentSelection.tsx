@@ -1,13 +1,7 @@
 import React from 'react';
 import { Link } from '@reach/router';
 import { FaUserCircle } from 'react-icons/fa';
-
-export type Student = {
-    id: string;
-    firstName: string;
-    lastName: string;
-    selected?: boolean;
-};
+import { Student } from 'calendar/types';
 
 type Props = {
     students: Student[];
