@@ -8,9 +8,10 @@ router.post('/', create);
 
 //find all appointment
 router.get('/', findAll);
-//find all appointment in the Detail Id
-router.get('/:id', findSlotsWithDetailId);
 
 router.get('/untaken', untaken);
+
+//find all appointment in the Detail Id
+router.get('/:id', findSlotsWithDetailId);
 
 export { router as AppointmentRouter };
