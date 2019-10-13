@@ -90,7 +90,7 @@ const fullCalendarStyles = theme('mode', {
                         }
                     }
 
-                    .fc-day,
+                    .fc-day-top,
                     .fc-today {
                         border-top-style: solid;
                     }
