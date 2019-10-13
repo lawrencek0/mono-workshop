@@ -9,7 +9,6 @@ export const create = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const id = (hashids.decode(maskedId)[0] as unknown) as number;
     const user: User = await getRepository(User).findOne(id);
-
     if (user.role === 'faculty') {
         const slots = await getRepository(Slot).save(req.body.dates);
         const faculty = await getRepository(User).findOne(id);
@@ -56,4 +55,37 @@ export const findAll = async (req: Request, res: Response) => {
         res.send({ appointments });
     }
     // @FIXME what if they aren't faculty or student
+};
+
+export const findSlotsWithDetailId = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const userId = (hashids.decode(maskedId)[0] as unknown) as number;
+    const user: User = await getRepository(User).findOne(userId);
+
+    if (user.role === 'faculty') {
+        const detail = await getRepository(Detail).findOne({
+            where: { id: req.params.id },
+            relations: ['slots', 'slots.student'],
+        });
+
+        res.send(detail);
+    } else if (user.role === 'student') {
+        const { slots, ...detail } = await getRepository(Detail).findOne({
+            where: { id: req.params.id },
+            relations: ['slots', 'slots.student'],
+        });
+        const output = slots.map(({ student, ...slot }) => {
+            // If slot has a student replace its information with "taken":true
+            // If it doesn't have a student, add "taken":false
+            return student
+                ? {
+                      ...slot,
+                      taken: true,
+                  }
+                : { ...slot, taken: false };
+        });
+        res.send({ slots: output, ...detail });
+    }
+
+    //res.send();
 };
