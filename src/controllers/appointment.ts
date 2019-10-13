@@ -38,18 +38,20 @@ export const findAll = async (req: Request, res: Response) => {
 
     // Check if the user is a faculty
     const user: User = await getRepository(User).findOne(userId);
+    // lists all of the appointments that the faculty has created
     if (user.role === 'faculty') {
         const appointment: Detail[] = await getRepository(Detail).find({
             where: { faculty: userId },
-            relations: ['slots'],
+            relations: ['slots', 'slots.student'],
         });
 
         res.send(appointment);
+        // lists all appointments that this student has currently signed up for
     } else if (user.role === 'student') {
         // @FIXME change to typeorm
         const appointments = await getManager().query(
-            `SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM appointment_details d LEFT JOIN appointment_slots s ON d.id = s.detailId WHERE studentId = ?
-             UNION SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM appointment_details d RIGHT JOIN appointment_slots s ON s.detailId = d.id WHERE studentId = ?`,
+            `SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM Appointment_details d LEFT JOIN Appointment_slots s ON d.id = s.detailId WHERE studentId = ?
+             UNION SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM Appointment_details d RIGHT JOIN Appointment_slots s ON s.detailId = d.id WHERE studentId = ?`,
             [userId, userId],
         );
         res.send({ appointments });
@@ -86,6 +88,24 @@ export const findSlotsWithDetailId = async (req: Request, res: Response) => {
         });
         res.send({ slots: output, ...detail });
     }
+};
 
-    //res.send();
+export const untaken = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const userId = (hashids.decode(maskedId)[0] as unknown) as number;
+
+    const user: User = await getRepository(User).findOne(userId);
+
+    // const war = await getRepository(User).find({ relations: ['details'] });
+    const det = await getManager().query(
+        `SELECT d.id, d.title, d.description FROM Appointment_details d WHERE d.id IN 
+        (SELECT s.detailId FROM Appointment_slots s LEFT JOIN Appointment_details_users u ON s.detailId = u.appointmentDetailsId WHERE u.userId = ? AND NOT s.studentId)`,
+        [userId, userId],
+    );
+
+    const dets = await getManager().query(
+        `SELECT u.appointmentDetailsId FROM Appointment_details_users u LEFT JOIN Appointment_slots s ON u.userId = s.studentId WHERE u.userId = ?`,
+        [userId, userId],
+    );
+    res.send(dets);
 };
