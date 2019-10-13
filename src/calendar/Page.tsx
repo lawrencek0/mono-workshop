@@ -7,7 +7,7 @@ import { RouteGuard } from 'routing/PrivateRoute';
 import Dashboard from './dashboard/Dashboard';
 import Select from './appointment/Select';
 
-const AppointmentForm = lazy(() => import('./forms/appointments/AppointmentForm'));
+const AppointmentCreationForm = lazy(() => import('./appointment/create/Form'));
 
 const Calendar: React.FC<RouteComponentProps> = () => {
     return (
@@ -17,7 +17,7 @@ const Calendar: React.FC<RouteComponentProps> = () => {
                 {/* @TODO: add dynamic RBAC rules? */}
                 <RouteGuard as={Select} action="events:visit" path="appointments/:detailId"></RouteGuard>
                 {/* @FIXME: use query params instead? */}
-                <RouteGuard as={AppointmentForm} action="events:add" path="appointments/new/:step"></RouteGuard>
+                <RouteGuard as={AppointmentCreationForm} action="events:add" path="appointments/new/:step"></RouteGuard>
             </StyledRouter>
         </Main>
     );

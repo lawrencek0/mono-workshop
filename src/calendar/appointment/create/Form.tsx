@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import { apiClient } from 'utils/api-client';
 import { media } from 'theme';
 import { Stepper } from './Stepper';
-import { AppointmentDetailsForm } from './AppointmentDetails';
+import { Details } from './Details';
 import { StudentSelection } from './StudentSelection';
 import { RangePicker } from './RangePicker';
-import { AppointmentSlotsReview } from './AppointmentSlotsReview';
-import { slotsFromRanges, slotsByDay } from './helpers';
+import { AppointmentSlotsReview } from './SlotsReview';
 import { getAllStudents } from 'utils/students-client';
 import { Slot, SlotsByDate, DateTimeRange, Student } from 'calendar/types';
+import { slotsFromRanges, slotsByDay } from 'calendar/helpers';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
@@ -31,10 +31,6 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
     >([]);
     const [slots, setSlots] = useState<Slot[]>([]);
     const [slotsByDate, setSlotsByDate] = useState<SlotsByDate>({});
-
-    if (isNaN(step) || (step < 0 || step > 5)) {
-        navigate('./1');
-    }
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
@@ -87,6 +83,10 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
         console.log(a);
     };
 
+    if (isNaN(step) || (step < 0 || step > 5)) {
+        navigate('./1');
+    }
+
     return (
         <>
             <div className="f3">Create New Appointment</div>
@@ -102,7 +102,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
                 />
                 {
                     {
-                        1: <AppointmentDetailsForm {...inputs} onInputChange={handleInputChange} />,
+                        1: <Details {...inputs} onInputChange={handleInputChange} />,
                         2: (
                             <StudentSelection
                                 students={students}

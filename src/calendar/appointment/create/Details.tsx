@@ -6,7 +6,7 @@ type Props = Detail & {
     onInputChange: (name: 'title' | 'description', value: string) => void;
 };
 
-const AppointmentDetailsForm: React.FC<Props> = ({ title, description, onInputChange }) => {
+const Details: React.FC<Props> = ({ title, description, onInputChange }) => {
     const handleInputChange = ({ currentTarget }: { currentTarget: HTMLInputElement | HTMLTextAreaElement }): void => {
         onInputChange(currentTarget.name as 'title' | 'description', currentTarget.value);
     };
@@ -48,4 +48,4 @@ const AppointmentDetailsForm: React.FC<Props> = ({ title, description, onInputCh
     );
 };
 
-export { AppointmentDetailsForm };
+export { Details };
