@@ -14,6 +14,12 @@ const eventReducer = (state: State, action: Action): State => {
         case 'fetch_all': {
             return action.payload;
         }
+        /**
+         * @TODO: this does nothing, make it useful or remove it. Issues:
+         * 1. only the backend "creates" the appointment, we are just creating slots
+         * 2. fetch_all is called immediately after creating the appointment
+         * 3. could be useful if we want to make Offline happen
+         */
         case 'create_appointment': {
             return { ...state, ...action.payload };
         }

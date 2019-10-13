@@ -4,7 +4,7 @@ import { Slot, Appointment } from './types';
 
 type Payload = {
     students: Pick<Student, 'id'>[];
-    slots: Slot[];
+    dates: Slot[];
     title: string;
     description: string;
 };

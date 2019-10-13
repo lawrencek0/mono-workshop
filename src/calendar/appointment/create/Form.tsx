@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps, navigate } from '@reach/router';
 import styled from 'styled-components';
-import { apiClient } from 'utils/api-client';
 import { media } from 'theme';
 import { Stepper } from './Stepper';
 import { Details } from './Details';
@@ -11,6 +10,7 @@ import { AppointmentSlotsReview } from './SlotsReview';
 import { getAllStudents } from 'utils/students-client';
 import { Slot, SlotsByDate, DateTimeRange, Student } from 'calendar/types';
 import { slotsFromRanges, slotsByDay } from 'calendar/helpers';
+import { createAppointment } from 'calendar/client';
 
 type Props = RouteComponentProps & {
     step?: 1 | 2 | 3 | 4;
@@ -77,10 +77,8 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
             dates: slots,
             ...inputs,
         };
-        const a = await apiClient('/appointments', {
-            body: data,
-        });
-        console.log(a);
+        await createAppointment(data);
+        await navigate('/calendar');
     };
 
     if (isNaN(step) || (step < 0 || step > 5)) {

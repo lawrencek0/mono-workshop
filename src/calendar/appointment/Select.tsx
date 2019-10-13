@@ -35,14 +35,9 @@ const StudentSelect: React.FC<{ detailId: string; slots: Slot[]; studentId?: str
             return;
         }
 
-        // @TODO: use dispatch instead
-        // @FIXME: better error handling
-        try {
-            await apiClient(`slots/${detailId}/${id}`, { method: 'PATCH', body: { studentId } });
-            await navigate('/calendar');
-        } catch (e) {
-            alert(e);
-        }
+        // @TODO: using dispatch causes the same issue as in 'create_appointment' action i.e all data is fetched in calendar page
+        await apiClient(`slots/${detailId}/${id}`, { method: 'PATCH', body: { studentId } });
+        await navigate('/calendar');
     };
     const handleChange = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
         setId(currentTarget.value);
