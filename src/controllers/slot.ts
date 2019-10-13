@@ -21,7 +21,7 @@ export const update = async (req: Request, res: Response) => {
 
     //gets the list of appointment that the student has taken for that detail
     const studentSlots: Slot[] = await getManager().query(
-        `SELECT * FROM appointment_slots WHERE detailId = ${req.params.detailId} AND studentId = ${userId}`,
+        `SELECT * FROM Appointment_slots WHERE detailId = ${req.params.detailId} AND studentId = ${userId}`,
     );
 
     //if the student already has a slot for the detail it will set the old one to null
