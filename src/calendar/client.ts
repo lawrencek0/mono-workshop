@@ -15,12 +15,12 @@ const createAppointment = async (payload: Payload): Promise<Payload> => {
 };
 
 const fetchAppointments = async (): Promise<Required<Appointment>[]> => {
-    const { selectedAppointments: appointments } = await apiClient('appointments');
+    const { appointments } = await apiClient('appointments');
     return appointments;
 };
 
 const fetchSlots = async (detailId: string): Promise<Required<Slot>[]> => {
-    const { slots } = await apiClient(`slots/${detailId}`);
+    const { slots } = await apiClient(`appointments/${detailId}`);
     return slots;
 };
 

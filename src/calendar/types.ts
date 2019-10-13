@@ -8,7 +8,7 @@ export type Slot = {
 };
 
 export type SlotsByDate = {
-    [key: string]: Required<Omit<Slot, 'id'>>[];
+    [key: string]: Slot[];
 };
 
 export type Detail = {
