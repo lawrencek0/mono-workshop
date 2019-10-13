@@ -9,7 +9,7 @@ import { Slot } from 'calendar/types';
 import { fetchSlots } from 'calendar/client';
 
 type Props = RouteComponentProps & {
-    slotId?: string;
+    detailId?: string;
 };
 
 const renderForFaculty = (slots: Slot[]): React.ReactNode => {
@@ -22,7 +22,11 @@ const renderForFaculty = (slots: Slot[]): React.ReactNode => {
     });
 };
 
-const StudentSelect: React.FC<{ slots: Slot[]; studentId?: string }> = ({ slots, studentId }) => {
+const StudentSelect: React.FC<{ detailId: string; slots: Slot[]; studentId?: string }> = ({
+    detailId,
+    slots,
+    studentId,
+}) => {
     const [id, setId] = useState('');
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
@@ -30,10 +34,12 @@ const StudentSelect: React.FC<{ slots: Slot[]; studentId?: string }> = ({ slots,
         if (!id) {
             return;
         }
+
+        // @TODO: use dispatch instead
+        // @FIXME: better error handling
         try {
-            const res = await apiClient(`slots/${id}`, { method: 'PATCH', body: { studentId } });
-            navigate('/events');
-            console.log(res);
+            await apiClient(`slots/${detailId}/${id}`, { method: 'PATCH', body: { studentId } });
+            await navigate('/calendar');
         } catch (e) {
             alert(e);
         }
@@ -47,7 +53,7 @@ const StudentSelect: React.FC<{ slots: Slot[]; studentId?: string }> = ({ slots,
                 <div key={slot.id}>
                     <input onChange={handleChange} type="radio" name="slot" value={slot.id} id={slot.id} />
                     <label htmlFor={slot.id}>
-                        {moment(slot.start).format('hh:MM A')} - {moment(slot.end).format('hh:MM A')}
+                        {moment(slot.start).format('hh:mm A')} - {moment(slot.end).format('hh:mm A')}
                     </label>
                 </div>
             ))}
@@ -56,29 +62,27 @@ const StudentSelect: React.FC<{ slots: Slot[]; studentId?: string }> = ({ slots,
     );
 };
 
-const Select: React.FC<Props> = ({ slotId }) => {
+const Select: React.FC<Props> = ({ detailId }) => {
     const { id, role } = useAuthState();
     const [slots, setSlots] = useState<Required<Slot>[]>([]);
 
     useEffect(() => {
-        if (slotId) {
+        if (detailId) {
             const fetchData = async (): Promise<void> => {
-                const appointmentSlots = await fetchSlots(slotId);
+                const appointmentSlots = await fetchSlots(detailId);
                 setSlots(appointmentSlots);
             };
             fetchData();
         } else {
             navigate('./');
         }
-    }, [slotId]);
+    }, [detailId]);
 
     return (
         <Wrapper>
-            {role === 'faculty' ? (
-                renderForFaculty(slots)
-            ) : (
-                <StudentSelect studentId={id.toLocaleString()} slots={slots} />
-            )}
+            {role === 'faculty'
+                ? renderForFaculty(slots)
+                : detailId && <StudentSelect detailId={detailId} studentId={id.toLocaleString()} slots={slots} />}
         </Wrapper>
     );
 };
