@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Slot } from './Slot';
 import { Detail } from './Detail';
+import { Event } from './Event';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -40,4 +41,10 @@ export class User {
 
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
+
+    @OneToMany(() => Event, Event => Event.owner)
+    ownedEvents: Event[];
+
+    @ManyToMany(() => Event, Event => Event.id)
+    events: Event[];
 }
