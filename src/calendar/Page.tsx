@@ -14,8 +14,10 @@ const Calendar: React.FC<RouteComponentProps> = () => {
         <Main>
             <StyledRouter>
                 <RouteGuard as={Dashboard} action="events:visit" path="/"></RouteGuard>
-                <RouteGuard as={Select} action="events:visit" path="appointment/:slotId"></RouteGuard>
-                <RouteGuard as={AppointmentForm} action="events:add" path="appointment/new/:step"></RouteGuard>
+                {/* @TODO: add dynamic RBAC rules? */}
+                <RouteGuard as={Select} action="events:visit" path="appointments/:detailId"></RouteGuard>
+                {/* @FIXME: use query params instead? */}
+                <RouteGuard as={AppointmentForm} action="events:add" path="appointments/new/:step"></RouteGuard>
             </StyledRouter>
         </Main>
     );
