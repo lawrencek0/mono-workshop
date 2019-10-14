@@ -36,8 +36,9 @@ export class User {
     @Column('text')
     bio: string;
 
-    @OneToMany(() => Slot, Slot => Slot.student)
-    slots: Slot[];
+    // @TODO: move to separate Student entity
+    @ManyToMany(() => Detail, Detail => Detail.students)
+    assignedDetails: Detail[];
 
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
