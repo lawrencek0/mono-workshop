@@ -10,7 +10,7 @@ const validate = (values: any): any => {
 
     if (!values.email) {
         errors.email = 'Required';
-    } else if (!/^[A-Z0-9._%+-]+@[warhawks.ulm.edu]||[ulm.edu]/i.test(values.email)) {
+    } else if (!/^[A-Za-z0-9]@(warhawks.ulm.edu|ulm.edu)/i.test(values.email)) {
         errors.email = 'Invalid email address';
     }
 
@@ -55,7 +55,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
 
     const dispatch = useAuthDispatch();
 
-    /*const submitForm = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
+    const HandleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
         if (e) {
             e.preventDefault();
         }
@@ -78,7 +78,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
         } catch (e) {
             throw new Error(`There was a error logging in: ${e}`);
         }
-    };*/
+    };
 
     const handleInputChange = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
         setInputs(inputs => ({ ...inputs, [currentTarget.name]: currentTarget.value }));
@@ -90,7 +90,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
 
     return (
         <Fragment>
-            <form onSubmit={submitForm}>
+            <form onSubmit={submitForm && HandleSubmit}>
                 <fieldset>
                     <legend className="ph0 mh0 fw6">Login</legend>
                     <div className="mt3">
