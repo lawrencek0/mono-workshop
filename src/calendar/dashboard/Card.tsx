@@ -7,7 +7,7 @@ import { Link } from '@reach/router';
 import { Slot, Faculty } from 'calendar/types';
 
 export type Props = Required<Slot> & {
-    type: 'appointment';
+    type: 'appointments';
     id: string;
     title: string;
     description: string;
@@ -59,7 +59,7 @@ const Card: React.FC<Props> = ({ type, id, title, description, start, end, facul
                 {faculty && renderFacultyAvatar(faculty)}
             </Body>
             <Footer>
-                <DetailsLink to={`${type}/${id}`}>Details</DetailsLink>
+                <DetailsLink to={`calendar/${type}/${id}`}>Details</DetailsLink>
             </Footer>
         </Wrapper>
     );
@@ -91,7 +91,7 @@ const Title = styled.h1`
     ${tw`text-gray-900 font-medium text-lg mb-2`}
 `;
 
-const Body = styled.p`
+const Body = styled.div`
     ${tw`text-gray-700 text-sm`}
 `;
 
