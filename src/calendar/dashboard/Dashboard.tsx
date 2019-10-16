@@ -16,7 +16,7 @@ const Dashboard: React.FC<{}> = () => {
     return (
         <Wrapper>
             <StyledCalendar selectedAppointment={selectedAppointment} />
-            {/* <StyledSidebar appointments={selectedAppointment} /> */}
+            <StyledSidebar appointments={selectedAppointment} />
         </Wrapper>
     );
 };

@@ -3,8 +3,8 @@ import { Student as StudentBase } from 'utils/students-client';
 
 export type Slot = {
     id?: string;
-    start: moment.Moment;
-    end: moment.Moment;
+    start: string | moment.Moment;
+    end: string | moment.Moment;
 };
 
 export type SlotsByDate = {
@@ -15,10 +15,10 @@ export type Detail = {
     id?: string;
     title: string;
     description: string;
-    student?: StudentBase;
+    faculty?: Faculty;
 };
 
-export type Appointment = Slot & Detail;
+export type Appointment = Required<Slot> & Required<Detail> & { type: 'appointments' };
 
 export type DateTimeRange = {
     id: number;
