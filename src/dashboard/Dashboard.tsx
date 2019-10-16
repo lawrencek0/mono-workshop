@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import { RouteComponentProps } from '@reach/router';
 import { useAuthState } from 'auth/hooks';
 import { Main } from 'navigation/Main';
-import Card from 'calendar/dashboard/Card';
+import Card from 'shared/cards/Appointment';
 import { Appointment } from 'calendar/types';
 import { fetchUntakenAppointments } from './client';
 

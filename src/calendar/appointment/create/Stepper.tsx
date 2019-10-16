@@ -1,90 +1,87 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { primaryColor, primaryTextColor, dayColors } from 'theme';
+import tw from 'tailwind.macro';
+import { primaryTextColor } from 'theme';
 
 type Props = {
+    title: string;
     steps: string[];
     activeStep: number;
     className?: string;
 };
 
-const StyledSteps = styled.ol<{ className?: string }>`
-    list-style: none;
+const Wrapper = styled.div<Pick<Props, 'className'>>`
+    ${tw`flex flex-col items-center text-xl`}
+`;
+
+const Title = styled.h1`
+    ${tw`text-2xl text-center mb-6`}
+`;
+
+const StyledSteps = styled.ol`
+    ${tw`list-none`}
     counter-reset: stepCount;
 `;
 
 const UnSelectedStep = styled.li`
-    position: relative;
-    overflow: hidden;
-    padding-left: 3em;
-    padding-bottom: 2em;
+    ${tw`relative overflow-hidden pl-16 pb-12`}
     line-height: 2em;
 
     &::before {
+        ${tw`absolute border-2 border-gray-400 border-0 border-l-2`}
         content: '';
-        position: absolute;
         top: 2em;
         left: 1em;
         width: 3em;
         height: 20em;
-        border: 2px solid ${dayColors.grey};
-        border-width: 0px 0 0 2px;
     }
 
     &:last-of-type::before {
-        border-width: 0;
+        ${tw`border-0 h-0`}
     }
 
     &::after {
-        background-color: transparent;
-        border-radius: 50%;
-        border: 1px solid ${primaryColor};
-        color: ${primaryTextColor};
+        ${tw`bg-transparent rounded-full border-2 border-primary-400 text-gray-700 text-center inset-0 absolute`}
         counter-increment: stepCount;
         content: counter(stepCount);
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 2em;
         height: 2em;
         line-height: 2em;
-        text-align: center;
     }
 `;
 
 const ActiveStep = styled(UnSelectedStep)`
-    font-weight: bold;
+    ${tw`font-bold`}
 
     &::after {
-        background-color: ${primaryColor};
+        ${tw`bg-primary-400`}
     }
 `;
 
 const SelectedStep = styled(UnSelectedStep)`
-    &::before {
-        border-color: ${primaryColor};
-    }
     &::after {
+        ${tw`bg-primary-400 text-transparent`}
         content: '️✔️';
-        color: transparent;
         text-shadow: 0 0 ${primaryTextColor};
-        background-color: ${primaryColor};
     }
 `;
 
-const Stepper: React.FC<Props> = ({ steps, activeStep, className }) => {
+const Stepper: React.FC<Props> = ({ title, steps, activeStep, className }) => {
     return (
-        <StyledSteps className={className}>
-            {steps.map((step, i) => {
-                if (i < activeStep - 1) {
-                    return <SelectedStep key={i}>{step}</SelectedStep>;
-                }
-                if (i === activeStep - 1) {
-                    return <ActiveStep key={i}>{step}</ActiveStep>;
-                }
-                return <UnSelectedStep key={i}>{step}</UnSelectedStep>;
-            })}
-        </StyledSteps>
+        <Wrapper className={className}>
+            <Title>{title}</Title>
+            <StyledSteps>
+                {steps.map((step, i) => {
+                    if (i < activeStep - 1) {
+                        return <SelectedStep key={step}>{step}</SelectedStep>;
+                    }
+                    if (i === activeStep - 1) {
+                        return <ActiveStep key={step}>{step}</ActiveStep>;
+                    }
+                    return <UnSelectedStep key={step}>{step}</UnSelectedStep>;
+                })}
+            </StyledSteps>
+        </Wrapper>
     );
 };
 

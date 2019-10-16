@@ -1,7 +1,9 @@
 import React from 'react';
-import { Link } from '@reach/router';
 import moment from 'moment';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
 import { SlotsByDate } from 'calendar/types';
+import { FormWrapper, FormTitle, StyledLink, ButtonWrapper } from 'shared/inputs';
 
 type Props = {
     slots: SlotsByDate;
@@ -10,12 +12,12 @@ type Props = {
 
 const Review: React.FC<Props> = ({ slots, handleSubmit }) => {
     return (
-        <article className="ba b--black-10 pa3 ma2">
-            <h1 className="f4 ttu tracked">Review Your Plan</h1>
+        <FormWrapper>
+            <FormTitle>Review Your Plan</FormTitle>
             {slots &&
                 Object.keys(slots).map(slotId => (
                     <div key={slotId}>
-                        {slotId}
+                        <SubTitle>{slotId}</SubTitle>
                         {Object.values(slots[slotId]).map(({ start, end }) => {
                             return (
                                 <div key={start.toLocaleString()}>
@@ -25,13 +27,17 @@ const Review: React.FC<Props> = ({ slots, handleSubmit }) => {
                         })}
                     </div>
                 ))}
-            <div className="mt3">
-                <Link className="link underline-hover black" to="/events" onClick={handleSubmit}>
+            <ButtonWrapper>
+                <StyledLink to="/events" onClick={handleSubmit}>
                     Submit
-                </Link>
-            </div>
-        </article>
+                </StyledLink>
+            </ButtonWrapper>
+        </FormWrapper>
     );
 };
+
+const SubTitle = styled.h2`
+    ${tw`text-gray-700 mb-2`}
+`;
 
 export { Review as AppointmentSlotsReview };

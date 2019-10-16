@@ -87,9 +87,9 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
 
     return (
         <>
-            <div className="f3">Create New Appointment</div>
             <Wrapper>
                 <Stepper
+                    title="Create New Appointment"
                     steps={[
                         'Fill Appointment Details',
                         'Select Students',

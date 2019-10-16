@@ -4,7 +4,6 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AppProviders } from 'AppProviders';
 import './styles/tailwind.out.css';
-import 'tachyons';
 
 ReactDOM.render(
     <AppProviders>

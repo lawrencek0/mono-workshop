@@ -1,6 +1,14 @@
 import React from 'react';
-import { Link } from '@reach/router';
 import { Detail } from 'calendar/types';
+import {
+    FormWrapper,
+    FormTitle,
+    StyledLabel,
+    StyledInput,
+    ButtonWrapper,
+    InputWrapper,
+    StyledLink,
+} from 'shared/inputs';
 
 type Props = Detail & {
     onInputChange: (name: 'title' | 'description', value: string) => void;
@@ -12,39 +20,26 @@ const Details: React.FC<Props> = ({ title, description, onInputChange }) => {
     };
 
     return (
-        <article className="ba b--black-10 pa3 ma2">
-            <h1 className="f4 ttu tracked">Fill Appointment Details</h1>
-            <div className="mt3">
-                <label className="db fw4 lh-copy f5" htmlFor="title">
-                    Title
-                </label>
-                <input
-                    className="border-box pa2 input-reset ba bg-transparent w-100 measure"
-                    type="title"
-                    name="title"
-                    id="title"
-                    value={title}
-                    onChange={handleInputChange}
-                />
-            </div>
-            <div className="mt3">
-                <label className="db fw4 lh-copy f5" htmlFor="description">
-                    Description
-                </label>
-                <textarea
-                    className="pa2 input-reset ba bg-transparent w-100 measure"
+        <FormWrapper>
+            <FormTitle>Fill Appointment Details</FormTitle>
+            <InputWrapper>
+                <StyledLabel htmlFor="title">Title</StyledLabel>
+                <StyledInput type="title" name="title" id="title" value={title} onChange={handleInputChange} />
+            </InputWrapper>
+            <InputWrapper>
+                <StyledLabel htmlFor="description">Description</StyledLabel>
+                <StyledInput
+                    as="textarea"
                     name="description"
                     id="description"
                     value={description}
                     onChange={handleInputChange}
                 />
-            </div>
-            <div className="mt3">
-                <Link className="link underline-hover black" to="../2">
-                    Next
-                </Link>
-            </div>
-        </article>
+            </InputWrapper>
+            <ButtonWrapper>
+                <StyledLink to="../2">Next</StyledLink>
+            </ButtonWrapper>
+        </FormWrapper>
     );
 };
 

@@ -5,7 +5,7 @@ import { Menu, MenuLink, MenuButton } from '@reach/menu-button';
 import { StyledMenuList } from 'navigation/Navbar';
 import { Link } from '@reach/router';
 import { FaCaretDown } from 'react-icons/fa';
-import Card, { Props as Appointment } from './Card';
+import Card, { Props as Appointment } from '../../shared/cards/Appointment';
 
 type Props = {
     appointments: Appointment[];
@@ -20,7 +20,7 @@ const NewEvent: React.FC<{}> = () => {
                 <FaCaretDown />
             </StyledMenuBtn>
             <StyledMenuList>
-                <MenuLink as={(Link as unknown) as string} to="appointment/new/1">
+                <MenuLink as={(Link as unknown) as string} to="appointments/new/1">
                     Appointment
                 </MenuLink>
             </StyledMenuList>
@@ -47,10 +47,6 @@ const StyledMenuBtn = styled(MenuButton)`
 
 const Title = styled.h1`
     ${tw`font-bold text-3xl mb-2`}
-`;
-
-const SubTitle = styled.h2`
-    ${tw`text-lg text-gray-700 mb-2`}
 `;
 
 const Wrapper = styled.div`

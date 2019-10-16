@@ -1,10 +1,25 @@
 import React, { useState, useRef } from 'react';
-import { Link } from '@reach/router';
+// these are needed to use the CSS Prop
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import styled from 'styled-components/macro';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as types from 'styled-components/cssprop';
+import tw from 'tailwind.macro';
 import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateTimeRange } from 'calendar/types';
+import {
+    FormWrapper,
+    FormTitle,
+    InputWrapper,
+    StyledInput,
+    StyledLabel,
+    StyledLink,
+    ButtonWrapper,
+} from 'shared/inputs';
+import { FlatButton, PrimaryButton } from 'shared/buttons';
 
 type PickerProps = DateTimeRange & {
     canDelete: boolean;
@@ -66,52 +81,64 @@ const Picker: React.FC<PickerProps> = ({
 
     return (
         <>
-            <DateRangePicker
-                onDatesChange={handleDateChanges}
-                startDate={startDate}
-                startDateId={startId}
-                endDate={endDate}
-                endDateId={endId}
-                onFocusChange={handleFocusChange}
-                focusedInput={focusedInput}
-                minimumNights={0}
-                isDayBlocked={blockWeekends}
-            />
-            <div className="flex mt3">
-                <div className="mr3">
-                    <label className="db fw4 lh-copy f5" htmlFor={`start-${id}`}>
-                        Start Time
-                    </label>
-                    <input
+            <DateRangePickerWrapper>
+                <StyledLabel
+                    css={`
+                        ${tw`block`}
+                    `}
+                >
+                    Pick Dates
+                </StyledLabel>
+                <DateRangePicker
+                    onDatesChange={handleDateChanges}
+                    startDate={startDate}
+                    startDateId={startId}
+                    endDate={endDate}
+                    endDateId={endId}
+                    onFocusChange={handleFocusChange}
+                    focusedInput={focusedInput}
+                    minimumNights={0}
+                    isDayBlocked={blockWeekends}
+                />
+            </DateRangePickerWrapper>
+
+            <InputWrapper
+                css={`
+                    ${tw`flex`}
+                `}
+            >
+                <div
+                    css={`
+                        ${tw`mr-4`}
+                    `}
+                >
+                    <StyledLabel htmlFor={`start-${id}`}>Start Time</StyledLabel>
+                    <StyledInput
                         type="time"
-                        className="border-box pa2 input-reset ba bg-transparent"
                         name="startTime"
                         id={`start-${id}`}
                         value={startTime.format('HH:mm')}
                         onChange={handleInputTimeChanges}
                     />
                 </div>
-                <div className="mr3">
-                    <label className="db fw4 lh-copy f5" htmlFor={`end-${id}`}>
-                        End Time
-                    </label>
-                    <input
+                <div>
+                    <StyledLabel htmlFor={`end-${id}`}>End Time</StyledLabel>
+                    <StyledInput
                         type="time"
-                        className="border-box pa2 input-reset ba bg-transparent"
                         name="endTime"
                         id={`end-${id}`}
                         value={endTime.format('HH:mm')}
                         onChange={handleInputTimeChanges}
                     />
                 </div>
-            </div>
-            <div className="mt3">
-                <label className="db fw4 lh-copy f5" htmlFor={`length-${id}`}>
-                    Length (in minutes)
-                </label>
-                <input
+            </InputWrapper>
+            <InputWrapper>
+                <StyledLabel htmlFor={`length-${id}`}>Length (in minutes)</StyledLabel>
+                <StyledInput
+                    css={`
+                        ${tw`w-full md:w-1/4 block`}
+                    `}
                     type="number"
-                    className="border-box pa2 input-reset ba bg-transparent w4"
                     min="0"
                     max="59"
                     name="length"
@@ -119,17 +146,39 @@ const Picker: React.FC<PickerProps> = ({
                     value={length}
                     onChange={handleInputTimeChanges}
                 />
-            </div>
+            </InputWrapper>
             {canDelete && (
-                <div className="mv3">
-                    <button className="bn ph3 pv2 mb2 dib white bg-dark-red" onClick={handleRemoveClick}>
+                <InputWrapper>
+                    <PrimaryButton variant="danger" onClick={handleRemoveClick}>
                         Delete?
-                    </button>
-                </div>
+                    </PrimaryButton>
+                </InputWrapper>
             )}
         </>
     );
 };
+
+const DateRangePickerWrapper = styled(InputWrapper)`
+    .DateInput_input {
+        ${tw`font-normal text-gray-800`}
+    }
+    .DateInput_input__focused {
+        ${tw`border-primary-600`}
+    }
+
+    .CalendarDay__selected {
+        ${tw`bg-primary-600 border-primary-300
+            hover:bg-primary-600 hover:border-primary-300
+            active:bg-primary-600 active:border-primary-300`}
+    }
+
+    .CalendarDay__selected_span:not(.CalendarDay__blocked_calendar),
+    .CalendarDay__hovered_span:not(.CalendarDay__blocked_calendar) {
+        ${tw`bg-primary-400 border-primary-200 text-white
+            hover:bg-primary-500 hover:border-primary-200 text-white
+            active:bg-primary-500 active:border-primary-200 text-white`}
+    }
+`;
 
 const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
     const id = useRef(0);
@@ -192,9 +241,11 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
         onSubmit(dateRanges);
     };
 
+    const canAddRange = !dateRanges[dateRanges.length - 1].endDate;
+
     return (
-        <article className="ba b--black-10 pa3 ma2">
-            <h1 className="f4 ttu tracked">Select the Date Range</h1>
+        <FormWrapper>
+            <FormTitle>Select the Date and Time Range</FormTitle>
             {dateRanges.map(date => (
                 <Picker
                     key={date.id}
@@ -208,19 +259,22 @@ const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
                     {...date}
                 />
             ))}
-            {dateRanges[dateRanges.length - 1].endDate && (
-                <div className="mv3">
-                    <button className="dib black" onClick={addDateRange}>
-                        Add Date Range
-                    </button>
-                </div>
-            )}
-            <div className="mt3">
-                <Link className="link underline-hover black" onClick={handleSubmit} to="../4">
+            <ButtonWrapper>
+                <FlatButton
+                    css={`
+                        ${tw`mr-4`}
+                    `}
+                    disabled={canAddRange}
+                    variant={canAddRange ? 'disabled' : 'default'}
+                    onClick={addDateRange}
+                >
+                    Add Range
+                </FlatButton>
+                <StyledLink onClick={handleSubmit} to="../4">
                     Next
-                </Link>
-            </div>
-        </article>
+                </StyledLink>
+            </ButtonWrapper>
+        </FormWrapper>
     );
 };
 

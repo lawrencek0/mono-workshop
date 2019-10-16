@@ -11,7 +11,7 @@ const Dashboard: React.FC<{}> = () => {
 
     useEffect(() => {
         fetchAppointments(dispatch);
-    }, []);
+    }, [dispatch]);
 
     return (
         <Wrapper>

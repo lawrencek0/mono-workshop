@@ -1,7 +1,18 @@
 import React from 'react';
-import { Link } from '@reach/router';
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
 import { FaUserCircle } from 'react-icons/fa';
 import { Student } from 'calendar/types';
+import {
+    FormWrapper,
+    FormTitle,
+    InputWrapper,
+    StyledInput,
+    StyledLabel as Label,
+    StyledLink,
+    ButtonWrapper,
+    StyledCheckboxLabel as CheckboxLabel,
+} from 'shared/inputs';
 
 type Props = {
     students: Student[];
@@ -11,51 +22,78 @@ type Props = {
 
 const StudentSelection: React.FC<Props> = ({ students, onStudentSelection, onSubmit }) => {
     return (
-        <article className="ba b--black-10 pa3 ma2">
-            <h1 className="f4 ttu tracked">Select Students</h1>
-            <div className="mv3">
-                <label className="db fw4 lh-copy f5" htmlFor="search">
-                    Search Students
-                </label>
-                <input
+        <FormWrapper>
+            <FormTitle>Select Students</FormTitle>
+            <InputWrapper>
+                <StyledLabel htmlFor="search">Search Students</StyledLabel>
+                <StyledInput
                     type="text"
                     id="search"
                     name="search"
-                    className="border-box pa2 input-reset ba w-100 measure"
                     disabled={true}
                     placeholder="Search Students with ElasticSearch (Coming Soon)"
                 />
-            </div>
-            <ul className="list pl0 measure">
-                {students.map(({ id, firstName, lastName, selected }) => (
-                    <li className="flex items-center lh-copy bb b--black-10 pa3 ph0" key={id}>
-                        <input
-                            type="checkbox"
-                            className="mr3"
-                            name={id}
-                            id={`student-${id}`}
-                            onChange={onStudentSelection}
-                            checked={selected || false}
-                        />
-                        <FaUserCircle size="3em" />
-                        <div className="pl3 flex-auto">
-                            <label htmlFor={`student-${id}`}>
-                                <span className="f6 db black-70">
-                                    {firstName} {lastName}
-                                </span>
-                                <span className="f6 db black-70">Junior</span>
-                            </label>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-            <div className="mt3">
-                <Link className="link underline-hover black" onClick={onSubmit} to="../3">
+            </InputWrapper>
+            <InputWrapper>
+                <StyledList>
+                    {students.map(({ id, firstName, lastName, selected }, i) => (
+                        <StyledListItem key={id} border={i !== students.length - 1}>
+                            <input
+                                type="checkbox"
+                                name={id}
+                                id={`student-${id}`}
+                                onChange={onStudentSelection}
+                                checked={selected || false}
+                            />
+                            <StyledCheckboxLabel htmlFor={`student-${id}`}>
+                                <StyledAvatar size="3em" />
+                                <div>
+                                    <LabelTitle>
+                                        {firstName} {lastName}
+                                    </LabelTitle>
+                                    <LabelSubtitle>Junior</LabelSubtitle>
+                                </div>
+                            </StyledCheckboxLabel>
+                        </StyledListItem>
+                    ))}
+                </StyledList>
+            </InputWrapper>
+            <ButtonWrapper>
+                <StyledLink onClick={onSubmit} to="../3">
                     Next
-                </Link>
-            </div>
-        </article>
+                </StyledLink>
+            </ButtonWrapper>
+        </FormWrapper>
     );
 };
+
+const StyledAvatar = styled(FaUserCircle)`
+    ${tw`mr-2`}
+`;
+
+const StyledList = styled.ul`
+    ${tw`list-none`}
+`;
+
+const StyledListItem = styled.li<{ border: boolean }>`
+    ${tw`flex items-center  border-gray-400 px-4 py-2 mt-2`}
+    border-bottom-width: ${props => props.border && '1px'}
+`;
+
+const StyledLabel = styled(Label)`
+    ${tw`ml-2`}
+`;
+
+const StyledCheckboxLabel = styled(CheckboxLabel)`
+    ${tw`flex`}
+`;
+
+const LabelTitle = styled.div`
+    ${tw`text-lg`}
+`;
+
+const LabelSubtitle = styled.div`
+    ${tw`text-base text-gray-600`}
+`;
 
 export { StudentSelection };

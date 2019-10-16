@@ -8,7 +8,7 @@ import { Link } from '@reach/router';
 const AppBar: React.FC<{}> = () => {
     return (
         <Header>
-            <h1 className="f4">Team Yellow</h1>
+            <Title>Team Yellow</Title>
             <Menu />
         </Header>
     );
@@ -34,6 +34,10 @@ const StyledIcon = styled(MdMenu)`
 const Header = styled.header`
     ${tw`flex bg-primary-400 items-center px-2 py-4 text-2xl`}
     color: ${primaryTextColor};
+`;
+
+const Title = styled.h1`
+    ${tw`text-3xl`}
 `;
 
 export default AppBar;

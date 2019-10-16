@@ -5,6 +5,7 @@ import moment from 'moment';
 import { FaBookReader } from 'react-icons/fa';
 import { Link } from '@reach/router';
 import { Slot, Faculty } from 'calendar/types';
+import { Wrapper, Title, Body, Footer, StyledLink } from './styles';
 
 export type Props = Required<Slot> & {
     type: 'appointments';
@@ -14,6 +15,7 @@ export type Props = Required<Slot> & {
     faculty?: Faculty;
     location?: string;
     color?: string;
+    className?: string;
 };
 
 const renderFacultyAvatar = ({ id, firstName, lastName }: Faculty): JSX.Element => {
@@ -48,9 +50,9 @@ const renderTimeSlot = ({ start, end }: Slot): JSX.Element => {
     return <></>;
 };
 
-const Card: React.FC<Props> = ({ type, id, title, description, start, end, faculty, location, color }) => {
+const Card: React.FC<Props> = ({ type, id, title, description, start, end, faculty, location, color, className }) => {
     return (
-        <Wrapper color={color}>
+        <StyledWrapper className={className} color={color}>
             <Title>{title}</Title>
             <Body>
                 {description}
@@ -59,9 +61,9 @@ const Card: React.FC<Props> = ({ type, id, title, description, start, end, facul
                 {faculty && renderFacultyAvatar(faculty)}
             </Body>
             <Footer>
-                <DetailsLink to={`calendar/${type}/${id}`}>Details</DetailsLink>
+                <StyledLink to={`calendar/${type}/${id}`}>Details</StyledLink>
             </Footer>
-        </Wrapper>
+        </StyledWrapper>
     );
 };
 
@@ -81,26 +83,9 @@ const AvatarWrapper = styled.div`
     ${tw`flex items-center mt-4`}
 `;
 
-const Wrapper = styled.div<{ color?: string }>`
-    ${tw`flex flex-col justify-between py-4 px-8 mb-4 leading-normal shadow-md
-        border border-gray-400 rounded border-l-8`}
+const StyledWrapper = styled(Wrapper)<{ color?: string }>`
+    ${tw`border border-gray-400 border-l-8`}
     border-left-color: ${props => props.color}
-`;
-
-const Title = styled.h1`
-    ${tw`text-gray-900 font-medium text-lg mb-2`}
-`;
-
-const Body = styled.div`
-    ${tw`text-gray-700 text-sm`}
-`;
-
-const Footer = styled.div`
-    ${tw`mt-4 uppercase tracking-wide text-base text-gray-600`}
-`;
-
-const DetailsLink = styled(Link)`
-    ${tw`border-gray-400 border-2 hover:bg-gray-200 py-2 px-4`}
 `;
 
 export default Card;
