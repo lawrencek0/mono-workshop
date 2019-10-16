@@ -90,18 +90,10 @@ export const findSlotsWithDetailId = async (req: Request, res: Response) => {
     }
 };
 
+// @TODO needs to list the appointments that the student needs to sign up for
 export const untaken = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;
-
-    const user: User = await getRepository(User).findOne(userId);
-
-    // const war = await getRepository(User).find({ relations: ['details'] });
-    const det = await getManager().query(
-        `SELECT d.id, d.title, d.description FROM Appointment_details d WHERE d.id IN 
-        (SELECT s.detailId FROM Appointment_slots s LEFT JOIN Appointment_details_users u ON s.detailId = u.appointmentDetailsId WHERE u.userId = ? AND NOT s.studentId)`,
-        [userId, userId],
-    );
 
     const dets = await getManager().query(
         `SELECT u.appointmentDetailsId FROM Appointment_details_users u LEFT JOIN Appointment_slots s ON u.userId = s.studentId WHERE u.userId = ?`,
