@@ -1,5 +1,4 @@
 import { Router } from 'express';
-// import { create, findOne, findAll, deleteAppointment } from './service';
 import { create, findAll, findSlotsWithDetailId, untaken } from '../controllers/appointment';
 const router = Router();
 
