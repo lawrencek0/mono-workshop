@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Detail } from './Detail';
 import { User } from './User';
 
@@ -13,10 +13,7 @@ export class Slot {
     @Column()
     end: Date;
 
-    @ManyToMany(() => User, User => User.slots)
-    students: User[];
-
-    @ManyToOne(() => User, User => User.slots, { nullable: true })
+    @ManyToOne(() => User, User => User.id, { nullable: true })
     student: User;
 
     @ManyToOne(() => Detail, Detail => Detail.slots)
