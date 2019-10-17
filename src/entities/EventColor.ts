@@ -1,15 +1,15 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { User } from './User';
 import { Event } from './Event';
 
 @Entity('Event_color')
 export class EventColor {
-    @PrimaryColumn()
-    userId: number;
+    @ManyToOne(() => User, User => User.eventColors, { primary: true })
+    user: User;
 
-    @PrimaryColumn()
-    eventId: number;
+    @ManyToOne(() => Event, Event => Event.colors, { primary: true })
+    event: Event;
 
     @Column()
-    hexColor: string;
+    color: string;
 }

@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 import { Detail } from './Detail';
 import { Event } from './Event';
+import { EventColor } from './EventColor';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -44,4 +45,7 @@ export class User {
 
     @OneToMany(() => Event, Event => Event.users)
     events: Event[];
+
+    @OneToMany(() => EventColor, EventColor => EventColor.user)
+    eventColors: EventColor[];
 }
