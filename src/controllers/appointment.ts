@@ -100,6 +100,7 @@ export const findSlotsWithDetailId = async (req: Request, res: Response) => {
     }
 };
 
+// @TODO needs to list the appointments that the student needs to sign up for
 export const untaken = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;

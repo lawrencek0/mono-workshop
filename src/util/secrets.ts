@@ -7,6 +7,13 @@ dotenv.config({ path: '.env' });
 export const ENVIRONMENT = process.env.NODE_ENV;
 const prod = ENVIRONMENT === 'production'; // Anything else is treated as 'dev'
 
+export const email = {
+    SOURCE_EMAIL: process.env['SOURCE_EMAIL'],
+    AWS_ACCESS_KEY_ID: process.env['AWS_ACCESS_KEY_ID'],
+    AWS_SECRET_ACCESS_KEY: process.env['AWS_SECRET_ACCESS_KEY'],
+    AWS_SES_REGION: process.env['AWS_SES_REGION'],
+};
+
 export const database = {
     DATABASE: process.env['DATABASE'],
     MYSQL_HOSTNAME: prod ? process.env['MYSQL_HOSTNAME'] : process.env['MYSQL_HOSTNAME_LOCAL'],
