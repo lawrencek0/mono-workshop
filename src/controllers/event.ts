@@ -36,3 +36,9 @@ export const getUserEvents = async (req: Request, res: Response) => {
         res.send('It broke ' + err);
     }
 };
+
+export const getEventUsers = async (req: Request, res: Response) => {
+    const users = await getRepository(Event).find({ where: { id: req.params.id }, relations: ['users'] });
+
+    res.send(users);
+};

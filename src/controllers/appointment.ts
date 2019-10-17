@@ -25,12 +25,6 @@ export const create = async (req: Request, res: Response) => {
     }
 };
 
-export const findByFacultyId = async (id: number) => {
-    const appointments: Detail[] = await getRepository(Detail).find({ where: { faculty: id }, relations: ['slots'] });
-
-    return appointments;
-};
-
 // This findAll list all appointments for user who is currently login
 export const findAll = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
