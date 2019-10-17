@@ -10,7 +10,6 @@ export const create = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const id = (hashids.decode(maskedId)[0] as unknown) as number;
     const user: User = await getRepository(User).findOne(id);
-    console.log(id);
 
     if (user.role === 'faculty') {
         const slots = await getRepository(Slot).save(req.body.dates);
@@ -22,6 +21,15 @@ export const create = async (req: Request, res: Response) => {
             faculty,
             students: req.body.students,
         });
+
+        detail.students.forEach(async (element: any) => {
+            await getRepository(AppointmentColor).save({
+                hexColor: req.body.color,
+                userId: element,
+                appDet: detail,
+            });
+        });
+
         res.send({ detail });
     } else {
         res.send('You cannot create appointments!');

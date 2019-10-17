@@ -1,6 +1,8 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 import { Detail } from './Detail';
 import { Event } from './Event';
+import { EventColor } from './EventColor';
+import { AppointmentColor } from './AppointmentColor';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -44,4 +46,10 @@ export class User {
 
     @OneToMany(() => Event, Event => Event.users)
     events: Event[];
+
+    @OneToMany(() => EventColor, EventColor => EventColor.userId)
+    evColor: EventColor[];
+
+    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.userId)
+    appColor: AppointmentColor[];
 }

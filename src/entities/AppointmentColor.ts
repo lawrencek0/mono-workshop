@@ -1,14 +1,16 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './User';
-import { Event } from './Event';
+import { Detail } from './Detail';
 
 @Entity('Appointment_color')
 export class AppointmentColor {
-    @PrimaryColumn()
-    userId: number;
+    @ManyToOne(() => User, User => User.appColor, { primary: true })
+    @JoinColumn({ name: 'userId' })
+    userId: User[];
 
-    @PrimaryColumn()
-    detailId: number;
+    @ManyToOne(() => Detail, Detail => Detail.color, { primary: true })
+    @JoinColumn({ name: 'detailId' })
+    appDet: Detail;
 
     @Column()
     hexColor: string;
