@@ -14,7 +14,7 @@ export const create = async (req: Request, res: Response) => {
         end: req.body.end,
         description: req.body.description,
         location: req.body.location,
-        owner: creater,
+        ownerId: creater,
         users: req.body.users,
     });
     res.send({ events });
