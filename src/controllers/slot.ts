@@ -37,7 +37,7 @@ export const update = async (req: Request, res: Response) => {
     slot.student = await getRepository(User).findOne(userId);
 
     if (req.body.detailId) slot.detail = await getRepository(Detail).findOne(parseInt(req.body.detailId));
-    if (req.body.students) slot.students = await getRepository(User).findByIds(req.body.students);
+    // if (req.body.students) slot.students = await getRepository(User).findByIds(req.body.students);
 
     slot = await getRepository(Slot)
         .preload(slot)

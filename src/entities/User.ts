@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { Slot } from './Slot';
 import { Detail } from './Detail';
-import { Event } from './Event';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -36,15 +35,10 @@ export class User {
     @Column('text')
     bio: string;
 
-    @OneToMany(() => Slot, Slot => Slot.student)
-    slots: Slot[];
+    // @TODO: move to separate Student entity
+    @ManyToMany(() => Detail, Detail => Detail.students)
+    assignedDetails: Detail[];
 
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
-
-    @OneToMany(() => Event, Event => Event.owner)
-    ownedEvents: Event[];
-
-    @ManyToMany(() => Event, Event => Event.id)
-    events: Event[];
 }
