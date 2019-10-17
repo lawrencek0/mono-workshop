@@ -3,11 +3,11 @@ import { User } from '../entities/User';
 import { getConnection } from 'typeorm';
 
 export const listAllUsers = async (req: Request, res: Response) => {
-    const user = await getConnection()
+    const users = await getConnection()
         .getRepository(User)
         .find();
 
-    res.send(user);
+    res.send({ users });
 };
 
 export const listAllStudents = async (req: Request, res: Response) => {
