@@ -5,6 +5,7 @@ import 'moment-timezone';
 import { Request, Response } from 'express';
 import { email } from '../util/secrets';
 import { Detail } from '../entities/Detail';
+import { Event } from '../entities/Event';
 
 AWS.config.update({
     accessKeyId: email.AWS_ACCESS_KEY_ID,
@@ -18,11 +19,12 @@ const transporter = nodemailer.createTransport({
 
 type table = 'appointment' | 'event';
 
-const generateHtmlMsg = (type: table, events: Detail): string => {
+const generateHtmlMsg = (type: table, events: Detail | Event): string => {
     let output = `<h1>${events.title}</h1>`;
     output += `<div>${events.description}</div>`;
-    output += '<table>';
+    // @FIXME: use type guards instead
     if (type === 'appointment') {
+        output += '<table>';
         output += `<caption>Time Slots for ${events.title}</caption>`;
         output += `<thead><tr>
                         <th>Day</th>
@@ -30,7 +32,7 @@ const generateHtmlMsg = (type: table, events: Detail): string => {
                         <th>End</th>
                     </tr></thead>`;
         output += '<tbody>';
-        events.slots.forEach(({ start, end }) => {
+        (events as Detail).slots.forEach(({ start, end }) => {
             output += `
             <tr>
                 <td>${moment(start)
@@ -48,9 +50,19 @@ const generateHtmlMsg = (type: table, events: Detail): string => {
             </tr>`;
         });
         output += '</tbody>';
+        output += '</table>';
+    } else if (type === 'event') {
+        output += `<div>At ${(events as Event).location}</div>`;
+        output += `<div>On ${moment((events as Event).start)
+            .tz('America/Chicago')
+            .format('MMM Do')}</div>`;
+        output += `<div>${moment((events as Event).start)
+            .tz('America/Chicago')
+            .format('hh:mm')} - ${moment((events as Event).end)
+            .tz('America/Chicago')
+            .format('hh:mm')}</div>`;
+        output += `<div>Organized by ${(events as Event).owner.firstName} ${(events as Event).owner.lastName}</div>`;
     }
-
-    output += '</table>';
 
     return output;
 };
@@ -59,7 +71,7 @@ const generateHtmlMsg = (type: table, events: Detail): string => {
 export const sender = async (req: Request, res: Response) => {
     try {
         const type: table = req.body.type;
-        const events: Detail = req.body.events;
+        const events: Detail | Event = req.body.events;
         const html = generateHtmlMsg(type, events);
         const result = await transporter.sendMail({
             from: email.SOURCE_EMAIL,
