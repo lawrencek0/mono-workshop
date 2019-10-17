@@ -17,7 +17,7 @@ export const create = async (req: Request, res: Response) => {
             description: req.body.description,
             slots,
             faculty: faculty,
-            users: req.body.users,
+            students: req.body.students,
         });
         res.send({ detail });
     } else {
