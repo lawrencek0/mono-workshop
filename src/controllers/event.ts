@@ -20,6 +20,7 @@ export const create = async (req: Request, res: Response) => {
     res.send({ events });
 };
 
+//gets the events that the current user is related to
 export const getUserEvents = async (req: Request, res: Response) => {
     try {
         const maskedId = res.locals.user['custom:user_id'];
@@ -36,6 +37,7 @@ export const getUserEvents = async (req: Request, res: Response) => {
     }
 };
 
+//gets the list of users associated with a certain event
 export const getEventUsers = async (req: Request, res: Response) => {
     const users = await getRepository(Event).find({ where: { id: req.params.id }, relations: ['users'] });
 
@@ -43,9 +45,11 @@ export const getEventUsers = async (req: Request, res: Response) => {
 };
 
 export const shareEvent = async (req: Request, res: Response) => {
+    //gets the event to be shared
     const evnt: Event = await getRepository(Event).findOne({ where: { id: req.params.id } });
-    // const done = await getRepository(Event).save({ evnt, users: req.body.users });
     const shareTo: number[] = req.body.users;
+
+    //shares the event with each user given
     shareTo.forEach(async element => {
         const shareTarget = await getRepository(User).findOne({ where: { id: element } });
         const done = await getManager()
