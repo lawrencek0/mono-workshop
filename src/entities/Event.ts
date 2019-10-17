@@ -24,7 +24,7 @@ export class Event {
     @ManyToOne(() => User, User => User.events)
     owner: User;
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, User => User.events)
     @JoinTable({ name: 'event_roster' })
     users: User[];
 }
