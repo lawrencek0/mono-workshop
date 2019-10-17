@@ -16,7 +16,7 @@ export const create = async (req: Request, res: Response) => {
         description: req.body.description,
         location: req.body.location,
         owner: creater,
-        students: req.body.students,
+        users: req.body.users,
     });
     res.send({ events });
 };
