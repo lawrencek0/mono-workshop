@@ -35,7 +35,7 @@ const Sidebar: React.FC<Props> = ({ className, appointments }) => {
             <Title>Events</Title>
             <NewEvent />
             {appointments.map(appointment => (
-                <Card key={appointment.id} {...appointment} />
+                <Card key={appointment.start.toString()} {...appointment} />
             ))}
         </Wrapper>
     );
@@ -50,7 +50,7 @@ const Title = styled.h1`
 `;
 
 const Wrapper = styled.div`
-    ${tw`flex flex-col px-8`}
+    ${tw`flex flex-col px-8 overflow-y-scroll`}
 `;
 
 export default Sidebar;

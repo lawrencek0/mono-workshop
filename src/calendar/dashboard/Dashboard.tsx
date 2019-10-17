@@ -6,8 +6,21 @@ import Sidebar from './Sidebar';
 import { useEventState, useEventDispatch, fetchAppointments } from 'calendar/hooks';
 
 const Dashboard: React.FC<{}> = () => {
-    const { events: selectedAppointment } = useEventState();
+    const { events } = useEventState();
     const dispatch = useEventDispatch();
+
+    const filledAppointments = events
+        ? events
+              .filter(({ student, faculty }) => student || faculty)
+              .map(({ title, student, faculty, ...event }) => ({
+                  ...event,
+                  student,
+                  faculty,
+                  title: faculty
+                      ? `Appointment with ${faculty.firstName} - ${title}`
+                      : `Appointment with ${student.firstName} - ${title}`,
+              }))
+        : [];
 
     useEffect(() => {
         fetchAppointments(dispatch);
@@ -15,14 +28,15 @@ const Dashboard: React.FC<{}> = () => {
 
     return (
         <Wrapper>
-            <StyledCalendar selectedAppointment={selectedAppointment} />
-            <StyledSidebar appointments={selectedAppointment} />
+            <StyledCalendar selectedAppointment={filledAppointments} />
+            <StyledSidebar appointments={filledAppointments} />
         </Wrapper>
     );
 };
 
 const Wrapper = styled.div`
     ${tw`flex h-full`}
+    max-height: calc(100vh - 84px - 0.5em);
 `;
 
 const StyledCalendar = styled(Calendar)`

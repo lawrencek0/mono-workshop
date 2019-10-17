@@ -15,6 +15,7 @@ export type Detail = {
     id?: string;
     title: string;
     description: string;
+    student?: Student;
     faculty?: Faculty;
 };
 

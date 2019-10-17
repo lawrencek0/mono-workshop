@@ -22,9 +22,16 @@ const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment }) =>
             // @FIXME: Can't get height due to Suspense https://github.com/facebook/react/issues/14536
             setTimeout(() => {
                 setHeight(node ? node.getBoundingClientRect().height : 0);
-            }, 500);
+            }, 1000);
         }
     }, []);
+
+    const eventLimitText = (eventCnt: number): string => {
+        // if (isMobile) {
+        //     return '.'.repeat(eventCnt);
+        // }
+        return '+ ' + eventCnt + ' more events';
+    };
 
     /**
      * TODO:
@@ -47,6 +54,8 @@ const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment }) =>
                     }
                     return moment(col).format('ddd');
                 }}
+                eventLimit={true}
+                eventLimitText={eventLimitText}
                 defaultView="dayGridMonth"
                 plugins={[dayGridPlugin]}
             />
@@ -97,6 +106,10 @@ const fullCalendarStyles = theme('mode', {
 
                     .fc-today {
                         ${tw`bg-transparent border-primary-400 text-primary-600`}
+                    }
+
+                    .fc-event {
+                        ${tw`bg-white border-l-4 truncate rounded cursor-pointer px-2 mb-2 border-gray-400 text-gray-800`}
                     }
                 }
             }
