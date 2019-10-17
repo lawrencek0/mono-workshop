@@ -28,7 +28,7 @@ export const fetchEvents = async (req: Request, res: Response) => {
 
         const events = await getRepository(Event)
             .createQueryBuilder('event')
-            .leftJoinAndSelect('event.users', 'user', 'user.id = :userId', { userId: id })
+            .innerJoinAndSelect('event.users', 'user', 'user.id = :userId', { userId: id })
             .getMany();
 
         res.send({ events });
@@ -49,16 +49,17 @@ export const fetchEvent = async (req: Request, res: Response) => {
 export const shareEvent = async (req: Request, res: Response) => {
     //gets the event to be shared
     const event: Event = await getRepository(Event).findOne({ where: { id: req.params.eventId } });
-    const shareTo: number[] = req.body.users;
+    const shareTo = await getRepository(User).findByIds(req.body.users);
 
     //shares the event with each user given
-    shareTo.forEach(async element => {
-        const shareTarget = await getRepository(User).findOne({ where: { id: element } });
-        const done = await getManager()
+    const op = shareTo.map(async user => {
+        getManager()
             .createQueryBuilder()
             .relation(Event, 'users')
             .of(event)
-            .add(shareTarget);
-        res.send(done);
+            .add(user);
     });
+    const done = await Promise.all(op);
+
+    res.send({ done });
 };
