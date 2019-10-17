@@ -17,9 +17,11 @@ const transporter = nodemailer.createTransport({
     SES: new AWS.SES({ apiVersion: '2010-12-01' }),
 });
 
-type table = 'appointment' | 'event';
+type Table = 'all' | 'appointment' | 'event';
 
-const generateHtmlMsg = (type: table, events: Detail | Event): string => {
+type Events = Detail | Event;
+
+const generateHtmlMsg = (type: Table, events: Events): string => {
     let output = `<h1>${events.title}</h1>`;
     output += `<div>${events.description}</div>`;
     // @FIXME: use type guards instead
@@ -67,12 +69,33 @@ const generateHtmlMsg = (type: table, events: Detail | Event): string => {
     return output;
 };
 
+const generateGeneral = (events: Events[]): string => {
+    let output = '<table>';
+    output += `<caption>Your ${events.length} Events</caption>`;
+    output += `<thead><tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                    </tr></thead>`;
+    output += '<tbody>';
+    events.forEach(event => {
+        output += `
+        <tr>
+            <td>${event.title}
+            </td>
+            <td>${event.description}
+            </td>
+        </tr>`;
+    });
+    output += '</tbody></table>';
+
+    return output;
+};
+
 // @TODO need to allow for 2+ attachment to be sent on a single email
 export const sender = async (req: Request, res: Response) => {
     try {
-        const type: table = req.body.type;
-        const events: Detail | Event = req.body.events;
-        const html = generateHtmlMsg(type, events);
+        const type: Table = req.body.type;
+        const html = type === 'all' ? generateGeneral(req.body.events) : generateHtmlMsg(type, req.body.events);
         const result = await transporter.sendMail({
             from: email.SOURCE_EMAIL,
             to: req.body.to,
