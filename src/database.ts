@@ -3,6 +3,7 @@ import { database } from './util/secrets';
 import { User } from './entities/User';
 import { Slot } from './entities/Slot';
 import { Detail } from './entities/Detail';
+import { Event } from './entities/Event';
 
 export default async () => {
     await createConnection({
@@ -12,7 +13,7 @@ export default async () => {
         username: database.MYSQL_USER,
         password: database.MYSQL_PASSWORD,
         database: database.DATABASE,
-        entities: [User, Slot, Detail],
+        entities: [User, Slot, Detail, Event],
         synchronize: false,
         logging: false,
     });
