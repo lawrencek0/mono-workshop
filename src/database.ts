@@ -14,7 +14,7 @@ export default async () => {
         password: database.MYSQL_PASSWORD,
         database: database.DATABASE,
         entities: [User, Slot, Detail, Event],
-        synchronize: true,
+        synchronize: false,
         logging: false,
     });
 };

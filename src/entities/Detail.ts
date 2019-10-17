@@ -19,7 +19,7 @@ export class Detail {
     @ManyToOne(() => User, User => User.details)
     faculty: User;
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, User => User.assignedDetails)
     @JoinTable({ name: 'appointment_details_users' })
     students: User[];
 }
