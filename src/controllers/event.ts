@@ -3,6 +3,7 @@ import { getRepository, getManager } from 'typeorm';
 import { Event } from '../entities/Event';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
+import { EventColor } from '../entities/EventColor';
 
 export const create = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
@@ -18,6 +19,17 @@ export const create = async (req: Request, res: Response) => {
         owner: creator,
         users,
     });
+
+    const events = await Promise.all(
+        users.map(user => {
+            const evnt = new EventColor();
+            evnt.color = req.body.color;
+            evnt.user = user;
+            evnt.event = event;
+            return evnt;
+        }),
+    );
+    await getRepository(EventColor).insert(events);
     res.send({ event });
 };
 
@@ -29,6 +41,12 @@ export const fetchEvents = async (req: Request, res: Response) => {
         const events = await getRepository(Event)
             .createQueryBuilder('event')
             .innerJoinAndSelect('event.users', 'user', 'user.id = :userId', { userId: id })
+            .innerJoinAndMapOne(
+                'event.color',
+                'event.colors',
+                'colors',
+                'colors.user = user.id AND colors.event = event.id',
+            )
             .getMany();
 
         res.send({ events });
