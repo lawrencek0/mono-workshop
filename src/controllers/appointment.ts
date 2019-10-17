@@ -122,7 +122,7 @@ export const untaken = async (req: Request, res: Response) => {
             .leftJoinAndSelect('detail.faculty', 'faculty')
             .getMany();
 
-        res.send({ appointments: unselectedAppointments });
+        return res.send({ appointments: unselectedAppointments });
     }
 
     res.send({ msg: "You can't any appointments" });
