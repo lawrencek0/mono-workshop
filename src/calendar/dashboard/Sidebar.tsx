@@ -50,7 +50,7 @@ const Title = styled.h1`
 `;
 
 const Wrapper = styled.div`
-    ${tw`flex flex-col px-8 overflow-y-scroll`}
+    ${tw`flex flex-col px-8 overflow-y-auto`}
 `;
 
 export default Sidebar;
