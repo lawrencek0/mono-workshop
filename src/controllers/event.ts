@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { Event } from '../entities/Event';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
@@ -37,10 +37,28 @@ export const fetchEvents = async (req: Request, res: Response) => {
     }
 };
 
+//gets the list of users associated with a certain event
 export const fetchEvent = async (req: Request, res: Response) => {
     const event = await getRepository(Event).findOne({
         where: { id: req.params.eventId },
         relations: ['owner', 'users'],
     });
     res.send({ event });
+};
+
+export const shareEvent = async (req: Request, res: Response) => {
+    //gets the event to be shared
+    const event: Event = await getRepository(Event).findOne({ where: { id: req.params.eventId } });
+    const shareTo: number[] = req.body.users;
+
+    //shares the event with each user given
+    shareTo.forEach(async element => {
+        const shareTarget = await getRepository(User).findOne({ where: { id: element } });
+        const done = await getManager()
+            .createQueryBuilder()
+            .relation(Event, 'users')
+            .of(event)
+            .add(shareTarget);
+        res.send(done);
+    });
 };

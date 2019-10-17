@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
-import { Slot } from './Slot';
 import { Detail } from './Detail';
 import { Event } from './Event';
 

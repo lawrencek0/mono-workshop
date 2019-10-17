@@ -4,11 +4,14 @@ import { getRepository } from 'typeorm';
 import { Slot } from '../entities/Slot';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
+import { AppointmentColor } from '../entities/AppointmentColor';
 
 export const create = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const id = (hashids.decode(maskedId)[0] as unknown) as number;
     const user: User = await getRepository(User).findOne(id);
+    console.log(id);
+
     if (user.role === 'faculty') {
         const slots = await getRepository(Slot).save(req.body.dates);
         const faculty = await getRepository(User).findOne(id);
@@ -23,12 +26,6 @@ export const create = async (req: Request, res: Response) => {
     } else {
         res.send('You cannot create appointments!');
     }
-};
-
-export const findByFacultyId = async (id: number) => {
-    const appointments: Detail[] = await getRepository(Detail).find({ where: { faculty: id }, relations: ['slots'] });
-
-    return appointments;
 };
 
 // This findAll list all appointments for user who is currently login
@@ -127,4 +124,17 @@ export const untaken = async (req: Request, res: Response) => {
     }
 
     res.send({ msg: "You can't any appointments" });
+};
+
+export const detColor = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const id = (hashids.decode(maskedId)[0] as unknown) as number;
+
+    const color = await getRepository(AppointmentColor).save({
+        userId: id,
+        detailId: Number.parseInt(req.params.id, 10),
+        hexColor: req.body.color,
+    });
+
+    res.send(color);
 };
