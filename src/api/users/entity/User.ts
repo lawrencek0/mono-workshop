@@ -18,7 +18,9 @@ export class User {
     })
     lastName: string;
 
-    @Column()
+    @Column({
+        unique: true,
+    })
     @IsEmail()
     email: string;
 
