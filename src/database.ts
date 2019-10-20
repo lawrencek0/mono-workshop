@@ -1,23 +1,13 @@
-import { createConnection } from 'typeorm';
-import { database } from './util/secrets';
+import { createConnection, Connection } from 'typeorm';
 import logger from './util/logger';
-import { join } from 'path';
+import ormconfig from './ormconfig';
 
-export default async () => {
+export default async (): Promise<Connection> => {
     let retries = 5;
+    let connection;
     while (retries > 0) {
         try {
-            await createConnection({
-                type: 'mysql',
-                host: database.MYSQL_HOSTNAME,
-                port: parseInt(database.MYSQL_PORT),
-                username: database.MYSQL_USER,
-                password: database.MYSQL_PASSWORD,
-                database: database.DATABASE,
-                entities: [join(process.cwd(), 'dist', 'api/**/entity/**/*.js')],
-                synchronize: false,
-                logging: false,
-            });
+            connection = await createConnection(ormconfig);
             break;
         } catch (e) {
             logger.error(e);
@@ -25,4 +15,5 @@ export default async () => {
             await new Promise(res => setTimeout(res, 5000));
         }
     }
+    return connection;
 };
