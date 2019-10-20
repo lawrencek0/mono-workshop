@@ -134,15 +134,14 @@ export const untaken = async (req: Request, res: Response) => {
     res.send({ msg: "You can't any appointments" });
 };
 
+// TODO: Fix this method!
 export const detColor = async (req: Request, res: Response) => {
-    const maskedId = res.locals.user['custom:user_id'];
-    const id = (hashids.decode(maskedId)[0] as unknown) as number;
-
-    const color = await getRepository(AppointmentColor).save({
-        userId: id,
-        detailId: Number.parseInt(req.params.id, 10),
-        hexColor: req.body.color,
-    });
-
-    res.send(color);
+    //     const maskedId = res.locals.user['custom:user_id'];
+    //     const id = (hashids.decode(maskedId)[0] as unknown) as number;
+    //     const color = await getRepository(AppointmentColor).save({
+    //         userId: id,
+    //         detailId: Number.parseInt(req.params.id, 10),
+    //         hexColor: req.body.color,
+    //     });
+    //     res.send(color);
 };

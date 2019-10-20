@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager, DeleteResult } from 'typeorm';
 import { Event } from '../entities/Event';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
@@ -31,6 +31,85 @@ export const create = async (req: Request, res: Response) => {
     );
     await getRepository(EventColor).insert(events);
     res.send({ event });
+};
+
+export const deleteOne = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const id = (hashids.decode(maskedId)[0] as unknown) as number;
+
+    const event: Event = await getRepository(Event).findOne(req.params.id, { relations: ['owner'] });
+
+    // Check if the person trying to update is the owner
+    // If they aren't the owner just return and send an error message
+    if (id !== event.owner.id) {
+        res.status(401).send({ msg: 'Unauthorized: You are not the Owner' });
+        return;
+    }
+    await getRepository(EventColor).delete({ event: event });
+
+    const deleted: DeleteResult = await getRepository(Event).delete(event);
+
+    res.send(deleted);
+};
+
+// TODO: Fix "color" field not being set.  I think this has to do with how color is set in the event entity
+//       It is not under a specific column like everything else and is in the colors association.  Validate it works.
+// TODO: Test updating colors association
+// Everything else updates!
+// TODO: Remove the comments above
+export const update = async (req: Request, res: Response) => {
+    const maskedId = res.locals.user['custom:user_id'];
+    const id = (hashids.decode(maskedId)[0] as unknown) as number;
+
+    const ownerId: number = await getRepository(Event)
+        .findOne(req.params.id, { relations: ['owner'] })
+        .then(event => event.owner.id)
+        .catch(err => {
+            res.status(404).send('Could not find Event');
+            return err;
+        });
+
+    // Check if the person trying to update is the owner
+    // If they aren't the owner just return and send an error message
+    if (id !== ownerId) {
+        res.status(401).send({ msg: 'You are not the Owner' });
+        return;
+    }
+
+    let event: Event = new Event();
+
+    // All the possible parameters that can be updated
+    event.id = parseInt(req.params.id);
+    event.title = req.body.title;
+    event.start = req.body.start;
+    event.end = req.body.end;
+    event.location = req.body.location;
+    event.description = req.body.description;
+    //event.color = req.body.color;
+
+    // If an association is being updated, set the assocition
+    if (req.body.ownerId)
+        event.owner = await getRepository(User)
+            .findOne(parseInt(req.body.ownerId))
+            .catch(err => err);
+    if (req.body.users)
+        event.users = await getRepository(User)
+            .findByIds(req.body.users)
+            .catch(err => err);
+    if (req.body.colors)
+        event.colors = await getRepository(EventColor)
+            .findByIds(req.body.colors)
+            .catch(err => err);
+
+    event = await getRepository(Event)
+        .preload(event)
+        .catch(err => err);
+
+    const updated: Event = await getRepository(Event)
+        .save(event)
+        .catch(err => err);
+
+    res.send(updated);
 };
 
 export const fetchEvents = async (req: Request, res: Response) => {

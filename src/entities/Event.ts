@@ -29,8 +29,9 @@ export class Event {
     @JoinTable({ name: 'event_roster' })
     users: User[];
 
-    @OneToMany(() => EventColor, EventColor => EventColor.event)
+    @OneToMany(() => EventColor, EventColor => EventColor.event, { onDelete: 'CASCADE' })
     colors: EventColor[];
 
+    @Column()
     color: string;
 }
