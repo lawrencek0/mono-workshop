@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { IsEmail } from 'class-validator';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -18,6 +19,7 @@ export class User {
     lastName: string;
 
     @Column()
+    @IsEmail()
     email: string;
 
     @Column({

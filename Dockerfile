@@ -7,9 +7,6 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
-RUN chmod +x /wait
-
 FROM node:10-alpine as prod
 
 WORKDIR  /usr/app
