@@ -1,0 +1,16 @@
+entity: User
+items:
+    faculty{1..3}:
+        firstName: '{{name.firstName}}'
+        lastName: '{{name.lastName}}'
+        email: 'faculty($current)@ulm.edu'
+        role: 'faculty'
+        bio: '{{lorem.paragraphs}}'
+        picUrl: '{{image.avatar}}'
+    student{1..3}:
+        firstName: '{{name.firstName}}'
+        lastName: '{{name.lastName}}'
+        email: 'student($current)@warhawks.ulm.edu'
+        role: 'student'
+        bio: '{{lorem.paragraphs}}'
+        picUrl: '{{image.avatar}}'
