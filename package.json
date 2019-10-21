@@ -23,9 +23,8 @@
         "watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
     },
     "dependencies": {
-        "@types/aws-sdk": "^2.7.0",
-        "@types/nodemailer": "^6.2.1",
         "amazon-cognito-identity-js": "^3.0.15",
+        "aws-sdk": "^2.553.0",
         "body-parser": "^1.19.0",
         "cognito-express": "^2.0.16",
         "compression": "^1.7.4",
@@ -47,6 +46,7 @@
         "winston": "^2.4.2"
     },
     "devDependencies": {
+        "@types/aws-sdk": "^2.7.0",
         "@types/body-parser": "^1.17.1",
         "@types/chai": "^4.2.1",
         "@types/compression": "^0.0.36",
@@ -60,6 +60,7 @@
         "@types/mysql": "^2.15.7",
         "@types/node": "^12.7.8",
         "@types/node-fetch": "^2.5.0",
+        "@types/nodemailer": "^6.2.1",
         "@types/request": "^2.48.2",
         "@types/supertest": "^2.0.8",
         "@types/winston": "^2.3.9",
