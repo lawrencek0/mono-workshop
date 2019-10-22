@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { create, findAll, findSlotsWithDetailId, untaken, detColor } from '../controllers/appointment';
+import { create, findAll, findSlotsWithDetailId, untaken } from '../controllers/appointment';
 const router = Router();
 
 // Creates an appointment
@@ -13,6 +13,6 @@ router.get('/untaken', untaken);
 
 //find all appointment in the Detail Id
 router.get('/:id', findSlotsWithDetailId);
-router.post('/:id', detColor);
+// router.get('/:id', getColor);
 
 export { router as AppointmentRouter };

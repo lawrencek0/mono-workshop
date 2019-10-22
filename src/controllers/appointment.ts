@@ -136,12 +136,20 @@ export const untaken = async (req: Request, res: Response) => {
 
 // TODO: Fix this method!
 export const detColor = async (req: Request, res: Response) => {
-    //     const maskedId = res.locals.user['custom:user_id'];
-    //     const id = (hashids.decode(maskedId)[0] as unknown) as number;
-    //     const color = await getRepository(AppointmentColor).save({
-    //         userId: id,
-    //         detailId: Number.parseInt(req.params.id, 10),
-    //         hexColor: req.body.color,
-    //     });
-    //     res.send(color);
+    const maskedId = res.locals.user['custom:user_id'];
+    const id = (hashids.decode(maskedId)[0] as unknown) as number;
+    const user = await getRepository(User).findOne({ where: { id: id } });
+    const color = await getRepository(AppointmentColor).save({
+        userId: user,
+        detailId: Number.parseInt(req.params.id, 10),
+        hexColor: req.body.color,
+    });
+    res.send(color);
+};
+
+export const changeColor = async (req: Request, res: Response) => {
+    const detail = await getRepository(Detail).findOne({ where: { id: req.params.id } });
+    const color = await getRepository(AppointmentColor).findOne({ where: { appDet: detail } });
+
+    res.send(color);
 };

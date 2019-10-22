@@ -8,7 +8,7 @@ import { Detail } from './Detail';
 export class AppointmentColor {
     @ManyToOne(() => User, User => User.appColor, { primary: true })
     @JoinColumn({ name: 'userId' })
-    userId: User[];
+    userId: User;
 
     @ManyToOne(() => Detail, Detail => Detail.color, { primary: true })
     @JoinColumn({ name: 'detailId' })
