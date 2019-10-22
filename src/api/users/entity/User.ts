@@ -1,10 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { Slot } from './Slot';
-import { Detail } from './Detail';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { IsEmail } from 'class-validator';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
-@Entity('User')
+@Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -19,7 +18,10 @@ export class User {
     })
     lastName: string;
 
-    @Column()
+    @Column({
+        unique: true,
+    })
+    @IsEmail()
     email: string;
 
     @Column({
@@ -34,11 +36,4 @@ export class User {
 
     @Column('text')
     bio: string;
-
-    // @TODO: move to separate Student entity
-    @ManyToMany(() => Detail, Detail => Detail.students)
-    assignedDetails: Detail[];
-
-    @OneToMany(() => Detail, Detail => Detail.faculty)
-    details: Detail[];
 }

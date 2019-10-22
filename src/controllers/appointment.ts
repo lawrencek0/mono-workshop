@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Detail } from '../entities/Detail';
-import { getRepository, getManager } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { Slot } from '../entities/Slot';
 import { User } from '../entities/User';
 import hashids from '../util/hasher';
@@ -31,7 +31,7 @@ export const findByFacultyId = async (id: number) => {
     return appointments;
 };
 
-//This findAll list all appointments for user who is currently login
+// This findAll list all appointments for user who is currently login
 export const findAll = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;
@@ -40,23 +40,38 @@ export const findAll = async (req: Request, res: Response) => {
     const user: User = await getRepository(User).findOne(userId);
     // lists all of the appointments that the faculty has created
     if (user.role === 'faculty') {
-        const appointment: Detail[] = await getRepository(Detail).find({
+        const appointments = await getRepository(Detail).find({
             where: { faculty: userId },
             relations: ['slots', 'slots.student'],
         });
 
-        res.send(appointment);
-        // lists all appointments that this student has currently signed up for
+        // add the detail fields to every slot
+        const output = appointments.flatMap(({ slots, ...rest }) => {
+            return slots.map(({ id: slotId, ...slot }) => ({
+                slotId,
+                ...slot,
+                ...rest,
+            }));
+        });
+
+        res.send({ appointments: output });
     } else if (user.role === 'student') {
-        // @FIXME change to typeorm
-        const appointments = await getManager().query(
-            `SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM Appointment_details d LEFT JOIN Appointment_slots s ON d.id = s.detailId WHERE studentId = ?
-             UNION SELECT d.id as "DetailId", d.title, d.description, s.id AS "slot id", s.start, s.end FROM Appointment_details d RIGHT JOIN Appointment_slots s ON s.detailId = d.id WHERE studentId = ?`,
-            [userId, userId],
-        );
-        res.send({ appointments });
+        // Get all the appointment details and slots selected by the user along with the faculty
+        const appointments = await getRepository(Detail)
+            .createQueryBuilder('detail')
+            .innerJoin('detail.students', 'student', 'student.id = :studentId', { studentId: userId })
+            .innerJoinAndSelect('detail.slots', 'slot', 'slot.student = student.id')
+            .leftJoinAndSelect('detail.faculty', 'faculty')
+            .getMany();
+        // flattens the slot
+        const output = appointments.map(({ slots, ...rest }) => {
+            // there will be only one slot associated with a detail for a student
+            const { id: slotId, ...slot } = slots[0];
+            return { ...rest, slotId, ...slot };
+        });
+        res.send({ appointments: output });
     }
-    // @FIXME what if they aren't faculty or student
+    // @FIXME: what if they aren't faculty or student
 };
 
 export const findSlotsWithDetailId = async (req: Request, res: Response) => {
@@ -79,12 +94,7 @@ export const findSlotsWithDetailId = async (req: Request, res: Response) => {
         const output = slots.map(({ student, ...slot }) => {
             // If slot has a student replace its information with "taken":true
             // If it doesn't have a student, add "taken":false
-            return student
-                ? {
-                      ...slot,
-                      taken: true,
-                  }
-                : { ...slot, taken: false };
+            return student ? { ...slot, taken: true } : { ...slot, taken: false };
         });
         res.send({ slots: output, ...detail });
     }
@@ -95,10 +105,27 @@ export const findSlotsWithDetailId = async (req: Request, res: Response) => {
 export const untaken = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];
     const userId = (hashids.decode(maskedId)[0] as unknown) as number;
+    const user = await getRepository(User).findOne(userId);
 
-    const dets = await getManager().query(
-        `SELECT u.appointmentDetailsId FROM Appointment_details_users u LEFT JOIN Appointment_slots s ON u.userId = s.studentId WHERE u.userId = ?`,
-        [userId, userId],
-    );
-    res.send(dets);
+    if (user.role === 'student') {
+        // Subquery that gets all the details' ids that the student has signed up for
+        const selectedAppointments = getRepository(Detail)
+            .createQueryBuilder('detail')
+            .innerJoin('detail.students', 'student', 'student.id = :studentId', { studentId: userId })
+            .innerJoin('detail.slots', 'slot', 'slot.student = student.id')
+            .select('detail.id');
+
+        // Use the subquery to get all the appointments assigned to the student but haven't been taken
+        const unselectedAppointments = await getRepository(Detail)
+            .createQueryBuilder('detail')
+            .innerJoin('detail.students', 'student', 'student.id = :studentId')
+            .where('detail.id NOT IN (' + selectedAppointments.getQuery() + ')')
+            .setParameters(selectedAppointments.getParameters())
+            .leftJoinAndSelect('detail.faculty', 'faculty')
+            .getMany();
+
+        return res.send({ appointments: unselectedAppointments });
+    }
+
+    res.send({ msg: "You can't any appointments" });
 };
