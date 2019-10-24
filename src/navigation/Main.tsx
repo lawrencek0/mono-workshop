@@ -1,7 +1,7 @@
 import React, { ReactNode, lazy } from 'react';
 import { RouteComponentProps } from '@reach/router';
 import tw from 'tailwind.macro';
-import { backgroundColor, primaryTextColor, media, useMediaQueryString } from 'theme';
+import { media, useMediaQueryString } from 'theme';
 import styled from 'styled-components/macro';
 import { primaryRoutes } from 'routing/routes';
 import { Sidebar } from './Sidebar';
@@ -22,9 +22,7 @@ export const Main: React.FC<{ children?: ReactNode } & RouteComponentProps> = ({
 };
 
 const Content = styled.main`
-    ${tw`mx-2 mt-2`}
-    background-color: ${backgroundColor};
-    color: ${primaryTextColor};
+    ${tw`mx-2 h-full`}
 `;
 
 const Wrapper = styled.div`

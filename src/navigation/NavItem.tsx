@@ -46,7 +46,7 @@ export const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary =
 const navLinkStyles = theme.variants('mode', 'variant', {
     inactive: {
         light: css`
-            ${tw`hover:bg-primary-300`}
+            ${tw`hover:bg-primary-100`}
         `,
         dark: css`
             ${tw`bg-transparent text-gray-500 hover:bg-gray-700`}

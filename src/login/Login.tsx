@@ -1,9 +1,20 @@
-import React, { useState, Fragment } from 'react';
-import { login, useAuthDispatch } from '../auth/hooks';
-import { UserPayload } from './types';
+import React, { useState } from 'react';
 import { RouteComponentProps, navigate } from '@reach/router';
+import styled from 'styled-components/macro';
+import tw from 'tailwind.macro';
+import { login, useAuthDispatch } from 'auth/hooks';
 import { localStorageKey } from 'utils/storage';
 import { useFormik, Formik, Form, Field } from 'formik';
+import {
+    FormWrapper,
+    FormTitle,
+    StyledSubmitBtn,
+    StyledCheckboxLabel,
+    StyledLabel,
+    StyledInput,
+    InputWrapper,
+} from 'shared/inputs';
+import { UserPayload } from './types';
 
 const validate = (values: any): any => {
     const errors: any = {};
@@ -65,18 +76,18 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
         // @TODO need better error handling
         try {
             await login(dispatch, inputs);
-            if (rememberUser) {
-                localStorage.setItem(localStorageKey('email'), inputs.email);
-                localStorage.setItem(localStorageKey('rememberMe'), 'true');
-            } else {
-                localStorage.removeItem(localStorageKey('email'));
-                localStorage.removeItem(localStorageKey('rememberMe'));
-            }
-            if (!to.includes('login')) {
-                navigate(to, { replace });
-            }
         } catch (e) {
             throw new Error(`There was a error logging in: ${e}`);
+        }
+        if (rememberUser) {
+            localStorage.setItem(localStorageKey('email'), inputs.email);
+            localStorage.setItem(localStorageKey('rememberMe'), 'true');
+        } else {
+            localStorage.removeItem(localStorageKey('email'));
+            localStorage.removeItem(localStorageKey('rememberMe'));
+        }
+        if (!to.includes('login')) {
+            navigate(to, { replace });
         }
     };
 
@@ -89,47 +100,49 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
     };
 
     return (
-        <Fragment>
-            <form onSubmit={submitForm && HandleSubmit}>
-                <fieldset>
-                    <legend className="ph0 mh0 fw6">Login</legend>
-                    <div className="mt3">
-                        <label className="db fw4 lh-copy f6" htmlFor="email">
-                            Email
-                        </label>
-                        <input {...email}></input>
-                        {metadataEmail.touched && metadataEmail.error}
-                    </div>
-                    <div className="mt3">
-                        <label className="db fw4 lh-copy f6" htmlFor="password">
-                            Password
-                        </label>
-                        <input {...password}></input>
-                        {metadataPassword.touched && metadataPassword.error}
-                    </div>
-                    <div className="mt3">
-                        <input
-                            type="checkbox"
-                            name="rememberMe"
-                            id="rememberMe"
-                            checked={rememberUser}
-                            onChange={handleCheckboxChange}
-                        />
-                        <label htmlFor="rememberMe" className="ml2 fw4 lh-copy-f6">
-                            Remember Me
-                        </label>
-                    </div>
-                    <div className="mt3">
-                        <input
-                            className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6"
-                            type="submit"
-                            value="Login"
-                        />
-                    </div>
-                </fieldset>
+        <Wrapper>
+            <form onSubmit={HandleSubmit}>
+                <FormTitle>Login</FormTitle>
+                <InputWrapper>
+                    <StyledLabel htmlFor="email">Email</StyledLabel>
+                    <StyledInput
+                        type="email"
+                        name="email"
+                        id="email"
+                        value={inputs.email}
+                        onChange={handleInputChange}
+                    />
+                </InputWrapper>
+                <InputWrapper>
+                    <StyledLabel htmlFor="password">Password</StyledLabel>
+                    <StyledInput
+                        type="password"
+                        name="password"
+                        id="password"
+                        value={inputs.password}
+                        onChange={handleInputChange}
+                    />
+                </InputWrapper>
+                <InputWrapper>
+                    <input
+                        type="checkbox"
+                        name="rememberMe"
+                        id="rememberMe"
+                        checked={rememberUser}
+                        onChange={handleCheckboxChange}
+                    />
+                    <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
+                </InputWrapper>
+                <InputWrapper>
+                    <StyledSubmitBtn type="submit" value="Login" />
+                </InputWrapper>
             </form>
-        </Fragment>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled(FormWrapper)`
+    ${tw`lg:w-1/4`}
+`;
 
 export default Login;

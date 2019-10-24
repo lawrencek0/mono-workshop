@@ -58,7 +58,7 @@ const Avatar = styled(MenuButton)`
 `;
 
 const StyledHeader = styled.header`
-    ${tw`flex items-center text-2xl border-gray-200 border-b-2 pt-2 pb-4`}
+    ${tw`flex items-center text-2xl shadow pt-2 pb-4 bg-white`}
 `;
 
 const StyledIcon = styled.div<{ css?: string }>`
