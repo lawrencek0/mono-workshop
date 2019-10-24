@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'tachyons';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AppProviders } from 'AppProviders';
+import './styles/tailwind.out.css';
 
 ReactDOM.render(
     <AppProviders>

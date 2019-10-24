@@ -7,6 +7,7 @@
     "@fullcalendar/core": "^4.3.1",
     "@fullcalendar/daygrid": "^4.3.0",
     "@fullcalendar/react": "^4.3.0",
+    "@reach/menu-button": "^0.1.18",
     "@reach/router": "^1.2.1",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.2",
@@ -22,8 +23,11 @@
     "typescript": "3.5.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm-run-all --parallel build:css start:react",
+    "build": "npm-run-all build:css build:react",
+    "start:react": "react-scripts start",
+    "build:react": "react-scripts build",
+    "build:css": "postcss src/styles/tailwind.css -o src/styles/tailwind.out.css",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'",
@@ -52,6 +56,7 @@
     "@storybook/addon-links": "^5.1.11",
     "@storybook/addons": "^5.1.11",
     "@storybook/react": "^5.1.11",
+    "@types/reach__menu-button": "^0.1.0",
     "@types/reach__router": "^1.2.5",
     "@types/react": "^16.9.2",
     "@types/storybook__react": "^4.0.2",
@@ -67,12 +72,16 @@
     "eslint-plugin-react": "^7.14.3",
     "husky": "^3.0.4",
     "lint-staged": "^9.2.3",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "^6.1.3",
     "prettier": "^1.18.2",
     "react-docgen-typescript-loader": "^3.2.0",
     "stylelint": "^10.1.0",
     "stylelint-config-recommended": "^2.2.0",
     "stylelint-config-styled-components": "^0.1.1",
-    "stylelint-processor-styled-components": "^1.8.0"
+    "stylelint-processor-styled-components": "^1.8.0",
+    "tailwind.macro": "^1.0.0-alpha.10",
+    "tailwindcss": "^1.1.2"
   },
   "husky": {
     "hooks": {
