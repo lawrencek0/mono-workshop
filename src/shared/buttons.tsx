@@ -11,7 +11,6 @@ const primaryBtnStyles = theme.variants('mode', 'variant', {
         light: css`
             ${sharedBtnStyles}
             ${tw`bg-primary-400 hover:bg-primary-500`}
-            background: red !important;
         `,
     },
     danger: {
@@ -53,4 +52,4 @@ FlatButton.defaultProps = {
     variant: 'default',
 };
 
-export { PrimaryButton, FlatButton, primaryBtnStyles, flatBtnStyles };
+export { PrimaryButton, FlatButton, sharedBtnStyles, primaryBtnStyles, flatBtnStyles };

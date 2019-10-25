@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { RouteComponentProps, navigate } from '@reach/router';
+import { Formik, Form, Field, FieldProps, FormikProps } from 'formik';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { login, useAuthDispatch } from 'auth/hooks';
@@ -9,101 +10,112 @@ import {
     FormTitle,
     StyledSubmitBtn,
     StyledCheckboxLabel,
-    StyledLabel,
-    StyledInput,
     InputWrapper,
+    SuperInput,
+    Variant,
 } from 'shared/inputs';
-import { UserPayload } from './types';
+
+type FormValues = {
+    email: string;
+    password: string;
+};
 
 const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
-    // @TODO: handle login failure
-    const [inputs, setInputs] = useState({
-        email: localStorage.getItem(localStorageKey('email')) || '',
-        password: '',
-    });
+    const dispatch = useAuthDispatch();
     const [rememberUser, setRememberUser] = useState(
         localStorage.getItem(localStorageKey('rememberMe')) === 'true' || false,
     );
-
-    const dispatch = useAuthDispatch();
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<UserPayload | void> => {
-        if (e) {
-            e.preventDefault();
-        }
-
-        if (inputs.email === '' || inputs.password === '') return;
-
-        // @TODO need better error handling
-        try {
-            await login(dispatch, inputs);
-        } catch (e) {
-            throw new Error(`There was a error logging in: ${e}`);
-        }
-        if (rememberUser) {
-            localStorage.setItem(localStorageKey('email'), inputs.email);
-            localStorage.setItem(localStorageKey('rememberMe'), 'true');
-        } else {
-            localStorage.removeItem(localStorageKey('email'));
-            localStorage.removeItem(localStorageKey('rememberMe'));
-        }
-        if (!to.includes('login')) {
-            navigate(to, { replace });
-        }
-    };
-
-    const handleInputChange = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
-        setInputs(inputs => ({ ...inputs, [currentTarget.name]: currentTarget.value }));
-    };
 
     const handleCheckboxChange = (_: React.ChangeEvent<HTMLInputElement>): void => {
         setRememberUser(!rememberUser);
     };
 
     return (
-        <Wrapper>
-            <form onSubmit={handleSubmit}>
-                <FormTitle>Login</FormTitle>
-                <InputWrapper>
-                    <StyledLabel htmlFor="email">Email</StyledLabel>
-                    <StyledInput
-                        type="email"
-                        name="email"
-                        id="email"
-                        value={inputs.email}
-                        onChange={handleInputChange}
-                    />
-                </InputWrapper>
-                <InputWrapper>
-                    <StyledLabel htmlFor="password">Password</StyledLabel>
-                    <StyledInput
-                        type="password"
-                        name="password"
-                        id="password"
-                        value={inputs.password}
-                        onChange={handleInputChange}
-                    />
-                </InputWrapper>
-                <InputWrapper>
-                    <input
-                        type="checkbox"
-                        name="rememberMe"
-                        id="rememberMe"
-                        checked={rememberUser}
-                        onChange={handleCheckboxChange}
-                    />
-                    <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
-                </InputWrapper>
-                <InputWrapper>
-                    <StyledSubmitBtn type="submit" value="Login" />
-                </InputWrapper>
-            </form>
-        </Wrapper>
+        <Formik
+            initialValues={{ email: localStorage.getItem(localStorageKey('email')) || '', password: '' }}
+            validate={values => {
+                const errors = {} as FormValues;
+
+                if (!values.email) {
+                    errors.email = 'Required';
+                } else if (!/^[A-Z0-9]+@(warhawks.ulm|ulm).edu$/i.test(values.email)) {
+                    errors.email = 'Invalid email address';
+                }
+
+                if (!values.password) {
+                    errors.password = 'Required';
+                }
+
+                return errors;
+            }}
+            onSubmit={async (values, actions) => {
+                try {
+                    await login(dispatch, values);
+                    if (rememberUser) {
+                        localStorage.setItem(localStorageKey('email'), values.email);
+                        localStorage.setItem(localStorageKey('rememberMe'), 'true');
+                    } else {
+                        localStorage.removeItem(localStorageKey('email'));
+                        localStorage.removeItem(localStorageKey('rememberMe'));
+                    }
+                    if (!to.includes('login')) {
+                        navigate(to, { replace });
+                    }
+                } catch (e) {
+                    actions.setSubmitting(false);
+                    actions.resetForm({ ...values, password: '' });
+                    actions.setStatus(e.message);
+                }
+            }}
+            render={({ isSubmitting, isValid, status }: FormikProps<FormValues>) => (
+                <Wrapper variant={status ? 'danger' : 'default'}>
+                    <Form>
+                        <FormTitle>Login</FormTitle>
+                        <ErrorMessage>{status}</ErrorMessage>
+                        <Field
+                            name="email"
+                            render={(props: FieldProps<FormValues>) => (
+                                <SuperInput type="email" id="email" label="Email" {...props} />
+                            )}
+                        />
+                        <Field
+                            name="password"
+                            render={(props: FieldProps<FormValues>) => (
+                                <SuperInput type="password" id="password" label="Password" {...props} />
+                            )}
+                        />
+                        <InputWrapper>
+                            <input
+                                type="checkbox"
+                                name="rememberMe"
+                                id="rememberMe"
+                                checked={rememberUser}
+                                onChange={handleCheckboxChange}
+                            />
+                            <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
+                        </InputWrapper>
+                        <InputWrapper>
+                            <StyledSubmitBtn
+                                type="submit"
+                                value="Login"
+                                disabled={isSubmitting}
+                                variant={isSubmitting || !isValid ? 'disabled' : 'default'}
+                            />
+                        </InputWrapper>
+                    </Form>
+                </Wrapper>
+            )}
+        />
     );
 };
 
-const Wrapper = styled(FormWrapper)`
+const ErrorMessage = styled.div`
+    ${tw`text-red-400 mb-2 font-semibold`}
+`;
+
+const Wrapper = styled(FormWrapper)<{ variant: Variant }>`
     ${tw`lg:w-1/4`}
+    ${props => props.variant === 'danger' && tw`border-t-4 border-red-500`}
 `;
 
 export default Login;
