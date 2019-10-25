@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { Detail } from '../entities/Detail';
+import { Detail } from '../api/appointments/entity/Detail';
 import { getRepository } from 'typeorm';
-import { Slot } from '../entities/Slot';
-import { User } from '../entities/User';
+import { Slot } from '../api/appointments/entity/Slot';
+import { User } from '../api/users/entity/User';
 import hashids from '../util/hasher';
 
 export const create = async (req: Request, res: Response) => {

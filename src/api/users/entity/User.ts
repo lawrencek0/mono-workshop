@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 import { IsEmail } from 'class-validator';
+import { Detail } from '../../appointments/entity/Detail';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -36,4 +37,11 @@ export class User {
 
     @Column('text')
     bio: string;
+
+    // @TODO: move to separate Student entity
+    @ManyToMany(() => Detail, Detail => Detail.students)
+    assignedDetails: Detail[];
+
+    @OneToMany(() => Detail, Detail => Detail.faculty)
+    details: Detail[];
 }

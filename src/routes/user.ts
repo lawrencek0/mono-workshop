@@ -1,13 +1,13 @@
-import { Router } from 'express';
-import * as userService from '../controllers/user';
+// import { Router } from 'express';
+// import * as userService from '../controllers/user';
 
-const router = Router();
-//list All users
-router.get('/', userService.listAllUsers);
+// const router = Router();
+// //list All users
+// router.get('/', userService.listAllUsers);
 
-//list All students(not completed)
-router.get('/students', userService.listAllStudents);
+// //list All students(not completed)
+// router.get('/students', userService.listAllStudents);
 
-router;
+// router;
 
-export { router as UserRouter };
+// export { router as UserRouter };
