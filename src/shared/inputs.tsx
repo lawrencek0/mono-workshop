@@ -1,9 +1,12 @@
+import React from 'react';
+import { FieldProps, ErrorMessage } from 'formik';
 import styled, { css } from 'styled-components/macro';
 import theme from 'styled-theming';
 import tw from 'tailwind.macro';
 import { Link } from '@reach/router';
+import { MdInfo } from 'react-icons/md';
 import { Wrapper, Title } from './cards/styles';
-import { primaryBtnStyles, sharedBtnStyles, flatBtnStyles } from './buttons';
+import { primaryBtnStyles, flatBtnStyles } from './buttons';
 
 export type Variant = 'default' | 'danger' | 'disabled';
 
@@ -100,6 +103,39 @@ const InputErrorMsg = styled.p`
     ${tw`text-red-500 pt-1 text-xs`}
 `;
 
+const StyledInfo = styled(MdInfo)`
+    ${tw`inline mr-1`}
+`;
+
+type SuperInputProps<T> = FieldProps<T> & {
+    label: string;
+    id: string;
+    type: string;
+};
+
+const SuperInput: <T extends Record<string, unknown>>(
+    p: SuperInputProps<T>,
+) => React.ReactElement<SuperInputProps<T>> = ({ field, form: { errors, touched }, id, label, type, ...props }) => {
+    const variant = errors[field.name] && touched[field.name] ? 'danger' : 'default';
+    return (
+        <InputWrapper>
+            <StyledLabel htmlFor={id} variant={variant}>
+                {label}
+            </StyledLabel>
+            <StyledInput type={type} variant={variant} id={id} {...field} {...props} />
+            <ErrorMessage
+                name={field.name}
+                render={msg => (
+                    <InputErrorMsg>
+                        <StyledInfo />
+                        {msg}
+                    </InputErrorMsg>
+                )}
+            />
+        </InputWrapper>
+    );
+};
+
 StyledLabel.defaultProps = {
     variant: 'default',
 };
@@ -123,4 +159,5 @@ export {
     StyledLink,
     StyledSubmitBtn,
     InputErrorMsg,
+    SuperInput,
 };
