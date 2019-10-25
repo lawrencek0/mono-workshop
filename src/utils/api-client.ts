@@ -22,7 +22,17 @@ export const apiClient = async <T>(
     const res = await fetch(`api/${endpoint}`, config);
 
     if (!res.ok) {
-        throw new Error(res.statusText);
+        let err;
+
+        try {
+            const { message } = await res.json();
+            err = new Error(message);
+        } catch (e) {
+            // parsing JSON may fail so use the statusText
+            err = new Error(res.statusText);
+        }
+
+        throw err;
     }
     const { type, ...data } = await res.json();
 
