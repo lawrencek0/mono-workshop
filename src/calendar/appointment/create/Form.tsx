@@ -12,13 +12,14 @@ import { Slot, SlotsByDate, DateTimeRange, Student } from 'calendar/types';
 import { slotsFromRanges, slotsByDay } from 'calendar/helpers';
 import { createAppointment } from 'calendar/client';
 
-type Props = RouteComponentProps & {
-    step?: 1 | 2 | 3 | 4;
-};
+type Props = RouteComponentProps<{ step: string }>;
 
 // @FIXME: this is probably not the best way to distribute state
 // @TODO: Add a back button, ability to go to any valid step
-const Page: React.FC<Props> = ({ step = 1 }) => {
+const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
+    // @TODO: range in TS https://github.com/Microsoft/TypeScript/issues/15480
+    const step = Number(stepStr.charAt(0)) as 1 | 2 | 3 | 4;
+
     const [inputs, setInputs] = useState({
         title: '',
         description: '',
@@ -83,6 +84,7 @@ const Page: React.FC<Props> = ({ step = 1 }) => {
 
     if (isNaN(step) || (step < 0 || step > 5)) {
         navigate('./1');
+        return <>Loading form</>;
     }
 
     return (
