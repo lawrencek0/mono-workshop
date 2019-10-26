@@ -2,26 +2,36 @@ import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import theme from 'styled-theming';
 
-const sharedBtnStyles = css`
+const sharedStyles = css`
     ${tw`py-2 px-4 rounded cursor-pointer focus:outline-none focus:shadow-outline`}
+`;
+const disabledStyles = css`
+    ${tw`opacity-50 text-gray-800 focus:shadow-none cursor-not-allowed font-light`}
 `;
 
 const primaryBtnStyles = theme.variants('mode', 'variant', {
     default: {
         light: css`
-            ${sharedBtnStyles}
+            ${sharedStyles}
             ${tw`bg-primary-400 hover:bg-primary-500`}
+        `,
+    },
+    disabled: {
+        light: css`
+            ${sharedStyles}
+            ${disabledStyles}
+            ${tw`bg-primary-300 hover:bg-primary-300`}
         `,
     },
     danger: {
         light: css`
-            ${sharedBtnStyles}
+            ${sharedStyles}
             ${tw`bg-red-400 hover:bg-red-500`}
         `,
     },
 });
 
-const PrimaryButton = styled.button<{ variant?: 'default' | 'danger' }>`
+const PrimaryButton = styled.button<{ variant?: 'default' | 'disabled' | 'danger' }>`
     ${primaryBtnStyles}
 `;
 
@@ -32,14 +42,15 @@ PrimaryButton.defaultProps = {
 const flatBtnStyles = theme.variants('mode', 'variant', {
     default: {
         light: css`
-            ${sharedBtnStyles}
+            ${sharedStyles}
             ${tw`bg-transparent hover:bg-gray-200 font-light`}
         `,
     },
     disabled: {
         light: css`
-            ${sharedBtnStyles}
-            ${tw`bg-gray-400 hover:bg-gray-400 opacity-50 text-gray-800 focus:shadow-none cursor-not-allowed font-light`}
+            ${sharedStyles}
+            ${disabledStyles}
+            ${tw`bg-gray-400 hover:bg-gray-400`}
         `,
     },
 });
@@ -52,4 +63,4 @@ FlatButton.defaultProps = {
     variant: 'default',
 };
 
-export { PrimaryButton, FlatButton, sharedBtnStyles, primaryBtnStyles, flatBtnStyles };
+export { PrimaryButton, FlatButton, sharedStyles as sharedBtnStyles, primaryBtnStyles, flatBtnStyles };
