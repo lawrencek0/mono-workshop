@@ -107,15 +107,15 @@ const StyledInfo = styled(MdInfo)`
     ${tw`inline mr-1`}
 `;
 
-type SuperInputProps<T> = FieldProps<T> & {
+type ExtendedFieldProps<T> = FieldProps<T> & {
     label: string;
     id: string;
     type: string;
 };
 
-const SuperInput: <T extends Record<string, unknown>>(
-    p: SuperInputProps<T>,
-) => React.ReactElement<SuperInputProps<T>> = ({ field, form: { errors, touched }, id, label, type, ...props }) => {
+const ExtendedField: <T extends Record<string, unknown>>(
+    p: ExtendedFieldProps<T>,
+) => React.ReactElement<ExtendedFieldProps<T>> = ({ field, form: { errors, touched }, id, label, type, ...props }) => {
     const variant = errors[field.name] && touched[field.name] ? 'danger' : 'default';
     return (
         <InputWrapper>
@@ -159,5 +159,5 @@ export {
     StyledLink,
     StyledSubmitBtn,
     InputErrorMsg,
-    SuperInput,
+    ExtendedField,
 };
