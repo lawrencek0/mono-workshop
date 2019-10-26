@@ -14,8 +14,8 @@
     "@types/node": "12.7.2",
     "@types/react-dates": "^17.1.5",
     "@types/react-dom": "16.9.0",
-    "moment": "^2.24.0",
     "formik": "^1.5.8",
+    "moment": "^2.24.0",
     "react": "^16.9.0",
     "react-dates": "^21.1.0",
     "react-dom": "^16.9.0",
@@ -24,7 +24,8 @@
     "react-with-direction": "^1.3.1",
     "styled-components": "^4.3.2",
     "styled-theming": "^2.2.0",
-    "typescript": "3.5.3"
+    "typescript": "3.5.3",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "npm-run-all --parallel build:css start:react",
@@ -66,6 +67,7 @@
     "@types/storybook__react": "^4.0.2",
     "@types/styled-components": "^4.1.18",
     "@types/styled-theming": "^2.2.2",
+    "@types/yup": "^0.26.24",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "babel-loader": "^8.0.6",
