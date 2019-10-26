@@ -11,7 +11,7 @@ import {
     StyledSubmitBtn,
     StyledCheckboxLabel,
     InputWrapper,
-    SuperInput,
+    ExtendedField,
     Variant,
 } from 'shared/inputs';
 
@@ -75,13 +75,13 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                         <Field
                             name="email"
                             render={(props: FieldProps<FormValues>) => (
-                                <SuperInput type="email" id="email" label="Email" {...props} />
+                                <ExtendedField type="email" id="email" label="Email" {...props} />
                             )}
                         />
                         <Field
                             name="password"
                             render={(props: FieldProps<FormValues>) => (
-                                <SuperInput type="password" id="password" label="Password" {...props} />
+                                <ExtendedField type="password" id="password" label="Password" {...props} />
                             )}
                         />
                         <InputWrapper>
