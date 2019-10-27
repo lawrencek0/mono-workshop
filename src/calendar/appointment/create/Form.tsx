@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps, navigate } from '@reach/router';
-import styled from 'styled-components';
-import { media } from 'theme';
+import styled from 'styled-components/macro';
+import tw from 'tailwind.macro';
+import { media, useMediaQueryString } from 'theme';
 import { Stepper } from './Stepper';
 import { Details } from './Details';
 import { StudentSelection } from './StudentSelection';
@@ -11,14 +12,27 @@ import { getAllStudents } from 'utils/students-client';
 import { Slot, SlotsByDate, DateTimeRange, Student } from 'calendar/types';
 import { slotsFromRanges, slotsByDay } from 'calendar/helpers';
 import { createAppointment } from 'calendar/client';
+import { Wrapper as FormWrapper } from 'shared/cards/styles';
 
 type Props = RouteComponentProps<{ step: string }>;
+
+const PageTitles = [
+    'Fill Appointment Details',
+    'Select Students',
+    'Select the Date Range',
+    'Review the Details',
+] as const;
 
 // @FIXME: this is probably not the best way to distribute state
 // @TODO: Add a back button, ability to go to any valid step
 const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
+    const isDesktop = useMediaQueryString('desktop');
     // @TODO: range in TS https://github.com/Microsoft/TypeScript/issues/15480
     const step = Number(stepStr.charAt(0)) as 1 | 2 | 3 | 4;
+
+    const goToPage = (page: number): void => {
+        navigate(`./${page}`);
+    };
 
     const [inputs, setInputs] = useState({
         title: '',
@@ -92,41 +106,33 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
             <Wrapper>
                 <Stepper
                     title="Create New Appointment"
-                    steps={[
-                        'Fill Appointment Details',
-                        'Select Students',
-                        'Select the Date Range',
-                        'Review the Details',
-                    ]}
+                    steps={PageTitles}
+                    direction={isDesktop ? 'horizontal' : 'vertical'}
                     activeStep={step as number}
+                    goToPage={goToPage}
                 />
-                {
+                <FormWrapper>
                     {
-                        1: <Details {...inputs} onInputChange={handleInputChange} />,
-                        2: (
-                            <StudentSelection
-                                students={students}
-                                onStudentSelection={handleStudentSelection}
-                                onSubmit={handleStudentsSubmit}
-                            />
-                        ),
-                        3: <RangePicker onSubmit={handleDatesSubmit} />,
-                        4: <AppointmentSlotsReview slots={slotsByDate} handleSubmit={handleFormSubmit} />,
-                    }[step]
-                }
+                        {
+                            1: <Details {...inputs} onInputChange={handleInputChange} />,
+                            2: (
+                                <StudentSelection
+                                    students={students}
+                                    onStudentSelection={handleStudentSelection}
+                                    onSubmit={handleStudentsSubmit}
+                                />
+                            ),
+                            3: <RangePicker onSubmit={handleDatesSubmit} />,
+                            4: <AppointmentSlotsReview slots={slotsByDate} handleSubmit={handleFormSubmit} />,
+                        }[step]
+                    }
+                </FormWrapper>
             </Wrapper>
         </>
     );
 };
-
-const Wrapper = styled.div.attrs(() => ({
-    className: 'center w-90',
-}))`
-    ${media.desktop} {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 3rem;
-    }
+const Wrapper = styled.div`
+    ${tw`flex flex-col-reverse lg:flex-col w-full lg:w-2/3 m-auto`}
 `;
 
 export default Page;
