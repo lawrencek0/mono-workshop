@@ -1,88 +1,155 @@
 import React from 'react';
-import styled from 'styled-components/macro';
+import styled, { css, ThemeProvider } from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { primaryTextColor } from 'theme';
+import theme from 'styled-theming';
 
-type Props = {
+type Direction = 'vertical' | 'horizontal';
+
+type Props = Readonly<{
     title: string;
-    steps: string[];
+    steps: Readonly<string[]>;
     activeStep: number;
-    className?: string;
-};
+    direction: Direction;
+    goToPage: (page: number) => void;
+}>;
 
-const Wrapper = styled.div<Pick<Props, 'className'>>`
-    ${tw`flex flex-col items-center text-xl`}
-`;
+const Stepper: React.FC<Props> = ({ title, steps, activeStep, direction, goToPage: handleClick }) => {
+    return (
+        <ThemeProvider theme={{ direction }}>
+            <Wrapper>
+                <Title>{title}</Title>
+                <StyledSteps>
+                    {steps.map((step, i) => {
+                        const type = i < activeStep - 1 ? 'selected' : i === activeStep - 1 ? 'active' : 'unselected';
+                        return (
+                            <ThemeProvider key={step} theme={{ type }}>
+                                <Step onClick={() => handleClick(i + 1)}>
+                                    <Connector></Connector>
+                                    <Text>{step}</Text>
+                                </Step>
+                            </ThemeProvider>
+                        );
+                    })}
+                </StyledSteps>
+            </Wrapper>
+        </ThemeProvider>
+    );
+};
 
 const Title = styled.h1`
     ${tw`text-2xl text-center mb-6`}
 `;
 
+const stepsStyles = theme('direction', {
+    horizontal: css`
+        ${tw`flex-row w-11/12`}
+    `,
+    vertical: css`
+        ${tw`flex-col m-auto`}
+    `,
+});
+
 const StyledSteps = styled.ol`
-    ${tw`list-none`}
+    ${tw`flex list-none`}
+    ${stepsStyles}
     counter-reset: stepCount;
 `;
 
-const UnSelectedStep = styled.li`
-    ${tw`relative overflow-hidden pl-16 pb-12`}
-    line-height: 2em;
+/**
+ * `calc` is used to make sure the line is properly positioned.
+ * The width of the circle is `2em` so by adding the half to 50% of the left, the line starts from the end of circle.
+ * `w-1` is `0.25em` so it's divided in half in order to center from its point of origin.
+ */
+const connectorLineStyles = theme('direction', {
+    horizontal: css`
+        ${tw`w-full h-1`}
+        left: calc(50% + 1em);
+        top: 1em;
+    `,
+    vertical: css`
+        ${tw`w-1 h-full`}
+        left: calc(1em - 0.125em);
+    `,
+});
+
+const connectorStyles = theme('type', {
+    selected: css`
+        &::before {
+            ${tw`bg-primary-400 border-primary-400`}
+            content: '️✔️';
+        }
+        &::after {
+            ${tw`bg-primary-400`}
+        }
+    `,
+});
+
+const Connector = styled.div`
+    ${tw`relative`}
 
     &::before {
-        ${tw`absolute border-2 border-gray-400 border-0 border-l-2`}
-        content: '';
-        top: 2em;
-        left: 1em;
-        width: 3em;
-        height: 20em;
-    }
-
-    &:last-of-type::before {
-        ${tw`border-0 h-0`}
-    }
-
-    &::after {
-        ${tw`bg-transparent rounded-full border-2 border-primary-400 text-gray-700 text-center inset-0 absolute`}
+        ${tw`mx-auto block rounded-full border-2 border-gray-400 text-gray-700 text-center z-10 w-8 h-8`}
+        background-color: #f9f9f9;
         counter-increment: stepCount;
         content: counter(stepCount);
-        width: 2em;
-        height: 2em;
         line-height: 2em;
     }
+    &::after {
+        ${tw`block bg-gray-400 absolute`}
+        ${connectorLineStyles}
+        content: '';
+    }
+
+    ${connectorStyles}
 `;
 
-const ActiveStep = styled(UnSelectedStep)`
-    ${tw`font-bold`}
+const stepDirectionStyles = theme('direction', {
+    horizontal: css`
+        ${tw`inline`}
+    `,
+    vertical: css`
+        ${tw`flex`}
+    `,
+});
 
-    &::after {
-        ${tw`bg-primary-400`}
+const stepStyles = theme('type', {
+    selected: css`
+        ${tw`font-normal`}
+    `,
+    active: css`
+        ${tw`font-semibold`}
+    `,
+    unselected: css`
+        ${tw`font-light`}
+    `,
+});
+
+const Step = styled.li`
+    ${tw`flex-1 cursor-pointer`}
+    ${stepDirectionStyles}
+    ${stepStyles}
+
+    &:last-of-type ${/*sc-select*/ Connector}::after {
+        content: none
     }
 `;
 
-const SelectedStep = styled(UnSelectedStep)`
-    &::after {
-        ${tw`bg-primary-400 text-transparent`}
-        content: '️✔️';
-        text-shadow: 0 0 ${primaryTextColor};
-    }
+const textStyles = theme('direction', {
+    horizontal: css`
+        ${tw`px-2 py-4`}
+    `,
+    vertical: css`
+        ${tw`px-4 pb-12 pt-1`}
+    `,
+});
+
+const Text = styled.div`
+    ${tw`text-center hover:underline`};
+    ${textStyles}
 `;
 
-const Stepper: React.FC<Props> = ({ title, steps, activeStep, className }) => {
-    return (
-        <Wrapper className={className}>
-            <Title>{title}</Title>
-            <StyledSteps>
-                {steps.map((step, i) => {
-                    if (i < activeStep - 1) {
-                        return <SelectedStep key={step}>{step}</SelectedStep>;
-                    }
-                    if (i === activeStep - 1) {
-                        return <ActiveStep key={step}>{step}</ActiveStep>;
-                    }
-                    return <UnSelectedStep key={step}>{step}</UnSelectedStep>;
-                })}
-            </StyledSteps>
-        </Wrapper>
-    );
-};
+const Wrapper = styled.div`
+    ${tw`flex flex-col items-center w-full`}
+`;
 
 export { Stepper };
