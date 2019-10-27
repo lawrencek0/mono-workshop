@@ -21,7 +21,8 @@
         ],
         "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
         // @TODO add prop-types later for storybook
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "no-constant-condition": "off"
     },
     "settings": {
         "react": {
