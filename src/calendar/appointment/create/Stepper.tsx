@@ -23,9 +23,11 @@ const Stepper: React.FC<Props> = ({ title, steps, activeStep, direction, goToPag
                         const type = i < activeStep - 1 ? 'selected' : i === activeStep - 1 ? 'active' : 'unselected';
                         return (
                             <ThemeProvider key={step} theme={{ type }}>
-                                <Step onClick={() => handleClick(i + 1)}>
-                                    <Connector></Connector>
-                                    <Text>{step}</Text>
+                                <Step>
+                                    <ConnectorWrapper onClick={() => handleClick(i + 1)}>
+                                        <Connector></Connector>
+                                        <Text>{step}</Text>
+                                    </ConnectorWrapper>
                                 </Step>
                             </ThemeProvider>
                         );
@@ -35,6 +37,33 @@ const Stepper: React.FC<Props> = ({ title, steps, activeStep, direction, goToPag
         </ThemeProvider>
     );
 };
+
+const displayStyles = theme('direction', {
+    horizontal: css`
+        ${tw`inline`}
+    `,
+    vertical: css`
+        ${tw`flex`}
+    `,
+});
+
+const fontStyles = theme('type', {
+    selected: css`
+        ${tw`font-normal`}
+    `,
+    active: css`
+        ${tw`font-semibold`}
+    `,
+    unselected: css`
+        ${tw`font-light`}
+    `,
+});
+
+const ConnectorWrapper = styled.button`
+    ${tw`w-full`}
+    ${fontStyles}
+    ${displayStyles}
+`;
 
 const Title = styled.h1`
     ${tw`text-2xl text-center mb-6`}
@@ -103,31 +132,8 @@ const Connector = styled.div`
     ${connectorStyles}
 `;
 
-const stepDirectionStyles = theme('direction', {
-    horizontal: css`
-        ${tw`inline`}
-    `,
-    vertical: css`
-        ${tw`flex`}
-    `,
-});
-
-const stepStyles = theme('type', {
-    selected: css`
-        ${tw`font-normal`}
-    `,
-    active: css`
-        ${tw`font-semibold`}
-    `,
-    unselected: css`
-        ${tw`font-light`}
-    `,
-});
-
 const Step = styled.li`
-    ${tw`flex-1 cursor-pointer`}
-    ${stepDirectionStyles}
-    ${stepStyles}
+    ${tw`flex-1`}
 
     &:last-of-type ${/*sc-select*/ Connector}::after {
         content: none
