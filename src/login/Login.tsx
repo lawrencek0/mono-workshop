@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RouteComponentProps, navigate } from '@reach/router';
-import { Formik, Form, Field, FieldProps, FormikProps } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { login, useAuthDispatch } from 'auth/hooks';
@@ -11,9 +11,9 @@ import {
     StyledSubmitBtn,
     StyledCheckboxLabel,
     InputWrapper,
-    ExtendedField,
     Variant,
-} from 'shared/inputs';
+} from 'shared/inputs/styles';
+import { Field } from 'shared/inputs/Field';
 
 type FormValues = {
     email: string;
@@ -63,49 +63,44 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                     }
                 } catch (e) {
                     actions.setSubmitting(false);
-                    actions.resetForm({ ...values, password: '' });
+                    actions.resetForm({ values: { ...values, password: '' } });
                     actions.setStatus(e.message);
                 }
             }}
-            render={({ isSubmitting, isValid, status }: FormikProps<FormValues>) => (
-                <Wrapper variant={status ? 'danger' : 'default'}>
-                    <Form>
-                        <FormTitle>Login</FormTitle>
-                        <ErrorMessage>{status}</ErrorMessage>
-                        <Field
-                            name="email"
-                            render={(props: FieldProps<FormValues>) => (
-                                <ExtendedField type="email" id="email" label="Email" {...props} />
-                            )}
-                        />
-                        <Field
-                            name="password"
-                            render={(props: FieldProps<FormValues>) => (
-                                <ExtendedField type="password" id="password" label="Password" {...props} />
-                            )}
-                        />
-                        <InputWrapper>
-                            <input
-                                type="checkbox"
-                                name="rememberMe"
-                                id="rememberMe"
-                                checked={rememberUser}
-                                onChange={handleCheckboxChange}
-                            />
-                            <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
-                        </InputWrapper>
-                        <InputWrapper>
-                            <StyledSubmitBtn
-                                type="submit"
-                                value="Login"
-                                disabled={isSubmitting}
-                                variant={isSubmitting || !isValid ? 'disabled' : 'default'}
-                            />
-                        </InputWrapper>
-                    </Form>
-                </Wrapper>
-            )}
-        />
+        >
+            {(props: FormikProps<FormValues>) => {
+                const isDisabled = !props.isValid || props.isSubmitting;
+                return (
+                    <Wrapper variant={props.status ? 'danger' : 'default'}>
+                        {/* @FIXME: Switch to Form (broken rn) https://github.com/jaredpalmer/formik/issues/1927 */}
+                        <form onSubmit={props.handleSubmit}>
+                            <FormTitle>Login</FormTitle>
+                            <ErrorMessage>{props.status}</ErrorMessage>
+                            <Field name="email" type="email" id="email" label="Email" {...props} />
+                            <Field type="password" id="password" name="password" label="Password" {...props} />
+                            <InputWrapper>
+                                <input
+                                    type="checkbox"
+                                    name="rememberMe"
+                                    id="rememberMe"
+                                    checked={rememberUser}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
+                            </InputWrapper>
+                            <InputWrapper>
+                                <StyledSubmitBtn
+                                    type="submit"
+                                    value="Login"
+                                    disabled={isDisabled}
+                                    variant={isDisabled ? 'disabled' : 'default'}
+                                />
+                            </InputWrapper>
+                        </form>
+                    </Wrapper>
+                );
+            }}
+        </Formik>
     );
 };
 
@@ -114,7 +109,7 @@ const ErrorMessage = styled.div`
 `;
 
 const Wrapper = styled(FormWrapper)<{ variant: Variant }>`
-    ${tw`lg:w-1/4`}
+    ${tw`w-10/12 md:w-6/12 lg:w-4/12 xl:w-1/4`}
     ${props => props.variant === 'danger' && tw`border-t-4 border-red-500`}
 `;
 
