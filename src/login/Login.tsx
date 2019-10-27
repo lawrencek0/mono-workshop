@@ -14,6 +14,7 @@ import {
     Variant,
 } from 'shared/inputs/styles';
 import { Field } from 'shared/inputs/Field';
+import { Progress } from 'shared/Progress';
 
 type FormValues = {
     email: string;
@@ -49,6 +50,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                 return errors;
             }}
             onSubmit={async (values, actions) => {
+                // eslint-disable-next-line no-undef
                 try {
                     await login(dispatch, values);
                     if (rememberUser) {
@@ -71,7 +73,8 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
             {(props: FormikProps<FormValues>) => {
                 const isDisabled = !props.isValid || props.isSubmitting;
                 return (
-                    <Wrapper variant={props.status ? 'danger' : 'default'}>
+                    <Wrapper variant={props.status && !props.isSubmitting ? 'danger' : 'default'}>
+                        {props.isSubmitting && <StyledProgress />}
                         {/* @FIXME: Switch to Form (broken rn) https://github.com/jaredpalmer/formik/issues/1927 */}
                         <form onSubmit={props.handleSubmit}>
                             <FormTitle>Login</FormTitle>
@@ -104,12 +107,16 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
     );
 };
 
+const StyledProgress = styled(Progress)`
+    ${tw`absolute inset-0`}
+`;
+
 const ErrorMessage = styled.div`
     ${tw`text-red-400 mb-2 font-semibold`}
 `;
 
 const Wrapper = styled(FormWrapper)<{ variant: Variant }>`
-    ${tw`w-10/12 md:w-6/12 lg:w-4/12 xl:w-1/4`}
+    ${tw`relative w-10/12 md:w-6/12 lg:w-4/12 xl:w-1/4`}
     ${props => props.variant === 'danger' && tw`border-t-4 border-red-500`}
 `;
 
