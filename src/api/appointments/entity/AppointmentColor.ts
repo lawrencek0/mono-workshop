@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from './User';
 import { Detail } from './Detail';
+import { User } from '../../users/entity/User';
 
 // TODO: Review these fields and naming convention
 // Use other entities as a guide!
@@ -10,7 +10,7 @@ export class AppointmentColor {
     @JoinColumn({ name: 'userId' })
     userId: User;
 
-    @ManyToOne(() => Detail, Detail => Detail.color, { primary: true })
+    @ManyToOne(() => Detail, Detail => Detail.colors, { primary: true })
     @JoinColumn({ name: 'detailId' })
     appDet: Detail;
 

@@ -4,8 +4,8 @@ import moment from 'moment';
 import 'moment-timezone';
 import { Request, Response } from 'express';
 import { email } from '../util/secrets';
-import { Detail } from '../entities/Detail';
-import { Event } from '../entities/Event';
+import { Event } from '../api/appointments/entity/Event';
+import { Detail } from '../api/appointments/entity/Detail';
 
 AWS.config.update({
     accessKeyId: email.AWS_ACCESS_KEY_ID,

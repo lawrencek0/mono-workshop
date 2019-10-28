@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 import { Slot } from './Slot';
-import { User } from './User';
+import { User } from '../../users/entity/User';
 import { AppointmentColor } from './AppointmentColor';
 
 @Entity('Appointment_details')
@@ -24,6 +24,6 @@ export class Detail {
     @JoinTable({ name: 'appointment_details_users' })
     students: User[];
 
-    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.appDet)
-    color: AppointmentColor[];
+    @ManyToOne(() => AppointmentColor, AppointmentColor => AppointmentColor.detail)
+    colors: AppointmentColor;
 }

@@ -17,7 +17,7 @@ services:
             target: base
         depends_on:
             - db
-        command: [sh, -c, '/wait && npm run watch']
+        command: npm run watch
         volumes:
             - '.:/usr/app/'
         environment:

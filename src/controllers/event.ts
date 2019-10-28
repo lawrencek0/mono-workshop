@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { getRepository, getManager, DeleteResult } from 'typeorm';
-import { Event } from '../entities/Event';
-import { User } from '../entities/User';
 import hashids from '../util/hasher';
-import { EventColor } from '../entities/EventColor';
+import { User } from '../api/users/entity/User';
+import { Event } from '../api/appointments/entity/Event';
+import { EventColor } from '../api/appointments/entity/EventColor';
 
 export const create = async (req: Request, res: Response) => {
     const maskedId = res.locals.user['custom:user_id'];

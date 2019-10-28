@@ -1,12 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
-import { Detail } from './Detail';
-import { Event } from './Event';
-import { EventColor } from './EventColor';
-import { AppointmentColor } from './AppointmentColor';
+import { IsEmail } from 'class-validator';
+import { Detail } from '../../appointments/entity/Detail';
+import { AppointmentColor } from '../../appointments/entity/AppointmentColor';
+import { Event } from '../../appointments/entity/Event';
+import { EventColor } from '../../appointments/entity/EventColor';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
-@Entity('User')
+@Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
@@ -21,7 +22,10 @@ export class User {
     })
     lastName: string;
 
-    @Column()
+    @Column({
+        unique: true,
+    })
+    @IsEmail()
     email: string;
 
     @Column({
@@ -52,4 +56,6 @@ export class User {
 
     @OneToMany(() => EventColor, EventColor => EventColor.user)
     eventColors: EventColor[];
+    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.user)
+    appointmentColors: AppointmentColor[];
 }
