@@ -1,10 +1,7 @@
 import { apiClient } from 'utils/api-client';
+import { User } from 'user/types';
 
-export type Student = {
-    id: string;
-    firstName: string;
-    lastName: string;
-};
+export type Student = User;
 
 const getAllStudents = async (): Promise<Student[]> => {
     try {

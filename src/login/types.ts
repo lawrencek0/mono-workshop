@@ -1,6 +1,6 @@
-import { UserModel } from '../user/model';
+import { User } from 'user/types';
 
-export type UserPayload = Partial<UserModel> & {
+export type UserPayload = Partial<User> & {
     accessToken?: string;
     refreshToken?: string;
 };
