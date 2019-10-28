@@ -4,7 +4,6 @@
   "private": true,
   "proxy": "http://localhost:8000",
   "dependencies": {
-
     "@babel/runtime": "^7.6.2",
     "@fullcalendar/core": "^4.3.1",
     "@fullcalendar/daygrid": "^4.3.0",
@@ -69,6 +68,7 @@
     "@types/storybook__react": "^4.0.2",
     "@types/styled-components": "^4.1.18",
     "@types/styled-theming": "^2.2.2",
+    "@types/yup": "^0.26.24",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "babel-loader": "^8.0.6",
