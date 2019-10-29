@@ -1,8 +1,9 @@
 import React from 'react';
-import { ErrorMessage, useField } from 'formik';
-import { MdWarning } from 'react-icons/md';
+import { useField } from 'formik';
 import { ThemeProvider } from 'styled-components';
-import { InputWrapper, StyledLabel, StyledInput, InputErrorMsg, Icon } from './styles';
+import { InputWrapper, StyledLabel, StyledInput } from './styles';
+import { ErrorMessage } from './ErrorMessage';
+import { IconType } from 'react-icons/lib/cjs';
 
 export type Props = {
     label: string;
@@ -10,9 +11,11 @@ export type Props = {
     name: string;
     type: string;
     as?: 'input' | 'textarea';
+    icon?: IconType;
+    [key: string]: unknown;
 };
 
-const StyledField: React.FC<Props> = ({ id, name, label, ...props }) => {
+const StyledField: React.FC<Props> = ({ id, name, label, icon, ...props }) => {
     const [field, meta] = useField(name);
     const variant = meta.touched && meta.error ? 'danger' : 'default';
 
@@ -21,15 +24,7 @@ const StyledField: React.FC<Props> = ({ id, name, label, ...props }) => {
             <InputWrapper>
                 <StyledLabel htmlFor={id}>{label}</StyledLabel>
                 <StyledInput id={id} {...field} {...props} />
-                <ErrorMessage
-                    name={name}
-                    render={msg => (
-                        <InputErrorMsg>
-                            <Icon as={MdWarning} />
-                            {msg}
-                        </InputErrorMsg>
-                    )}
-                />
+                <ErrorMessage name={name} icon={icon} />
             </InputWrapper>
         </ThemeProvider>
     );
