@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 't
 import { IsEmail } from 'class-validator';
 import { Detail } from '../../appointments/entity/Detail';
 import { AppointmentColor } from '../../appointments/entity/AppointmentColor';
-import { Event } from '../../appointments/entity/Event';
-import { EventColor } from '../../appointments/entity/EventColor';
+import { Event } from '../../events/entity/Event';
+import { EventColor } from '../../events/entity/Color';
 
 export type Role = 'student' | 'faculty' | 'admin';
 

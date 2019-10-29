@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { User } from '../../users/entity/User';
-import { EventColor } from './EventColor';
+import { EventColor } from './Color';
 
 @Entity('Event')
 export class Event {
