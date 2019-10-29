@@ -18,6 +18,16 @@ export class SlotRepository {
         return this.repository.findOne({ where: { id: slotId } });
     }
 
+    findMyTaken(user: number, detail: number) {
+        return this.repository
+            .createQueryBuilder('slot')
+            .where('slot.studentId = :studentId', { studentId: user })
+            .innerJoinAndSelect('slot.detail', 'detail', 'slot.detailId = detail.id AND detail.id = :detailId', {
+                detailId: detail,
+            })
+            .getOne();
+    }
+
     findByDetail(detailId: number) {
         return this.repository.find({ where: { detail: detailId } });
     }

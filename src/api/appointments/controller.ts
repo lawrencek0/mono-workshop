@@ -1,4 +1,16 @@
-import { JsonController, Post, BodyParam, Body, HttpError, CurrentUser, Get, Patch, Param } from 'routing-controllers';
+import {
+    JsonController,
+    Post,
+    BodyParam,
+    Body,
+    HttpError,
+    CurrentUser,
+    Get,
+    Patch,
+    Param,
+    BadRequestError,
+    Delete,
+} from 'routing-controllers';
 import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
 import { DetailRepository, SlotRepository } from './repository';
@@ -20,9 +32,7 @@ export class AppointmentControler {
             if (user.role === 'faculty') {
                 detail.faculty = user;
                 const title = await this.detailRepository.saveDetail(detail);
-                // title.slots = this.slotRepository.saveSlot(slot);
                 slot.forEach(element => {
-                    // console.log(element);
                     element.detail = title;
                     this.slotRepository.saveSlot(element);
                 });
@@ -38,16 +48,11 @@ export class AppointmentControler {
     async findAll(@CurrentUser({ required: true }) user: User) {
         try {
             if (user.role === 'faculty') {
-                const appoint = this.detailRepository.findAllFac(user.id);
+                const appoint = await this.detailRepository.findAllFac(user.id);
                 return appoint;
             } else if (user.role === 'student') {
                 const appoint = await this.detailRepository.findAllStu(user.id);
-                // const output = appoint.map(({ slots, ...rest }) => {
-                //     // there will be only one slot associated with a detail for a student
-                //     const { id: slotId, ...slot } = slots[0];
-                //     return { ...rest, slotId, ...slot };
-                // });
-                console.log(appoint);
+
                 return { appoint };
             }
         } catch (error) {
@@ -55,14 +60,36 @@ export class AppointmentControler {
         }
     }
 
-    @Patch('/:id')
-    async update(@CurrentUser({ required: true }) user: User, @Param('id') id: number) {
+    @Patch('/:detailId/:slotId')
+    async update(
+        @CurrentUser({ required: true }) user: User,
+        @Param('detailId') detailId: number,
+        @Param('slotId') slotId: number,
+    ) {
         if (user.role === 'student') {
-            const slot = await this.slotRepository.findById(id);
-            slot.student = user;
-            return this.slotRepository.saveSlot(slot);
+            try {
+                //finds the slot that the user wants
+                const slot = await this.slotRepository.findById(slotId);
+                //finds the slots for the detail that the user has already taken
+                const taken: Slot = await this.slotRepository.findMyTaken(user.id, detailId);
+                if (taken) {
+                    //deselects the old appointment
+                    taken.student = null;
+                    this.slotRepository.saveSlot(taken);
+                }
+                //selects the new slot for the student
+                slot.student = user;
+                return this.slotRepository.saveSlot(slot);
+            } catch (e) {
+                throw new BadRequestError(e);
+            }
         } else {
             return 'You can not do this silly head';
         }
+    }
+
+    @Delete('/:detailId')
+    async delete() {
+        return '';
     }
 }
