@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Detail } from './Detail';
 import { User } from '../../users/entity/User';
 
@@ -13,6 +13,9 @@ export class AppointmentColor {
     @ManyToOne(() => Detail, Detail => Detail.colors, { primary: true })
     @JoinColumn({ name: 'detailId' })
     appDet: Detail;
+
+    @OneToMany(() => Detail, detail => detail.colors)
+    details: Detail[];
 
     @Column()
     hexColor: string;

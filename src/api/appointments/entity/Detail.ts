@@ -24,6 +24,6 @@ export class Detail {
     @JoinTable({ name: 'appointment_details_users' })
     students: User[];
 
-    @ManyToOne(() => AppointmentColor, AppointmentColor => AppointmentColor.detail)
+    @ManyToOne(() => AppointmentColor, AppointmentColor => AppointmentColor.details)
     colors: AppointmentColor;
 }

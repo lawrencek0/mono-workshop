@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Detail } from './entity/Detail';
 import { Slot } from './entity/Slot';
-import { User } from '../users/entity/User';
+//import { User } from '../users/entity/User';
 
 @Service()
 export class SlotRepository {

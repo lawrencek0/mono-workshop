@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
-import { User } from './User';
+import { User } from '../../users/entity/User';
 import { Event } from './Event';
 
 @Entity('Event_color')

@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
-import { User } from './User';
+import { User } from '../../users/entity/User';
 import { EventColor } from './EventColor';
 
 @Entity('Event')
@@ -22,10 +22,10 @@ export class Event {
     @Column('text')
     description: string;
 
-    @ManyToOne(() => User, User => User.events)
+    @ManyToOne(() => User, user => user.events)
     owner: User;
 
-    @ManyToMany(() => User, User => User.events)
+    @ManyToMany(() => User, user => user.events)
     @JoinTable({ name: 'event_roster' })
     users: User[];
 
