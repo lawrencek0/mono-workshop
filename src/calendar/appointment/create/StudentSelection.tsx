@@ -1,52 +1,48 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import { useField } from 'formik';
 import { FaUserCircle } from 'react-icons/fa';
 import { Student } from 'calendar/types';
-import {
-    FormWrapper,
-    FormTitle,
-    InputWrapper,
-    StyledInput,
-    StyledLabel as Label,
-    StyledLink,
-    ButtonWrapper,
-    StyledCheckboxLabel as CheckboxLabel,
-} from 'shared/inputs';
+import { FormTitle, InputWrapper, StyledCheckboxLabel as CheckboxLabel } from 'shared/inputs/styles';
+import { Field } from 'shared/inputs/Field';
+import { ErrorMessage } from 'shared/inputs/ErrorMessage';
 
 type Props = {
     students: Student[];
-    onStudentSelection: ({ currentTarget }: { currentTarget: HTMLInputElement }) => void;
-    onSubmit: (event: React.MouseEvent) => void;
 };
 
-const StudentSelection: React.FC<Props> = ({ students, onStudentSelection, onSubmit }) => {
+const StudentSelection: React.FC<Props> = ({ students }) => {
+    const [field] = useField('students');
+
     return (
-        <FormWrapper>
+        <>
             <FormTitle>Select Students</FormTitle>
-            <InputWrapper>
-                <StyledLabel htmlFor="search">Search Students</StyledLabel>
-                <StyledInput
-                    type="text"
-                    id="search"
-                    name="search"
-                    disabled={true}
-                    placeholder="Search Students with ElasticSearch (Coming Soon)"
-                />
-            </InputWrapper>
+            <ErrorMessage name="students" />
+            <Field
+                type="text"
+                id="search"
+                name="search"
+                disabled={true}
+                label="Search Students"
+                placeholder="Search Students with ElasticSearch (Coming Soon)"
+            />
             <InputWrapper>
                 <StyledList>
-                    {students.map(({ id, firstName, lastName, selected }, i) => (
+                    {students.map(({ id, firstName, lastName, picUrl }, i) => (
                         <StyledListItem key={id} border={i !== students.length - 1}>
                             <input
+                                {...field}
                                 type="checkbox"
-                                name={id}
+                                name="students"
+                                value={id.toString()}
                                 id={`student-${id}`}
-                                onChange={onStudentSelection}
-                                checked={selected || false}
+                                checked={field.value.includes(id.toString())}
                             />
                             <StyledCheckboxLabel htmlFor={`student-${id}`}>
-                                <StyledAvatar size="3em" />
+                                <div css={tw`mx-4`}>
+                                    {picUrl ? <Avatar src={picUrl} /> : <FaUserCircle size="3em" />}
+                                </div>
                                 <div>
                                     <LabelTitle>
                                         {firstName} {lastName}
@@ -58,17 +54,14 @@ const StudentSelection: React.FC<Props> = ({ students, onStudentSelection, onSub
                     ))}
                 </StyledList>
             </InputWrapper>
-            <ButtonWrapper>
-                <StyledLink onClick={onSubmit} to="../3">
-                    Next
-                </StyledLink>
-            </ButtonWrapper>
-        </FormWrapper>
+        </>
     );
 };
 
-const StyledAvatar = styled(FaUserCircle)`
-    ${tw`mr-2`}
+const Avatar = styled.img`
+    ${tw`rounded-full inline-block`}
+    width: 3em;
+    height: 3em;
 `;
 
 const StyledList = styled.ul`
@@ -78,10 +71,6 @@ const StyledList = styled.ul`
 const StyledListItem = styled.li<{ border: boolean }>`
     ${tw`flex items-center  border-gray-400 px-4 py-2 mt-2`}
     border-bottom-width: ${props => props.border && '1px'}
-`;
-
-const StyledLabel = styled(Label)`
-    ${tw`ml-2`}
 `;
 
 const StyledCheckboxLabel = styled(CheckboxLabel)`

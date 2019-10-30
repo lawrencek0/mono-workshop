@@ -1,54 +1,52 @@
-import React, { useState, useRef } from 'react';
-// these are needed to use the CSS Prop
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, { useState } from 'react';
 import styled from 'styled-components/macro';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import * as types from 'styled-components/cssprop';
 import tw from 'tailwind.macro';
 import moment from 'moment';
 import { DateRangePicker } from 'react-dates';
+import { useFormikContext } from 'formik';
+import { MdAdd } from 'react-icons/md';
+import { MdRemove } from 'react-icons/md';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import { DateTimeRange } from 'calendar/types';
-import {
-    FormWrapper,
-    FormTitle,
-    InputWrapper,
-    StyledInput,
-    StyledLabel,
-    StyledLink,
-    ButtonWrapper,
-} from 'shared/inputs';
+import { FormTitle, InputWrapper, StyledLabel, ButtonWrapper } from 'shared/inputs/styles';
+import { Field } from 'shared/inputs/Field';
 import { FlatButton, PrimaryButton } from 'shared/buttons';
+import { DatetimeRange } from './Form';
 
-type PickerProps = DateTimeRange & {
+type PickerProps = DatetimeRange['datetimeRanges'][number] & {
     canDelete: boolean;
-    startId: 'startDate';
-    endId: 'endDate';
-    handleDateChanges: ({ startDate, endDate }: Pick<DateTimeRange, 'startDate' | 'endDate'>) => void;
-    onInputTimeChanges: (name: 'startTime' | 'endTime' | 'length', value: moment.Moment | number) => void;
+    datetimeIndex: number;
     removeDateRange: (id: number) => void;
+    handleAddTimeRange: () => void;
+    handleRemoveTimeRange: (timerangeId: number) => void;
 };
 
 type RangePickerProps = {
-    onSubmit: (dateRanges: DateTimeRange[]) => void;
+    daterangeRef: React.MutableRefObject<number>;
+    timerangeRef: React.MutableRefObject<number>;
 };
+
+// @TODO:
+// DONE: now need to hook up the form with Formik's
+// DONE: add a way to add multiple times and then multiple dates
+// @TODO: add a nice border between them like student selection
+// DONE: try to add validation with when
+// @TODO: use two column layout with labels on the left to make it nicer
+// DONE: multiple input times?
 
 // @FIXME: start date starts on the next day with multiple inputs
 const Picker: React.FC<PickerProps> = ({
-    handleDateChanges,
-    onInputTimeChanges,
+    handleAddTimeRange,
+    handleRemoveTimeRange,
     removeDateRange,
-    id,
+    id: datetimeId,
     startDate,
     endDate,
-    startId,
-    endId,
     canDelete,
-    startTime,
-    endTime,
-    length,
+    datetimeIndex,
+    times,
 }) => {
+    const { setFieldValue } = useFormikContext<DatetimeRange>();
     const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 
     const handleFocusChange = (focus: 'startDate' | 'endDate' | null): void => {
@@ -56,18 +54,77 @@ const Picker: React.FC<PickerProps> = ({
     };
 
     const handleRemoveClick = (): void => {
-        removeDateRange(id);
+        removeDateRange(datetimeId);
     };
 
-    const handleInputTimeChanges = ({ currentTarget }: { currentTarget: HTMLInputElement }): void => {
-        if (currentTarget.name === 'length') {
-            const value = Number.parseInt(currentTarget.value, 10);
-            onInputTimeChanges('length', value);
-        } else if (currentTarget.name === 'startTime' || currentTarget.name === 'endTime') {
-            const value = moment(currentTarget.value, 'HH:mm');
-            onInputTimeChanges(currentTarget.name, value);
-        }
+    const handleDatesChange = ({
+        startDate,
+        endDate,
+    }: {
+        startDate: moment.Moment | null;
+        endDate: moment.Moment | null;
+    }): void => {
+        const start = startDate
+            ? moment(startDate)
+                  .startOf('day')
+                  .toISOString()
+            : null;
+        const end = endDate
+            ? moment(endDate)
+                  .endOf('day')
+                  .toISOString()
+            : null;
+
+        setFieldValue(`datetimeRanges[${datetimeIndex}].startDate` as 'datetimeRanges', start);
+        setFieldValue(`datetimeRanges[${datetimeIndex}].endDate` as 'datetimeRanges', end);
     };
+
+    // const handleTimeChange = (timeId: number) => (e: React.ChangeEvent<HTMLInputElement>): void => {
+    //     const { datetimes } = values;
+    //     const datetimeIndex = datetimes.findIndex(({ id: i }) => i === id);
+
+    //     const timeIndex = datetimes[datetimeIndex].times.findIndex(({ id: i }) => i === timeId);
+    //     setFieldValue('datetimes', [
+    //         ...datetimes.slice(0, datetimeIndex),
+    //         {
+    //             ...datetimes[datetimeIndex],
+    //             times: [
+    //                 ...datetimes[datetimeIndex].times.slice(0, timeIndex),
+    //                 {
+    //                     ...datetimes[datetimeIndex].times[timeIndex],
+    //                     [e.currentTarget.name as 'startTime' | 'endTime']: e.currentTarget.value,
+    //                 },
+    //                 ...datetimes[datetimeIndex].times.slice(timeIndex + 1),
+    //             ],
+    //         },
+    //         ...datetimes.slice(datetimeIndex + 1),
+    //     ]);
+    // };
+
+    // const handleTimeBlur = (e: React.ChangeEvent<HTMLInputElement>, timeId: number): void => {
+    //     const { datetimes } = touched;
+
+    //     return setFieldTouched(`datetimes[${id}].times[${timeId}][${e.currentTarget.name}]` as never, true);
+
+    //     // const datetimeIndex = datetimes.find(({ id: i }) => i === id);
+
+    //     // const timeIndex = datetimes[datetimeIndex].times.findIndex(({ id: i }) => i === timeId);
+    //     // setFieldValue('datetimes', [
+    //     //     ...datetimes.slice(0, datetimeIndex),
+    //     //     {
+    //     //         ...datetimes[datetimeIndex],
+    //     //         times: [
+    //     //             ...datetimes[datetimeIndex].times.slice(0, timeIndex),
+    //     //             {
+    //     //                 ...datetimes[datetimeIndex].times[timeIndex],
+    //     //                 [e.currentTarget.name as 'startTime' | 'endTime']: true,
+    //     //             },
+    //     //             ...datetimes[datetimeIndex].times.slice(timeIndex + 1),
+    //     //         ],
+    //     //     },
+    //     //     ...datetimes.slice(datetimeIndex + 1),
+    //     // ]);
+    // };
 
     const blockWeekends = (day: moment.Moment): boolean => {
         const num = moment(day).weekday();
@@ -82,19 +139,13 @@ const Picker: React.FC<PickerProps> = ({
     return (
         <>
             <DateRangePickerWrapper>
-                <StyledLabel
-                    css={`
-                        ${tw`block`}
-                    `}
-                >
-                    Pick Dates
-                </StyledLabel>
+                <StyledLabel css={tw`block text-gray-700`}>Pick Dates</StyledLabel>
                 <DateRangePicker
-                    onDatesChange={handleDateChanges}
-                    startDate={startDate}
-                    startDateId={startId}
-                    endDate={endDate}
-                    endDateId={endId}
+                    onDatesChange={handleDatesChange}
+                    startDate={startDate ? moment(startDate) : null}
+                    startDateId={`startDateId-${datetimeId}`}
+                    endDate={endDate ? moment(endDate) : null}
+                    endDateId={`endDateId-${datetimeId}`}
                     onFocusChange={handleFocusChange}
                     focusedInput={focusedInput}
                     minimumNights={0}
@@ -102,54 +153,56 @@ const Picker: React.FC<PickerProps> = ({
                 />
             </DateRangePickerWrapper>
 
-            <InputWrapper
-                css={`
-                    ${tw`flex`}
-                `}
-            >
-                <div
-                    css={`
-                        ${tw`mr-4`}
-                    `}
-                >
-                    <StyledLabel htmlFor={`start-${id}`}>Start Time</StyledLabel>
-                    <StyledInput
-                        type="time"
-                        name="startTime"
-                        id={`start-${id}`}
-                        value={startTime.format('HH:mm')}
-                        onChange={handleInputTimeChanges}
-                    />
-                </div>
-                <div>
-                    <StyledLabel htmlFor={`end-${id}`}>End Time</StyledLabel>
-                    <StyledInput
-                        type="time"
-                        name="endTime"
-                        id={`end-${id}`}
-                        value={endTime.format('HH:mm')}
-                        onChange={handleInputTimeChanges}
-                    />
-                </div>
-            </InputWrapper>
+            {times.map(({ id: timerangeId }, index) => {
+                console.log(times[index]);
+                return (
+                    <InputWrapper key={timerangeId} css={tw`flex mb-0`}>
+                        <div css={tw`mr-4`}>
+                            <Field
+                                label="Start Time"
+                                labelHidden={index > 0}
+                                type="time"
+                                name={`datetimeRanges[${datetimeIndex}].times[${index}].startTime`}
+                                id={`start-${datetimeId}-${timerangeId}`}
+                            />
+                        </div>
+                        <div>
+                            <Field
+                                label="End Time"
+                                labelHidden={index > 0}
+                                type="time"
+                                name={`datetimeRanges[${datetimeIndex}].times[${index}].endTime`}
+                                id={`end-${datetimeId}-${timerangeId}`}
+                            />
+                        </div>
+                        <div>
+                            {times.length > 1 && (
+                                <button type="button" onClick={() => handleRemoveTimeRange(timerangeId)}>
+                                    <MdRemove />
+                                </button>
+                            )}
+                            {index === times.length - 1 && (
+                                <button type="button" onClick={handleAddTimeRange}>
+                                    <MdAdd />
+                                </button>
+                            )}
+                        </div>
+                    </InputWrapper>
+                );
+            })}
             <InputWrapper>
-                <StyledLabel htmlFor={`length-${id}`}>Length (in minutes)</StyledLabel>
-                <StyledInput
-                    css={`
-                        ${tw`w-full md:w-1/4 block`}
-                    `}
+                <Field
+                    label="Length (in minutes)"
+                    css={tw`w-full md:w-1/4 block`}
                     type="number"
-                    min="0"
-                    max="59"
-                    name="length"
-                    id={`length-${id}`}
-                    value={length}
-                    onChange={handleInputTimeChanges}
+                    min="1"
+                    name={`datetimeRanges[${datetimeIndex}].length`}
+                    id={`length-${datetimeId}`}
                 />
             </InputWrapper>
             {canDelete && (
                 <InputWrapper>
-                    <PrimaryButton variant="danger" onClick={handleRemoveClick}>
+                    <PrimaryButton variant="danger" type="button" onClick={handleRemoveClick}>
                         Delete?
                     </PrimaryButton>
                 </InputWrapper>
@@ -180,101 +233,91 @@ const DateRangePickerWrapper = styled(InputWrapper)`
     }
 `;
 
-const RangePicker: React.FC<RangePickerProps> = ({ onSubmit }) => {
-    const id = useRef(0);
-
-    const [dateRanges, setDateRanges] = useState<DateTimeRange[]>([
-        {
-            id: id.current,
-            startTime: moment()
-                .hours(9)
-                .minute(0)
-                .second(0)
-                .millisecond(0),
-            endTime: moment()
-                .hours(17)
-                .minute(0)
-                .second(0)
-                .millisecond(0),
-            startDate: null,
-            endDate: null,
-            length: 20,
-        },
-    ]);
+const RangePicker: React.FC<RangePickerProps> = ({ daterangeRef, timerangeRef }) => {
+    const {
+        values: { datetimeRanges },
+        setFieldValue,
+    } = useFormikContext<DatetimeRange>();
 
     const addDateRange = (): void => {
-        id.current++;
-        const prevEndDate = dateRanges[dateRanges.length - 1].endDate;
-        const entry = {
-            ...dateRanges[dateRanges.length - 1],
-            id: id.current,
-            startDate: prevEndDate ? moment(prevEndDate).add(1, 'day') : null,
-            endDate: null,
-        };
-        setDateRanges([...dateRanges, entry]);
+        daterangeRef.current++;
+        const prevEndDate = datetimeRanges[datetimeRanges.length - 1].endDate;
+        setFieldValue('datetimeRanges', [
+            ...datetimeRanges,
+            {
+                ...datetimeRanges[datetimeRanges.length - 1],
+                id: daterangeRef.current,
+                startDate: prevEndDate ? moment(prevEndDate).add(1, 'day') : null,
+                endDate: null,
+            },
+        ]);
     };
 
-    const removeDateRange = (id: number): void => {
-        setDateRanges(dateRanges.filter(range => range.id !== id));
+    const removeDateRange = (datetimeId: number): void => {
+        setFieldValue('datetimeRanges', datetimeRanges.filter(({ id }) => id !== datetimeId));
     };
 
-    const onDatesChanges = (id: number) => ({
-        startDate,
-        endDate,
-    }: Pick<DateTimeRange, 'startDate' | 'endDate'>): void => {
-        const start = startDate ? moment(startDate).startOf('day') : null;
-        const end = endDate ? moment(endDate).endOf('day') : null;
-
-        setDateRanges(
-            dateRanges.map(range => (range.id === id ? { ...range, startDate: start, endDate: end } : range)),
-        );
+    const addTimeRange = (datetimeId: number) => (): void => {
+        timerangeRef.current++;
+        const datetimeIndex = datetimeRanges.findIndex(({ id }) => id === datetimeId);
+        const timeArr = datetimeRanges[datetimeIndex].times;
+        setFieldValue('datetimeRanges', [
+            ...datetimeRanges.slice(0, datetimeIndex),
+            {
+                ...datetimeRanges[datetimeIndex],
+                times: [
+                    ...timeArr,
+                    {
+                        id: timerangeRef.current,
+                        startTime: timeArr[timeArr.length - 1].endTime,
+                        endTime: '',
+                    },
+                ],
+            },
+            ...datetimeRanges.slice(datetimeIndex + 1),
+        ]);
     };
 
-    const onInputTimeChanges = (id: number) => (
-        name: 'startTime' | 'endTime' | 'length',
-        value: moment.Moment | number,
-    ): void => {
-        setDateRanges(dateRanges.map(range => (range.id === id ? { ...range, [name]: value } : range)));
+    const removeTimeRange = (datetimeId: number) => (timerangeId: number): void => {
+        const datetimeIndex = datetimeRanges.findIndex(({ id }) => id === datetimeId);
+        const times = datetimeRanges[datetimeIndex].times.filter(({ id }) => id !== timerangeId);
+
+        setFieldValue('datetimeRanges', [
+            ...datetimeRanges.slice(0, datetimeIndex),
+            {
+                ...datetimeRanges[datetimeIndex],
+                times,
+            },
+            ...datetimeRanges.slice(datetimeIndex + 1),
+        ]);
     };
 
-    const handleSubmit = (_e: React.MouseEvent): void => {
-        onSubmit(dateRanges);
-    };
-
-    const canAddRange = !dateRanges[dateRanges.length - 1].endDate;
+    const canAddRange = datetimeRanges && !datetimeRanges[datetimeRanges.length - 1].endDate;
 
     return (
-        <FormWrapper>
+        <>
             <FormTitle>Select the Date and Time Range</FormTitle>
-            {dateRanges.map(date => (
+            {datetimeRanges.map((datetime, i) => (
                 <Picker
-                    key={date.id}
-                    startId="startDate"
-                    endId="endDate"
-                    handleDateChanges={onDatesChanges(date.id)}
-                    onInputTimeChanges={onInputTimeChanges(date.id)}
-                    canDelete={dateRanges.length > 1}
+                    key={datetime.id}
+                    handleAddTimeRange={addTimeRange(datetime.id)}
+                    handleRemoveTimeRange={removeTimeRange(datetime.id)}
+                    canDelete={datetimeRanges.length > 1}
                     removeDateRange={removeDateRange}
-                    id={date.id}
-                    {...date}
+                    datetimeIndex={i}
+                    {...datetime}
                 />
             ))}
             <ButtonWrapper>
                 <FlatButton
-                    css={`
-                        ${tw`mr-4`}
-                    `}
                     disabled={canAddRange}
                     variant={canAddRange ? 'disabled' : 'default'}
                     onClick={addDateRange}
                 >
                     Add Range
                 </FlatButton>
-                <StyledLink onClick={handleSubmit} to="../4">
-                    Next
-                </StyledLink>
             </ButtonWrapper>
-        </FormWrapper>
+        </>
     );
 };
 
