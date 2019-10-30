@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Detail } from '../../appointments/entity/Detail';
-import { AppointmentColor } from '../../appointments/entity/AppointmentColor';
+// import { AppointmentColor } from '../../appointments/entity/AppointmentColor';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -46,6 +46,6 @@ export class User {
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
 
-    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.user)
-    appointmentColors: AppointmentColor[];
+    // @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.user)
+    // appointmentColors: AppointmentColor[];
 }
