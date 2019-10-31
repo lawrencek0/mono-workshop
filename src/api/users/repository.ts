@@ -12,6 +12,10 @@ export class UserRepository {
         return this.repository.findOne(id);
     }
 
+    findAllByIds(ids: number[]) {
+        return this.repository.findByIds(ids);
+    }
+
     findByEmail(email: string) {
         return this.repository.findOne({ email });
     }
