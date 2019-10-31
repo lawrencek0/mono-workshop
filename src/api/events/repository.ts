@@ -5,7 +5,7 @@ import { Event } from './entity/Event';
 //import { User } from '../users/entity/User';
 
 @Service()
-export class SlotRepository {
+export class EventRepository {
     @InjectRepository(Event)
     private repository: Repository<Event>;
 
