@@ -1,8 +1,10 @@
-import { JsonController, Post, Body, HttpError, CurrentUser } from 'routing-controllers';
+import { JsonController, Post, Body, HttpError, CurrentUser, Get, Param, Delete } from 'routing-controllers';
 import { User } from '../users/entity/User';
 import { EventColor } from '../events/entity/Color';
 import { Event } from './entity/Event';
 import { Repository, getRepository } from 'typeorm';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { Inject } from 'typedi';
 
 @JsonController('/events')
 export class EventController {
@@ -35,6 +37,21 @@ export class EventController {
             );
             await this.eventColorRepository.insert(events);
             return event;
+        } catch (e) {
+            throw new HttpError(e);
+        }
+    }
+    @Delete('/:eventId')
+    async deleteOne(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
+        try {
+            const event: Event = await this.eventRepository.findOne(id);
+            //*Dont remove this comment* had a problem with validation
+            // if (user.id !== event.owner.id) {
+            //     return 'Unauthorized: You are not the Owner';
+            // } else {
+            await this.eventColorRepository.delete({ event: event });
+            return await this.eventRepository.delete(event);
+            // }
         } catch (e) {
             throw new HttpError(e);
         }
