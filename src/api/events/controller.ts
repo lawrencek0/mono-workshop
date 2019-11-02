@@ -13,7 +13,7 @@ import {
 import { User } from '../users/entity/User';
 import { EventColor } from '../events/entity/Color';
 import { Event } from './entity/Event';
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Inject } from 'typedi';
 import { EventRepository, EventColorRepository } from './repository';
@@ -24,12 +24,18 @@ export class EventController {
     @Inject() private eventRepository: EventRepository;
     @Inject() private eventColorRepository: EventColorRepository;
     @Inject() private userRepository: UserRepository;
+    // @InjectRepository(Event)
+    // @InjectRepository(User)
+    // @InjectRepository(EventColor)
+    // eventRepository2: Repository<Event>;
+    // userRepository2: Repository<User>;
+    // eventColorRepository2: Repository<EventColor>;
 
     @Post('/')
     async create(@CurrentUser({ required: true }) owner: User, @Body() event: Event) {
         try {
             const users = await this.userRepository.findAllByIds(event.users.map(({ id }) => id));
-            const newEvent = await this.eventRepository.saveEvent({ ...event, owner, users });
+            const newEvent: Event = await this.eventRepository.saveEvent({ ...event, owner, users });
 
             const eventColors = users.map(user => {
                 const evnt = new EventColor();
@@ -75,6 +81,25 @@ export class EventController {
             if (event.users) newEvent.users = await this.userRepository.findAllByIds(event.users.map(({ id }) => id));
 
             return this.eventRepository.saveEvent(event);
+        } catch (e) {
+            throw new HttpError(e);
+        }
+    }
+    @Get('/')
+    async findAll(@CurrentUser({ required: true }) user: User) {
+        try {
+            const Events: Event[] = await this.eventRepository.findAll(user.id);
+
+            return { Events };
+        } catch (e) {
+            throw new HttpError(e);
+        }
+    }
+    @Get('/:eventId')
+    async findOne(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
+        try {
+            const Event: Event = await this.eventRepository.findOne(id);
+            return { Event };
         } catch (e) {
             throw new HttpError(e);
         }
