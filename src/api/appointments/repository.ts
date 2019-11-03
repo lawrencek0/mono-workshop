@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Detail } from './entity/Detail';
 import { Slot } from './entity/Slot';
+import { AppointmentColor } from './entity/AppointmentColor';
 
 @Service()
 export class SlotRepository {
@@ -29,16 +30,12 @@ export class SlotRepository {
         const isOwner = this.repository
             .createQueryBuilder('slot')
             .where('slot.id = :slotId', { slot: slotId })
-            .innerJoinAndSelect(
-                'slot.detail',
-                'detail',
-                'slot.detailId = detail.id AND detail.facultyId = :facultyId',
-                {
-                    facultyId: userId,
-                },
-            )
-            .getOne();
+            .innerJoinAndSelect('slot.detail', 'detail', 'detail.facultyId = :facultyId', {
+                facultyId: userId,
+            })
 
+            .getOne();
+        console.log(isOwner + '!!!!!!!!!!!!!!!!!!!!!');
         if (isOwner) {
             return this.repository
                 .createQueryBuilder()
@@ -70,6 +67,13 @@ export class DetailRepository {
             .innerJoinAndSelect('detail.slots', 'slot', 'slot.student = student.id')
             .leftJoinAndSelect('detail.faculty', 'faculty')
             .getMany();
+    }
+
+    isOwner(detailId: number, userId: number) {
+        return this.repository
+            .createQueryBuilder('detail')
+            .where('id = :detail AND facultyId = :user', { detail: detailId, user: userId })
+            .getOne();
     }
 
     // finds the appointment details that a student still needs to sign up for
@@ -111,11 +115,25 @@ export class DetailRepository {
 
     // finds the detail by using it's unique id
     findById(id: number) {
-        return this.repository.findOne(id);
+        return this.repository.findOne({ where: { id: id }, relations: ['slots', 'slots.student'] });
     }
 
     // creates or updates the detail
     saveDetail(detail: Detail) {
-        return this.repository.save(detail);
+        try {
+            return this.repository.save(detail);
+        } catch (error) {
+            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + error);
+        }
+    }
+}
+
+@Service()
+export class ColorRepository {
+    @InjectRepository(AppointmentColor)
+    private repository: Repository<AppointmentColor>;
+
+    saveColor(color: AppointmentColor) {
+        return this.repository.save(color);
     }
 }
