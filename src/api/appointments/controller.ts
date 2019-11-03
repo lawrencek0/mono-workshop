@@ -41,11 +41,11 @@ export class AppointmentControler {
             console.log('acevgrehtyjukigulk,umnhbgxfvd');
             if (user.role === 'faculty') {
                 const students = await this.userRepository.findAllById(detail.students.map(({ id }) => id));
-                try {
-                    // const newDetail = await this.detailRepository.saveDetail({ ...detail, students, faculty: user });
-                } catch (error) {
-                    console.log('qwertyuiop[;lkjhgfd', error);
-                }
+                // try {
+                //     // const newDetail = await this.detailRepository.saveDetail({ ...detail, students, faculty: user });
+                // } catch (error) {
+                //     console.log('qwertyuiop[;lkjhgfd', error);
+                // }
 
                 // return 'xsacdsvfbghnjmnhgbfvdcs';
                 const newDetail = await this.detailRepository.saveDetail({ ...detail, students, faculty: user });
