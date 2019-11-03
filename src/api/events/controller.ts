@@ -65,19 +65,15 @@ export class EventController {
         }
     }
 
-    @Put('/:eventId')
-    async update(@CurrentUser({ required: true }) user: User, @Body() event: Event, @Param('eventId') id: number) {
+    @Put('/:id')
+    async update(@CurrentUser({ required: true }) user: User, @Body() event: Event, @Param('id') id: number) {
         try {
             const currentEvent: Event = await this.eventRepository.findById(id);
-            //*Dont remove this comment* had a problem with validation
-            if (user.id !== event.owner.id) {
+            if (user.id !== currentEvent.owner.id) {
                 return 'Unauthorized: You are not the Owner';
             }
 
             const newEvent = { ...currentEvent, ...event };
-
-            // If an association is being updated, set the assocition
-            // if (event.owner) event.owner = await this.userRepository.findById();
             if (event.users) newEvent.users = await this.userRepository.findAllByIds(event.users.map(({ id }) => id));
 
             return this.eventRepository.saveEvent(event);
