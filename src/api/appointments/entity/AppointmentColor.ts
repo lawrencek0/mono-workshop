@@ -9,7 +9,7 @@ export class AppointmentColor {
     @ManyToOne(() => User, User => User.appointmentColors, { primary: true })
     user: User;
 
-    @OneToOne(() => Detail, Detail => Detail.colors, { primary: true })
+    @ManyToOne(() => Detail, Detail => Detail.colors, { primary: true })
     detail: Detail;
 
     @Column()
