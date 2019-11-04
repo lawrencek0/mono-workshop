@@ -56,6 +56,7 @@ export class User {
 
     @OneToMany(() => EventColor, EventColor => EventColor.user)
     eventColors: EventColor[];
-    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.user)
-    appointmentColors: AppointmentColor[];
+
+    // @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.user)
+    // appointmentColors: AppointmentColor[];
 }
