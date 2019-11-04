@@ -26,15 +26,17 @@ type RangePickerProps = {
     timerangeRef: React.MutableRefObject<number>;
 };
 
-// @TODO:
-// DONE: now need to hook up the form with Formik's
-// DONE: add a way to add multiple times and then multiple dates
-// @TODO: add a nice border between them like student selection
-// DONE: try to add validation with when
-// @TODO: use two column layout with labels on the left to make it nicer
-// DONE: multiple input times?
+const blockedDays = (day: moment.Moment): boolean => {
+    const num = moment(day).weekday();
 
-// @FIXME: start date starts on the next day with multiple inputs
+    // block weekends
+    if (num === 0 || num === 6) {
+        return true;
+    }
+
+    return false;
+};
+
 const Picker: React.FC<PickerProps> = ({
     handleAddTimeRange,
     handleRemoveTimeRange,
@@ -47,6 +49,7 @@ const Picker: React.FC<PickerProps> = ({
     times,
 }) => {
     const { setFieldValue } = useFormikContext<DatetimeRange>();
+
     const [focusedInput, setFocusedInput] = useState<'startDate' | 'endDate' | null>(null);
 
     const handleFocusChange = (focus: 'startDate' | 'endDate' | null): void => {
@@ -79,63 +82,6 @@ const Picker: React.FC<PickerProps> = ({
         setFieldValue(`datetimeRanges[${datetimeIndex}].endDate` as 'datetimeRanges', end);
     };
 
-    // const handleTimeChange = (timeId: number) => (e: React.ChangeEvent<HTMLInputElement>): void => {
-    //     const { datetimes } = values;
-    //     const datetimeIndex = datetimes.findIndex(({ id: i }) => i === id);
-
-    //     const timeIndex = datetimes[datetimeIndex].times.findIndex(({ id: i }) => i === timeId);
-    //     setFieldValue('datetimes', [
-    //         ...datetimes.slice(0, datetimeIndex),
-    //         {
-    //             ...datetimes[datetimeIndex],
-    //             times: [
-    //                 ...datetimes[datetimeIndex].times.slice(0, timeIndex),
-    //                 {
-    //                     ...datetimes[datetimeIndex].times[timeIndex],
-    //                     [e.currentTarget.name as 'startTime' | 'endTime']: e.currentTarget.value,
-    //                 },
-    //                 ...datetimes[datetimeIndex].times.slice(timeIndex + 1),
-    //             ],
-    //         },
-    //         ...datetimes.slice(datetimeIndex + 1),
-    //     ]);
-    // };
-
-    // const handleTimeBlur = (e: React.ChangeEvent<HTMLInputElement>, timeId: number): void => {
-    //     const { datetimes } = touched;
-
-    //     return setFieldTouched(`datetimes[${id}].times[${timeId}][${e.currentTarget.name}]` as never, true);
-
-    //     // const datetimeIndex = datetimes.find(({ id: i }) => i === id);
-
-    //     // const timeIndex = datetimes[datetimeIndex].times.findIndex(({ id: i }) => i === timeId);
-    //     // setFieldValue('datetimes', [
-    //     //     ...datetimes.slice(0, datetimeIndex),
-    //     //     {
-    //     //         ...datetimes[datetimeIndex],
-    //     //         times: [
-    //     //             ...datetimes[datetimeIndex].times.slice(0, timeIndex),
-    //     //             {
-    //     //                 ...datetimes[datetimeIndex].times[timeIndex],
-    //     //                 [e.currentTarget.name as 'startTime' | 'endTime']: true,
-    //     //             },
-    //     //             ...datetimes[datetimeIndex].times.slice(timeIndex + 1),
-    //     //         ],
-    //     //     },
-    //     //     ...datetimes.slice(datetimeIndex + 1),
-    //     // ]);
-    // };
-
-    const blockWeekends = (day: moment.Moment): boolean => {
-        const num = moment(day).weekday();
-
-        if (num === 0 || num === 6) {
-            return true;
-        }
-
-        return false;
-    };
-
     return (
         <>
             <DateRangePickerWrapper>
@@ -149,16 +95,15 @@ const Picker: React.FC<PickerProps> = ({
                     onFocusChange={handleFocusChange}
                     focusedInput={focusedInput}
                     minimumNights={0}
-                    isDayBlocked={blockWeekends}
+                    isDayBlocked={blockedDays}
                 />
             </DateRangePickerWrapper>
 
             {times.map(({ id: timerangeId }, index) => {
-                console.log(times[index]);
                 return (
                     <InputWrapper key={timerangeId} css={tw`flex mb-0`}>
                         <div css={tw`mr-4`}>
-                            <Field
+                            <StyledField
                                 label="Start Time"
                                 labelHidden={index > 0}
                                 type="time"
@@ -166,8 +111,8 @@ const Picker: React.FC<PickerProps> = ({
                                 id={`start-${datetimeId}-${timerangeId}`}
                             />
                         </div>
-                        <div>
-                            <Field
+                        <div css={tw`mr-4`}>
+                            <StyledField
                                 label="End Time"
                                 labelHidden={index > 0}
                                 type="time"
@@ -175,7 +120,7 @@ const Picker: React.FC<PickerProps> = ({
                                 id={`end-${datetimeId}-${timerangeId}`}
                             />
                         </div>
-                        <div>
+                        <div css={tw`self-center`}>
                             {times.length > 1 && (
                                 <button type="button" onClick={() => handleRemoveTimeRange(timerangeId)}>
                                     <MdRemove />
@@ -191,9 +136,8 @@ const Picker: React.FC<PickerProps> = ({
                 );
             })}
             <InputWrapper>
-                <Field
+                <StyledField
                     label="Length (in minutes)"
-                    css={tw`w-full md:w-1/4 block`}
                     type="number"
                     min="1"
                     name={`datetimeRanges[${datetimeIndex}].length`}
@@ -210,6 +154,10 @@ const Picker: React.FC<PickerProps> = ({
         </>
     );
 };
+
+const StyledField = styled(Field)`
+    ${tw`w-40 flex flex-col`}
+`;
 
 const DateRangePickerWrapper = styled(InputWrapper)`
     .DateInput_input {
