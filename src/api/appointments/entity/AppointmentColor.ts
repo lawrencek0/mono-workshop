@@ -4,7 +4,7 @@ import { User } from '../../users/entity/User';
 
 @Entity('Appointment_color')
 export class AppointmentColor {
-    @ManyToOne(() => User, User => User.appColor, { primary: true })
+    @ManyToOne(() => User, User => User.appointmentColors, { primary: true })
     user: User;
 
     @ManyToOne(() => Detail, Detail => Detail.colors, { primary: true })
