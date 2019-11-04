@@ -24,7 +24,7 @@ const StyledField: React.FC<Props> = ({ id, name, label, icon, labelHidden, ...p
     return (
         <ThemeProvider theme={{ variant }}>
             <InputWrapper>
-                <StyledLabel css={labelHidden ? tw`hidden` : ''} htmlFor={id}>
+                <StyledLabel css={labelHidden ? tw`hidden` : 'block'} htmlFor={id}>
                     {label}
                 </StyledLabel>
                 <StyledInput id={id} {...field} {...props} />
