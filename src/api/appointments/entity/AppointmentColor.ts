@@ -5,10 +5,10 @@ import { User } from '../../users/entity/User';
 @Entity('Appointment_color')
 export class AppointmentColor {
     @ManyToOne(() => User, User => User.appColor, { primary: true })
-    userId: User;
+    user: User;
 
     @ManyToOne(() => Detail, Detail => Detail.colors, { primary: true })
-    appDet: Detail;
+    detail: Detail;
 
     @Column()
     hexColor: string;
