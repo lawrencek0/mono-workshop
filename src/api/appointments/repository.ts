@@ -3,7 +3,8 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Detail } from './entity/Detail';
 import { Slot } from './entity/Slot';
-import { AppointmentColor } from './entity/AppointmentColor';
+import { DetailUsers } from './entity/DetailsUsers';
+import { User } from '../users/entity/User';
 
 @Service()
 export class SlotRepository {
@@ -69,6 +70,7 @@ export class DetailRepository {
             .getMany();
     }
 
+    // checks that the current user is the owner of the detail
     isOwner(detailId: number, userId: number) {
         return this.repository
             .createQueryBuilder('detail')
@@ -129,11 +131,16 @@ export class DetailRepository {
 }
 
 @Service()
-export class ColorRepository {
-    @InjectRepository(AppointmentColor)
-    private repository: Repository<AppointmentColor>;
+export class DetailUsersRepo {
+    @InjectRepository(DetailUsers)
+    private repository: Repository<DetailUsers>;
 
-    saveColor(color: AppointmentColor) {
+    // returns the one user-detail relation
+    getOne(userId: User, detailId: Detail) {
+        return this.repository.findOne({ where: { user: userId, detail: detailId }, relations: ['user', 'detail'] });
+    }
+
+    saveDetailUser(color: DetailUsers) {
         return this.repository.save(color);
     }
 }

@@ -2,7 +2,6 @@ import {
     JsonController,
     Post,
     BodyParam,
-    Body,
     HttpError,
     CurrentUser,
     Get,
@@ -13,17 +12,15 @@ import {
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
-import { DetailRepository, SlotRepository, ColorRepository } from './repository';
-import { Detail } from './entity/Detail';
+import { DetailRepository, SlotRepository, DetailUsersRepo } from './repository';
 import { Slot } from './entity/Slot';
-import { AppointmentColor } from './entity/AppointmentColor';
 import { UserRepository } from '../users/repository';
 
 @JsonController('/appointments')
 export class AppointmentControler {
     @Inject() private detailRepository: DetailRepository;
     @Inject() private slotRepository: SlotRepository;
-    @Inject() private colorRepository: ColorRepository;
+    @Inject() private detailUsersRepo: DetailUsersRepo;
     @Inject() private userRepository: UserRepository;
 
     // faculty creates appointment
@@ -32,48 +29,46 @@ export class AppointmentControler {
     // @FIXME needs colors
     @Post('/')
     async create(
+        @BodyParam('users') userss: User[],
         @CurrentUser({ required: true }) user: User,
-        @Body() detail: Detail,
-        @BodyParam('slots') slots: Slot[],
+        @BodyParam('title') detTitle: string,
+        @BodyParam('description') detDesc: string,
+        @BodyParam('slots')
+        slots: Slot[],
         @BodyParam('colors') color: string,
     ) {
         try {
-            console.log('acevgrehtyjukigulk,umnhbgxfvd');
+            console.dir('acevgrehtyjukigulk,umnhbgxfvd ', userss);
             if (user.role === 'faculty') {
-                const students = await this.userRepository.findAllById(detail.students.map(({ id }) => id));
-                // try {
-                //     // const newDetail = await this.detailRepository.saveDetail({ ...detail, students, faculty: user });
-                // } catch (error) {
-                //     console.log('qwertyuiop[;lkjhgfd', error);
-                // }
+                const users = await this.userRepository.findAllById(userss.map(({ id }) => id));
 
-                // return 'xsacdsvfbghnjmnhgbfvdcs';
-                const newDetail = await this.detailRepository.saveDetail({ ...detail, students, faculty: user });
-                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!  ', newDetail.id);
-                const facultyColor = new AppointmentColor();
-                facultyColor.user = user;
-                facultyColor.detail = newDetail;
-                facultyColor.hexColor = color;
-                console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!  ', newDetail.id);
-
-                // await this.detailRepository.saveDetail(newDetail);
-                await this.colorRepository.saveColor(facultyColor);
+                const newDetail = await this.detailRepository.saveDetail({
+                    title: detTitle,
+                    description: detDesc,
+                    slots: undefined,
+                    faculty: user,
+                    users: undefined,
+                    id: undefined,
+                });
                 await Promise.all([
-                    slots.map(slot => {
-                        slot.detail = newDetail;
-                        this.slotRepository.saveSlot(slot);
-                    }),
-                    students.map(student => {
-                        const newColor = new AppointmentColor();
-                        newColor.user = student;
-                        newColor.detail = newDetail;
-                        newColor.hexColor = color;
-                        this.colorRepository.saveColor(newColor);
-                        return newColor;
-                    }),
+                    await Promise.all(
+                        slots.map(slot => {
+                            return this.slotRepository.saveSlot({ ...slot, detail: newDetail });
+                        }),
+                    ),
+                    await Promise.all(
+                        users.map(student => {
+                            return this.detailUsersRepo.saveDetailUser({
+                                user: student,
+                                detail: newDetail,
+                                hexColor: color,
+                            });
+                        }),
+                    ),
+                    await this.detailUsersRepo.saveDetailUser({ user, detail: newDetail, hexColor: color }),
                 ]);
 
-                return { detail, slots };
+                return { newDetail };
             }
         } catch (e) {
             throw new HttpError(e);
@@ -98,7 +93,7 @@ export class AppointmentControler {
 
     @Get('/untaken/:detailId')
     async untakenByDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
-        //checks that there isan
+        // returns the appointment details that the student must still need to sign up for
         if (user.role === 'student') {
             return this.detailRepository.findUntaken(detailId);
         } else {
@@ -149,11 +144,54 @@ export class AppointmentControler {
         }
     }
 
-    // @FIXME updates color for those who are not owner
     // if owner then they can update color, title, description, or student list
-    @Patch('/:detail')
-    async updateDetail() {
-        return '';
+    @Patch('/:detailId')
+    async updateDetail(
+        @CurrentUser({ required: true }) user: User,
+        @Param('detailId') detailId: number,
+        @BodyParam('color') newColor: string,
+        @BodyParam('title') newTitle: string,
+        @BodyParam('description') newDesc: string,
+        @BodyParam('users') newUsers: User[],
+    ) {
+        // checks that the current user is the owner of the detail
+        const detailOwn = await this.detailRepository.isOwner(detailId, user.id);
+        if (user.role === 'student') {
+            // if the current is only a student then they can only update the color
+            // shown on their calendar
+            const detail = await this.detailRepository.findById(detailId);
+            const detailUser = await this.detailUsersRepo.getOne(user, detail);
+            detailUser.hexColor = newColor;
+
+            return this.detailUsersRepo.saveDetailUser(detailUser);
+        } else if (user.role === 'faculty' && detailOwn) {
+            // checks that the user is the owner of the appointment detail
+            // if they are the owner then they can add students to the list
+            // or change title or description and update their own color
+
+            const detailUser = await this.detailUsersRepo.getOne(user, detailOwn);
+            if (newTitle) detailOwn.title = newTitle;
+            if (newDesc) detailOwn.description = newDesc;
+            if (newColor) detailUser.hexColor = newColor;
+            const newDetail = await this.detailRepository.saveDetail(detailOwn);
+
+            if (newUsers) {
+                const users = await this.userRepository.findAllById(newUsers.map(({ id }) => id));
+
+                // maps the new users to the detail and gives them their color
+                await Promise.all(
+                    users.map(student => {
+                        return this.detailUsersRepo.saveDetailUser({
+                            user: student,
+                            detail: newDetail,
+                            hexColor: newColor,
+                        });
+                    }),
+                );
+            }
+
+            return this.detailUsersRepo.saveDetailUser(detailUser);
+        }
     }
 
     // deletes a detail and everything associated with it
@@ -167,6 +205,8 @@ export class AppointmentControler {
         }
     }
 
+    // deletes an individual slot
+    // @FIXME: assumes that the user has permission to do this
     @Delete('/:detailId/:slotId')
     async deleteSlot(
         @CurrentUser({ required: true }) user: User,

@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Detail } from '../../appointments/entity/Detail';
-import { AppointmentColor } from '../../appointments/entity/AppointmentColor';
+import { DetailUsers } from '../../appointments/entity/DetailsUsers';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -40,12 +40,16 @@ export class User {
     bio: string;
 
     // @TODO: move to separate Student entity
-    @ManyToMany(() => Detail, Detail => Detail.students)
-    assignedDetails: Detail[];
+    // @ManyToMany(() => Detail, Detail => Detail.users)
+    // assignedDetails: Detail[];
 
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
 
-    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.user)
-    appointmentColors: AppointmentColor[];
+    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+    })
+    appointmentColors: DetailUsers[];
 }

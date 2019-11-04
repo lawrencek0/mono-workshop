@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, ManyToMany, JoinTable, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Slot } from './Slot';
 import { User } from '../../users/entity/User';
-import { AppointmentColor } from './AppointmentColor';
+import { DetailUsers } from './DetailsUsers';
 
 @Entity('Appointment_details')
 export class Detail {
@@ -14,19 +14,20 @@ export class Detail {
     @Column('text')
     description: string;
 
-    @OneToMany(() => Slot, Slot => Slot.detail, { cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => Slot, Slot => Slot.detail, { cascade: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     slots: Slot[];
 
     @ManyToOne(() => User, User => User.details)
     faculty: User;
 
-    @ManyToMany(() => User, User => User.assignedDetails, { cascade: true, onDelete: 'CASCADE' })
-    @JoinTable({ name: 'appointment_details_users' })
-    students: User[];
+    // @ManyToMany(() => User, User => User.assignedDetails, { cascade: true, onDelete: 'CASCADE' })
+    // @JoinTable({ name: 'appointment_details_users' })
+    // students: User[];
 
-    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.detail, {
+    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.detail, {
         cascade: true,
         onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
     })
-    colors: AppointmentColor[];
+    users: DetailUsers[];
 }
