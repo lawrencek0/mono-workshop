@@ -7,7 +7,7 @@ import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { useMediaQueryString } from 'theme';
 import { getAllStudents } from 'utils/students-client';
-import { Slot, SlotsByDate, DateTimeRange, Student } from 'calendar/types';
+import { SlotsByDate, Student } from 'calendar/types';
 import { slotsFromRanges, slotsByDay } from 'calendar/helpers';
 import { FormWrapper } from 'shared/inputs/styles';
 import { FlatButton, PrimaryButton } from 'shared/buttons';
@@ -78,20 +78,24 @@ const datetimeRangesSchema = Yup.object({
             )
                 .required()
                 .min(1, 'At least one Time Range'),
+            length: Yup.number(),
         }),
     )
         .required()
         .min(1, 'At least one Datetime range should be selected'),
 });
 
-const final = Yup.object();
+const final = Yup.object({
+    slots: Yup.array(),
+});
 
-const schemas = [detailSchema, studentsSchema, datetimeRangesSchema, final];
+const schemas = [detailSchema, studentsSchema, datetimeRangesSchema, final] as const;
 
 export type DatetimeRange = Yup.InferType<typeof datetimeRangesSchema>;
-type Schema = Yup.InferType<typeof schemas[number]>;
+type Schema = Yup.InferType<typeof detailSchema> &
+    Yup.InferType<typeof studentsSchema> &
+    Yup.InferType<typeof datetimeRangesSchema>;
 
-// @FIXME: this is probably not the best way to distribute state
 // @TODO: Add a back button, ability to go to any valid step
 const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
     const isDesktop = useMediaQueryString('desktop');
@@ -100,8 +104,12 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
     // @TODO: range in TS https://github.com/Microsoft/TypeScript/issues/15480
     const step = Number(stepStr.charAt(0)) as 1 | 2 | 3 | 4;
 
+    // @TODO: make it possible to navigate to next steps as long as the schema is valid
     const goToPage = (page: number): void => {
-        navigate(`./${page}`);
+        if (page < step) {
+            navigate(`./${page}`);
+            return;
+        }
     };
 
     const [students, setStudents] = useState<Student[]>([
@@ -109,7 +117,6 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
         { id: 'adsfad', firstName: 'Hon', lastName: 'Noh', role: 'student', bio: 'hmm' },
         { id: 'adssfad', firstName: 'Hon', lastName: 'Noh', role: 'student', bio: 'hmm' },
     ]);
-    const [slots, setSlots] = useState<Slot[]>([]);
     const [slotsByDate, setSlotsByDate] = useState<SlotsByDate>({});
 
     useEffect(() => {
@@ -119,13 +126,6 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
         };
         fetchData();
     }, []);
-
-    const handleDatesSubmit = (dateRanges: DateTimeRange[]): void => {
-        const slots = slotsFromRanges(dateRanges);
-        const dates = slotsByDay(slots);
-        setSlots(slots.flat());
-        setSlotsByDate(dates);
-    };
 
     const isLastStep = (): boolean => {
         if (step === 4) {
@@ -143,16 +143,15 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
     };
 
     // @TODO: work on this after fixing up review
-    const handleFormSubmit = async (): Promise<void> => {
-        // const data = {
-        //     students: selectedStudents,
-        //     dates: slots,
-        //     ...inputs,
-        // };
-        // await createAppointment(data);
+    const handleFormSubmit = async (data: Schema): Promise<void> => {
         if (isLastStep()) {
             await navigate('/calendar');
             return;
+        }
+
+        if (step === 3) {
+            const dates = slotsByDay(slotsFromRanges(data.datetimeRanges));
+            setSlotsByDate(dates);
         }
 
         handleNext();
@@ -234,12 +233,7 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
                                         1: <Details />,
                                         2: <StudentSelection students={students} />,
                                         3: <RangePicker daterangeRef={daterangeId} timerangeRef={timerangeId} />,
-                                        4: (
-                                            <AppointmentSlotsReview
-                                                slots={slotsByDate}
-                                                handleSubmit={handleFormSubmit}
-                                            />
-                                        ),
+                                        4: <AppointmentSlotsReview slots={slotsByDate} />,
                                     }[step]
                                 }
                                 {renderNavBtns(formikProps, step > 1)}

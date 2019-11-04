@@ -3,16 +3,15 @@ import moment from 'moment';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
 import { SlotsByDate } from 'calendar/types';
-import { FormWrapper, FormTitle, StyledLink, ButtonWrapper } from 'shared/inputs';
+import { FormTitle } from 'shared/inputs/styles';
 
 type Props = {
     slots: SlotsByDate;
-    handleSubmit: (e: React.MouseEvent) => void;
 };
 
-const Review: React.FC<Props> = ({ slots, handleSubmit }) => {
+const Review: React.FC<Props> = ({ slots }) => {
     return (
-        <FormWrapper>
+        <>
             <FormTitle>Review Your Plan</FormTitle>
             {slots &&
                 Object.keys(slots).map(slotId => (
@@ -27,12 +26,7 @@ const Review: React.FC<Props> = ({ slots, handleSubmit }) => {
                         })}
                     </div>
                 ))}
-            <ButtonWrapper>
-                <StyledLink to="/events" onClick={handleSubmit}>
-                    Submit
-                </StyledLink>
-            </ButtonWrapper>
-        </FormWrapper>
+        </>
     );
 };
 

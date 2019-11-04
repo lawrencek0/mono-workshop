@@ -23,8 +23,11 @@ export type Appointment = Required<Slot> & Required<Detail> & { type: 'appointme
 
 export type DateTimeRange = {
     id: number;
-    startTime: moment.Moment;
-    endTime: moment.Moment;
+    times: {
+        id: number;
+        startTime: moment.Moment;
+        endTime: moment.Moment;
+    }[];
     startDate: moment.Moment | null;
     endDate: moment.Moment | null;
     length?: number;

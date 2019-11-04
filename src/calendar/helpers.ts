@@ -1,5 +1,6 @@
 import moment from 'moment';
-import { Slot, SlotsByDate, DateTimeRange } from 'calendar/types';
+import { Slot, SlotsByDate } from 'calendar/types';
+import { DatetimeRange } from './appointment/create/Form';
 
 const generateSlots = (start: moment.Moment, length: number, duration: number): Required<Omit<Slot, 'id'>>[] => {
     return Array.from({ length }, (_, i) => {
@@ -12,38 +13,36 @@ const generateSlots = (start: moment.Moment, length: number, duration: number): 
     });
 };
 
-const slotsFromRanges = (dateRanges: DateTimeRange[]): Required<Omit<Slot, 'id'>>[][] => {
-    return dateRanges.reduce<Required<Omit<Slot, 'id'>>[][]>(
-        (acc, { startDate, endDate, startTime, endTime, length }) => {
-            if (startDate && endDate && startTime && endTime && length) {
-                const days = moment(endDate).diff(startDate, 'days') + 1;
-                const hours = moment(endTime).diff(startTime, 'hours');
-                const startHour = moment(startTime).get('hours');
-                const numOfSlots = Math.ceil((hours * 60) / length);
-                Array(days)
-                    .fill(0)
-                    .forEach((_, i) => {
+const slotsFromRanges = (dateRanges: DatetimeRange['datetimeRanges']): Required<Omit<Slot, 'id'>>[] => {
+    return dateRanges.flatMap(({ startDate, endDate, times, length }) => {
+        if (startDate && endDate && times && length) {
+            const days = moment(endDate).diff(startDate, 'days') + 1;
+            const slots = Array(days)
+                .fill(0)
+                .flatMap((_, i) => {
+                    return times.flatMap<Slot>(({ startTime, endTime }) => {
                         const day = moment(startDate)
                             .add(i, 'days')
-                            .add(startHour, 'hours');
-                        const slots = generateSlots(day, numOfSlots, length);
-                        acc.push(slots);
+                            .add(moment(startTime, 'HH:mm').hours(), 'h');
+                        const hours = moment(endTime, 'HH:mm').diff(moment(startTime, 'HH:mm'), 'm');
+                        const numOfSlots = Math.ceil(hours / length);
+                        return generateSlots(day, numOfSlots, length);
                     });
-                return acc;
-            }
-            return acc;
-        },
-        [],
-    );
+                });
+
+            return slots;
+        }
+        return [];
+    });
 };
 
-const slotsByDay = (allSlots: Required<Omit<Slot, 'id'>>[][]): SlotsByDate => {
+const slotsByDay = (allSlots: Required<Omit<Slot, 'id'>>[]): SlotsByDate => {
     return allSlots.reduce<SlotsByDate>((acc, slots) => {
-        const start = moment(slots[0].start).format('YYYY/MM/DD');
+        const start = moment(slots.start).format('YYYY/MM/DD');
         if (!acc[start]) {
             acc[start] = [];
         }
-        acc[start] = [...acc[start], ...slots];
+        acc[start].push(slots);
         return acc;
     }, {});
 };
