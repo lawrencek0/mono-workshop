@@ -24,7 +24,7 @@ export class Detail {
     @JoinTable({ name: 'appointment_details_users' })
     students: User[];
 
-    @OneToOne(() => AppointmentColor, AppointmentColor => AppointmentColor.appDet, {
+    @OneToMany(() => AppointmentColor, AppointmentColor => AppointmentColor.appDet, {
         cascade: true,
         onDelete: 'CASCADE',
     })
