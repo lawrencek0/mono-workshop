@@ -33,6 +33,7 @@ export class Event {
     @OneToMany(() => EventColor, EventColor => EventColor.event, { onDelete: 'CASCADE' })
     colors: EventColor[];
 
+    // @FIXME: should only store color in the join table
     @Column()
     color: string;
 

@@ -63,4 +63,34 @@ export class GroupController {
     async getGroupMembers(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
         return this.groupRepo.getMembers(groupId);
     }
+
+    @Patch('/:groupId')
+    async updateGroup(
+        @CurrentUser({ required: true }) user: User,
+        @Param('groupId') groupId: number,
+        @BodyParam('name') name: string,
+        @BodyParam('users') users: User[],
+    ) {
+        const group = await this.groupRepo.getGroup(groupId);
+        const groupUsers = await this.userRepository.findAllById(users.map(({ id }) => id));
+
+        if (name) group.name = name;
+        if (users) {
+            await Promise.all(
+                groupUsers.map(member => {
+                    return this.groupUserRepo.saveGroupUser({ user: member, group: group, role: 'member' });
+                }),
+            );
+        }
+        return this.groupRepo.saveGroup(group);
+    }
+
+    @Delete('/user/:groupId')
+    async removeUser(
+        @CurrentUser({ required: true }) user: User,
+        @Param('groupId') groupId: number,
+        @BodyParam('users') users: User,
+    ) {
+        return this.groupUserRepo.removeUser(users.id, groupId);
+    }
 }

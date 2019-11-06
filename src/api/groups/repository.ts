@@ -5,6 +5,7 @@ import { GroupEventRoster } from './entity/GroupEventRoster';
 import { GroupUser } from './entity/GroupUsers';
 import { Group } from './entity/Group';
 import { User } from '../users/entity/User';
+import { DetailUsersRepo } from '../appointments/repository';
 
 @Service()
 export class GroupRepository {
@@ -17,6 +18,10 @@ export class GroupRepository {
 
     getMembers(groupId: number) {
         return this.repository.find({ where: { id: groupId }, relations: ['groupUsers', 'groupUsers.user'] });
+    }
+
+    getGroup(groupId: number) {
+        return this.repository.findOne(groupId);
     }
 }
 
@@ -41,5 +46,20 @@ export class GroupUsersRepository {
 
     getMyGroups(userId: number) {
         return this.repository.find({ where: { user: userId }, relations: ['group'] });
+    }
+
+    removeUser(userId: number, groupId: number) {
+        return (
+            this.repository
+                .createQueryBuilder()
+                .delete()
+                // .from(DetailUsersRepo)
+                .where('user.id = :userId AND group.id = :groupId', { userId: userId, groupId: groupId })
+                .execute()
+        );
+    }
+
+    getMembers(groupId: number) {
+        return this.repository.find({ where: { id: groupId }, relations: ['user'] });
     }
 }

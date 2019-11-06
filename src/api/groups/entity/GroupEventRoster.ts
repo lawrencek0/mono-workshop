@@ -5,13 +5,13 @@ import { User } from '../../users/entity/User';
 
 @Entity()
 export class GroupEventRoster {
-    @ManyToOne(() => Group, Group => Group.id, { primary: true })
+    @ManyToOne(() => Group, Group => Group.id)
     group: Group;
 
-    @ManyToOne(() => Event, Event => Event.groupEvent)
+    @ManyToOne(() => Event, Event => Event.groupEvent, { primary: true })
     event: Event;
 
-    @ManyToOne(() => User, User => User.group)
+    @ManyToOne(() => User, User => User.group, { primary: true })
     user: User;
 
     @Column()
