@@ -8,17 +8,10 @@ export class GroupEventRoster {
     @ManyToOne(() => Group, Group => Group.id, { primary: true })
     group: Group;
 
-    @ManyToOne(() => Event, Event => Event.groupEvent, {
-        primary: true,
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(() => Event, Event => Event.groupEvent)
     event: Event;
 
-    @ManyToOne(() => User, User => User.group, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
+    @ManyToOne(() => User, User => User.group)
     user: User;
 
     @Column()

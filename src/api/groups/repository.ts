@@ -21,7 +21,7 @@ export class GroupEventRepository {
     @InjectRepository(GroupEventRoster)
     private repository: Repository<GroupEventRoster>;
 
-    saveGroup(groupEvent: GroupEventRoster) {
+    saveGroupEvent(groupEvent: GroupEventRoster) {
         return this.repository.save(groupEvent);
     }
 }
@@ -31,7 +31,7 @@ export class GroupUsersRepository {
     @InjectRepository(GroupUser)
     private repository: Repository<GroupUser>;
 
-    saveGroup(groupUser: GroupUser) {
+    saveGroupUser(groupUser: GroupUser) {
         return this.repository.save(groupUser);
     }
 }

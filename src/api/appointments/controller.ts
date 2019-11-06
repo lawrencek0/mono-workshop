@@ -38,7 +38,6 @@ export class AppointmentControler {
         @BodyParam('colors') color: string,
     ) {
         try {
-            console.dir('acevgrehtyjukigulk,umnhbgxfvd ', userss);
             if (user.role === 'faculty') {
                 const users = await this.userRepository.findAllById(userss.map(({ id }) => id));
 
