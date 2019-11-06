@@ -14,6 +14,10 @@ export class GroupRepository {
     saveGroup(group: Group) {
         return this.repository.save(group);
     }
+
+    getMembers(groupId: number) {
+        return this.repository.find({ where: { id: groupId }, relations: ['groupUsers', 'groupUsers.user'] });
+    }
 }
 
 @Service()
@@ -33,5 +37,9 @@ export class GroupUsersRepository {
 
     saveGroupUser(groupUser: GroupUser) {
         return this.repository.save(groupUser);
+    }
+
+    getMyGroups(userId: number) {
+        return this.repository.find({ where: { user: userId }, relations: ['group'] });
     }
 }

@@ -14,6 +14,7 @@ import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
 import { GroupRepository, GroupUsersRepository, GroupEventRepository } from './repository';
 import { UserRepository } from '../users/repository';
+import G = require('glob');
 
 @JsonController('/groups')
 export class GroupController {
@@ -49,5 +50,17 @@ export class GroupController {
         } catch (error) {
             throw new HttpError(error);
         }
+    }
+
+    // returns the groups that the current user is a part of
+    @Get('/')
+    async getMyGroups(@CurrentUser({ required: true }) user: User) {
+        return this.groupUserRepo.getMyGroups(user.id);
+    }
+
+    // returns the list of members in a group
+    @Get('/:groupId')
+    async getGroupMembers(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
+        return this.groupRepo.getMembers(groupId);
     }
 }
