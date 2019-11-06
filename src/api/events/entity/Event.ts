@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { User } from '../../users/entity/User';
 import { EventColor } from './Color';
+import { GroupEventRoster } from '../../groups/entity/GroupEventRoster';
 
 @Entity('Event')
 export class Event {
@@ -34,4 +35,10 @@ export class Event {
 
     @Column()
     color: string;
+
+    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.event, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    groupEvent: GroupEventRoster[];
 }

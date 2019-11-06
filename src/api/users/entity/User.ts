@@ -4,6 +4,8 @@ import { Detail } from '../../appointments/entity/Detail';
 import { Event } from '../../events/entity/Event';
 import { EventColor } from '../../events/entity/Color';
 import { DetailUsers } from '../../appointments/entity/DetailsUsers';
+import { GroupUser } from '../../groups/entity/GroupUsers';
+import { GroupEventRoster } from '../../groups/entity/GroupEventRoster';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -60,4 +62,16 @@ export class User {
         onUpdate: 'CASCADE',
     })
     appointmentColors: DetailUsers[];
+
+    @OneToMany(() => GroupUser, GroupUser => GroupUser.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    group: GroupUser[];
+
+    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.user, {
+        cascade: true,
+        onDelete: 'CASCADE',
+    })
+    groupEvent: GroupEventRoster[];
 }
