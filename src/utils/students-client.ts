@@ -5,7 +5,7 @@ export type Student = User;
 
 const getAllStudents = async (): Promise<Student[]> => {
     try {
-        const { students }: { students: Student[] } = await apiClient('users/students');
+        const { students }: { students: Student[] } = await apiClient(`users?role=student`);
         return students;
     } catch (e) {
         throw new Error(e);

@@ -8,13 +8,13 @@ export type Credentials = {
 };
 
 const login = async ({ email, password }: Credentials): Promise<Required<UserPayload>> => {
-    const { accessToken, refreshToken, ...user }: Required<UserPayload> = await apiClient('auth/login', {
+    const { accessToken, refreshToken, user }: Required<UserPayload> = await apiClient('auth/login', {
         body: { email, password },
     });
     localStorage.setItem(localStorageKey('accessToken'), accessToken);
     localStorage.setItem(localStorageKey('refreshToken'), refreshToken);
     localStorage.setItem(localStorageKey('user'), JSON.stringify(user));
-    return { accessToken, refreshToken, ...user };
+    return { accessToken, refreshToken, user };
 };
 
 const logout = async (): Promise<void> => {
