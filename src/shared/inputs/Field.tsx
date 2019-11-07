@@ -12,18 +12,19 @@ export type Props = {
     name: string;
     type: string;
     as?: 'input' | 'textarea';
+    className?: string;
     icon?: IconType;
     labelHidden?: boolean;
     [key: string]: unknown;
 };
 
-const StyledField: React.FC<Props> = ({ id, name, label, icon, labelHidden, ...props }) => {
+const StyledField: React.FC<Props> = ({ id, name, label, icon, labelHidden, className, ...props }) => {
     const [field, meta] = useField(name);
     const variant = meta.touched && meta.error ? 'danger' : 'default';
 
     return (
         <ThemeProvider theme={{ variant }}>
-            <InputWrapper>
+            <InputWrapper className={className}>
                 <StyledLabel css={labelHidden ? tw`hidden` : 'block'} htmlFor={id}>
                     {label}
                 </StyledLabel>
