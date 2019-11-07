@@ -4,7 +4,7 @@ import * as client from './client';
 import { localStorageKey } from '../utils/storage';
 import { navigate } from '@reach/router';
 
-type State = Required<UserPayload> | undefined;
+type State = Partial<UserPayload> | undefined;
 type Action = { type: 'login'; payload: Required<UserPayload> } | { type: 'logout' } | { type: 'refreshToken' };
 type Dispatch = (action: Action) => void;
 
@@ -31,8 +31,9 @@ const authReducer = (state: State, action: Action): State => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const accessToken = localStorage.getItem(localStorageKey('accessToken')) || undefined;
+    const refreshToken = localStorage.getItem(localStorageKey('refreshToken')) || undefined;
     const user = localStorage.getItem(localStorageKey('user')) || '{}';
-    const [state, dispatch] = useReducer(authReducer, { accessToken, ...JSON.parse(user) });
+    const [state, dispatch] = useReducer(authReducer, { accessToken, refreshToken, user: JSON.parse(user) });
 
     return (
         <AuthStateContext.Provider value={state}>

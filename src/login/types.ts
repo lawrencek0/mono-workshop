@@ -1,6 +1,7 @@
 import { User } from 'user/types';
 
-export type UserPayload = Partial<User> & {
-    accessToken?: string;
-    refreshToken?: string;
+export type UserPayload = {
+    accessToken: string;
+    refreshToken: string;
+    user: User;
 };

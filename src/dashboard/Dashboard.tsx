@@ -7,6 +7,7 @@ import { Main } from 'navigation/Main';
 import Card from 'shared/cards/Appointment';
 import { Appointment } from 'calendar/types';
 import { fetchUntakenAppointments } from './client';
+import { UserPayload } from 'login/types';
 
 const StudentDashboard: React.FC<{}> = () => {
     const [events, setEvents] = useState<Appointment[]>([]);
@@ -36,7 +37,9 @@ const Wrapper = styled.div`
 `;
 
 const Dashboard: React.FC<RouteComponentProps> = () => {
-    const { role } = useAuthState();
+    const {
+        user: { role },
+    } = useAuthState() as Required<UserPayload>;
 
     return <Main>{role === 'student' && <StudentDashboard />}</Main>;
 };

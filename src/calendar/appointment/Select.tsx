@@ -7,6 +7,7 @@ import { useAuthState } from 'auth/hooks';
 import { apiClient } from 'utils/api-client';
 import { Slot } from 'calendar/types';
 import { fetchSlots } from 'calendar/client';
+import { UserPayload } from 'login/types';
 
 type Props = RouteComponentProps & {
     detailId?: string;
@@ -58,7 +59,9 @@ const StudentSelect: React.FC<{ detailId: string; slots: Slot[]; studentId?: str
 };
 
 const Select: React.FC<Props> = ({ detailId }) => {
-    const { id, role } = useAuthState();
+    const {
+        user: { id, role },
+    } = useAuthState() as Required<UserPayload>;
     const [slots, setSlots] = useState<Required<Slot>[]>([]);
 
     useEffect(() => {
