@@ -20,22 +20,18 @@ const can = (action: string, role?: Role): boolean => {
     return false;
 };
 
-type Props = RouteComponentProps & {
-    as: React.ComponentType;
-    action: string;
-};
+type Props<P> = RouteComponentProps &
+    P & {
+        as: React.FC<P>;
+        action: string;
+        children?: JSX.Element;
+    };
 
-const RouteGuard: React.FC<Props> = ({ as: Component, action, location, ...props }) => {
-    const { role } = useAuthState();
-
-    if (can(action, role)) {
-        return <Component {...props} />;
-    }
-
-    if (role) {
-        navigate('/');
-        return <Dashboard />;
-    }
+const RouteGuard = <P extends {}>(props: Props<P>): JSX.Element => {
+    // variadic spread: https://github.com/microsoft/TypeScript/issues/5453
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { as: Component, action, location, children, ...rest } = props as any;
+    const { user } = useAuthState();
 
     let to = '/';
 
@@ -43,8 +39,20 @@ const RouteGuard: React.FC<Props> = ({ as: Component, action, location, ...props
         to = location.pathname;
     }
 
-    navigate('/login');
-    return <Login to={to} />;
+    if (!user) {
+        navigate('/login');
+        return <Login to={to} />;
+    }
+
+    const { role } = user;
+
+    if (can(action, role)) {
+        return <Component {...rest}>{children}</Component>;
+    }
+
+    // @TODO: instead navigate to previous route with a message?
+    navigate('/');
+    return <Dashboard />;
 };
 
 export { RouteGuard };
