@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import moment from 'moment';
@@ -7,7 +7,7 @@ import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { useMediaQueryString } from 'theme';
 import { getAllStudents } from 'utils/students-client';
-import { SlotsByDate, Student } from 'calendar/types';
+import { Student, Slot } from 'calendar/types';
 import { slotsFromRanges, slotsByDay } from 'calendar/helpers';
 import { FormWrapper } from 'shared/inputs/styles';
 import { FlatButton, PrimaryButton } from 'shared/buttons';
@@ -16,6 +16,7 @@ import { Details } from './Details';
 import { StudentSelection } from './StudentSelection';
 import { RangePicker } from './RangePicker';
 import { AppointmentSlotsReview } from './SlotsReview';
+import * as client from 'calendar/client';
 
 type Props = RouteComponentProps<{ step: string }>;
 
@@ -29,6 +30,9 @@ const PageTitles = [
 const detailSchema = Yup.object({
     title: Yup.string().required('Title is required'),
     description: Yup.string().notRequired(),
+    color: Yup.string()
+        .required('Color is required')
+        .matches(/^#(?:[0-9A-F]){6}$/i, 'Not a valid color code'),
 }).required();
 
 const studentsSchema = Yup.object({
@@ -117,7 +121,8 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
         { id: 'adsfad', firstName: 'Hon', lastName: 'Noh', role: 'student', bio: 'hmm' },
         { id: 'adssfad', firstName: 'Hon', lastName: 'Noh', role: 'student', bio: 'hmm' },
     ]);
-    const [slotsByDate, setSlotsByDate] = useState<SlotsByDate>({});
+    const [slots, setSlots] = useState<Slot[]>([]);
+    const slotsByDate = useMemo(() => slotsByDay(slots), [slots]);
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
@@ -143,15 +148,18 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
     };
 
     // @TODO: work on this after fixing up review
-    const handleFormSubmit = async (data: Schema): Promise<void> => {
+    const handleFormSubmit = async ({ datetimeRanges, ...data }: Schema): Promise<void> => {
         if (isLastStep()) {
+            await client.createAppointment({
+                ...data,
+                slots,
+            });
             await navigate('/calendar');
             return;
         }
 
         if (step === 3) {
-            const dates = slotsByDay(slotsFromRanges(data.datetimeRanges));
-            setSlotsByDate(dates);
+            setSlots(slotsFromRanges(datetimeRanges));
         }
 
         handleNext();
@@ -194,6 +202,7 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
                         {
                             title: '',
                             description: '',
+                            color: '#FFF382',
                             students: [],
                             datetimeRanges: [
                                 {

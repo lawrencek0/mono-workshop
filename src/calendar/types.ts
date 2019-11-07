@@ -14,7 +14,7 @@ export type SlotsByDate = {
 export type Detail = {
     id?: string;
     title: string;
-    description: string;
+    description?: string;
     student?: Student;
     faculty?: Faculty;
 };

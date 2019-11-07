@@ -1,12 +1,9 @@
 import { apiClient } from 'utils/api-client';
-import { Student } from 'utils/students-client';
-import { Slot, Appointment } from './types';
+import { Slot, Appointment, Detail } from './types';
 
-type Payload = {
-    students: Pick<Student, 'id'>[];
-    dates: Slot[];
-    title: string;
-    description: string;
+type Payload = Omit<Detail, 'student' | 'faculty'> & {
+    students: string[];
+    slots: Slot[];
 };
 
 const createAppointment = async (payload: Payload): Promise<Payload> => {
