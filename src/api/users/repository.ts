@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { User } from './entity/User';
+import { User, Role } from './entity/User';
 
 @Service()
 export class UserRepository {
@@ -18,6 +18,10 @@ export class UserRepository {
 
     findAllById(userIds: number[]) {
         return this.repository.findByIds(userIds);
+    }
+
+    findAllByRole(role: Role) {
+        return this.repository.find({ role });
     }
 
     saveUser(user: User) {
