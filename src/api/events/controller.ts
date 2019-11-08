@@ -12,10 +12,8 @@ import {
     BodyParam,
 } from 'routing-controllers';
 import { User } from '../users/entity/User';
-import { EventColor } from '../events/entity/Color';
 import { Event } from './entity/Event';
-import { Repository } from 'typeorm';
-import { InjectRepository } from 'typeorm-typedi-extensions';
+import { getRepository } from 'typeorm';
 import { Inject } from 'typedi';
 import { EventRepository, EventColorRepository } from './repository';
 import { UserRepository } from '../users/repository';
@@ -30,61 +28,39 @@ export class EventController {
     @Inject() private groupRepo: GroupRepository;
     @Inject() private groupEventsRepo: GroupEventRepository;
     @Inject() private groupUsersRepo: GroupUsersRepository;
-    // @InjectRepository(Event)
-    // @InjectRepository(User)
-    // @InjectRepository(EventColor)
-    // eventRepository2: Repository<Event>;
-    // userRepository2: Repository<User>;
-    // eventColorRepository2: Repository<EventColor>;
 
     @Post('/')
     async create(
         @CurrentUser({ required: true }) owner: User,
         @Body() event: Event,
-        @BodyParam('groupId') groupId: number,
+        @BodyParam('groupId') groupIds: number[],
     ) {
         try {
-            if (groupId) {
-                const groupUsers = await this.groupUsersRepo.getMembers(groupId);
-                const users = await this.userRepository.findAllByIds(groupUsers.map(({ user }) => user.id));
+            // All users who are members of the group(s) sent in the request
+            const users: User[] = await getRepository(User)
+                .find({ relations: ['group.group', 'group'] })
+                .then(users =>
+                    users.filter(user =>
+                        user.group.some(group => (group.group ? groupIds.includes(group.group.id) : false)),
+                    ),
+                );
 
-                const group = await this.groupRepo.getGroup(groupId);
+            const newEvent: Event = await this.eventRepository.saveEvent({ ...event, owner });
 
-                const newEvent: Event = await this.eventRepository.saveEvent({ ...event, owner });
-
-                await Promise.all(
-                    users.map(user => {
+            // Create a group event roster for each group for each user
+            await Promise.all(
+                users.map(user =>
+                    user.group.map(group => {
                         const evnt = new GroupEventRoster();
-                        evnt.group = group;
+                        evnt.group = group.group;
                         evnt.user = user;
                         evnt.event = newEvent;
                         evnt.going = false;
                         return this.groupEventsRepo.saveGroupEvent(evnt);
-
-                        // {color: "UPDATED COLOR", user: {id: '', blah}, event: {}}
                     }),
-                );
-
-                // [color, user, eventid]
-                return newEvent;
-            } else {
-                const users = await this.userRepository.findAllByIds(event.users.map(({ id }) => id));
-                const newEvent: Event = await this.eventRepository.saveEvent({ ...event, owner, users });
-
-                const eventColors = users.map(user => {
-                    const evnt = new EventColor();
-                    evnt.color = event.color;
-                    evnt.user = user;
-                    evnt.event = newEvent;
-                    return evnt;
-
-                    // {color: "UPDATED COLOR", user: {id: '', blah}, event: {}}
-                });
-
-                // [color, user, eventid]
-                await this.eventColorRepository.saveColors(eventColors);
-                return newEvent;
-            }
+                ),
+            );
+            return newEvent;
         } catch (e) {
             throw new HttpError(e);
         }

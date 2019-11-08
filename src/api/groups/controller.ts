@@ -7,14 +7,12 @@ import {
     Get,
     Patch,
     Param,
-    BadRequestError,
     Delete,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
 import { GroupRepository, GroupUsersRepository, GroupEventRepository } from './repository';
 import { UserRepository } from '../users/repository';
-import G = require('glob');
 
 @JsonController('/groups')
 export class GroupController {
@@ -46,7 +44,7 @@ export class GroupController {
             );
             // this next line saves the creator as "owner" in the Group_users table
             await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            return { newGroup };
+            return { ...newGroup };
         } catch (error) {
             throw new HttpError(error);
         }
