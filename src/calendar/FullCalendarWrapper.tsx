@@ -1,19 +1,23 @@
 import React, { useState, useCallback, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import styled, { css } from 'styled-components/macro';
+import styled, { css, ThemeProvider } from 'styled-components/macro';
 import theme from 'styled-theming';
 import tw from 'tailwind.macro';
 import moment from 'moment';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
+import { OptionsInput } from '@fullcalendar/core';
 
-type Props = any & {
-    className?: string;
-};
+type Variant = 'flat' | 'raised';
+type Props = OptionsInput &
+    any & {
+        className?: string;
+        variant?: Variant;
+    };
 
 // @FIXME: can't automatically set parent height https://github.com/fullcalendar/fullcalendar/issues/4650
-const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment }) => {
+const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment, variant = 'flat' }) => {
     const calendar = useRef<FullCalendar>(null);
     const [height, setHeight] = useState(500);
 
@@ -41,30 +45,32 @@ const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment }) =>
      */
 
     return (
-        <Wrapper className={className} ref={measuredRef}>
-            <FullCalendar
-                events={selectedAppointment}
-                ref={calendar}
-                height={height}
-                header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
-                titleFormat={{ year: 'numeric', month: 'long' }}
-                columnHeaderHtml={col => {
-                    if (moment(col).weekday() === moment().weekday()) {
-                        return `<span class="current-day">${moment(col).format('ddd')}</span>`;
-                    }
-                    return moment(col).format('ddd');
-                }}
-                eventLimit={true}
-                eventLimitText={eventLimitText}
-                defaultView="dayGridMonth"
-                plugins={[dayGridPlugin]}
-            />
-        </Wrapper>
+        <ThemeProvider theme={{ variant }}>
+            <Wrapper className={className} ref={measuredRef}>
+                <FullCalendar
+                    events={selectedAppointment}
+                    ref={calendar}
+                    height={height}
+                    header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
+                    titleFormat={{ year: 'numeric', month: 'long' }}
+                    columnHeaderHtml={col => {
+                        if (moment(col).weekday() === moment().weekday()) {
+                            return `<span class="current-day">${moment(col).format('ddd')}</span>`;
+                        }
+                        return moment(col).format('ddd');
+                    }}
+                    eventLimit={true}
+                    eventLimitText={eventLimitText}
+                    defaultView="dayGridMonth"
+                    plugins={[dayGridPlugin]}
+                />
+            </Wrapper>
+        </ThemeProvider>
     );
 };
 
-const fullCalendarStyles = theme('mode', {
-    light: css`
+const fullCalendarStyles = theme('variant', {
+    flat: css`
         .fc-toolbar {
             .fc-button.fc-button-primary {
                 ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
@@ -117,7 +123,7 @@ const fullCalendarStyles = theme('mode', {
     `,
 });
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ variant?: Variant }>`
     height: 100%;
 
     ${fullCalendarStyles}
