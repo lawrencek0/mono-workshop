@@ -81,7 +81,7 @@ export class AppointmentControler {
             if (user.role === 'faculty') {
                 return this.detailRepository.findAllFac(user.id);
             } else if (user.role === 'student') {
-                const appoint = await this.detailRepository.findAllStu(user.id);
+                const appoint = await this.detailUsersRepo.getAllUserDetails(user.id);
 
                 return { appoint };
             }

@@ -60,16 +60,6 @@ export class DetailRepository {
     @InjectRepository(Detail)
     private repository: Repository<Detail>;
 
-    // finds all the appointments that a student is allowed to sign up for
-    findAllStu(userId: number) {
-        return this.repository
-            .createQueryBuilder('detail')
-            .innerJoin('detail.students', 'student', 'student.id = :studentId', { studentId: userId })
-            .innerJoinAndSelect('detail.slots', 'slot', 'slot.student = student.id')
-            .leftJoinAndSelect('detail.faculty', 'faculty')
-            .getMany();
-    }
-
     // checks that the current user is the owner of the detail
     isOwner(detailId: number, userId: number) {
         return this.repository
@@ -138,6 +128,10 @@ export class DetailUsersRepo {
     // returns the one user-detail relation
     getOne(userId: User, detailId: Detail) {
         return this.repository.findOne({ where: { user: userId, detail: detailId }, relations: ['user', 'detail'] });
+    }
+
+    getAllUserDetails(userId: number) {
+        return this.repository.find({ where: { user: userId }, relations: ['detail'] });
     }
 
     saveDetailUser(color: DetailUsers) {
