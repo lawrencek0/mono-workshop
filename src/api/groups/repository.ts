@@ -4,8 +4,6 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { GroupEventRoster } from './entity/GroupEventRoster';
 import { GroupUser } from './entity/GroupUsers';
 import { Group } from './entity/Group';
-import { User } from '../users/entity/User';
-import { DetailUsersRepo } from '../appointments/repository';
 
 @Service()
 export class GroupRepository {
@@ -57,6 +55,10 @@ export class GroupUsersRepository {
                 .where('user.id = :userId AND group.id = :groupId', { userId: userId, groupId: groupId })
                 .execute()
         );
+    }
+
+    getThisMember(userId: number, groupId: number) {
+        return this.repository.findOne({ where: { userId, groupId } });
     }
 
     getMembers(groupId: number) {

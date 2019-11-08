@@ -14,7 +14,6 @@ import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
 import { GroupRepository, GroupUsersRepository, GroupEventRepository } from './repository';
 import { UserRepository } from '../users/repository';
-import G = require('glob');
 
 @JsonController('/groups')
 export class GroupController {
@@ -59,11 +58,24 @@ export class GroupController {
     }
 
     // returns the list of members in a group
-    @Get('/:groupId')
+    @Get('/members/:groupId')
     async getGroupMembers(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
         return this.groupRepo.getMembers(groupId);
     }
 
+    @Get('/:groupId')
+    async getGroup(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
+        const permission = await this.groupUserRepo.getThisMember(user.id, groupId);
+        console.dir(permission.role + ' !!!!!!!!!!!!!wqerhetjynhgbx hdthtr hgn');
+        if (permission) {
+            return this.groupRepo.getGroup(groupId);
+        } else {
+            return 'You are not in this group';
+        }
+    }
+
+    // allows updating the name of the group
+    // also can add users to the group
     @Patch('/:groupId')
     async updateGroup(
         @CurrentUser({ required: true }) user: User,
@@ -85,12 +97,19 @@ export class GroupController {
         return this.groupRepo.saveGroup(group);
     }
 
+    // removes a user from the group
+    // only the owner of the group and mods of the group can remove users
     @Delete('/user/:groupId')
     async removeUser(
         @CurrentUser({ required: true }) user: User,
         @Param('groupId') groupId: number,
         @BodyParam('users') users: User,
     ) {
-        return this.groupUserRepo.removeUser(users.id, groupId);
+        const owner = await this.groupUserRepo.getThisMember(user.id, groupId);
+        if (owner.role === 'owner' || owner.role === 'mod') {
+            return this.groupUserRepo.removeUser(users.id, groupId);
+        } else {
+            return 'You do not have permission to do that';
+        }
     }
 }
