@@ -7,7 +7,6 @@ import {
     Get,
     Patch,
     Param,
-    BadRequestError,
     Delete,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
@@ -45,7 +44,7 @@ export class GroupController {
             );
             // this next line saves the creator as "owner" in the Group_users table
             await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            return { newGroup };
+            return { ...newGroup };
         } catch (error) {
             throw new HttpError(error);
         }
