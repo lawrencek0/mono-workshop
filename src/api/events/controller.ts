@@ -36,15 +36,7 @@ export class EventController {
         @BodyParam('groupId') groupIds: number[],
     ) {
         try {
-            // All users who are members of the group(s) sent in the request
-            const users: User[] = await getRepository(User)
-                .find({ relations: ['group.group', 'group'] })
-                .then(users =>
-                    users.filter(user =>
-                        user.group.some(group => (group.group ? groupIds.includes(group.group.id) : false)),
-                    ),
-                );
-
+            const users: User[] = await this.userRepository.userGroup(groupIds);
             const newEvent: Event = await this.eventRepository.saveEvent({ ...event, owner });
 
             // Create a group event roster for each group for each user

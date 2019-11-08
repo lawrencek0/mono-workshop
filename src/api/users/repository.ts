@@ -27,4 +27,14 @@ export class UserRepository {
     saveUser(user: User) {
         return this.repository.save(user);
     }
+
+    userGroup(groupIds: number[]) {
+        return this.repository
+            .find({ relations: ['group.group', 'group'] })
+            .then(users =>
+                users.filter(user =>
+                    user.group.some(group => (group.group ? groupIds.includes(group.group.id) : false)),
+                ),
+            );
+    }
 }
