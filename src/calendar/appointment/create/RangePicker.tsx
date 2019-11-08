@@ -258,6 +258,7 @@ const RangePicker: React.FC<RangePickerProps> = ({ daterangeRef, timerangeRef })
             ))}
             <ButtonWrapper>
                 <FlatButton
+                    type="button"
                     disabled={canAddRange}
                     variant={canAddRange ? 'disabled' : 'default'}
                     onClick={addDateRange}

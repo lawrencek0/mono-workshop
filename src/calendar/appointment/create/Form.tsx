@@ -61,7 +61,7 @@ const datetimeRangesSchema = Yup.object({
                 Yup.object({
                     id: Yup.number().required(),
                     startTime: Yup.string()
-                        .required()
+                        .required('Start time is required')
                         .test('is-valid', 'Invalid time', function(value) {
                             return moment(value, 'HH:mm').isValid();
                         })
@@ -70,7 +70,7 @@ const datetimeRangesSchema = Yup.object({
                             return moment(value, 'HH:mm').isBefore(moment(endTime, 'HH:mm'));
                         }),
                     endTime: Yup.string()
-                        .required()
+                        .required('End time is required')
                         .test('is-valid', 'Invalid time', function(value) {
                             return moment(value, 'HH:mm').isValid();
                         })

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -6,9 +6,11 @@ import { AppProviders } from 'AppProviders';
 import './styles/tailwind.out.css';
 
 ReactDOM.render(
-    <AppProviders>
-        <App />
-    </AppProviders>,
+    <StrictMode>
+        <AppProviders>
+            <App />
+        </AppProviders>
+    </StrictMode>,
     document.getElementById('root'),
 );
 

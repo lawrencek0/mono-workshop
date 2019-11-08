@@ -10,7 +10,7 @@ const Details: React.FC = () => {
             <FormTitle>Fill Appointment Details</FormTitle>
             <Field type="text" name="title" id="title" label="Title" />
             <Field as="textarea" type="text" name="description" id="description" label="Description" />
-            <StyledColor type="color" defaultValue="#FFF382" name="color" id="color" label="Pick Event Color" />
+            <StyledColor type="color" name="color" id="color" label="Pick Event Color" />
         </>
     );
 };
