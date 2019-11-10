@@ -2,8 +2,8 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { User } from '../../users/entity/User';
 import { Event } from './Event';
 
-@Entity('Event_color')
-export class EventColor {
+@Entity('EventRoster')
+export class EventRoster {
     @ManyToOne(() => User, User => User.eventColors, { primary: true })
     user: User;
 

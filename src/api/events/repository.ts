@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Event } from './entity/Event';
-import { EventColor } from './entity/Color';
+import { EventRoster } from './entity/EventRoster';
 //import { User } from '../users/entity/User';
 
 @Service()
@@ -32,10 +32,10 @@ export class EventRepository {
 }
 
 @Service()
-export class EventColorRepository {
-    @InjectRepository(EventColor)
-    private repository: Repository<EventColor>;
-    saveColors(color: EventColor[]) {
+export class EventRosterRepository {
+    @InjectRepository(EventRoster)
+    private repository: Repository<EventRoster>;
+    saveColors(color: EventRoster[]) {
         return this.repository.save(color);
     }
     deleteByEvent(event: Event) {

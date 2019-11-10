@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { User } from '../../users/entity/User';
-import { EventColor } from './Color';
+import { EventRoster } from './EventRoster';
 import { GroupEventRoster } from '../../groups/entity/GroupEventRoster';
 
 @Entity('Event')
@@ -26,12 +26,12 @@ export class Event {
     @ManyToOne(() => User, user => user.events)
     owner: User;
 
-    @ManyToMany(() => User, user => user.events)
-    @JoinTable({ name: 'event_roster' })
-    users: User[];
+    // @ManyToMany(() => User, user => user.events)
+    // @JoinTable({ name: 'event_roster' })
+    // users: User[];
 
-    @OneToMany(() => EventColor, EventColor => EventColor.event, { onDelete: 'CASCADE' })
-    colors: EventColor[];
+    @OneToMany(() => EventRoster, EventColor => EventColor.event, { onDelete: 'CASCADE' })
+    colors: EventRoster[];
 
     // @FIXME: should only store color in the join table
     // @Column()

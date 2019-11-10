@@ -13,17 +13,18 @@ import {
 } from 'routing-controllers';
 import { User } from '../users/entity/User';
 import { Event } from './entity/Event';
-import { getRepository } from 'typeorm';
 import { Inject } from 'typedi';
-import { EventRepository, EventColorRepository } from './repository';
+import { EventRepository, EventRosterRepository } from './repository';
 import { UserRepository } from '../users/repository';
 import { GroupEventRoster } from '../groups/entity/GroupEventRoster';
 import { GroupEventRepository, GroupRepository, GroupUsersRepository } from '../groups/repository';
+import { getRepository } from 'typeorm';
+import { EventRoster } from './entity/EventRoster';
 
 @JsonController('/events')
 export class EventController {
     @Inject() private eventRepository: EventRepository;
-    @Inject() private eventColorRepository: EventColorRepository;
+    @Inject() private eventRosterRepository: EventRosterRepository;
     @Inject() private userRepository: UserRepository;
     @Inject() private groupRepo: GroupRepository;
     @Inject() private groupEventsRepo: GroupEventRepository;
@@ -40,18 +41,21 @@ export class EventController {
             const newEvent: Event = await this.eventRepository.saveEvent({ ...event, owner });
 
             // Create a group event roster for each group for each user
-            await Promise.all(
-                users.map(user =>
-                    user.group.map(group => {
-                        const evnt = new GroupEventRoster();
-                        evnt.group = group.group;
-                        evnt.user = user;
-                        evnt.event = newEvent;
-                        evnt.going = false;
-                        return this.groupEventsRepo.saveGroupEvent(evnt);
-                    }),
-                ),
-            );
+            users.forEach(user => {
+                getRepository(EventRoster).save({
+                    user: user,
+                    event: newEvent,
+                    color: newEvent.color,
+                });
+                user.group.forEach(group => {
+                    const evnt = new GroupEventRoster();
+                    evnt.group = group.group;
+                    evnt.user = user;
+                    evnt.event = newEvent;
+                    evnt.going = false;
+                    this.groupEventsRepo.saveGroupEvent(evnt);
+                });
+            });
             return newEvent;
         } catch (e) {
             throw new HttpError(e);
@@ -63,7 +67,7 @@ export class EventController {
         if (!event || user.id !== event.owner.id) {
             throw new UnauthorizedError('Unauthorized: You are not the Owner');
         } else {
-            await this.eventColorRepository.deleteByEvent(event);
+            await this.eventRosterRepository.deleteByEvent(event);
             return this.eventRepository.deleteEvent(event.id);
         }
     }
@@ -75,10 +79,6 @@ export class EventController {
             if (user.id !== currentEvent.owner.id) {
                 return 'Unauthorized: You are not the Owner';
             }
-
-            const newEvent = { ...currentEvent, ...event };
-            if (event.users) newEvent.users = await this.userRepository.findAllByIds(event.users.map(({ id }) => id));
-
             return this.eventRepository.saveEvent(event);
         } catch (e) {
             throw new HttpError(e);

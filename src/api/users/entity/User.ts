@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Detail } from '../../appointments/entity/Detail';
 import { Event } from '../../events/entity/Event';
-import { EventColor } from '../../events/entity/Color';
+import { EventRoster } from '../../events/entity/EventRoster';
 import { DetailUsers } from '../../appointments/entity/DetailsUsers';
 import { GroupUser } from '../../groups/entity/GroupUsers';
 import { GroupEventRoster } from '../../groups/entity/GroupEventRoster';
@@ -50,11 +50,11 @@ export class User {
     @OneToMany(() => Detail, Detail => Detail.faculty)
     details: Detail[];
 
-    @OneToMany(() => Event, Event => Event.users)
+    @OneToMany(() => Event, Event => Event.owner)
     events: Event[];
 
-    @OneToMany(() => EventColor, EventColor => EventColor.user)
-    eventColors: EventColor[];
+    @OneToMany(() => EventRoster, EventColor => EventColor.user)
+    eventColors: EventRoster[];
 
     @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.user, {
         cascade: true,
