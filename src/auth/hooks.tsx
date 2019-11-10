@@ -1,11 +1,11 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import { UserPayload } from '../login/types';
 import * as client from './client';
 import { localStorageKey } from '../utils/storage';
 import { navigate } from '@reach/router';
+import { UserResource } from 'resources/UserResource';
 
-type State = Partial<UserPayload> | undefined;
-type Action = { type: 'login'; payload: Required<UserPayload> } | { type: 'logout' } | { type: 'refreshToken' };
+type State = { accessToken?: string; refreshToken?: string; user: Required<InstanceType<typeof UserResource>> };
+type Action = { type: 'login'; payload: Required<NonNullable<State>> } | { type: 'logout' } | { type: 'refreshToken' };
 type Dispatch = (action: Action) => void;
 
 const AuthStateContext = createContext<State | undefined>(undefined);
@@ -14,6 +14,11 @@ const AuthDispatchContext = createContext<Dispatch | undefined>(undefined);
 const authReducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'login': {
+            const { accessToken, refreshToken, user } = action.payload;
+            localStorage.setItem(localStorageKey('accessToken'), accessToken);
+            localStorage.setItem(localStorageKey('refreshToken'), refreshToken);
+            localStorage.setItem(localStorageKey('user'), JSON.stringify(user));
+
             return { ...action.payload };
         }
         case 'logout': {
@@ -46,13 +51,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     );
 };
 
-const login = (dispatch: Dispatch, creds: client.Credentials): Promise<UserPayload> => {
-    return client.login(creds).then(payload => {
-        dispatch({ type: 'login', payload });
-        return payload;
-    });
-};
-
 const logout = (dispatch: Dispatch): Promise<void> => {
     return client.logout().then(() => {
         dispatch({ type: 'logout' });
@@ -79,4 +77,4 @@ const useAuthDispatch = (): Dispatch => {
     return dispatch;
 };
 
-export { AuthProvider, useAuthState, useAuthDispatch, login, logout };
+export { AuthProvider, useAuthState, useAuthDispatch, logout };

@@ -3,7 +3,7 @@ import { RouteComponentProps, navigate } from '@reach/router';
 import { Formik, FormikProps } from 'formik';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { login, useAuthDispatch } from 'auth/hooks';
+import { useAuthDispatch } from 'auth/hooks';
 import { localStorageKey } from 'utils/storage';
 import {
     FormWrapper,
@@ -15,6 +15,8 @@ import {
 } from 'shared/inputs/styles';
 import { Field } from 'shared/inputs/Field';
 import { Progress } from 'shared/Progress';
+import { UserResource } from 'resources/UserResource';
+import { useFetcher, NetworkErrorBoundary } from 'rest-hooks';
 
 type FormValues = {
     email: string;
@@ -23,6 +25,7 @@ type FormValues = {
 
 const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
     const dispatch = useAuthDispatch();
+    const login = useFetcher(UserResource.makeLoggedInUserShape());
     const [rememberUser, setRememberUser] = useState(
         localStorage.getItem(localStorageKey('rememberMe')) === 'true' || false,
     );
@@ -50,9 +53,9 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                 return errors;
             }}
             onSubmit={async (values, actions) => {
-                // eslint-disable-next-line no-undef
                 try {
-                    await login(dispatch, values);
+                    const { accessToken, refreshToken, ...user } = await login({}, values);
+                    dispatch({ type: 'login', payload: { accessToken, refreshToken, user } });
                     if (rememberUser) {
                         localStorage.setItem(localStorageKey('email'), values.email);
                         localStorage.setItem(localStorageKey('rememberMe'), 'true');
@@ -74,32 +77,34 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                 const isDisabled = !props.isValid || props.isSubmitting;
                 return (
                     <Wrapper variant={props.status && !props.isSubmitting ? 'danger' : 'default'}>
-                        {props.isSubmitting && <StyledProgress />}
-                        {/* @FIXME: Switch to Form (broken rn) https://github.com/jaredpalmer/formik/issues/1927 */}
-                        <form onSubmit={props.handleSubmit}>
-                            <FormTitle>Login</FormTitle>
-                            <ErrorMessage>{props.status}</ErrorMessage>
-                            <Field name="email" type="email" id="email" label="Email" {...props} />
-                            <Field type="password" id="password" name="password" label="Password" {...props} />
-                            <InputWrapper>
-                                <input
-                                    type="checkbox"
-                                    name="rememberMe"
-                                    id="rememberMe"
-                                    checked={rememberUser}
-                                    onChange={handleCheckboxChange}
-                                />
-                                <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
-                            </InputWrapper>
-                            <InputWrapper>
-                                <StyledSubmitBtn
-                                    type="submit"
-                                    value="Login"
-                                    disabled={isDisabled}
-                                    variant={isDisabled ? 'disabled' : 'default'}
-                                />
-                            </InputWrapper>
-                        </form>
+                        <NetworkErrorBoundary>
+                            {props.isSubmitting && <StyledProgress />}
+                            {/* @FIXME: Switch to Form (broken rn) https://github.com/jaredpalmer/formik/issues/1927 */}
+                            <form onSubmit={props.handleSubmit}>
+                                <FormTitle>Login</FormTitle>
+                                <ErrorMessage>{props.status}</ErrorMessage>
+                                <Field name="email" type="email" id="email" label="Email" {...props} />
+                                <Field type="password" id="password" name="password" label="Password" {...props} />
+                                <InputWrapper>
+                                    <input
+                                        type="checkbox"
+                                        name="rememberMe"
+                                        id="rememberMe"
+                                        checked={rememberUser}
+                                        onChange={handleCheckboxChange}
+                                    />
+                                    <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
+                                </InputWrapper>
+                                <InputWrapper>
+                                    <StyledSubmitBtn
+                                        type="submit"
+                                        value="Login"
+                                        disabled={isDisabled}
+                                        variant={isDisabled ? 'disabled' : 'default'}
+                                    />
+                                </InputWrapper>
+                            </form>
+                        </NetworkErrorBoundary>
                     </Wrapper>
                 );
             }}
