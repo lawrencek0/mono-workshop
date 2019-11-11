@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import moment from 'moment';
@@ -6,9 +6,7 @@ import { RouteComponentProps, navigate } from '@reach/router';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { useMediaQueryString } from 'theme';
-import { getAllStudents } from 'utils/students-client';
-import { Student, Slot } from 'calendar/types';
-import { slotsFromRanges, slotsByDay } from 'calendar/helpers';
+import { slotsFromRanges, groupSlotsByDay } from 'calendar/helpers';
 import { FormWrapper } from 'shared/inputs/styles';
 import { FlatButton, PrimaryButton } from 'shared/buttons';
 import { Stepper } from './Stepper';
@@ -16,7 +14,9 @@ import { Details } from './Details';
 import { StudentSelection } from './StudentSelection';
 import { RangePicker } from './RangePicker';
 import { AppointmentSlotsReview } from './SlotsReview';
-import * as client from 'calendar/client';
+import { useFetcher, useResource } from 'rest-hooks';
+import { AppointmentResource, SlotResource } from 'resources/AppointmentResource';
+import { UserResource } from 'resources/UserResource';
 
 type Props = RouteComponentProps<{ step: string }>;
 
@@ -102,6 +102,8 @@ type Schema = Yup.InferType<typeof detailSchema> &
 
 // @TODO: Add a back button, ability to go to any valid step
 const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
+    const create = useFetcher(AppointmentResource.createShape());
+    const students = useResource(UserResource.listByRole(), { role: 'student' });
     const isDesktop = useMediaQueryString('desktop');
     const daterangeId = useRef(0);
     const timerangeId = useRef(0);
@@ -115,22 +117,8 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
             return;
         }
     };
-
-    const [students, setStudents] = useState<Student[]>([
-        { id: 'adfad', firstName: 'Hon', lastName: 'Noh', role: 'student', bio: 'hmm' },
-        { id: 'adsfad', firstName: 'Hon', lastName: 'Noh', role: 'student', bio: 'hmm' },
-        { id: 'adssfad', firstName: 'Hon', lastName: 'Noh', role: 'student', bio: 'hmm' },
-    ]);
-    const [slots, setSlots] = useState<Slot[]>([]);
-    const slotsByDate = useMemo(() => slotsByDay(slots), [slots]);
-
-    useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            const students = await getAllStudents();
-            setStudents(students);
-        };
-        fetchData();
-    }, []);
+    const [slots, setSlots] = useState<InstanceType<typeof SlotResource>[]>([]);
+    const slotsByDay = useMemo(() => groupSlotsByDay(slots), [slots]);
 
     const isLastStep = (): boolean => {
         if (step === 4) {
@@ -150,12 +138,14 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
     // @TODO: work on this after fixing up review
     const handleFormSubmit = async ({ datetimeRanges, ...data }: Schema): Promise<void> => {
         if (isLastStep()) {
-            await client.createAppointment({
-                ...data,
-                slots,
-            });
-            await navigate('/calendar');
-            return;
+            await create(
+                {},
+                {
+                    ...data,
+                    slots,
+                },
+            );
+            return navigate('/calendar');
         }
 
         if (step === 3) {
@@ -242,7 +232,7 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
                                         1: <Details />,
                                         2: <StudentSelection students={students} />,
                                         3: <RangePicker daterangeRef={daterangeId} timerangeRef={timerangeId} />,
-                                        4: <AppointmentSlotsReview slots={slotsByDate} />,
+                                        4: <AppointmentSlotsReview slots={slotsByDay} />,
                                     }[step]
                                 }
                                 {renderNavBtns(formikProps, step > 1)}

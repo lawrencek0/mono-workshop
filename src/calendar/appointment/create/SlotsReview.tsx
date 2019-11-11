@@ -2,8 +2,8 @@ import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { SlotsByDate } from 'calendar/types';
 import { FormTitle } from 'shared/inputs/styles';
+import { SlotsByDate } from 'calendar/types';
 
 type Props = {
     slots: SlotsByDate;
@@ -19,7 +19,7 @@ const Review: React.FC<Props> = ({ slots }) => {
                         <SubTitle>{slotId}</SubTitle>
                         {Object.values(slots[slotId]).map(({ start, end }) => {
                             return (
-                                <div key={start.toLocaleString()}>
+                                <div key={moment(start).toLocaleString()}>
                                     {moment(start).format('h:mm a')} - {moment(end).format('h:mm a')}
                                 </div>
                             );

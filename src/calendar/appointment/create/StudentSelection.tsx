@@ -3,13 +3,13 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { useField } from 'formik';
 import { FaUserCircle } from 'react-icons/fa';
-import { Student } from 'calendar/types';
 import { FormTitle, InputWrapper, StyledCheckboxLabel as CheckboxLabel } from 'shared/inputs/styles';
 import { Field } from 'shared/inputs/Field';
 import { ErrorMessage } from 'shared/inputs/ErrorMessage';
+import { UserResource } from 'resources/UserResource';
 
 type Props = {
-    students: Student[];
+    students: Required<InstanceType<typeof UserResource>>[];
 };
 
 const StudentSelection: React.FC<Props> = ({ students }) => {

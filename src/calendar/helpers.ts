@@ -1,26 +1,28 @@
 import moment from 'moment';
-import { Slot, SlotsByDate } from 'calendar/types';
+import { SlotsByDate } from 'calendar/types';
 import { DatetimeRange } from './appointment/create/Form';
+import { SlotResource } from 'resources/AppointmentResource';
 
-const generateSlots = (start: moment.Moment, length: number, duration: number): Required<Omit<Slot, 'id'>>[] => {
+const generateSlots = (start: moment.Moment, length: number, duration: number): InstanceType<typeof SlotResource>[] => {
     return Array.from({ length }, (_, i) => {
         const slotStart = moment(start).add(i * duration, 'm');
         const slotEnd = moment(slotStart).add(duration, 'm');
-        return {
+
+        return SlotResource.fromJS({
             start: slotStart,
             end: slotEnd,
-        };
+        });
     });
 };
 
-const slotsFromRanges = (dateRanges: DatetimeRange['datetimeRanges']): Required<Omit<Slot, 'id'>>[] => {
+const slotsFromRanges = (dateRanges: DatetimeRange['datetimeRanges']): InstanceType<typeof SlotResource>[] => {
     return dateRanges.flatMap(({ startDate, endDate, times, length }) => {
         if (startDate && endDate && times && length) {
             const days = moment(endDate).diff(startDate, 'days') + 1;
-            const slots = Array(days)
+            return Array(days)
                 .fill(0)
                 .flatMap((_, i) => {
-                    return times.flatMap<Slot>(({ startTime, endTime }) => {
+                    return times.flatMap<InstanceType<typeof SlotResource>>(({ startTime, endTime }) => {
                         const day = moment(startDate)
                             .add(i, 'days')
                             .add(moment(startTime, 'HH:mm').hours(), 'h');
@@ -29,14 +31,12 @@ const slotsFromRanges = (dateRanges: DatetimeRange['datetimeRanges']): Required<
                         return generateSlots(day, numOfSlots, length);
                     });
                 });
-
-            return slots;
         }
         return [];
     });
 };
 
-const slotsByDay = (allSlots: Required<Omit<Slot, 'id'>>[]): SlotsByDate => {
+const groupSlotsByDay = (allSlots: InstanceType<typeof SlotResource>[]): SlotsByDate => {
     return allSlots.reduce<SlotsByDate>((acc, slots) => {
         const start = moment(slots.start).format('YYYY/MM/DD');
         if (!acc[start]) {
@@ -47,4 +47,4 @@ const slotsByDay = (allSlots: Required<Omit<Slot, 'id'>>[]): SlotsByDate => {
     }, {});
 };
 
-export { generateSlots, slotsFromRanges, slotsByDay };
+export { generateSlots, slotsFromRanges, groupSlotsByDay };

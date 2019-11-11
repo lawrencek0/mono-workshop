@@ -1,4 +1,4 @@
-import { Resource, Request, AbstractInstanceType } from 'rest-hooks';
+import { Resource, Request, AbstractInstanceType, ReadShape, SchemaList } from 'rest-hooks';
 import { localStorageKey } from 'utils/storage';
 import moment from 'moment';
 import { UserResource } from './UserResource';
@@ -8,26 +8,41 @@ abstract class BaseResource extends Resource {
         request.set('idtoken', localStorage.getItem(localStorageKey('accessToken')) || '');
 }
 
-export class DetailResource extends BaseResource {
+export class AppointmentResource extends BaseResource {
     readonly id?: number = undefined;
     readonly title: string = '';
     readonly description?: string = '';
-    readonly slots: Required<SlotResource>[] = [];
+    readonly faculty?: UserResource = undefined;
+    readonly slots?: SlotResource[] = undefined;
 
     pk(): number | undefined {
         return this.id;
     }
 
     static urlRoot = '/api/appointments';
+
+    static listByUntaken<T extends typeof Resource>(
+        this: T,
+    ): ReadShape<SchemaList<Required<Readonly<AbstractInstanceType<T>>>>> {
+        return {
+            ...this.listShape(),
+            getFetchKey: () => {
+                return `/api/appointments/details/untaken`;
+            },
+            fetch: async () => {
+                return this.fetch('get', `/api/appointments/details/untaken`);
+            },
+        };
+    }
 }
 
 export class SlotResource extends BaseResource {
-    readonly id?: number = undefined;
+    readonly id: number = 0;
     readonly start: moment.MomentInput = '';
     readonly end: moment.MomentInput = '';
-    readonly student: InstanceType<typeof UserResource> | null | boolean = null;
+    readonly student?: InstanceType<typeof UserResource> | null | boolean = null;
 
-    pk(): number | undefined {
+    pk(): number {
         return this.id;
     }
 

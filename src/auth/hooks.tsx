@@ -1,5 +1,4 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import * as client from './client';
 import { localStorageKey } from '../utils/storage';
 import { navigate } from '@reach/router';
 import { UserResource } from 'resources/UserResource';
@@ -22,6 +21,9 @@ const authReducer = (state: State, action: Action): State => {
             return { ...action.payload };
         }
         case 'logout': {
+            localStorage.removeItem(localStorageKey('accessToken'));
+            localStorage.removeItem(localStorageKey('refreshToken'));
+            localStorage.removeItem(localStorageKey('user'));
             navigate('/login', { replace: true });
             return {} as State;
         }
@@ -51,12 +53,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     );
 };
 
-const logout = (dispatch: Dispatch): Promise<void> => {
-    return client.logout().then(() => {
-        dispatch({ type: 'logout' });
-    });
-};
-
 const useAuthState = (): NonNullable<State> => {
     const state = useContext(AuthStateContext);
 
@@ -77,4 +73,4 @@ const useAuthDispatch = (): Dispatch => {
     return dispatch;
 };
 
-export { AuthProvider, useAuthState, useAuthDispatch, logout };
+export { AuthProvider, useAuthState, useAuthDispatch };

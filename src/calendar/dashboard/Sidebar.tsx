@@ -5,7 +5,7 @@ import { Menu, MenuLink, MenuButton } from '@reach/menu-button';
 import { StyledMenuList } from 'navigation/Navbar';
 import { Link } from '@reach/router';
 import { FaCaretDown } from 'react-icons/fa';
-import Card, { Props as Appointment } from '../../shared/cards/Appointment';
+import { Props as Appointment } from '../../shared/cards/Appointment';
 
 type Props = {
     appointments: Appointment[];
@@ -34,9 +34,9 @@ const Sidebar: React.FC<Props> = ({ className, appointments }) => {
         <Wrapper className={className}>
             <Title>Events</Title>
             <NewEvent />
-            {appointments.map(appointment => (
-                <Card key={appointment.start.toString()} {...appointment} />
-            ))}
+            {/* {appointments.map(appointment => (
+                <Card key={moment(appointment.start).toString()} {...appointment} />
+            ))} */}
         </Wrapper>
     );
 };

@@ -25,7 +25,7 @@ type FormValues = {
 
 const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> = ({ to = '/', replace = false }) => {
     const dispatch = useAuthDispatch();
-    const login = useFetcher(UserResource.makeLoggedInUserShape());
+    const login = useFetcher(UserResource.makeCurrentUserShape());
     const [rememberUser, setRememberUser] = useState(
         localStorage.getItem(localStorageKey('rememberMe')) === 'true' || false,
     );

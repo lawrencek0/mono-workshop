@@ -1,25 +1,9 @@
 import moment from 'moment';
-import { Student as StudentBase } from 'utils/students-client';
-
-export type Slot = {
-    id?: string;
-    start: string | moment.Moment;
-    end: string | moment.Moment;
-};
+import { SlotResource } from 'resources/AppointmentResource';
 
 export type SlotsByDate = {
-    [key: string]: Slot[];
+    [key: string]: InstanceType<typeof SlotResource>[];
 };
-
-export type Detail = {
-    id?: string;
-    title: string;
-    description?: string;
-    student?: Student;
-    faculty?: Faculty;
-};
-
-export type Appointment = Required<Slot> & Required<Detail> & { type: 'appointments' };
 
 export type DateTimeRange = {
     id: number;
@@ -32,9 +16,3 @@ export type DateTimeRange = {
     endDate: moment.Moment | null;
     length?: number;
 };
-
-export type Student = StudentBase & {
-    selected?: boolean;
-};
-
-export type Faculty = StudentBase;

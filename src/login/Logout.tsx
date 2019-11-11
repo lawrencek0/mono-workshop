@@ -1,10 +1,10 @@
 import React from 'react';
 import { RouteComponentProps } from '@reach/router';
-import { useAuthDispatch, logout } from 'auth/hooks';
+import { useAuthDispatch } from 'auth/hooks';
 
 const Logout: React.FC<RouteComponentProps> = () => {
     const dispatch = useAuthDispatch();
-    logout(dispatch);
+    dispatch({ type: 'logout' });
     // @TODO: instead show a popup/notification
     return <h1>Logging you out</h1>;
 };

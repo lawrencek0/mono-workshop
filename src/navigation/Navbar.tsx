@@ -7,14 +7,13 @@ import { MdAccountCircle } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
 import { Menu, MenuList, MenuButton, MenuLink } from '@reach/menu-button';
 import { useAuthState } from 'auth/hooks';
-import { UserPayload } from 'login/types';
 import { Link } from '@reach/router';
 import '@reach/menu-button/styles.css';
 
 const Navbar: React.FC<{}> = () => {
     const {
         user: { firstName, lastName },
-    } = useAuthState() as Required<UserPayload>;
+    } = useAuthState();
 
     return (
         <StyledHeader>
