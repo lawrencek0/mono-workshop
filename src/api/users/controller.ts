@@ -10,6 +10,6 @@ export class UserController {
     // @FIXME: need more security!
     @Get('/')
     async findAllByRole(@QueryParam('role') role: Role) {
-        return { [`${role}s`]: await this.repository.findAllByRole(role) };
+        return this.repository.findAllByRole(role);
     }
 }

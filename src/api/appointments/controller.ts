@@ -9,6 +9,7 @@ import {
     Param,
     BadRequestError,
     Delete,
+    UnauthorizedError,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
@@ -29,18 +30,16 @@ export class AppointmentControler {
     // @FIXME needs colors
     @Post('/')
     async create(
-        @BodyParam('users') userss: User[],
+        @BodyParam('students') studentIds: number[],
         @CurrentUser({ required: true }) user: User,
         @BodyParam('title') detTitle: string,
         @BodyParam('description') detDesc: string,
-        @BodyParam('slots')
-        slots: Slot[],
-        @BodyParam('colors') color: string,
+        @BodyParam('slots') slots: Slot[],
+        @BodyParam('color') color: string,
     ) {
         try {
-            console.dir('acevgrehtyjukigulk,umnhbgxfvd ', userss);
             if (user.role === 'faculty') {
-                const users = await this.userRepository.findAllById(userss.map(({ id }) => id));
+                const students = await this.userRepository.findAllById(studentIds);
 
                 const newDetail = await this.detailRepository.saveDetail({
                     title: detTitle,
@@ -50,25 +49,14 @@ export class AppointmentControler {
                     users: undefined,
                     id: undefined,
                 });
-                await Promise.all([
-                    await Promise.all(
-                        slots.map(slot => {
-                            return this.slotRepository.saveSlot({ ...slot, detail: newDetail });
-                        }),
-                    ),
-                    await Promise.all(
-                        users.map(student => {
-                            return this.detailUsersRepo.saveDetailUser({
-                                user: student,
-                                detail: newDetail,
-                                hexColor: color,
-                            });
-                        }),
-                    ),
-                    await this.detailUsersRepo.saveDetailUser({ user, detail: newDetail, hexColor: color }),
+                const slotsWithDetail = slots.map(slot => ({ ...slot, detail: newDetail }));
+                const detailUsers = students.map(student => ({ user: student, detail: newDetail, hexColor: color }));
+                const [newSlots] = await Promise.all([
+                    this.slotRepository.saveSlots(slotsWithDetail),
+                    this.detailUsersRepo.saveDetailUsers(detailUsers),
                 ]);
 
-                return { newDetail };
+                return { ...newDetail, slots: newSlots };
             }
         } catch (e) {
             throw new HttpError(e);
@@ -82,33 +70,42 @@ export class AppointmentControler {
             if (user.role === 'faculty') {
                 return this.detailRepository.findAllFac(user.id);
             } else if (user.role === 'student') {
-                const appoint = await this.detailRepository.findAllStu(user.id);
+                const appoint = await this.detailRepository.findAllForStudent(user.id);
 
                 return { appoint };
             }
-        } catch (error) {
-            return console.error();
+        } catch (e) {
+            throw new HttpError(e);
         }
     }
 
-    @Get('/untaken/:detailId')
-    async untakenByDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
+    // @FIXME: bug in routing-controller allows request to '/untaken' to fall through
+    // to ':/detailId'
+    @Get('/details/untaken')
+    async untakenByDetail(@CurrentUser({ required: true }) user: User) {
         // returns the appointment details that the student must still need to sign up for
         if (user.role === 'student') {
-            return this.detailRepository.findUntaken(detailId);
-        } else {
-            return 'you are not supposed to be here';
+            try {
+                return this.detailRepository.findUntaken(user);
+            } catch (e) {
+                throw new HttpError(e);
+            }
         }
+
+        throw new UnauthorizedError('you are not supposed to be here');
     }
 
     @Get('/:detailId')
-    async findTheseSlots(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
+    async findSlotsForDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
         if (user.role === 'student') {
             const { slots, ...Detail } = await this.detailRepository.findById(detailId);
             const output = slots.map(({ student, ...slot }) => {
-                // If slot has a student replace its information with "taken":true
-                // If it doesn't have a student, add "taken":false
-                return student ? { ...slot, taken: true } : { ...slot, taken: false };
+                // If slot is owned by the user include the student information
+                // If slot has a student replace its information with "student":true
+                // If it doesn't have a student, add "student":false
+                return student
+                    ? { ...slot, student: student.id === user.id ? student : true }
+                    : { ...slot, student: false };
             });
 
             return { slots: output, ...Detail };
@@ -139,9 +136,9 @@ export class AppointmentControler {
             } catch (e) {
                 throw new BadRequestError(e);
             }
-        } else {
-            return 'You can not do this silly head';
         }
+
+        throw new UnauthorizedError('You can not do this silly head');
     }
 
     // if owner then they can update color, title, description, or student list
