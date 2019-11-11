@@ -13,6 +13,7 @@ import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
 import { GroupRepository, GroupUsersRepository, GroupEventRepository } from './repository';
 import { UserRepository } from '../users/repository';
+import { getRepository } from 'typeorm';
 
 @JsonController('/groups')
 export class GroupController {
@@ -35,7 +36,7 @@ export class GroupController {
                 name: groupName,
                 groupUsers: undefined,
                 id: undefined,
-                events: undefined,
+                event: undefined,
             });
             await Promise.all(
                 groupUsers.map(member => {
@@ -49,7 +50,33 @@ export class GroupController {
             throw new HttpError(error);
         }
     }
+    @Post('/fileUpload')
+    async bulkCreate(
+        @CurrentUser({ required: true }) user: User,
+        @BodyParam('name') groupName: string,
+        @BodyParam('users') users: User[],
+    ) {
+        try {
+            const groupUsers = await getRepository(User).save(users);
 
+            const newGroup = await this.groupRepo.saveGroup({
+                name: groupName,
+                groupUsers: undefined,
+                id: undefined,
+                event: undefined,
+            });
+            await Promise.all(
+                groupUsers.map(member => {
+                    return this.groupUserRepo.saveGroupUser({ user: member, group: newGroup, role: 'member' });
+                }),
+            );
+            // this next line saves the creator as "owner" in the Group_users table
+            await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
+            return { ...newGroup };
+        } catch (error) {
+            throw new HttpError(error);
+        }
+    }
     // returns the groups that the current user is a part of
     @Get('/')
     async getMyGroups(@CurrentUser({ required: true }) user: User) {
