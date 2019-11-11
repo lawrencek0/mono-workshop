@@ -31,7 +31,7 @@ export class Event {
     // users: User[];
 
     @OneToMany(() => EventRoster, EventColor => EventColor.event, { onDelete: 'CASCADE' })
-    colors: EventRoster[];
+    eventRoster: EventRoster[];
 
     // @FIXME: should only store color in the join table
     // @Column()

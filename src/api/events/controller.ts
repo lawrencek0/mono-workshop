@@ -63,11 +63,25 @@ export class EventController {
     }
     @Delete('/:eventId')
     async delete(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
-        const event: Event = await this.eventRepository.findById(id);
+        const event: Event = await getRepository(Event).findOne(id, {
+            relations: [
+                'groupEvent',
+                'groupEvent.group',
+                'groupEvent.event',
+                'groupEvent.user',
+                'owner',
+                'eventRoster',
+                'eventRoster.event',
+                'eventRoster.user',
+            ],
+        });
+
         if (!event || user.id !== event.owner.id) {
             throw new UnauthorizedError('Unauthorized: You are not the Owner');
         } else {
-            await this.eventRosterRepository.deleteByEvent(event);
+            await getRepository(GroupEventRoster).remove(event.groupEvent);
+
+            await getRepository(EventRoster).remove(event.eventRoster);
             return this.eventRepository.deleteEvent(event.id);
         }
     }

@@ -7,7 +7,7 @@ export class EventRoster {
     @ManyToOne(() => User, User => User.eventColors, { primary: true })
     user: User;
 
-    @ManyToOne(() => Event, Event => Event.colors, { primary: true })
+    @ManyToOne(() => Event, Event => Event.eventRoster, { primary: true })
     event: Event;
 
     @Column()
