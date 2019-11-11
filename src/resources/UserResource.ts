@@ -1,4 +1,4 @@
-import { Resource, SchemaDetail, AbstractInstanceType, MutateShape } from 'rest-hooks';
+import { Resource, SchemaDetail, AbstractInstanceType, MutateShape, ReadShape, SchemaList } from 'rest-hooks';
 import { Role } from 'user/types';
 
 export class UserResource extends Resource {
@@ -16,9 +16,21 @@ export class UserResource extends Resource {
 
     static urlRoot = '/api/users';
 
-    // static fetchPlugin = (request: Request) => request.auth('', '');
+    static listByRole<T extends typeof Resource>(
+        this: T,
+    ): ReadShape<SchemaList<Required<Readonly<AbstractInstanceType<T>>>>> {
+        return {
+            ...this.listShape(),
+            getFetchKey: ({ role }: { role: Role }) => {
+                return `/api/users?role=${role}`;
+            },
+            fetch: async ({ role }: { role: Role }) => {
+                return this.fetch('get', `/api/users?role=${role}`);
+            },
+        };
+    }
 
-    static makeLoggedInUserShape<T extends typeof Resource>(
+    static makeCurrentUserShape<T extends typeof Resource>(
         this: T,
     ): MutateShape<SchemaDetail<Readonly<AbstractInstanceType<T>>>> {
         return {

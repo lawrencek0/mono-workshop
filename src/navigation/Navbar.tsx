@@ -11,7 +11,9 @@ import { Link } from '@reach/router';
 import '@reach/menu-button/styles.css';
 
 const Navbar: React.FC<{}> = () => {
-    const { firstName, lastName } = useAuthState();
+    const {
+        user: { firstName, lastName },
+    } = useAuthState();
 
     return (
         <StyledHeader>
