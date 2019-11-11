@@ -70,20 +70,63 @@ const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment, vari
 };
 
 const fullCalendarStyles = theme('variant', {
-    flat: css`
-        .fc-toolbar {
-            .fc-button.fc-button-primary {
-                ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
-                    text-gray-800 hover:text-gray-800 active:text-gray-800 
-                    border-gray-400 hover:border-primary-400 focus:border-primary-200 
-                    focus:shadow-outline py-2 px-8`}
+    card: css`
+        .fc {
+            table {
+                ${tw`text-center`}
+                th,
+                td {
+                    /* removes all borders */
+                    ${tw`border-none`}
+                }
+
+                .fc-day-top {
+                    & > .fc-day-number {
+                        /* needed for centering the day number */
+                        ${tw`float-none inline-block`}
+                    }
+                }
+
+                .fc-more-cell {
+                    .fc-more {
+                        /* for styling the more events from eventLimit */
+                        ${tw`inline-block w-2/3 mx-auto h-2 rounded bg-blue-400`}
+                    }
+                }
+
+                .fc-today {
+                    ${tw`bg-transparent border-primary-400 text-primary-600`}
+                }
+            }
+            .fc-toolbar {
+                ${tw`mb-4`}
+
+                .fc-button {
+                    /* remove styling from the calendar control buttons */
+                    ${tw`bg-transparent border-0 text-gray-500`}
+                }
+
+                h2 {
+                    /* styles the calendar title */
+                    ${tw`text-xl font-bold`}
+                }
             }
         }
+    `,
+    flat: css`
         .fc {
             table {
                 th,
                 td {
                     ${tw`border-none`}
+                }
+                .fc-toolbar {
+                    .fc-button.fc-button-primary {
+                        ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
+                    text-gray-800 hover:text-gray-800 active:text-gray-800 
+                    border-gray-400 hover:border-primary-400 focus:border-primary-200 
+                    focus:shadow-outline py-2 px-8`}
+                    }
                 }
                 .fc-head {
                     th {
@@ -128,5 +171,9 @@ const Wrapper = styled.div<{ variant?: Variant }>`
 
     ${fullCalendarStyles}
 `;
+
+Wrapper.defaultProps = {
+    variant: 'flat',
+};
 
 export default CalendarWrapper;
