@@ -14,7 +14,7 @@ export class Detail {
     @Column('text')
     description: string;
 
-    @OneToMany(() => Slot, Slot => Slot.detail, { cascade: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @OneToMany(() => Slot, Slot => Slot.detail)
     slots: Slot[];
 
     @ManyToOne(() => User, User => User.details)
@@ -24,10 +24,6 @@ export class Detail {
     // @JoinTable({ name: 'appointment_details_users' })
     // students: User[];
 
-    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.detail, {
-        cascade: true,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-    })
+    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.detail)
     users: DetailUsers[];
 }

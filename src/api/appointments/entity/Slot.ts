@@ -16,6 +16,6 @@ export class Slot {
     @ManyToOne(() => User, User => User.id, { nullable: true })
     student: User;
 
-    @ManyToOne(() => Detail, Detail => Detail.slots)
+    @ManyToOne(() => Detail, Detail => Detail.slots, { cascade: true, onDelete: 'CASCADE' })
     detail: Detail;
 }

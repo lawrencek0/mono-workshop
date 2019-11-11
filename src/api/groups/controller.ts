@@ -35,7 +35,7 @@ export class GroupController {
                 name: groupName,
                 groupUsers: undefined,
                 id: undefined,
-                event: undefined,
+                events: undefined,
             });
             await Promise.all(
                 groupUsers.map(member => {
@@ -62,10 +62,10 @@ export class GroupController {
         return this.groupRepo.getMembers(groupId);
     }
 
+    // gets the desired group if the current user is a part of the group
     @Get('/:groupId')
     async getGroup(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
         const permission = await this.groupUserRepo.getThisMember(user.id, groupId);
-        console.dir(permission.role + ' !!!!!!!!!!!!!wqerhetjynhgbx hdthtr hgn');
         if (permission) {
             return this.groupRepo.getGroup(groupId);
         } else {
@@ -109,6 +109,18 @@ export class GroupController {
             return this.groupUserRepo.removeUser(users.id, groupId);
         } else {
             return 'You do not have permission to do that';
+        }
+    }
+
+    // deletes group if the current user is the owner
+    @Delete('/:groupId')
+    async deleteGroup(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
+        const owner = await this.groupUserRepo.getThisMember(user.id, groupId);
+
+        if (owner && owner.role === 'owner') {
+            return this.groupRepo.deleteGroup(groupId);
+        } else {
+            return 'You do not have permission to delete this group!';
         }
     }
 }

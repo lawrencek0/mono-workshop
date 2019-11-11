@@ -53,25 +53,15 @@ export class User {
     @OneToMany(() => Event, Event => Event.owner)
     events: Event[];
 
-    @OneToMany(() => EventRoster, EventColor => EventColor.user)
+    @OneToMany(() => EventRoster, EventRoster => EventRoster.user)
     eventColors: EventRoster[];
 
-    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.user, {
-        cascade: true,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
-    })
+    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.user)
     appointmentColors: DetailUsers[];
 
-    @OneToMany(() => GroupUser, GroupUser => GroupUser.user, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
+    @OneToMany(() => GroupUser, GroupUser => GroupUser.user)
     group: GroupUser[];
 
-    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.user, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
+    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.user)
     groupEvent: GroupEventRoster[];
 }

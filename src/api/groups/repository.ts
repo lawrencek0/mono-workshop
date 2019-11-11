@@ -19,7 +19,18 @@ export class GroupRepository {
     }
 
     getGroup(groupId: number) {
-        return this.repository.findOne(groupId);
+        return this.repository.findOne({
+            where: { id: groupId },
+            relations: ['events', 'events.user', 'groupUsers', 'groupUsers.user'],
+        });
+    }
+
+    deleteGroup(groupId: number) {
+        return this.repository
+            .createQueryBuilder()
+            .delete()
+            .where('id = :id', { id: groupId })
+            .execute();
     }
 }
 
@@ -58,7 +69,7 @@ export class GroupUsersRepository {
     }
 
     getThisMember(userId: number, groupId: number) {
-        return this.repository.findOne({ where: { userId, groupId } });
+        return this.repository.findOne({ where: { user: userId, group: groupId } });
     }
 
     getMembers(groupId: number) {

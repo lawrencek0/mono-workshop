@@ -6,10 +6,10 @@ import { Detail } from './Detail';
 // // Use other entities as a guide!
 @Entity('Appointment_details_users')
 export class DetailUsers {
-    @ManyToOne(() => User, User => User.appointmentColors, { primary: true })
+    @ManyToOne(() => User, User => User.appointmentColors, { primary: true, cascade: true, onDelete: 'CASCADE' })
     user: User;
 
-    @ManyToOne(() => Detail, Detail => Detail.users, { primary: true })
+    @ManyToOne(() => Detail, Detail => Detail.users, { primary: true, cascade: true, onDelete: 'CASCADE' })
     detail: Detail;
 
     @Column()

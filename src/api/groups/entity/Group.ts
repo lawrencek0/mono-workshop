@@ -13,9 +13,6 @@ export class Group {
     @OneToMany(() => GroupUser, GroupUser => GroupUser.group)
     groupUsers: GroupUser[];
 
-    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.group, {
-        cascade: true,
-        onDelete: 'CASCADE',
-    })
-    event: GroupEventRoster[];
+    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.group)
+    events: GroupEventRoster[];
 }
