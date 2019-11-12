@@ -39,10 +39,10 @@ export class User {
     })
     role: Role;
 
-    @Column()
+    @Column({ nullable: true })
     picUrl: string;
 
-    @Column('text')
+    @Column({ nullable: true, type: 'text' })
     bio: string;
 
     // @TODO: move to separate Student entity

@@ -5,6 +5,7 @@ import { Detail } from './entity/Detail';
 import { Slot } from './entity/Slot';
 import { DetailUsers } from './entity/DetailsUsers';
 import { User } from '../users/entity/User';
+import { UnauthorizedError } from 'routing-controllers';
 
 @Service()
 export class SlotRepository {
@@ -36,7 +37,7 @@ export class SlotRepository {
             })
 
             .getOne();
-        console.log(isOwner + '!!!!!!!!!!!!!!!!!!!!!');
+
         if (isOwner) {
             return this.repository
                 .createQueryBuilder()
@@ -44,14 +45,18 @@ export class SlotRepository {
                 .from(Slot)
                 .where('id = :id', { id: slotId })
                 .execute();
-        } else {
-            return 'no no';
         }
+
+        throw new UnauthorizedError('Not the owner');
     }
 
     // creates or updates the given slot
     saveSlot(slot: Slot) {
         return this.repository.save(slot);
+    }
+
+    saveSlots(slots: Slot[]) {
+        return this.repository.save(slots);
     }
 }
 
@@ -59,6 +64,16 @@ export class SlotRepository {
 export class DetailRepository {
     @InjectRepository(Detail)
     private repository: Repository<Detail>;
+
+    // finds all the appointments that a student is allowed to sign up for
+    findAllForStudent(userId: number) {
+        return this.repository
+            .createQueryBuilder('detail')
+            .innerJoin('detail.students', 'student', 'student.id = :studentId', { studentId: userId })
+            .innerJoinAndSelect('detail.slots', 'slot', 'slot.student = student.id')
+            .leftJoinAndSelect('detail.faculty', 'faculty')
+            .getMany();
+    }
 
     // checks that the current user is the owner of the detail
     isOwner(detailId: number, userId: number) {
@@ -69,18 +84,18 @@ export class DetailRepository {
     }
 
     // finds the appointment details that a student still needs to sign up for
-    findUntaken(userId: number) {
+    findUntaken(user: User) {
         const selectedAppointments = this.repository
             .createQueryBuilder('detail')
-            .innerJoin('detail.students', 'student', 'student.id = :studentId', { studentId: userId })
-            .innerJoin('detail.slots', 'slot', 'slot.student = student.id')
+            .innerJoin('detail.users', 'detailUser', 'detailUser.userId = :studentId')
+            .innerJoin('detail.slots', 'slot', 'slot.student = detailUser.userId')
             .select('detail.id');
 
         return this.repository
             .createQueryBuilder('detail')
-            .innerJoin('detail.students', 'student', 'student.id = :studentId')
-            .where('detail.id NOT IN (' + selectedAppointments.getQuery() + ')')
-            .setParameters(selectedAppointments.getParameters())
+            .innerJoin('detail.users', 'detailUser', 'detailUser.userId = :studentId')
+            .where(`detail.id NOT IN (${selectedAppointments.getQuery()})`)
+            .setParameters({ studentId: user.id })
             .leftJoinAndSelect('detail.faculty', 'faculty')
             .getMany();
     }
@@ -112,11 +127,7 @@ export class DetailRepository {
 
     // creates or updates the detail
     saveDetail(detail: Detail) {
-        try {
-            return this.repository.save(detail);
-        } catch (error) {
-            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + error);
-        }
+        return this.repository.save(detail);
     }
 }
 
@@ -134,7 +145,11 @@ export class DetailUsersRepo {
         return this.repository.find({ where: { user: userId }, relations: ['detail'] });
     }
 
-    saveDetailUser(color: DetailUsers) {
-        return this.repository.save(color);
+    saveDetailUser(user: DetailUsers) {
+        return this.repository.save(user);
+    }
+
+    saveDetailUsers(users: DetailUsers[]) {
+        return this.repository.save(users);
     }
 }
