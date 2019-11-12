@@ -13,8 +13,9 @@ import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
 import { GroupRepository, GroupUsersRepository, GroupEventRepository } from './repository';
 import { UserRepository } from '../users/repository';
+import hashids from '../../util/hasher';
 import Cognito from '../auth/cognito';
-import { Group } from './entity/Group';
+import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 
 type UserWithPassword = User & { password: string };
 @JsonController('/groups')
@@ -59,26 +60,70 @@ export class GroupController {
         @BodyParam('users') users: UserWithPassword[],
     ) {
         try {
-            // Save new users in local database
-            const newStudents = await this.userRepository.saveNewUsers(users);
+            const students = await Promise.all(
+                users.map(async element => {
+                    return this.userRepository.findByEmail(element.email).then(existUser => {
+                        if (!existUser) {
+                            return this.userRepository.saveUser(element).then(user => ({
+                                ...user,
+                                password: element.password,
+                            }));
+                        }
+                        return null;
+                    });
+                }),
+            );
+            const newStudents = students.filter(student => student);
+            await Promise.all(
+                newStudents.map(async element => {
+                    const id = element.id;
+                    const hashedId = hashids.encode(id);
+                    const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
+                        new AmazonCognitoIdentity.CognitoUserAttribute({
+                            Name: 'email',
+                            Value: element.email,
+                        }),
+                        new AmazonCognitoIdentity.CognitoUserAttribute({
+                            Name: 'custom:user_id',
+                            Value: hashedId,
+                        }),
+                    ];
 
-            // Save new users in incognito
-            this.userRepository.saveUsersInIncognito(newStudents, this.cognito);
+                    return new Promise((resolve, reject) =>
+                        this.cognito.userPool.signUp(
+                            element.email,
+                            element.password,
+                            attributeList,
+                            null,
+                            (err, _result) => {
+                                if (err) {
+                                    // @FIXME: what if it fails here? need a way to undo the query
+                                    return reject(new HttpError(409, err.message));
+                                }
 
-            // Create new group to put all users from request in
-            const newGroup: Group = await this.groupRepo.saveGroup({
+                                return resolve({ id: hashedId, element });
+                            },
+                        ),
+                    );
+                }),
+            );
+            const newGroup = await this.groupRepo.saveGroup({
                 name: groupName,
                 groupUsers: undefined,
                 id: undefined,
                 events: undefined,
             });
-
-            // Add each user as a member to the group
-            this.groupUserRepo.addMembers(users, newGroup, 'member');
-
-            // Save the creator as "owner" in the Group_users table
+            await Promise.all(
+                users.map(async member => {
+                    return this.groupUserRepo.saveGroupUser({
+                        user: await this.userRepository.findByEmail(member.email),
+                        group: newGroup,
+                        role: 'member',
+                    });
+                }),
+            );
+            // this next line saves the creator as "owner" in the Group_users table
             await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-
             return { ...newGroup };
         } catch (error) {
             throw new HttpError(error);
