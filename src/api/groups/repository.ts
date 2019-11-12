@@ -2,8 +2,10 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { GroupEventRoster } from './entity/GroupEventRoster';
-import { GroupUser } from './entity/GroupUsers';
+import { GroupUser, Role } from './entity/GroupUsers';
 import { Group } from './entity/Group';
+import { User } from '../users/entity/User';
+import { UserRepository } from '../users/repository';
 
 @Service()
 export class GroupRepository {
@@ -47,6 +49,8 @@ export class GroupEventRepository {
 @Service()
 export class GroupUsersRepository {
     @InjectRepository(GroupUser)
+    private userRepository: UserRepository;
+
     private repository: Repository<GroupUser>;
 
     saveGroupUser(groupUser: GroupUser) {
@@ -74,5 +78,19 @@ export class GroupUsersRepository {
 
     getMembers(groupId: number) {
         return this.repository.find({ where: { id: groupId }, relations: ['user'] });
+    }
+
+    // Saves all users from users array into a group
+    // All users will be given the same role that's passed in
+    async addMembers(users: User[], group: Group, role: Role) {
+        await Promise.all(
+            users.map(async member => {
+                return this.saveGroupUser({
+                    user: await this.userRepository.findByEmail(member.email),
+                    group,
+                    role,
+                });
+            }),
+        );
     }
 }
