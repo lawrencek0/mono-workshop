@@ -11,7 +11,7 @@ import {
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
-import { GroupRepository, GroupUsersRepository, GroupEventRepository } from './repository';
+import { GroupRepository, GroupUsersRepository, GroupEventRepository, PostRepo } from './repository';
 import { UserRepository } from '../users/repository';
 
 @JsonController('/groups')
@@ -20,6 +20,7 @@ export class GroupController {
     @Inject() private groupUserRepo: GroupUsersRepository;
     @Inject() private groupEventRepo: GroupEventRepository;
     @Inject() private userRepository: UserRepository;
+    @Inject() private postRepo: PostRepo;
 
     // creates a group and populates the group_user table
     @Post('/')
@@ -36,6 +37,7 @@ export class GroupController {
                 groupUsers: undefined,
                 id: undefined,
                 events: undefined,
+                posts: undefined,
             });
             await Promise.all(
                 groupUsers.map(member => {
@@ -122,5 +124,17 @@ export class GroupController {
         } else {
             return 'You do not have permission to delete this group!';
         }
+    }
+
+    @Post('/:groupId/posts')
+    async createPost(
+        @CurrentUser({ required: true }) user: User,
+        @Param('groupId') groupId: number,
+        @BodyParam('title') title: string,
+        @BodyParam('contents') contents: string,
+    ) {
+        const group = await this.groupRepo.getGroup(groupId);
+
+        return this.postRepo.savePost({ id: undefined, title: title, contents: contents, poster: user, group: group });
     }
 }

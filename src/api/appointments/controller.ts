@@ -90,11 +90,11 @@ export class AppointmentControler {
         }
     }
 
-    @Get('/untaken/:detailId')
+    @Get('/untaken/')
     async untakenByDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
         // returns the appointment details that the student must still need to sign up for
         if (user.role === 'student') {
-            return this.detailRepository.findUntaken(detailId);
+            return this.detailRepository.findUntaken(user.id);
         } else {
             return 'you are not supposed to be here';
         }
