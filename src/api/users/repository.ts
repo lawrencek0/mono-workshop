@@ -1,12 +1,14 @@
 import { Service } from 'typedi';
-import { Repository } from 'typeorm';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 import { User, Role } from './entity/User';
+import { Repository, Connection } from 'typeorm';
+import { InjectRepository, InjectConnection } from 'typeorm-typedi-extensions';
 
 @Service()
 export class UserRepository {
     @InjectRepository(User)
     private repository: Repository<User>;
+    @InjectConnection()
+    private connection: Connection;
 
     findById(id: number) {
         return this.repository.findOne(id);
@@ -31,7 +33,9 @@ export class UserRepository {
     saveUser(user: User) {
         return this.repository.save(user);
     }
-
+    saveUsers(users: User[]) {
+        return this.repository.save(users);
+    }
     userGroup(groupIds: number[]) {
         return this.repository
             .find({ relations: ['group.group', 'group'] })
