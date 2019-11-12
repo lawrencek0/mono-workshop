@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Detail } from '../../appointments/entity/Detail';
 import { Event } from '../../events/entity/Event';
@@ -6,6 +6,8 @@ import { EventRoster } from '../../events/entity/EventRoster';
 import { DetailUsers } from '../../appointments/entity/DetailsUsers';
 import { GroupUser } from '../../groups/entity/GroupUsers';
 import { GroupEventRoster } from '../../groups/entity/GroupEventRoster';
+import { GroupPost } from '../../groups/entity/GroupPost';
+// import { AssignSubmissions } from '../../groups/entity/Submissions';
 
 export type Role = 'student' | 'faculty' | 'admin';
 
@@ -64,4 +66,10 @@ export class User {
 
     @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.user)
     groupEvent: GroupEventRoster[];
+
+    @OneToMany(() => GroupPost, GroupPost => GroupPost.poster)
+    posts: GroupPost[];
+
+    // @OneToOne(() => AssignSubmissions, AssignSubmissions => AssignSubmissions.poster)
+    // submission: AssignSubmissions;
 }

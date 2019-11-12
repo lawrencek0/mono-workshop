@@ -4,6 +4,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { GroupEventRoster } from './entity/GroupEventRoster';
 import { GroupUser } from './entity/GroupUsers';
 import { Group } from './entity/Group';
+import { GroupPost } from './entity/GroupPost';
 
 @Service()
 export class GroupRepository {
@@ -74,5 +75,15 @@ export class GroupUsersRepository {
 
     getMembers(groupId: number) {
         return this.repository.find({ where: { id: groupId }, relations: ['user'] });
+    }
+}
+
+@Service()
+export class PostRepo {
+    @InjectRepository(GroupPost)
+    private repository: Repository<GroupPost>;
+
+    savePost(post: GroupPost) {
+        return this.repository.save(post);
     }
 }

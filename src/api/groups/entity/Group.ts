@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { GroupUser } from './GroupUsers';
 import { GroupEventRoster } from './GroupEventRoster';
+import { GroupPost } from './GroupPost';
 
 @Entity()
 export class Group {
@@ -15,4 +16,7 @@ export class Group {
 
     @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.group)
     events: GroupEventRoster[];
+
+    @OneToMany(() => GroupPost, GroupPost => GroupPost.group)
+    posts: GroupPost[];
 }
