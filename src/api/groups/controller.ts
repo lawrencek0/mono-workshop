@@ -25,39 +25,13 @@ export class GroupController {
     @Inject() private groupEventRepo: GroupEventRepository;
     @Inject() private userRepository: UserRepository;
     @Inject() private cognito: Cognito;
+
     // creates a group and populates the group_user table
     @Post('/')
     async create(
         @CurrentUser({ required: true }) user: User,
         @BodyParam('name') groupName: string,
-        @BodyParam('users') users: User[],
-    ) {
-        try {
-            const groupUsers = await this.userRepository.findAllById(users.map(({ id }) => id));
-
-            const newGroup = await this.groupRepo.saveGroup({
-                name: groupName,
-                groupUsers: undefined,
-                id: undefined,
-                events: undefined,
-            });
-            await Promise.all(
-                groupUsers.map(member => {
-                    return this.groupUserRepo.saveGroupUser({ user: member, group: newGroup, role: 'member' });
-                }),
-            );
-            // this next line saves the creator as "owner" in the Group_users table
-            await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            return { ...newGroup };
-        } catch (error) {
-            throw new HttpError(error);
-        }
-    }
-    @Post('/fileUpload')
-    async bulkCreate(
-        @CurrentUser({ required: true }) user: User,
-        @BodyParam('name') groupName: string,
-        @BodyParam('users') users: UserWithPassword[],
+        @BodyParam('members') users: User[],
     ) {
         try {
             const students = await Promise.all(
@@ -66,7 +40,7 @@ export class GroupController {
                         if (!existUser) {
                             return this.userRepository.saveUser(element).then(user => ({
                                 ...user,
-                                password: element.password,
+                                password: '$uperStr0ng',
                             }));
                         }
                         return null;
@@ -132,7 +106,9 @@ export class GroupController {
     // returns the groups that the current user is a part of
     @Get('/')
     async getMyGroups(@CurrentUser({ required: true }) user: User) {
-        return this.groupUserRepo.getMyGroups(user.id);
+        const groups = await this.groupUserRepo.getMyGroups(user.id);
+
+        return groups.map(({ group, ...rest }) => ({ ...group, ...rest }));
     }
 
     // returns the list of members in a group
