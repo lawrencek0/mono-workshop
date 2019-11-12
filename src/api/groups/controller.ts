@@ -114,7 +114,7 @@ export class GroupController {
                 events: undefined,
             });
             await Promise.all(
-                students.map(async member => {
+                users.map(async member => {
                     return this.groupUserRepo.saveGroupUser({
                         user: await this.userRepository.findByEmail(member.email),
                         group: newGroup,
