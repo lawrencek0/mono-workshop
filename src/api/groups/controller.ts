@@ -122,7 +122,9 @@ export class GroupController {
     async getGroup(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
         const permission = await this.groupUserRepo.getThisMember(user.id, groupId);
         if (permission) {
-            return this.groupRepo.getGroup(groupId);
+            const group = await this.groupRepo.getGroup(groupId);
+            const members = group.groupUsers.map(({ user, role }) => ({ ...user, role }));
+            return { ...group, members, role: permission.role };
         } else {
             return 'You are not in this group';
         }
@@ -135,7 +137,7 @@ export class GroupController {
         @CurrentUser({ required: true }) user: User,
         @Param('groupId') groupId: number,
         @BodyParam('name') name: string,
-        @BodyParam('users') users: User[],
+        @BodyParam('members') users: User[],
     ) {
         const group = await this.groupRepo.getGroup(groupId);
         const groupUsers = await this.userRepository.findAllById(users.map(({ id }) => id));
