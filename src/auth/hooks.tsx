@@ -39,12 +39,8 @@ const authReducer = (state: State, action: Action): State => {
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const accessToken = localStorage.getItem(localStorageKey('accessToken')) || undefined;
     const refreshToken = localStorage.getItem(localStorageKey('refreshToken')) || undefined;
-    const user = localStorage.getItem(localStorageKey('user'));
-    const [state, dispatch] = useReducer(authReducer, {
-        accessToken,
-        refreshToken,
-        user: user ? JSON.parse(user) : undefined,
-    });
+    const user = localStorage.getItem(localStorageKey('user')) || '{}';
+    const [state, dispatch] = useReducer(authReducer, { accessToken, refreshToken, user: JSON.parse(user) });
 
     return (
         <AuthStateContext.Provider value={state}>
