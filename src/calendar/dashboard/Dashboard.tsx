@@ -1,7 +1,7 @@
 import React from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
-import Calendar from 'calendar/FullCalendarWrapper';
+import Calendar from 'calendar/dashboard/Calendar';
 
 const Dashboard: React.FC<{}> = () => {
     return (
@@ -13,7 +13,6 @@ const Dashboard: React.FC<{}> = () => {
 
 const Wrapper = styled.div`
     ${tw`flex h-full`}
-    max-height: calc(100vh - 84px - 0.5em);
 `;
 
 const StyledCalendar = styled(Calendar)`
