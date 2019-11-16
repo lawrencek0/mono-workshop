@@ -1,34 +1,43 @@
-import React, { useState, useCallback, useRef } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import styled, { css, ThemeProvider } from 'styled-components/macro';
 import theme from 'styled-theming';
 import tw from 'tailwind.macro';
 import moment from 'moment';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { OptionsInput } from '@fullcalendar/core';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
-import { OptionsInput } from '@fullcalendar/core';
 
 type Variant = 'flat' | 'raised';
-type Props = OptionsInput &
-    any & {
-        className?: string;
-        variant?: Variant;
-    };
+type Props = OptionsInput & {
+    className?: string;
+    variant?: Variant;
+    height?: number;
+};
 
-// @FIXME: can't automatically set parent height https://github.com/fullcalendar/fullcalendar/issues/4650
-const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment, variant = 'flat' }) => {
-    const calendar = useRef<FullCalendar>(null);
-    const [height, setHeight] = useState(500);
+const CalendarWrapper: React.FC<Props> = ({ variant = 'flat' }) => {
+    const [height, setHeight] = useState(-1);
+    const ref = useRef<HTMLDivElement>(null);
+    const timer = useRef<number>();
 
-    const measuredRef = useCallback((node: HTMLDivElement | null) => {
-        if (node) {
-            // @FIXME: Can't get height due to Suspense https://github.com/facebook/react/issues/14536
-            setTimeout(() => {
-                setHeight(node ? node.getBoundingClientRect().height : 0);
-            }, 1000);
-        }
-    }, []);
+    // @FIXME: hack cuz https://github.com/fullcalendar/fullcalendar/issues/4650
+    useLayoutEffect(() => {
+        (async (): Promise<void> => {
+            while (!ref.current || ref.current.getBoundingClientRect().height === 0) {
+                // @FIXME: setTimeout cuz element is hidden https://github.com/facebook/react/issues/14536
+                await new Promise(resolve => {
+                    timer.current = setTimeout(() => resolve(), 50);
+                });
+            }
+            const bounds = await ref.current.getBoundingClientRect();
+            setHeight(bounds.height);
+        })();
+
+        return () => {
+            clearInterval(timer.current);
+        };
+    }, [ref]);
 
     const eventLimitText = (eventCnt: number): string => {
         // if (isMobile) {
@@ -46,10 +55,9 @@ const CalendarWrapper: React.FC<Props> = ({ className, selectedAppointment, vari
 
     return (
         <ThemeProvider theme={{ variant }}>
-            <Wrapper className={className} ref={measuredRef}>
+            <Wrapper ref={ref}>
                 <FullCalendar
-                    events={selectedAppointment}
-                    ref={calendar}
+                    events={{}}
                     height={height}
                     header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
                     titleFormat={{ year: 'numeric', month: 'long' }}
@@ -115,18 +123,18 @@ const fullCalendarStyles = theme('variant', {
     `,
     flat: css`
         .fc {
+            .fc-toolbar {
+                .fc-button.fc-button-primary {
+                    ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
+                    text-gray-800 hover:text-gray-800 active:text-gray-800 
+                    border-gray-400 hover:border-primary-400 focus:border-primary-200 
+                    focus:shadow-outline py-2 px-8`}
+                }
+            }
             table {
                 th,
                 td {
                     ${tw`border-none`}
-                }
-                .fc-toolbar {
-                    .fc-button.fc-button-primary {
-                        ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
-                    text-gray-800 hover:text-gray-800 active:text-gray-800 
-                    border-gray-400 hover:border-primary-400 focus:border-primary-200 
-                    focus:shadow-outline py-2 px-8`}
-                    }
                 }
                 .fc-head {
                     th {
@@ -166,14 +174,10 @@ const fullCalendarStyles = theme('variant', {
     `,
 });
 
-const Wrapper = styled.div<{ variant?: Variant }>`
-    height: 100%;
+const Wrapper = styled.div`
+    ${tw`h-full`}
 
     ${fullCalendarStyles}
 `;
-
-Wrapper.defaultProps = {
-    variant: 'flat',
-};
 
 export default CalendarWrapper;
