@@ -127,8 +127,8 @@ const fullCalendarStyles = theme('variant', {
                 .fc-button.fc-button-primary {
                     ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
                     text-gray-800 hover:text-gray-800 active:text-gray-800 
-                    border-gray-400 hover:border-primary-400 focus:border-primary-200 
-                    focus:shadow-outline py-2 px-8`}
+                    border-gray-500 hover:border-primary-600 focus:border-primary-600 
+                    focus:shadow-outline py-2 px-8 uppercase`}
                 }
             }
             table {
@@ -141,8 +141,7 @@ const fullCalendarStyles = theme('variant', {
                         ${tw`py-4 uppercase text-2xl text-gray-500`}
 
                         .current-day {
-                            ${tw`text-primary-500 font-medium`}
-                            text-shadow: 0 1px 1px #f6e05e;
+                            ${tw`text-gray-700 font-medium`}
                         }
                     }
                 }
