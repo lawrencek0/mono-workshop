@@ -12,10 +12,12 @@ import {
     UnauthorizedError,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
+import { IEvent, EventList } from 'strongly-typed-events';
 import { User } from '../users/entity/User';
 import { DetailRepository, SlotRepository, DetailUsersRepo } from './repository';
 import { Slot } from './entity/Slot';
 import { UserRepository } from '../users/repository';
+import { Detail } from './entity/Detail';
 
 @JsonController('/appointments')
 export class AppointmentControler {
@@ -23,6 +25,19 @@ export class AppointmentControler {
     @Inject() private slotRepository: SlotRepository;
     @Inject() private detailUsersRepo: DetailUsersRepo;
     @Inject() private userRepository: UserRepository;
+    private events = new EventList<this, Detail>();
+
+    get onCreate(): IEvent<this, Detail> {
+        return this.events.get('create').asEvent();
+    }
+
+    get onDelete(): IEvent<this, Detail> {
+        return this.events.get('delete').asEvent();
+    }
+
+    private dispatch(name: 'create' | 'delete', args: Detail) {
+        this.events.get(name).dispatchAsync(this, args);
+    }
 
     // faculty creates appointment
     // slots for that appointment are saved
@@ -40,7 +55,6 @@ export class AppointmentControler {
         try {
             if (user.role === 'faculty') {
                 const students = await this.userRepository.findAllById(studentIds);
-
                 const newDetail = await this.detailRepository.saveDetail({
                     title: detTitle,
                     description: detDesc,
@@ -51,10 +65,12 @@ export class AppointmentControler {
                 });
                 const slotsWithDetail = slots.map(slot => ({ ...slot, detail: newDetail }));
                 const detailUsers = students.map(student => ({ user: student, detail: newDetail, hexColor: color }));
-                const [newSlots] = await Promise.all([
+                const [newSlots, newUsers] = await Promise.all([
                     this.slotRepository.saveSlots(slotsWithDetail),
                     this.detailUsersRepo.saveDetailUsers(detailUsers),
                 ]);
+
+                this.dispatch('create', { ...newDetail, slots: newSlots, users: newUsers });
 
                 return { ...newDetail, slots: newSlots };
             }
