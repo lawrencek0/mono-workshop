@@ -5,6 +5,7 @@ import tw from 'tailwind.macro';
 import moment from 'moment';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import { OptionsInput } from '@fullcalendar/core';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
@@ -16,7 +17,7 @@ type Props = OptionsInput & {
     height?: number;
 };
 
-const CalendarWrapper: React.FC<Props> = ({ variant = 'flat' }) => {
+const CalendarWrapper: React.FC<Props> = ({ className, variant = 'flat', ...props }) => {
     const [height, setHeight] = useState(-1);
     const ref = useRef<HTMLDivElement>(null);
     const timer = useRef<number>();
@@ -55,8 +56,9 @@ const CalendarWrapper: React.FC<Props> = ({ variant = 'flat' }) => {
 
     return (
         <ThemeProvider theme={{ variant }}>
-            <Wrapper ref={ref}>
+            <Wrapper ref={ref} className={className}>
                 <FullCalendar
+                    {...props}
                     events={{}}
                     height={height}
                     header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
@@ -70,7 +72,7 @@ const CalendarWrapper: React.FC<Props> = ({ variant = 'flat' }) => {
                     eventLimit={true}
                     eventLimitText={eventLimitText}
                     defaultView="dayGridMonth"
-                    plugins={[dayGridPlugin]}
+                    plugins={[interactionPlugin, dayGridPlugin]}
                 />
             </Wrapper>
         </ThemeProvider>
