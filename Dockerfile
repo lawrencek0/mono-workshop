@@ -16,6 +16,7 @@ RUN npm ci
 COPY --from=base /usr/app/dist ./dist
 
 COPY .env ./
+COPY email-templates ./
 
 EXPOSE 8000
 CMD node dist/server.js
