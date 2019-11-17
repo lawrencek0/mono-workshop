@@ -1,5 +1,14 @@
 import { check } from 'express-validator';
-import { JsonController, Post, BodyParam, NotFoundError, UseBefore, Body, HttpError } from 'routing-controllers';
+import {
+    JsonController,
+    Post,
+    BodyParam,
+    NotFoundError,
+    UseBefore,
+    Body,
+    HttpError,
+    UnauthorizedError,
+} from 'routing-controllers';
 import { Inject } from 'typedi';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { UserRepository } from '../users/repository';
@@ -127,5 +136,26 @@ export class AuthController {
         } catch (e) {
             throw new HttpError(409, e);
         }
+    }
+
+    @Post('/refresh')
+    async refresh(@BodyParam('idToken') idToken: string, @BodyParam('refreshToken') refreshToken: string) {
+        const RefreshToken = new AmazonCognitoIdentity.CognitoRefreshToken({ RefreshToken: refreshToken });
+        const sessionData = {
+            IdToken: '',
+            RefreshToken,
+            Pool: this.cognito.userPool,
+            Username: '',
+        };
+
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(sessionData);
+
+        return new Promise((resolve, reject) =>
+            cognitoUser.refreshSession(RefreshToken, (err, session: AmazonCognitoIdentity.CognitoUserSession) => {
+                if (err) reject(new UnauthorizedError(err));
+
+                return resolve({ idToken: session.getIdToken().getJwtToken() });
+            }),
+        );
     }
 }
