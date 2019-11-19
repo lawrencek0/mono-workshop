@@ -23,7 +23,7 @@ export class EmailService {
     ): Promise<void> {
         const template = new EmailTemplate({
             message: {
-                from: 'l.khadka@outlook.com',
+                from: 'ses4teamyellow@gmail.com',
             },
             // uncomment below to send emails in development/test env:
             // send: true

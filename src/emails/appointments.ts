@@ -1,6 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { EmailService } from './service';
 import { Detail } from '../api/appointments/entity/Detail';
+import { Slot } from '../api/appointments/entity/Slot';
+import { getMaxListeners } from 'cluster';
+import moment from 'moment';
 
 @Service()
 export class AppointmentEmail {
@@ -14,23 +17,24 @@ export class AppointmentEmail {
                 {
                     template,
                     message: {
-                        to: user.user.email,
+                        //to: user.user.email,
+                        to: 'sujeong0826@gmail.com',
                     },
                     locals: {
                         name: detail.users[0].user.firstName,
                         faculty: detail.faculty,
                         title: detail.title,
+                        slots: detail.slots.map(slot => ({
+                            start: moment(slot.start).format('LLL'),
+                            end: moment(slot.end).format('LLL'),
+                        })),
                     },
                 },
                 {
-                    // uncomment: to view emails locally
-                    // preview: {
-                    //     open: {
-                    //         app: 'firefox',
-                    //         wait: true,
-                    //     },
-                    // },
-                    send: true,
+                    // set preview to true to open email in browser
+                    preview: true,
+                    // set send to true to send email even if in development/test
+                    send: false,
                 },
             );
         });
