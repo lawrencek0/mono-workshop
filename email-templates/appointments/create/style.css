@@ -1,0 +1,19 @@
+table {
+    font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+thead {
+    font-weight: bold;
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+tbody {
+    font-size: 90%;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: middle;
+}
+tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}

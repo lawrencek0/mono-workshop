@@ -1,11 +1,20 @@
-p Hi #{name},
-p #{faculty.firstName} #{faculty.lastName} has invited you to: #{title}.
-p You can sign up here: 
-    a href={/calendars/appointment/{appointmentId} Sign up
-p Here are available slots:  
-table(style='width:100%', border='1')
-    tr
-        th Slots
-    each slot in slots
-        tr
-            td Start: #{slot.start}<br> End: #{slot.end}
+doctype html
+html
+    head
+        link(rel="stylesheet", href="style.css", data-inline)
+    body
+        p Hi #{name},
+        p #{faculty.firstName} #{faculty.lastName} has invited you to: #{title}.
+        p You can sign up here: 
+            <a href={/calendars/appointment/{appointmentId}> Sign up</a>
+        p Here are available slots:  
+        table(style='width:100%', border='1')
+            thead
+                tr
+                    th Start
+                    th End
+            tbody
+                each slot in slots
+                    tr
+                        td #{slot.start}
+                        td #{slot.end}

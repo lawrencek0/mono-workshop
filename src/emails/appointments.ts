@@ -35,6 +35,11 @@ export class AppointmentEmail {
                     preview: true,
                     // set send to true to send email even if in development/test
                     send: false,
+                    juiceResources: {
+                        webResources: {
+                            relativeTo: template,
+                        },
+                    },
                 },
             );
         });
