@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
@@ -10,16 +10,12 @@ type Props = {
     position?: { left?: number; top?: number };
 };
 
-export const Modal: React.FC<Props> = ({ position }) => {
-    if (!position) {
-        return <></>;
-    }
-
+export const Modal = forwardRef<HTMLElement, Props>(({ position }, ref) => {
     const handleSubmit = (): void => {
         /* TODO */
     };
     return createPortal(
-        <Wrapper aria-modal={true} tabIndex={-1} {...position}>
+        <Wrapper ref={ref} aria-modal={true} tabIndex={-1} {...position}>
             <Formik initialValues={{}} onSubmit={handleSubmit}>
                 <Form>
                     <StyledLink to="./appointments/new/1">
@@ -35,13 +31,15 @@ export const Modal: React.FC<Props> = ({ position }) => {
         </Wrapper>,
         document.body,
     );
-};
+});
+
+Modal.displayName = 'Modal';
 
 const Wrapper = styled.aside<{ left?: number; top?: number }>`
     ${tw`absolute bg-white rounded w-2/12 h-32 px-8 py-4 text-center z-10 shadow-lg`};
-    display: ${props => (props.left ? 'block' : 'none')};
+    visibility: ${props => (props.left ? 'shown' : 'hidden')};
     left: ${props => `${props.left}px`};
-    top: ${props => `${props.top}px`};
+    top: ${props => (props.top ? `${props.top}px` : 0)};
 `;
 
 const StyledLink = styled(Link)`

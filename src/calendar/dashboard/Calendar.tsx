@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, forwardRef } from 'react';
 import styled, { css, ThemeProvider } from 'styled-components/macro';
 import theme from 'styled-theming';
 import tw from 'tailwind.macro';
@@ -12,33 +12,34 @@ import '@fullcalendar/daygrid/main.css';
 
 type Variant = 'flat' | 'raised';
 type Props = OptionsInput & {
+    calendarRef?: React.RefObject<FullCalendar>;
     className?: string;
     variant?: Variant;
     height?: number;
 };
 
-const CalendarWrapper: React.FC<Props> = ({ className, variant = 'flat', ...props }) => {
+const CalendarWrapper = forwardRef<FullCalendar, Props>(({ className, variant = 'flat', ...props }, ref) => {
     const [height, setHeight] = useState(-1);
-    const ref = useRef<HTMLDivElement>(null);
+    const wrapperRef = useRef<HTMLDivElement>(null);
     const timer = useRef<number>();
 
     // @FIXME: hack cuz https://github.com/fullcalendar/fullcalendar/issues/4650
     useLayoutEffect(() => {
         (async (): Promise<void> => {
-            while (!ref.current || ref.current.getBoundingClientRect().height === 0) {
+            while (!wrapperRef.current || wrapperRef.current.getBoundingClientRect().height === 0) {
                 // @FIXME: setTimeout cuz element is hidden https://github.com/facebook/react/issues/14536
                 await new Promise(resolve => {
                     timer.current = setTimeout(() => resolve(), 50);
                 });
             }
-            const bounds = await ref.current.getBoundingClientRect();
+            const bounds = await wrapperRef.current.getBoundingClientRect();
             setHeight(bounds.height);
         })();
 
         return () => {
             clearInterval(timer.current);
         };
-    }, [ref]);
+    }, [wrapperRef]);
 
     const eventLimitText = (eventCnt: number): string => {
         // if (isMobile) {
@@ -56,9 +57,10 @@ const CalendarWrapper: React.FC<Props> = ({ className, variant = 'flat', ...prop
 
     return (
         <ThemeProvider theme={{ variant }}>
-            <Wrapper ref={ref} className={className}>
+            <Wrapper ref={wrapperRef} className={className}>
                 <FullCalendar
                     {...props}
+                    ref={ref}
                     events={{}}
                     height={height}
                     header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
@@ -69,6 +71,7 @@ const CalendarWrapper: React.FC<Props> = ({ className, variant = 'flat', ...prop
                         }
                         return moment(col).format('ddd');
                     }}
+                    select={e => console.log(e)}
                     eventLimit={true}
                     eventLimitText={eventLimitText}
                     defaultView="dayGridMonth"
@@ -77,7 +80,9 @@ const CalendarWrapper: React.FC<Props> = ({ className, variant = 'flat', ...prop
             </Wrapper>
         </ThemeProvider>
     );
-};
+});
+
+CalendarWrapper.displayName = 'CalendarWrapper';
 
 const fullCalendarStyles = theme('variant', {
     card: css`
