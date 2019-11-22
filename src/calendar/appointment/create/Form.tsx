@@ -142,6 +142,7 @@ const Page: React.FC<Props> = ({ step: stepStr = '0' }) => {
                 {},
                 {
                     ...data,
+                    students: students.filter(({ id }) => data.students.includes(id.toString())),
                     slots,
                 },
             );

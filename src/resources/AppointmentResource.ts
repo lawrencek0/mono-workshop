@@ -14,6 +14,7 @@ export class AppointmentResource extends BaseResource {
     readonly description?: string = '';
     readonly faculty?: UserResource = undefined;
     readonly slots?: SlotResource[] = undefined;
+    readonly students?: Partial<UserResource>[] = undefined;
 
     pk(): number | undefined {
         return this.id;

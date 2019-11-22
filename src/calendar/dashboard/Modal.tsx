@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import moment from 'moment';
 import { Formik, Form, Field } from 'formik';
-import { useResource } from 'rest-hooks';
+import { useResource, useFetcher } from 'rest-hooks';
 import Downshift, { ControllerStateAndHelpers } from 'downshift';
 import { FaHeading } from 'react-icons/fa';
 import { FaAlignLeft } from 'react-icons/fa';
@@ -16,6 +16,10 @@ import { FaUserCircle } from 'react-icons/fa';
 import { PrimaryButton, FlatButton } from 'shared/buttons';
 import { UserResource } from 'resources/UserResource';
 import { Avatar } from 'calendar/appointment/create/StudentSelection';
+import { slotsFromRanges } from 'calendar/helpers';
+import { AppointmentResource } from 'resources/AppointmentResource';
+import { Link } from '@reach/router';
+import { StyledLink } from 'shared/cards/styles';
 
 type EventType = 'appointment';
 
@@ -135,6 +139,7 @@ const Item = styled.li`
 
 export const Modal = forwardRef<HTMLElement, Props>(
     ({ position, type: eventType = 'appointment', startDate = moment() }, ref) => {
+        const create = useFetcher(AppointmentResource.createShape());
         const [type, setType] = useState<EventType>(eventType);
         const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
 
@@ -143,9 +148,6 @@ export const Modal = forwardRef<HTMLElement, Props>(
             setType(value);
         };
 
-        const handleSubmit = (): void => {
-            /* TODO */
-        };
         return createPortal(
             <Wrapper ref={ref} aria-modal={true} tabIndex={-1} {...position}>
                 <Formik
@@ -158,9 +160,36 @@ export const Modal = forwardRef<HTMLElement, Props>(
                         endTime: moment(startDate)
                             .add(1, 'h')
                             .format('HH:mm'),
+                        length: 20,
+                        color: '#FFF382',
                     }}
                     enableReinitialize
-                    onSubmit={handleSubmit}
+                    onSubmit={async values => {
+                        const slots = slotsFromRanges([
+                            {
+                                id: 0,
+                                startDate: values.startDate,
+                                endDate: values.endDate,
+                                times: [
+                                    {
+                                        id: 0,
+                                        startTime: values.startTime,
+                                        endTime: values.endTime,
+                                    },
+                                ],
+                                length: values.length,
+                            },
+                        ]);
+
+                        await create(
+                            {},
+                            {
+                                ...values,
+                                students: selectedUsers,
+                                slots,
+                            },
+                        );
+                    }}
                 >
                     {({ values }) => (
                         <StyledForm autoComplete="off">
@@ -194,6 +223,14 @@ export const Modal = forwardRef<HTMLElement, Props>(
                             <div css={tw`flex`}>
                                 <StyledField css={tw`mr-4`} type="time" name="startTime" aria-label="Start time" />
                                 <StyledField type="time" name="endTime" aria-label="End time" />
+                            </div>
+                            <div css="grid-column-start: 2">
+                                <StyledField
+                                    type="number"
+                                    name="length"
+                                    placeholder="Length of appointment"
+                                    aria-label="Length of appointment"
+                                />
                             </div>
                             <Separator aria-hidden />
                             <StyledIcon as={FaUsers} aria-hidden />
@@ -231,10 +268,13 @@ export const Modal = forwardRef<HTMLElement, Props>(
                                 placeholder="Enter the description"
                                 aria-label="Description"
                             />
+                            <div css="grid-column-start: 2">
+                                <StyledField css={tw`w-16 h-8 p-2`} type="color" name="color" aria-label="Color" />
+                            </div>
                             <ActionButtons>
-                                <FlatButton css={tw`mr-4`} type="button">
+                                <StyledLink to="./appointments/new/1" css={tw`mr-4 border-0`}>
                                     More Options
-                                </FlatButton>
+                                </StyledLink>
                                 <PrimaryButton type="submit">Submit</PrimaryButton>
                             </ActionButtons>
                         </StyledForm>
