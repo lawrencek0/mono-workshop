@@ -3,6 +3,18 @@ import { SlotsByDate } from 'calendar/types';
 import { DatetimeRange } from './appointment/create/Form';
 import { SlotResource } from 'resources/AppointmentResource';
 
+const getDate = (
+    date: moment.MomentInput = moment(),
+    hour: number = moment().hours(),
+    minutes: number = moment().minutes(),
+): moment.Moment => {
+    return moment(date)
+        .hours(moment(hour).hours())
+        .minutes(moment(minutes).minutes())
+        .seconds(0)
+        .milliseconds(0);
+};
+
 const generateSlots = (start: moment.Moment, length: number, duration: number): InstanceType<typeof SlotResource>[] => {
     return Array.from({ length }, (_, i) => {
         const slotStart = moment(start).add(i * duration, 'm');
@@ -47,4 +59,4 @@ const groupSlotsByDay = (allSlots: InstanceType<typeof SlotResource>[]): SlotsBy
     }, {});
 };
 
-export { generateSlots, slotsFromRanges, groupSlotsByDay };
+export { getDate, generateSlots, slotsFromRanges, groupSlotsByDay };
