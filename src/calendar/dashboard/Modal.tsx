@@ -10,9 +10,12 @@ import { FaHeading } from 'react-icons/fa';
 import { FaAlignLeft } from 'react-icons/fa';
 import { FaCalendarWeek } from 'react-icons/fa';
 import { FaClock } from 'react-icons/fa';
+import { FaMinusCircle } from 'react-icons/fa';
 import { FaUsers } from 'react-icons/fa';
+import { FaUserCircle } from 'react-icons/fa';
 import { PrimaryButton, FlatButton } from 'shared/buttons';
 import { UserResource } from 'resources/UserResource';
+import { Avatar } from 'calendar/appointment/create/StudentSelection';
 
 type EventType = 'appointment';
 
@@ -38,6 +41,7 @@ const Items: React.FC<{
                 .map((item, index) => (
                     <Item
                         key={{}}
+                        css={tw`flex items-center`}
                         {...getItemProps({
                             key: `${item.firstName} ${item.lastName}`,
                             index,
@@ -50,6 +54,11 @@ const Items: React.FC<{
                             },
                         })}
                     >
+                        {item.picUrl ? (
+                            <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={item.picUrl} />
+                        ) : (
+                            <FaUserCircle size="3em" />
+                        )}
                         {itemToString(item)}
                     </Item>
                 ))}
@@ -79,7 +88,7 @@ const DropdownSelect: React.FC<{
                     case Downshift.stateChangeTypes.clickItem:
                         return {
                             ...changes,
-                            isOpen: true,
+                            isOpen: false,
                             highlightedIndex: state.highlightedIndex,
                             inputValue: '',
                         };
@@ -93,6 +102,7 @@ const DropdownSelect: React.FC<{
             {props => (
                 <div>
                     <input
+                        css={tw`hover:bg-gray-300 hover:border-gray-500 focus:border-gray-800 focus:bg-gray-300 px-2 pt-2 w-full border-b-2 border-b-2 border-transparent`}
                         {...props.getInputProps({
                             placeholder: 'Add guests',
                         })}
@@ -188,6 +198,31 @@ export const Modal = forwardRef<HTMLElement, Props>(
                             <Separator aria-hidden />
                             <StyledIcon as={FaUsers} aria-hidden />
                             <DropdownSelect users={selectedUsers} setUsers={setSelectedUsers} />
+                            <div css="grid-column-start: 2">
+                                {selectedUsers.map(user => (
+                                    <div
+                                        css={tw`flex items-center rounded py-2 border-2 border-transparent hover:border-gray-400 w-full `}
+                                        key={user.id}
+                                    >
+                                        {user.picUrl ? (
+                                            <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={user.picUrl} />
+                                        ) : (
+                                            <FaUserCircle size="3em" />
+                                        )}
+                                        <div>
+                                            {user.firstName} {user.lastName}
+                                        </div>
+                                        <FaMinusCircle
+                                            onClick={() =>
+                                                setSelectedUsers(
+                                                    selectedUsers.filter(selectedUser => selectedUser.id !== user.id),
+                                                )
+                                            }
+                                            css={tw`text-gray-600 hover:text-gray-800 ml-auto mr-4 cursor-pointer`}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                             <Separator aria-hidden />
                             <StyledIcon as={FaAlignLeft} aria-hidden />
                             <StyledField
@@ -228,7 +263,7 @@ const StyledForm = styled(Form)`
 `;
 
 const StyledField = styled(Field)`
-    ${tw`hover:bg-gray-300 focus:bg-gray-300 px-2 pt-2 w-full focus:border-b-2 border-gray-800`}
+    ${tw`hover:bg-gray-300 hover:border-gray-500 focus:border-gray-800 focus:bg-gray-300 px-2 pt-2 w-full border-b-2 border-b-2 border-transparent`}
 `;
 
 const ButtonWrapper = styled.div`

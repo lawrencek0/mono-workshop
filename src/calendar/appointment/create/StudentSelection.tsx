@@ -85,4 +85,4 @@ const LabelSubtitle = styled.div`
     ${tw`text-base text-gray-600`}
 `;
 
-export { StudentSelection };
+export { Avatar, StudentSelection };
