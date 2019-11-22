@@ -1,16 +1,18 @@
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { Formik, Form, Field } from 'formik';
 import moment from 'moment';
-import { Link } from '@reach/router';
+import { Formik, Form, Field } from 'formik';
+import { useResource } from 'rest-hooks';
+import Downshift, { ControllerStateAndHelpers } from 'downshift';
 import { FaHeading } from 'react-icons/fa';
 import { FaAlignLeft } from 'react-icons/fa';
 import { FaCalendarWeek } from 'react-icons/fa';
 import { FaClock } from 'react-icons/fa';
 import { FaUsers } from 'react-icons/fa';
 import { PrimaryButton, FlatButton } from 'shared/buttons';
+import { UserResource } from 'resources/UserResource';
 
 type EventType = 'appointment';
 
@@ -22,9 +24,109 @@ export type Props = {
     startDate?: moment.Moment;
 };
 
+const Items: React.FC<{
+    downshift: ControllerStateAndHelpers<InstanceType<typeof UserResource>>;
+    selectedUsers: InstanceType<typeof UserResource>[];
+}> = ({ downshift: { inputValue, getItemProps, highlightedIndex, itemToString }, selectedUsers }) => {
+    // @TODO: add endpoint to search by name instead
+    const users = useResource(UserResource.listByRole(), { role: 'student' });
+
+    return (
+        <>
+            {users
+                .filter(item => !inputValue || item.firstName.toLowerCase().includes(inputValue.toLowerCase()))
+                .map((item, index) => (
+                    <Item
+                        key={{}}
+                        {...getItemProps({
+                            key: `${item.firstName} ${item.lastName}`,
+                            index,
+                            item,
+                            style: {
+                                backgroundColor: highlightedIndex === index ? 'lightgray' : 'white',
+                                fontWeight: selectedUsers.find(selectedUser => selectedUser.id === item.id)
+                                    ? 'bold'
+                                    : 'normal',
+                            },
+                        })}
+                    >
+                        {itemToString(item)}
+                    </Item>
+                ))}
+        </>
+    );
+};
+
+const DropdownSelect: React.FC<{
+    users: InstanceType<typeof UserResource>[];
+    setUsers: React.Dispatch<React.SetStateAction<InstanceType<typeof UserResource>[]>>;
+}> = ({ users, setUsers }) => {
+    return (
+        <Downshift
+            onChange={(selectedItem: InstanceType<typeof UserResource>, stateAndHelpers) => {
+                const item = users.find(user => user.id === selectedItem.id);
+
+                if (item) {
+                    setUsers(users.filter(user => user.id !== selectedItem.id));
+                } else {
+                    setUsers([...users, selectedItem]);
+                }
+            }}
+            itemToString={(i: InstanceType<typeof UserResource>): string => (i ? `${i.firstName} ${i.lastName}` : '')}
+            stateReducer={(state, changes) => {
+                switch (changes.type) {
+                    case Downshift.stateChangeTypes.keyDownEnter:
+                    case Downshift.stateChangeTypes.clickItem:
+                        return {
+                            ...changes,
+                            isOpen: true,
+                            highlightedIndex: state.highlightedIndex,
+                            inputValue: '',
+                        };
+
+                    default:
+                        return changes;
+                }
+            }}
+            selectedItem={null}
+        >
+            {props => (
+                <div>
+                    <input
+                        {...props.getInputProps({
+                            placeholder: 'Add guests',
+                        })}
+                    />
+                    <Menu
+                        {...props.getMenuProps({
+                            'aria-label': 'Search users and groups',
+                        })}
+                    >
+                        {props.isOpen ? (
+                            <Suspense fallback={<Item>Searching...</Item>}>
+                                <Items downshift={props} selectedUsers={users} />
+                            </Suspense>
+                        ) : null}
+                    </Menu>
+                </div>
+            )}
+        </Downshift>
+    );
+};
+
+const Menu = styled.ul`
+    ${tw`absolute shadow rounded w-9/12`}
+    max-height: 20em;
+`;
+
+const Item = styled.li`
+    ${tw`px-2 py-4 block cursor-pointer`}
+`;
+
 export const Modal = forwardRef<HTMLElement, Props>(
     ({ position, type: eventType = 'appointment', startDate = moment() }, ref) => {
         const [type, setType] = useState<EventType>(eventType);
+        const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
 
         const handleTypeClick = ({ currentTarget }: React.MouseEvent<HTMLButtonElement>): void => {
             const value = currentTarget.name as EventType;
@@ -53,12 +155,12 @@ export const Modal = forwardRef<HTMLElement, Props>(
                     {({ values }) => (
                         <StyledForm autoComplete="off">
                             <StyledIcon as={FaHeading} aria-hidden />
+                            {/* TODO: Focus with react-focus-trap */}
                             <StyledField
                                 css={tw`text-2xl`}
                                 name="title"
                                 placeholder="Enter the title"
                                 aria-label="Title"
-                                innerRef={(el: HTMLInputElement) => el && el.focus()}
                                 required
                             />
                             <ButtonWrapper>
@@ -72,7 +174,7 @@ export const Modal = forwardRef<HTMLElement, Props>(
                                     Appointment
                                 </StyledButton>
                             </ButtonWrapper>
-                            <Separator />
+                            <Separator aria-hidden />
                             <StyledIcon as={FaCalendarWeek} aria-hidden />
                             <div css={tw`flex`}>
                                 <StyledField css={tw`mr-4`} type="date" name="startDate" aria-label="Start date" />
@@ -81,12 +183,12 @@ export const Modal = forwardRef<HTMLElement, Props>(
                             <StyledIcon as={FaClock} aria-hidden />
                             <div css={tw`flex`}>
                                 <StyledField css={tw`mr-4`} type="time" name="startTime" aria-label="Start time" />
-                                <StyledField min={values.startTime} type="time" name="endTime" aria-label="End time" />
+                                <StyledField type="time" name="endTime" aria-label="End time" />
                             </div>
-                            <Separator />
+                            <Separator aria-hidden />
                             <StyledIcon as={FaUsers} aria-hidden />
-                            <StyledField aria-label="Attendees" disabled value="TODO" />
-                            <Separator />
+                            <DropdownSelect users={selectedUsers} setUsers={setSelectedUsers} />
+                            <Separator aria-hidden />
                             <StyledIcon as={FaAlignLeft} aria-hidden />
                             <StyledField
                                 as="textarea"
@@ -112,7 +214,7 @@ export const Modal = forwardRef<HTMLElement, Props>(
 Modal.displayName = 'Modal';
 
 const Wrapper = styled.aside<{ left?: number; top?: number }>`
-    ${tw`absolute bg-white rounded lg:w-4/12 xl:w-3/12 p-4 z-10 shadow-lg`};
+    ${tw`absolute bg-white rounded p-4 z-10 shadow-lg`};
     visibility: ${props => (props.left ? 'shown' : 'hidden')};
     left: ${props => `${props.left}px`};
     top: ${props => (props.top ? `${props.top}px` : 0)};
@@ -147,10 +249,6 @@ const Separator = styled.div`
     ${tw`bg-gray-200 w-full`}
     grid-column: span 2;
     height: 2px;
-`;
-
-const StyledLink = styled(Link)`
-    ${tw`flex flex-col items-center text-gray-700`}
 `;
 
 const StyledIcon = styled.div`

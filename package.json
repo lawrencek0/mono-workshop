@@ -15,6 +15,7 @@
     "@types/node": "12.7.2",
     "@types/react-dates": "^17.1.5",
     "@types/react-dom": "16.9.0",
+    "downshift": "^3.4.2",
     "formik": "2",
     "moment": "^2.24.0",
     "react": "^16.9.0",
