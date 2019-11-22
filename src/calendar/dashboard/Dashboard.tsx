@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
 import FullCalendar from '@fullcalendar/react';
 import { DateClickApi } from '@fullcalendar/core/Calendar';
+import { Fab, Action } from 'react-tiny-fab';
+import 'react-tiny-fab/dist/styles.css';
 import Calendar from 'calendar/dashboard/Calendar';
 import { Modal, Props as ModalProps, Position } from './Modal';
 import { getDate } from 'calendar/helpers';
@@ -45,6 +47,23 @@ const Dashboard: React.FC<{}> = () => {
     const [modalInfo, setModalInfo] = useState<Pick<ModalProps, 'position' | 'startDate'>>({});
     const calendarRef = useRef<FullCalendar>(null);
     const modalRef = useRef<HTMLElement>(null);
+
+    const handleDocClick = ({ target }: MouseEvent): void => {
+        if (calendarRef.current && modalRef.current && target) {
+            if (calendarRef.current.getApi().el.contains(target as Node) || modalRef.current.contains(target as Node)) {
+                return;
+            }
+        }
+        setModalInfo({ position: undefined });
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleDocClick);
+
+        return () => {
+            document.removeEventListener('click', handleDocClick);
+        };
+    }, []);
 
     const handleDateClick = ({ dayEl, date }: DateClickApi): void => {
         if (calendarRef.current && modalRef.current) {

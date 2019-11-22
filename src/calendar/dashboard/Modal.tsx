@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, Suspense } from 'react';
+import React, { forwardRef, useState, Suspense, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
@@ -143,6 +143,10 @@ export const Modal = forwardRef<HTMLElement, Props>(
         const [type, setType] = useState<EventType>(eventType);
         const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
 
+        useEffect(() => {
+            setSelectedUsers([]);
+        }, [position]);
+
         const handleTypeClick = ({ currentTarget }: React.MouseEvent<HTMLButtonElement>): void => {
             const value = currentTarget.name as EventType;
             setType(value);
@@ -200,7 +204,6 @@ export const Modal = forwardRef<HTMLElement, Props>(
                                 name="title"
                                 placeholder="Enter the title"
                                 aria-label="Title"
-                                required
                             />
                             <ButtonWrapper>
                                 <StyledButton
