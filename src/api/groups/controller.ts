@@ -32,6 +32,7 @@ export class GroupController {
     async create(
         @CurrentUser({ required: true }) user: User,
         @BodyParam('name') groupName: string,
+        @BodyParam('description') groupDescription: string,
         @BodyParam('members') users: User[],
     ) {
         try {
@@ -84,6 +85,7 @@ export class GroupController {
             );
             const newGroup = await this.groupRepo.saveGroup({
                 name: groupName,
+                description: groupDescription,
                 groupUsers: undefined,
                 id: undefined,
                 events: undefined,
@@ -139,12 +141,15 @@ export class GroupController {
         @CurrentUser({ required: true }) user: User,
         @Param('groupId') groupId: number,
         @BodyParam('name') name: string,
+        @BodyParam('description') groupDescription: string,
         @BodyParam('members') users: User[],
     ) {
         const group = await this.groupRepo.getGroup(groupId);
         const groupUsers = await this.userRepository.findAllById(users.map(({ id }) => id));
 
         if (name) group.name = name;
+        if (groupDescription) group.description = groupDescription;
+
         if (users) {
             await Promise.all(
                 groupUsers.map(member => {
