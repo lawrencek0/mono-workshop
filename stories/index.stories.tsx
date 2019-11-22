@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { storiesOf, addDecorator, RenderFunction } from '@storybook/react';
-import Login from 'login/Login';
+import Login from 'auth/Login';
 
 const StyledComponentsDecorator = (storyFn: RenderFunction): JSX.Element => (
     <ThemeProvider theme={{ mode: 'light' }}>

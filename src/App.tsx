@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react';
-import Login from 'login/Login';
+import Login from 'auth/Login';
 import { Router, RouteComponentProps, Link } from '@reach/router';
 import { Dashboard } from 'dashboard/Dashboard';
 import { RouteGuard } from 'routing/PrivateRoute';
-import { Logout } from 'login/Logout';
+import { Logout } from 'auth/Logout';
 import { createGlobalStyle } from 'styled-components/macro';
 
 const GlobalStyle = createGlobalStyle`
@@ -19,7 +19,7 @@ const App: React.FC = () => {
             <Router>
                 <RouteGuard as={Dashboard} action="dashboard:visit" path="/" />
                 <RouteGuard as={Login} action="login" path="/login" />
-                <Logout path="/logout" />
+                <RouteGuard as={Logout} action="logout" path="/logout" />
                 <NotFoundPage path="*" />
             </Router>
         </Suspense>

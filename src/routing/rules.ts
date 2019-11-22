@@ -4,13 +4,13 @@ const rules = {
         static: ['login'],
     },
     student: {
-        static: ['dashboard:visit'],
+        static: ['dashboard:visit', 'logout'],
     },
     faculty: {
-        static: ['dashboard:visit'],
+        static: ['dashboard:visit', 'logout'],
     },
     admin: {
-        static: ['dashboard:visit'],
+        static: ['dashboard:visit', 'logout'],
     },
 };
 
