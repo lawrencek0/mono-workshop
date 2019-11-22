@@ -1,10 +1,10 @@
 import React from 'react';
 import { useAuthState } from 'auth/hooks';
-import { Role } from 'user/types';
 import { RouteComponentProps, navigate } from '@reach/router';
-import Login from 'login/Login';
+import Login from 'auth/Login';
 import { rbacRules } from './rules';
 import { Dashboard } from 'dashboard/Dashboard';
+import { Role } from 'resources/UserResource';
 
 const can = (action: string, role?: Role): boolean => {
     if (!role) {
@@ -31,7 +31,7 @@ const RouteGuard = <P extends {}>(props: Props<P>): JSX.Element => {
     // variadic spread: https://github.com/microsoft/TypeScript/issues/5453
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { as: Component, action, location, children, ...rest } = props as any;
-    const { user } = useAuthState();
+    const { user, accessToken } = useAuthState();
 
     let to = '/';
 
@@ -39,7 +39,7 @@ const RouteGuard = <P extends {}>(props: Props<P>): JSX.Element => {
         to = location.pathname;
     }
 
-    if (!user) {
+    if (!accessToken) {
         navigate('/login');
         return <Login to={to} />;
     }
