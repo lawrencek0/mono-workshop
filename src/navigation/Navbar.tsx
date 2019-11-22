@@ -10,7 +10,7 @@ import { useAuthState } from 'auth/hooks';
 import { Link } from '@reach/router';
 import '@reach/menu-button/styles.css';
 
-const Navbar: React.FC<{}> = () => {
+const Navbar: React.FC = () => {
     const {
         user: { firstName, lastName },
     } = useAuthState();

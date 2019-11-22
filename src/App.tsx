@@ -1,9 +1,9 @@
 import React, { Suspense, lazy } from 'react';
-import Login from 'login/Login';
+import Login from 'auth/Login';
 import { Router, RouteComponentProps, Link } from '@reach/router';
 import { Dashboard } from 'dashboard/Dashboard';
 import { RouteGuard } from 'routing/PrivateRoute';
-import { Logout } from 'login/Logout';
+import { Logout } from 'auth/Logout';
 import { createGlobalStyle } from 'styled-components/macro';
 
 const Calendar = lazy(() => import('calendar/Page'));
@@ -22,7 +22,7 @@ const App: React.FC = () => {
                 <RouteGuard as={Dashboard} action="dashboard:visit" path="/" />
                 <RouteGuard as={Calendar} action="events:visit" path="calendar/*" />
                 <RouteGuard as={Login} action="login" path="/login" />
-                <Logout path="/logout" />
+                <RouteGuard as={Logout} action="logout" path="/logout" />
                 <NotFoundPage path="*" />
             </Router>
         </Suspense>

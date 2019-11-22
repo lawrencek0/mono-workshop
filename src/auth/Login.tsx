@@ -3,6 +3,7 @@ import { RouteComponentProps, navigate } from '@reach/router';
 import { Formik, FormikProps } from 'formik';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import { useFetcher } from 'rest-hooks';
 import { useAuthDispatch } from 'auth/hooks';
 import { localStorageKey } from 'utils/storage';
 import {
@@ -16,7 +17,6 @@ import {
 import { Field } from 'shared/inputs/Field';
 import { Progress } from 'shared/Progress';
 import { UserResource } from 'resources/UserResource';
-import { useFetcher, NetworkErrorBoundary } from 'rest-hooks';
 
 type FormValues = {
     email: string;
@@ -69,7 +69,8 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                 } catch (e) {
                     actions.setSubmitting(false);
                     actions.resetForm({ values: { ...values, password: '' } });
-                    actions.setStatus(e.message);
+                    const msg = e.response.body ? e.response.body.message : e.response.text;
+                    actions.setStatus(msg);
                 }
             }}
         >
@@ -77,34 +78,32 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                 const isDisabled = !props.isValid || props.isSubmitting;
                 return (
                     <Wrapper variant={props.status && !props.isSubmitting ? 'danger' : 'default'}>
-                        <NetworkErrorBoundary>
-                            {props.isSubmitting && <StyledProgress />}
-                            {/* @FIXME: Switch to Form (broken rn) https://github.com/jaredpalmer/formik/issues/1927 */}
-                            <form onSubmit={props.handleSubmit}>
-                                <FormTitle>Login</FormTitle>
-                                <ErrorMessage>{props.status}</ErrorMessage>
-                                <Field name="email" type="email" id="email" label="Email" {...props} />
-                                <Field type="password" id="password" name="password" label="Password" {...props} />
-                                <InputWrapper>
-                                    <input
-                                        type="checkbox"
-                                        name="rememberMe"
-                                        id="rememberMe"
-                                        checked={rememberUser}
-                                        onChange={handleCheckboxChange}
-                                    />
-                                    <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
-                                </InputWrapper>
-                                <InputWrapper>
-                                    <StyledSubmitBtn
-                                        type="submit"
-                                        value="Login"
-                                        disabled={isDisabled}
-                                        variant={isDisabled ? 'disabled' : 'default'}
-                                    />
-                                </InputWrapper>
-                            </form>
-                        </NetworkErrorBoundary>
+                        {props.isSubmitting && <StyledProgress />}
+                        {/* @FIXME: Switch to Form (broken rn) https://github.com/jaredpalmer/formik/issues/1927 */}
+                        <form onSubmit={props.handleSubmit}>
+                            <FormTitle>Login</FormTitle>
+                            <ErrorMessage>{props.status}</ErrorMessage>
+                            <Field name="email" type="email" id="email" label="Email" {...props} />
+                            <Field type="password" id="password" name="password" label="Password" {...props} />
+                            <InputWrapper>
+                                <input
+                                    type="checkbox"
+                                    name="rememberMe"
+                                    id="rememberMe"
+                                    checked={rememberUser}
+                                    onChange={handleCheckboxChange}
+                                />
+                                <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
+                            </InputWrapper>
+                            <InputWrapper>
+                                <StyledSubmitBtn
+                                    type="submit"
+                                    value="Login"
+                                    disabled={isDisabled}
+                                    variant={isDisabled ? 'disabled' : 'default'}
+                                />
+                            </InputWrapper>
+                        </form>
                     </Wrapper>
                 );
             }}

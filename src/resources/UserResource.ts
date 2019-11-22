@@ -1,5 +1,6 @@
 import { Resource, SchemaDetail, AbstractInstanceType, MutateShape, ReadShape, SchemaList } from 'rest-hooks';
-import { Role } from 'user/types';
+
+export type Role = 'student' | 'faculty' | 'admin';
 
 export class UserResource extends Resource {
     readonly id?: number = undefined;
