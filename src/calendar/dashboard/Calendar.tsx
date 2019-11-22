@@ -18,7 +18,7 @@ type Props = OptionsInput & {
     height?: number;
 };
 
-const CalendarWrapper = forwardRef<FullCalendar, Props>(({ className, variant = 'flat', ...props }, ref) => {
+const CalendarWrapper = forwardRef<FullCalendar, Props>(({ events, className, variant = 'flat', ...props }, ref) => {
     const [height, setHeight] = useState(-1);
     const wrapperRef = useRef<HTMLDivElement>(null);
     const timer = useRef<number>();
@@ -61,7 +61,7 @@ const CalendarWrapper = forwardRef<FullCalendar, Props>(({ className, variant = 
                 <FullCalendar
                     {...props}
                     ref={ref}
-                    events={{}}
+                    events={events}
                     height={height}
                     header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
                     titleFormat={{ year: 'numeric', month: 'long' }}

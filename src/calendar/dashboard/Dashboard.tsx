@@ -1,13 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
+import { useResource } from 'rest-hooks';
 import FullCalendar from '@fullcalendar/react';
 import { DateClickApi } from '@fullcalendar/core/Calendar';
-import { Fab, Action } from 'react-tiny-fab';
 import 'react-tiny-fab/dist/styles.css';
 import Calendar from 'calendar/dashboard/Calendar';
 import { Modal, Props as ModalProps, Position } from './Modal';
 import { getDate } from 'calendar/helpers';
+import { AppointmentResource } from 'resources/AppointmentResource';
 
 const calculateModalPos = (calendar: HTMLElement, cell: HTMLElement, modal: HTMLElement): Position => {
     const { top: calendarTop, left: calendarLeft } = calendar.getBoundingClientRect();
@@ -47,6 +48,15 @@ const Dashboard: React.FC<{}> = () => {
     const [modalInfo, setModalInfo] = useState<Pick<ModalProps, 'position' | 'startDate'>>({});
     const calendarRef = useRef<FullCalendar>(null);
     const modalRef = useRef<HTMLElement>(null);
+    const appointments = useResource(AppointmentResource.listShape(), {}) as Required<
+        InstanceType<typeof AppointmentResource>
+    >[];
+
+    const events = useMemo(() => {
+        return appointments.flatMap(({ slots, title }) =>
+            slots.map(slot => ({ start: slot.start, end: slot.end, title })),
+        );
+    }, [appointments]);
 
     const handleDocClick = ({ target }: MouseEvent): void => {
         if (calendarRef.current && modalRef.current && target) {
@@ -78,7 +88,7 @@ const Dashboard: React.FC<{}> = () => {
     return (
         <Wrapper>
             <Modal ref={modalRef} {...modalInfo} />
-            <Calendar ref={calendarRef} dateClick={handleDateClick} />
+            <Calendar events={events} ref={calendarRef} dateClick={handleDateClick} />
         </Wrapper>
     );
 };
