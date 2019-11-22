@@ -3,6 +3,7 @@ import { RouteComponentProps, navigate } from '@reach/router';
 import { Formik, FormikProps } from 'formik';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
+import { useFetcher } from 'rest-hooks';
 import { useAuthDispatch } from 'auth/hooks';
 import { localStorageKey } from 'utils/storage';
 import {
@@ -16,7 +17,6 @@ import {
 import { Field } from 'shared/inputs/Field';
 import { Progress } from 'shared/Progress';
 import { UserResource } from 'resources/UserResource';
-import { useFetcher, NetworkErrorBoundary } from 'rest-hooks';
 
 type FormValues = {
     email: string;
