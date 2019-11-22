@@ -99,7 +99,9 @@ export class DetailRepository {
             .leftJoinAndSelect('detail.faculty', 'faculty')
             .getMany();
     }
-
+    findDetail(detailId: number) {
+        return this.repository.findOne({ where: { id: detailId }, relations: ['users', 'users.user', 'faculty'] });
+    }
     // runs the query to delete an appointment
     // slots and student associations are deleted by cascade
     deleteDetail(detailId: number, userId: number) {
@@ -122,7 +124,7 @@ export class DetailRepository {
 
     // finds the detail by using it's unique id
     findById(id: number) {
-        return this.repository.findOne({ where: { id: id }, relations: ['slots', 'slots.student'] });
+        return this.repository.findOne({ where: { id: id }, relations: ['slots', 'slots.user'] });
     }
 
     // creates or updates the detail
