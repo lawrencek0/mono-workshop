@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
 import { useResource } from 'rest-hooks';
+import { RouteComponentProps } from '@reach/router';
 import FullCalendar from '@fullcalendar/react';
 import { DateClickApi } from '@fullcalendar/core/Calendar';
 import 'react-tiny-fab/dist/styles.css';
@@ -9,6 +10,7 @@ import Calendar from 'calendar/dashboard/Calendar';
 import { Modal, Props as ModalProps, Position } from './Modal';
 import { getDate } from 'calendar/helpers';
 import { AppointmentResource } from 'resources/AppointmentResource';
+import { useAuthState } from 'auth/hooks';
 
 const calculateModalPos = (calendar: HTMLElement, cell: HTMLElement, modal: HTMLElement): Position => {
     const { top: calendarTop, left: calendarLeft } = calendar.getBoundingClientRect();
@@ -44,19 +46,42 @@ const calculateModalPos = (calendar: HTMLElement, cell: HTMLElement, modal: HTML
     return pos;
 };
 
-const Dashboard: React.FC<{}> = () => {
+const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
     const [modalInfo, setModalInfo] = useState<Pick<ModalProps, 'position' | 'startDate'>>({});
     const calendarRef = useRef<FullCalendar>(null);
     const modalRef = useRef<HTMLElement>(null);
     const appointments = useResource(AppointmentResource.listShape(), {}) as Required<
         InstanceType<typeof AppointmentResource>
     >[];
+    const {
+        user: { role },
+    } = useAuthState();
 
     const events = useMemo(() => {
-        return appointments.flatMap(({ slots, title }) =>
-            slots.map(slot => ({ start: slot.start, end: slot.end, title })),
-        );
-    }, [appointments]);
+        return role === 'faculty'
+            ? appointments.flatMap(({ slots, title, id }) =>
+                  slots.map(slot => ({
+                      ...slot,
+                      groupId: id,
+                      type: 'appointments',
+                      slotId: slot.id,
+                      title,
+                      border: (slot as any).color,
+                  })),
+              )
+            : appointments.flatMap(({ slots, title, id }) => {
+                  return slots
+                      .filter(({ student }) => student && typeof student !== 'boolean')
+                      .map(slot => ({
+                          ...slot,
+                          groupId: id,
+                          type: 'appointments',
+                          slotId: slot.id,
+                          title,
+                          border: (slot as any).color,
+                      }));
+              });
+    }, [appointments, role]);
 
     const handleDocClick = ({ target }: MouseEvent): void => {
         if (calendarRef.current && modalRef.current && target) {
@@ -88,7 +113,16 @@ const Dashboard: React.FC<{}> = () => {
     return (
         <Wrapper>
             <Modal ref={modalRef} {...modalInfo} />
-            <Calendar events={events} ref={calendarRef} dateClick={handleDateClick} />
+            <Calendar
+                eventClick={({ event }) => {
+                    if (navigate) {
+                        navigate(`./${event.extendedProps.type}/${event.groupId}`);
+                    }
+                }}
+                events={events}
+                ref={calendarRef}
+                dateClick={handleDateClick}
+            />
         </Wrapper>
     );
 };
