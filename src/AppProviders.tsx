@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { AuthProvider } from 'auth/hooks';
 import { themes } from 'theme';
-import { CacheProvider } from 'rest-hooks';
+import { CacheProvider, NetworkManager, SubscriptionManager, PollingSubscription } from 'rest-hooks';
+import { AuthManager } from 'resources/AuthManager';
 
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [theme] = useState<themes>('light');
@@ -16,7 +17,9 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     // };
 
     return (
-        <CacheProvider>
+        <CacheProvider
+            managers={[new AuthManager(), new NetworkManager(), new SubscriptionManager(PollingSubscription)]}
+        >
             <ThemeProvider theme={{ mode: theme }}>
                 <AuthProvider>{children}</AuthProvider>
             </ThemeProvider>
