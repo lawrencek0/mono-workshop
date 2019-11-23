@@ -14,8 +14,10 @@ import { User } from '../users/entity/User';
 import { GroupRepository, GroupUsersRepository, GroupEventRepository, PostRepo } from './repository';
 import { UserRepository } from '../users/repository';
 import hashids from '../../util/hasher';
+import { IEvent, EventList } from 'strongly-typed-events';
 import Cognito from '../auth/cognito';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
+import { Group } from './entity/Group';
 
 type UserWithPassword = User & { password: string };
 @JsonController('/groups')
@@ -26,7 +28,19 @@ export class GroupController {
     @Inject() private userRepository: UserRepository;
     @Inject() private postRepo: PostRepo;
     @Inject() private cognito: Cognito;
+    private events = new EventList<this, Group>();
 
+    get onCreate(): IEvent<this, Group> {
+        return this.events.get('create').asEvent();
+    }
+
+    get onDelete(): IEvent<this, Group> {
+        return this.events.get('delete').asEvent();
+    }
+
+    private dispatch(name: 'create' | 'delete', args: Group) {
+        this.events.get(name).dispatchAsync(this, args);
+    }
     // creates a group and populates the group_user table
     @Post('/')
     async create(
