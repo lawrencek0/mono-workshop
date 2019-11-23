@@ -14,7 +14,10 @@ export class AppointmentResource extends BaseResource {
     readonly description?: string = '';
     readonly faculty?: UserResource = undefined;
     readonly slots?: SlotResource[] = undefined;
-    readonly students?: Partial<UserResource>[] = undefined;
+    readonly students?: Partial<InstanceType<typeof UserResource>>[] = undefined;
+    readonly userProps?: {
+        hexColor: string;
+    } = undefined;
 
     pk(): number | undefined {
         return this.id;

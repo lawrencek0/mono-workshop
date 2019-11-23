@@ -59,17 +59,18 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
 
     const events = useMemo(() => {
         return role === 'faculty'
-            ? appointments.flatMap(({ slots, title, id }) =>
+            ? appointments.flatMap(({ slots, title, id, userProps }) =>
                   slots.map(slot => ({
                       ...slot,
                       groupId: id,
                       type: 'appointments',
                       slotId: slot.id,
                       title,
-                      border: (slot as any).color,
+                      borderColor: userProps.hexColor,
+                      backgroundColor: userProps.hexColor,
                   })),
               )
-            : appointments.flatMap(({ slots, title, id }) => {
+            : appointments.flatMap(({ slots, title, id, userProps }) => {
                   return slots
                       .filter(({ student }) => student && typeof student !== 'boolean')
                       .map(slot => ({
@@ -78,7 +79,7 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
                           type: 'appointments',
                           slotId: slot.id,
                           title,
-                          border: (slot as any).color,
+                          borderColor: userProps.hexColor,
                       }));
               });
     }, [appointments, role]);
