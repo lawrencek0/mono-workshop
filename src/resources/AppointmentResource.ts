@@ -1,12 +1,7 @@
-import { Resource, Request, AbstractInstanceType, ReadShape, SchemaList } from 'rest-hooks';
-import { localStorageKey } from 'utils/storage';
+import { Resource, AbstractInstanceType, ReadShape, SchemaList } from 'rest-hooks';
 import moment from 'moment';
 import { UserResource } from './UserResource';
-
-abstract class BaseResource extends Resource {
-    static fetchPlugin = (request: Request) =>
-        request.set('idtoken', localStorage.getItem(localStorageKey('accessToken')) || '');
-}
+import { BaseResource } from './BaseResource';
 
 export class AppointmentResource extends BaseResource {
     readonly id?: number = undefined;
