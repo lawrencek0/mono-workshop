@@ -69,9 +69,11 @@ export class DetailRepository {
     findAllForStudent(userId: number) {
         return this.repository
             .createQueryBuilder('detail')
-            .innerJoin('detail.users', 'user', 'user.user = :studentId', { studentId: userId })
+            .innerJoinAndMapOne('detail.userProps', 'detail.users', 'user', 'user.user = :studentId', {
+                studentId: userId,
+            })
             .innerJoinAndSelect('detail.slots', 'slot', 'slot.student = user.user')
-            .innerJoinAndSelect('slot.student', 'student')
+            .leftJoinAndSelect('slot.student', 'student')
             .leftJoinAndSelect('detail.faculty', 'faculty')
             .getMany();
     }
@@ -117,10 +119,14 @@ export class DetailRepository {
     // finds all appointments that belong to user(must be faculty)
     // lists all slots with detail and the students that have selected them
     findAllForFaculty(userId: number) {
-        return this.repository.find({
-            where: { faculty: userId },
-            relations: ['slots', 'slots.student'],
-        });
+        return this.repository
+            .createQueryBuilder('detail')
+            .where('detail.faculty = :facultyId', { facultyId: userId })
+            .innerJoinAndMapOne('detail.userProps', 'detail.users', 'user', 'user.user = detail.faculty')
+            .innerJoinAndSelect('detail.slots', 'slot', 'slot.detail = detail.id')
+            .leftJoinAndSelect('slot.student', 'student')
+            .leftJoinAndSelect('detail.faculty', 'faculty')
+            .getMany();
     }
 
     // finds the detail by using it's unique id
