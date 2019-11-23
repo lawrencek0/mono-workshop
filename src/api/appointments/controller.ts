@@ -84,7 +84,7 @@ export class AppointmentControler {
     async findAll(@CurrentUser({ required: true }) user: User) {
         try {
             if (user.role === 'faculty') {
-                return this.detailRepository.findAllFac(user.id);
+                return this.detailRepository.findAllForFaculty(user.id);
             } else if (user.role === 'student') {
                 const appoint = await this.detailRepository.findAllForStudent(user.id);
 
@@ -125,6 +125,8 @@ export class AppointmentControler {
             });
 
             return { slots: output, ...Detail };
+        } else if (user.role === 'faculty') {
+            return this.detailRepository.findById(detailId);
         }
     }
     // student selects an appointment slot

@@ -113,7 +113,7 @@ export class DetailRepository {
 
     // finds all appointments that belong to user(must be faculty)
     // lists all slots with detail and the students that have selected them
-    findAllFac(userId: number) {
+    findAllForFaculty(userId: number) {
         return this.repository.find({
             where: { faculty: userId },
             relations: ['slots', 'slots.student'],
@@ -122,7 +122,10 @@ export class DetailRepository {
 
     // finds the detail by using it's unique id
     findById(id: number) {
-        return this.repository.findOne({ where: { id: id }, relations: ['slots', 'slots.student'] });
+        return this.repository.findOne({
+            where: { id: id },
+            relations: ['slots', 'slots.student', 'users', 'users.user'],
+        });
     }
 
     // creates or updates the detail
