@@ -1,11 +1,22 @@
 import { check } from 'express-validator';
-import { JsonController, Post, BodyParam, NotFoundError, UseBefore, Body, HttpError } from 'routing-controllers';
+import {
+    JsonController,
+    Post,
+    BodyParam,
+    NotFoundError,
+    UseBefore,
+    Body,
+    HttpError,
+    UnauthorizedError,
+    CurrentUser,
+} from 'routing-controllers';
 import { Inject } from 'typedi';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { UserRepository } from '../users/repository';
 import { User } from '../users/entity/User';
 import hashids from '../../util/hasher';
 import Cognito from './cognito';
+import AWS from 'aws-sdk';
 
 export const validateLogin = [
     check('email', 'Invalid email')
@@ -126,6 +137,61 @@ export class AuthController {
             );
         } catch (e) {
             throw new HttpError(409, e);
+        }
+    }
+
+    // route for refreshing the user's session tokens
+    @Post('/refresh')
+    async refresh(@BodyParam('idToken') idToken: string, @BodyParam('refreshToken') refreshToken: string) {
+        const RefreshToken = new AmazonCognitoIdentity.CognitoRefreshToken({ RefreshToken: refreshToken });
+        const sessionData = {
+            IdToken: '',
+            RefreshToken,
+            Pool: this.cognito.userPool,
+            Username: '',
+        };
+
+        // gets the current cognito user
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(sessionData);
+
+        // refreshes the current user's tokens
+        return new Promise((resolve, reject) =>
+            cognitoUser.refreshSession(RefreshToken, (err, session: AmazonCognitoIdentity.CognitoUserSession) => {
+                if (err) reject(new UnauthorizedError(err));
+
+                return resolve({ idToken: session.getIdToken().getJwtToken() });
+            }),
+        );
+    }
+
+    @Post('/verify')
+    async confirmEmail(@BodyParam('email') email: string, @BodyParam('code') code: string) {
+        // create
+        const cogIDP = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-2' });
+        return cogIDP.confirmSignUp(
+            { ClientId: this.cognito.userPool.getClientId(), ConfirmationCode: code, Username: email },
+            (err, data) => {
+                if (err) console.log('it broke ' + err);
+                else console.log('Success! ' + data);
+            },
+        );
+    }
+
+    @Post('/password')
+    async resetPassword(@CurrentUser({ required: true }) admin: User, @BodyParam('user') userEmail: string) {
+        // const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+        //     Username: user.email,
+        //     Pool: this.cognito.userPool,
+        // });
+
+        const cogIDP = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-2' });
+        if (admin.role === 'admin') {
+            return cogIDP.adminResetUserPassword({
+                UserPoolId: this.cognito.userPool.getClientId(),
+                Username: userEmail,
+            });
+        } else {
+            return 'You are not authorized to do this.';
         }
     }
 }

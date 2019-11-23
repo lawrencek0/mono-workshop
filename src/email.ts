@@ -3,9 +3,9 @@ import nodemailer from 'nodemailer';
 import moment from 'moment';
 import 'moment-timezone';
 import { Request, Response } from 'express';
-import { email } from '../util/secrets';
-import { Event } from '../api/events/entity/Event';
-import { Detail } from '../api/appointments/entity/Detail';
+import { email } from './util/secrets';
+import { Event } from './api/events/entity/Event';
+import { Detail } from './api/appointments/entity/Detail';
 
 AWS.config.update({
     accessKeyId: email.AWS_ACCESS_KEY_ID,
@@ -16,7 +16,6 @@ AWS.config.update({
 const transporter = nodemailer.createTransport({
     SES: new AWS.SES({ apiVersion: '2010-12-01' }),
 });
-
 type Table = 'all' | 'appointment' | 'event';
 
 type Events = Detail | Event;

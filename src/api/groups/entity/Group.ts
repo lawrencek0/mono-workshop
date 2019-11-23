@@ -11,6 +11,9 @@ export class Group {
     @Column({ length: 50 })
     name: string;
 
+    @Column({ length: 1024 })
+    description: string;
+
     @OneToMany(() => GroupUser, GroupUser => GroupUser.group)
     groupUsers: GroupUser[];
 
