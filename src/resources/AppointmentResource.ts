@@ -33,6 +33,9 @@ export class AppointmentResource extends BaseResource {
             fetch: async () => {
                 return this.fetch('get', `/api/appointments/details/untaken`);
             },
+            options: {
+                dataExpiryLength: 100,
+            },
         };
     }
 }
