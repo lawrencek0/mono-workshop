@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
 import { RouteComponentProps, navigate } from '@reach/router';
@@ -43,6 +43,12 @@ const StudentSelect: React.FC<{ detailId: string; slots: InstanceType<typeof Slo
     const selectedSlot = slots.find(slot => slot.student instanceof Object);
     const slotsByDay = useMemo(() => groupSlotsByDay(slots), [slots]);
     const slotDays = Object.keys(slotsByDay);
+
+    useEffect(() => {
+        return () => {
+            invalidator({ id: detailId });
+        };
+    }, [detailId, invalidator]);
 
     return (
         <Formik
