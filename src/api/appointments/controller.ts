@@ -213,6 +213,8 @@ export class AppointmentControler {
     @Delete('/:detailId')
     async deleteDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
         try {
+            const detail = await this.detailRepository.findDetail(detailId);
+            this.dispatch('delete', { ...detail });
             return this.detailRepository.deleteDetail(detailId, user.id);
         } catch (error) {
             return 'You cannot delete this detail ' + error;

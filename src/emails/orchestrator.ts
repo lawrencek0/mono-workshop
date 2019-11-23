@@ -9,5 +9,6 @@ export class EmailOrchestrator {
     private appointment: AppointmentControler;
     public registerEvents() {
         this.appointment.onCreate.subscribe((_, args) => this.appointmentEmailService.onCreate(args));
+        this.appointment.onDelete.subscribe((_, args) => this.appointmentEmailService.onDelete(args));
     }
 }
