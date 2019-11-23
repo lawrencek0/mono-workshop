@@ -45,7 +45,7 @@ export class AppointmentControler {
     // @FIXME needs colors
     @Post('/')
     async create(
-        @BodyParam('students') studentIds: number[],
+        @BodyParam('students') selectedStudents: User[],
         @CurrentUser({ required: true }) user: User,
         @BodyParam('title') detTitle: string,
         @BodyParam('description') detDesc: string,
@@ -54,7 +54,7 @@ export class AppointmentControler {
     ) {
         try {
             if (user.role === 'faculty') {
-                const students = await this.userRepository.findAllById(studentIds);
+                const students = await this.userRepository.findAllById(selectedStudents);
                 const newDetail = await this.detailRepository.saveDetail({
                     title: detTitle,
                     description: detDesc,

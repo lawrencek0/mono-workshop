@@ -22,8 +22,8 @@ export class UserRepository {
         return this.repository.findOne({ email });
     }
 
-    findAllById(userIds: number[]) {
-        return this.repository.findByIds(userIds);
+    findAllById(users: User[]) {
+        return this.repository.findByIds(users.map(({ id }) => id));
     }
 
     findAllByRole(role: Role) {
