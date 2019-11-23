@@ -86,9 +86,7 @@ export class AppointmentControler {
             if (user.role === 'faculty') {
                 return this.detailRepository.findAllForFaculty(user.id);
             } else if (user.role === 'student') {
-                const appoint = await this.detailRepository.findAllForStudent(user.id);
-
-                return { appoint };
+                return this.detailRepository.findAllForStudent(user.id);
             }
         } catch (e) {
             throw new HttpError(e);
@@ -150,7 +148,8 @@ export class AppointmentControler {
                 }
                 //selects the new slot for the student
                 slot.student = user;
-                return this.slotRepository.saveSlot(slot);
+                await this.slotRepository.saveSlot(slot);
+                return this.detailRepository.findById(detailId);
             } catch (e) {
                 throw new BadRequestError(e);
             }
@@ -191,7 +190,7 @@ export class AppointmentControler {
             const newDetail = await this.detailRepository.saveDetail(detailOwn);
 
             if (newUsers) {
-                const users = await this.userRepository.findAllById(newUsers.map(({ id }) => id));
+                const users = await this.userRepository.findAllById(newUsers);
 
                 // maps the new users to the detail and gives them their color
                 await Promise.all(

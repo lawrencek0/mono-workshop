@@ -69,8 +69,9 @@ export class DetailRepository {
     findAllForStudent(userId: number) {
         return this.repository
             .createQueryBuilder('detail')
-            .innerJoin('detail.students', 'student', 'student.id = :studentId', { studentId: userId })
-            .innerJoinAndSelect('detail.slots', 'slot', 'slot.student = student.id')
+            .innerJoin('detail.users', 'user', 'user.user = :studentId', { studentId: userId })
+            .innerJoinAndSelect('detail.slots', 'slot', 'slot.student = user.user')
+            .innerJoinAndSelect('slot.student', 'student')
             .leftJoinAndSelect('detail.faculty', 'faculty')
             .getMany();
     }
@@ -145,7 +146,7 @@ export class DetailUsersRepo {
     }
 
     getAllUserDetails(userId: number) {
-        return this.repository.find({ where: { user: userId }, relations: ['detail'] });
+        return this.repository.find({ where: { user: userId }, relations: ['detail', 'detail.slots'] });
     }
 
     saveDetailUser(user: DetailUsers) {
