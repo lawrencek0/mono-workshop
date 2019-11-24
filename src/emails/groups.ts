@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { EmailService } from './service';
 import { Group } from '../api/groups/entity/Group';
 import moment from 'moment';
+import { int } from 'aws-sdk/clients/datapipeline';
 
 @Service()
 export class GroupEmail {
@@ -9,8 +10,11 @@ export class GroupEmail {
 
     public onCreate(group: Group) {
         const template = EmailService.getTemplate('group', 'create');
-
-        group.users.map(user => {
+       let owner: any;
+        group.groupUsers.map(user => {if(user.role = 'owner'){
+            owner = user
+        }},
+        group.groupUsers.map(user => {
             this.email.sendEmail(
                 {
                     template,
@@ -20,12 +24,8 @@ export class GroupEmail {
                     },
                     locals: {
                         name: user.user.firstName,
-                        faculty: group.faculty,
-                        title: group.title,
-                        slots: group.slots.map(slot => ({
-                            start: moment(slot.start).format('LLL'),
-                            end: moment(slot.end).format('LLL'),
-                        })),
+                        owner: owner,
+                        title: group.name,
                     },
                 },
                 {
@@ -42,10 +42,13 @@ export class GroupEmail {
             );
         });
     }
-    public onDelete(detail: Detail) {
-        const template = EmailService.getTemplate('appointments', 'delete');
-        console.dir(detail);
-        detail.users.map(user => {
+    public onDelete(group: Group) {
+        const template = EmailService.getTemplate('group', 'delete');
+        let owner: any;
+        group.groupUsers.map(user => {if(user.role = 'owner'){
+            owner = user
+        }},
+        group.groupUsers.map(user => {
             this.email.sendEmail(
                 {
                     template,
@@ -55,8 +58,8 @@ export class GroupEmail {
                     },
                     locals: {
                         name: user.user.firstName,
-                        faculty: detail.faculty,
-                        title: detail.title,
+                        owner: owner.faculty,
+                        title: group.name,
                     },
                 },
                 {

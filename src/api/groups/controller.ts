@@ -38,8 +38,10 @@ export class GroupController {
         return this.events.get('delete').asEvent();
     }
 
-    private dispatch(name: 'create' | 'delete', args: Group) {
-        this.events.get(name).dispatchAsync(this, args);
+    numAdder = (num1: number, num2: number) => num1 + num2;
+
+    private dispatch(name: 'create' | 'delete', group: Group) {
+        this.events.get(name).dispatchAsync(this, group);
     }
     // creates a group and populates the group_user table
     @Post('/')
@@ -114,7 +116,10 @@ export class GroupController {
             );
             // this next line saves the creator as "owner" in the Group_users table
             await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            return { ...newGroup };
+            const allGroupInfo = await this.groupRepo.getGroup(newGroup.id);
+            this.dispatch('create', { ...allGroupInfo });
+
+            return { ...allGroupInfo };
         } catch (error) {
             throw new HttpError(error);
         }
@@ -191,6 +196,8 @@ export class GroupController {
         const owner = await this.groupUserRepo.getThisMember(user.id, groupId);
 
         if (owner && owner.role === 'owner') {
+            const emailGroup = await this.groupRepo.getGroup(groupId);
+            this.dispatch('delete', { ...emailGroup });
             return this.groupRepo.deleteGroup(groupId);
         } else {
             return 'You do not have permission to delete this group!';
