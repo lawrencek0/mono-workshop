@@ -2,16 +2,18 @@ import React, { useState } from 'react';
 import { RouteComponentProps } from '@reach/router';
 import * as Yup from 'yup';
 import * as XLSX from 'xlsx';
-import { FormWrapper, StyledSubmitBtn } from 'shared/inputs/styles';
+import { StyledSubmitBtn } from 'shared/inputs/styles';
 import { Formik, Form } from 'formik';
 import { Field } from 'shared/inputs/Field';
 import { Title } from 'shared/cards/styles';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { UserResource } from 'resources/UserResource';
-import { useResource } from 'rest-hooks';
+import { useFetcher } from 'rest-hooks';
 import { Separator, UserItems } from 'calendar/dashboard/Modal';
 import { DropdownSelect, Menu, Item } from 'calendar/dashboard/Items';
+import { ErrorMessage, Wrapper } from 'auth/Login';
+import { GroupResource, GroupUser } from 'resources/GroupResource';
 
 const schema = Yup.object({
     name: Yup.string().required('Name is required'),
@@ -44,7 +46,8 @@ const processFile = (file: File, cb: (users: UserResource[]) => unknown): void =
     reader.readAsArrayBuffer(file);
 };
 
-const Create: React.FC<RouteComponentProps> = () => {
+const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
+    const create = useFetcher(GroupResource.createShape());
     const [selectedUsers, setSelectedUsers] = useState<UserResource[]>([]);
     const [usersFromFile, setUsersFromFile] = useState<UserResource[]>([]);
 
@@ -74,44 +77,74 @@ const Create: React.FC<RouteComponentProps> = () => {
     };
 
     return (
-        <FormWrapper>
-            <Title css={tw`text-2xl text-center`}>Create a new group</Title>
-            <Formik
-                initialValues={
-                    {
-                        name: '',
-                        description: '',
-                    } as Yup.InferType<typeof schema>
+        <Formik
+            initialValues={
+                {
+                    name: '',
+                    description: '',
+                } as Yup.InferType<typeof schema>
+            }
+            validationSchema={schema}
+            onSubmit={async (values, actions) => {
+                actions.setStatus();
+
+                if (!selectedUsers.length && !usersFromFile.length) {
+                    return actions.setStatus("Can't have a group by yourself");
                 }
-                validationSchema={schema}
-                onSubmit={v => {
-                    console.log(v);
-                }}
-            >
-                <Form>
-                    <Field type="text" name="name" id="name" label="Group Name" />
-                    <Field as="textarea" type="text" name="description" id="description" label="Description" />
-                    <Separator aria-hidden css={tw`my-4`} />
-                    <StyledDropdown users={selectedUsers} setUsers={setSelectedUsers} />
-                    <div css={tw`my-4`}>
-                        <UserItems users={selectedUsers} deleteCb={handleUserDelete} />
-                    </div>
-                    <Separator aria-hidden css={tw`my-4`} />
-                    <Field
-                        type="file"
-                        name="memberFile"
-                        id="memberFile"
-                        label="Add Users from Files"
-                        onChange={handleFile}
-                        multiple
-                    />
-                    <div css={tw`my-4`}>
-                        <UserItems users={usersFromFile} deleteCb={handleUsersFromFileDelete} />
-                    </div>
-                    <StyledSubmitBtn type="submit" value="Create Group" />
-                </Form>
-            </Formik>
-        </FormWrapper>
+
+                try {
+                    const groupUsers = [...selectedUsers, ...usersFromFile] as GroupUser[];
+                    const group = await create({}, { ...values, groupUsers });
+                    if (navigate) {
+                        await navigate(`../${group.id}`);
+                    }
+                } catch (e) {
+                    actions.setSubmitting(false);
+                    const msg = e.response.body ? e.response.body.message : e.response.text;
+                    actions.setStatus(JSON.stringify(msg));
+                }
+            }}
+        >
+            {props => {
+                const isDisabled = !props.isValid || props.isSubmitting;
+                return (
+                    <Wrapper
+                        css={tw`lg:w-2/3 xl:w-6/12`}
+                        variant={props.status && !props.isSubmitting ? 'danger' : 'default'}
+                    >
+                        <Title css={tw`text-2xl text-center`}>Create a new group</Title>
+                        <Form>
+                            <ErrorMessage>{props.status}</ErrorMessage>
+                            <Field type="text" name="name" id="name" label="Group Name" />
+                            <Field as="textarea" type="text" name="description" id="description" label="Description" />
+                            <Separator aria-hidden css={tw`my-4`} />
+                            <StyledDropdown users={selectedUsers} setUsers={setSelectedUsers} />
+                            <div css={tw`my-4`}>
+                                <UserItems users={selectedUsers} deleteCb={handleUserDelete} />
+                            </div>
+                            <Separator aria-hidden css={tw`my-4`} />
+                            <Field
+                                type="file"
+                                name="memberFile"
+                                id="memberFile"
+                                label="Add Users from Files"
+                                onChange={handleFile}
+                                multiple
+                            />
+                            <div css={tw`my-4`}>
+                                <UserItems users={usersFromFile} deleteCb={handleUsersFromFileDelete} />
+                            </div>
+                            <StyledSubmitBtn
+                                type="submit"
+                                value="Create Group"
+                                disabled={isDisabled}
+                                variant={isDisabled ? 'disabled' : 'default'}
+                            />
+                        </Form>
+                    </Wrapper>
+                );
+            }}
+        </Formik>
     );
 };
 
