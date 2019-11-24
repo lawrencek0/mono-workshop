@@ -1,8 +1,8 @@
 import React from 'react';
-import { RouteComponentProps } from '@reach/router';
+import { RouteComponentProps, Link } from '@reach/router';
 import { useResource } from 'rest-hooks';
 import { GroupResource } from 'resources/GroupResource';
-import { Wrapper as Card } from 'shared/cards/styles';
+import { Wrapper as Card, Title } from 'shared/cards/styles';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 
@@ -12,7 +12,14 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
     return (
         <Wrapper>
             <Card>Groups here</Card>
-            <Card>Groups list here</Card>
+            <Card as="aside">
+                <Title>Groups</Title>
+                {groups.map(({ id, name }) => (
+                    <Link css={tw`capitalize`} key={id} to={`./${id}`}>
+                        {name}
+                    </Link>
+                ))}
+            </Card>
         </Wrapper>
     );
 };
