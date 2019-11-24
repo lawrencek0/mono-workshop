@@ -13,7 +13,7 @@ import { useFetcher } from 'rest-hooks';
 import { Separator, UserItems } from 'calendar/dashboard/Modal';
 import { DropdownSelect, Menu, Item } from 'calendar/dashboard/Items';
 import { ErrorMessage, Wrapper } from 'auth/Login';
-import { GroupResource, GroupUser } from 'resources/GroupResource';
+import { GroupResource, GroupUserResource } from 'resources/GroupResource';
 
 const schema = Yup.object({
     name: Yup.string().required('Name is required'),
@@ -93,7 +93,7 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
                 }
 
                 try {
-                    const groupUsers = [...selectedUsers, ...usersFromFile] as GroupUser[];
+                    const groupUsers = [...selectedUsers, ...usersFromFile] as GroupUserResource[];
                     const group = await create({}, { ...values, groupUsers });
                     if (navigate) {
                         await navigate(`../${group.id}`);
