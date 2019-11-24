@@ -9,6 +9,7 @@ import {
     HttpError,
     UnauthorizedError,
     CurrentUser,
+    Req,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
@@ -142,7 +143,7 @@ export class AuthController {
 
     // route for refreshing the user's session tokens
     @Post('/refresh')
-    async refresh(@BodyParam('idToken') idToken: string, @BodyParam('refreshToken') refreshToken: string) {
+    async refresh(@BodyParam('refreshToken') refreshToken: string, @Req() request: any) {
         const RefreshToken = new AmazonCognitoIdentity.CognitoRefreshToken({ RefreshToken: refreshToken });
         const sessionData = {
             IdToken: '',

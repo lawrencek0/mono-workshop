@@ -10,6 +10,7 @@ import {
     BadRequestError,
     Delete,
     UnauthorizedError,
+    NotFoundError,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { IEvent, EventList } from 'strongly-typed-events';
@@ -112,27 +113,30 @@ export class AppointmentControler {
 
     @Get('/:detailId')
     async findSlotsForDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
-        if (user.role === 'student') {
-            const { slots, users: _, ...Detail } = await this.detailRepository.findById(detailId);
-            const output = slots.map(({ student, ...slot }) => {
-                // If slot is owned by the user include the student information
-                // If slot has a student replace its information with "student":true
-                // If it doesn't have a student, add "student":false
-                return student
-                    ? { ...slot, student: student.id === user.id ? student : true }
-                    : { ...slot, student: false };
-            });
+        const detail = await this.detailRepository.findById(detailId);
+        if (detail) {
+            const { slots, users, ...Detail } = detail;
+            if (user.role === 'student') {
+                const output = slots.map(({ student, ...slot }) => {
+                    // If slot is owned by the user include the student information
+                    // If slot has a student replace its information with "student":true
+                    // If it doesn't have a student, add "student":false
+                    return student
+                        ? { ...slot, student: student.id === user.id ? student : true }
+                        : { ...slot, student: false };
+                });
 
-            return { slots: output, ...Detail };
-        } else if (user.role === 'faculty') {
-            const { users, slots, ...Detail } = await this.detailRepository.findById(detailId);
-
-            return {
-                slots,
-                students: users.filter(({ user: { id } }) => id !== user.id).map(({ user }) => user),
-                ...Detail,
-            };
+                return { slots: output, ...Detail };
+            } else if (user.role === 'faculty') {
+                return {
+                    slots,
+                    students: users.filter(({ user: { id } }) => id !== user.id).map(({ user }) => user),
+                    ...Detail,
+                };
+            }
         }
+
+        throw new NotFoundError('Invalid appointment');
     }
     // student selects an appointment slot
     // re-selects if they already have one for that detail
@@ -189,8 +193,6 @@ export class AppointmentControler {
         @BodyParam('description') newDesc: string,
         @BodyParam('users') newUsers: User[],
     ) {
-        // checks that the current user is the owner of the detail
-        const detailOwn = await this.detailRepository.isOwner(detailId, user.id);
         if (user.role === 'student') {
             // if the current is only a student then they can only update the color
             // shown on their calendar
@@ -199,33 +201,37 @@ export class AppointmentControler {
             detailUser.hexColor = newColor;
 
             return this.detailUsersRepo.saveDetailUser(detailUser);
-        } else if (user.role === 'faculty' && detailOwn) {
-            // checks that the user is the owner of the appointment detail
-            // if they are the owner then they can add students to the list
-            // or change title or description and update their own color
+        } else if (user.role === 'faculty') {
+            // checks that the current user is the owner of the detail
+            const detailOwn = await this.detailRepository.isOwner(detailId, user.id);
+            if (detailOwn) {
+                // checks that the user is the owner of the appointment detail
+                // if they are the owner then they can add students to the list
+                // or change title or description and update their own color
 
-            const detailUser = await this.detailUsersRepo.getOne(user, detailOwn);
-            if (newTitle) detailOwn.title = newTitle;
-            if (newDesc) detailOwn.description = newDesc;
-            if (newColor) detailUser.hexColor = newColor;
-            const newDetail = await this.detailRepository.saveDetail(detailOwn);
+                const detailUser = await this.detailUsersRepo.getOne(user, detailOwn);
+                if (newTitle) detailOwn.title = newTitle;
+                if (newDesc) detailOwn.description = newDesc;
+                if (newColor) detailUser.hexColor = newColor;
+                const newDetail = await this.detailRepository.saveDetail(detailOwn);
 
-            if (newUsers) {
-                const users = await this.userRepository.findAllById(newUsers);
+                if (newUsers) {
+                    const users = await this.userRepository.findAllById(newUsers);
 
-                // maps the new users to the detail and gives them their color
-                await Promise.all(
-                    users.map(student => {
-                        return this.detailUsersRepo.saveDetailUser({
-                            user: student,
-                            detail: newDetail,
-                            hexColor: newColor,
-                        });
-                    }),
-                );
+                    // maps the new users to the detail and gives them their color
+                    await Promise.all(
+                        users.map(student => {
+                            return this.detailUsersRepo.saveDetailUser({
+                                user: student,
+                                detail: newDetail,
+                                hexColor: newColor,
+                            });
+                        }),
+                    );
+                }
+
+                return this.detailUsersRepo.saveDetailUser(detailUser);
             }
-
-            return this.detailUsersRepo.saveDetailUser(detailUser);
         }
     }
 
@@ -250,6 +256,13 @@ export class AppointmentControler {
         @Param('detailId') detailId: number,
         @Param('slotId') slotId: number,
     ) {
-        return this.slotRepository.deleteSlot(slotId, user.id);
+        const detailOwn = await this.detailRepository.isOwner(detailId, user.id);
+
+        if (detailOwn) {
+            await this.slotRepository.deleteSlot(slotId, user.id);
+            return this.detailRepository.findById(detailId);
+        } else {
+            throw new UnauthorizedError("You can't delete this slot");
+        }
     }
 }

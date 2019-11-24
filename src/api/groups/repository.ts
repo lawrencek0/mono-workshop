@@ -15,14 +15,9 @@ export class GroupRepository {
         return this.repository.save(group);
     }
 
-    getMembers(groupId: number) {
-        return this.repository.find({ where: { id: groupId }, relations: ['groupUsers', 'groupUsers.user'] });
-    }
-
-    getGroup(groupId: number) {
+    findById(groupId: number) {
         return this.repository.findOne({
             where: { id: groupId },
-            relations: ['events', 'events.user', 'groupUsers', 'groupUsers.user'],
         });
     }
 
@@ -69,12 +64,12 @@ export class GroupUsersRepository {
         );
     }
 
-    getThisMember(userId: number, groupId: number) {
-        return this.repository.findOne({ where: { user: userId, group: groupId } });
+    findByUserAndGroup(userId: number, groupId: number) {
+        return this.repository.findOne({ where: { user: userId, group: groupId }, relations: ['user'] });
     }
 
-    getMembers(groupId: number) {
-        return this.repository.find({ where: { id: groupId }, relations: ['user'] });
+    findAllByGroup(groupId: number) {
+        return this.repository.find({ where: { group: groupId }, relations: ['user'] });
     }
 }
 
