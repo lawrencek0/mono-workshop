@@ -14,8 +14,10 @@ import { User } from '../users/entity/User';
 import { GroupRepository, GroupUsersRepository, GroupEventRepository, PostRepo } from './repository';
 import { UserRepository } from '../users/repository';
 import hashids from '../../util/hasher';
+import { IEvent, EventList } from 'strongly-typed-events';
 import Cognito from '../auth/cognito';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
+import { Group } from './entity/Group';
 
 @JsonController('/groups')
 export class GroupController {
@@ -25,7 +27,21 @@ export class GroupController {
     @Inject() private userRepository: UserRepository;
     @Inject() private postRepo: PostRepo;
     @Inject() private cognito: Cognito;
+    private events = new EventList<this, Group>();
 
+    get onCreate(): IEvent<this, Group> {
+        return this.events.get('create').asEvent();
+    }
+
+    get onDelete(): IEvent<this, Group> {
+        return this.events.get('delete').asEvent();
+    }
+
+    numAdder = (num1: number, num2: number) => num1 + num2;
+
+    private dispatch(name: 'create' | 'delete', group: Group) {
+        this.events.get(name).dispatchAsync(this, group);
+    }
     // creates a group and populates the group_user table
     @Post('/')
     async create(
@@ -101,7 +117,10 @@ export class GroupController {
             );
             // this next line saves the creator as "owner" in the Group_users table
             await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            return { ...newGroup };
+            const allGroupInfo = await this.groupRepo.getGroup(newGroup.id);
+            this.dispatch('create', { ...allGroupInfo });
+
+            return { ...allGroupInfo };
         } catch (error) {
             throw new HttpError(error);
         }
@@ -179,6 +198,8 @@ export class GroupController {
         const owner = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
 
         if (owner && owner.role === 'owner') {
+            const emailGroup = await this.groupRepo.getGroup(groupId);
+            this.dispatch('delete', { ...emailGroup });
             return this.groupRepo.deleteGroup(groupId);
         } else {
             return 'You do not have permission to delete this group!';
