@@ -63,6 +63,7 @@ export class AuthController {
     async login(
         @BodyParam('email', { required: true }) email: string,
         @BodyParam('password', { required: true }) password: string,
+        @BodyParam('newPassword') newPassword: string,
     ) {
         const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
             Username: email,
@@ -73,7 +74,6 @@ export class AuthController {
             Pool: this.cognito.userPool,
         };
         const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
         return new Promise((resolve, reject) =>
             cognitoUser.authenticateUser(authenticationDetails, {
                 onSuccess: async result => {
@@ -83,7 +83,6 @@ export class AuthController {
                     if (!user) {
                         return reject(new NotFoundError('User not found'));
                     }
-
                     const idToken = result.getIdToken().getJwtToken();
                     const refreshToken = result.getRefreshToken().getToken();
 
@@ -98,6 +97,16 @@ export class AuthController {
                 },
                 onFailure: err => {
                     reject(new NotFoundError(err.message));
+                },
+                newPasswordRequired: () => {
+                    cognitoUser.completeNewPasswordChallenge(newPassword, undefined, {
+                        onSuccess: () => {
+                            return resolve('Password changed successfully');
+                        },
+                        onFailure: err => {
+                            return reject(err.message);
+                        },
+                    });
                 },
             }),
         );
@@ -165,6 +174,7 @@ export class AuthController {
         );
     }
 
+    // @FIXME: we may not need this. Using the OTP at the first log in should verify the email
     @Post('/verify')
     async confirmEmail(@BodyParam('email') email: string, @BodyParam('code') code: string) {
         // create
@@ -178,21 +188,37 @@ export class AuthController {
         );
     }
 
+    // @FIXME: doesn't allow password changes
     @Post('/password')
-    async resetPassword(@CurrentUser({ required: true }) admin: User, @BodyParam('user') userEmail: string) {
-        // const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
-        //     Username: user.email,
-        //     Pool: this.cognito.userPool,
-        // });
-
+    async resetPassword(
+        @CurrentUser({ required: true }) user: User,
+        @BodyParam('oldPassword') oldPassword: string,
+        @BodyParam('code') code: string,
+        @BodyParam('newPassword') newPassword: string,
+    ) {
+        const userData = {
+            Username: user.email,
+            Pool: this.cognito.userPool,
+        };
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
         const cogIDP = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-2' });
-        if (admin.role === 'admin') {
-            return cogIDP.adminResetUserPassword({
-                UserPoolId: this.cognito.userPool.getClientId(),
-                Username: userEmail,
-            });
-        } else {
-            return 'You are not authorized to do this.';
-        }
+        // console.dir(cognitoUser.setSignInUserSession(new AmazonCognitoIdentity.CognitoUserSession()));
+        return new Promise((resolve, reject) =>
+            cogIDP.changePassword(
+                {
+                    AccessToken: cognitoUser
+                        .getSignInUserSession()
+                        .getAccessToken()
+                        .getJwtToken(),
+                    PreviousPassword: oldPassword,
+                    ProposedPassword: newPassword,
+                },
+                (err, data: AWS.CognitoIdentityServiceProvider.ChangePasswordResponse) => {
+                    if (err) return reject(err.message);
+
+                    return resolve(data);
+                },
+            ),
+        );
     }
 }
