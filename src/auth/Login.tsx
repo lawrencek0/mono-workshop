@@ -115,11 +115,11 @@ const StyledProgress = styled(Progress)`
     ${tw`absolute inset-0`}
 `;
 
-const ErrorMessage = styled.div`
+export const ErrorMessage = styled.div`
     ${tw`text-red-400 mb-2 font-semibold`}
 `;
 
-const Wrapper = styled(FormWrapper)<{ variant: Variant }>`
+export const Wrapper = styled(FormWrapper)<{ variant: Variant }>`
     ${tw`relative w-10/12 md:w-6/12 lg:w-4/12 xl:w-1/4`}
     ${props => props.variant === 'danger' && tw`border-t-4 border-red-500`}
 `;
