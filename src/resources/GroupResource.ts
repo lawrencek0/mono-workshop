@@ -8,6 +8,7 @@ export class GroupResource extends BaseResource {
     readonly id?: number = undefined;
     readonly name: string = '';
     readonly description?: string = '';
+    readonly user?: GroupResource = undefined;
     readonly groupUsers?: GroupUserResource[] = undefined;
 
     pk(): number | undefined {

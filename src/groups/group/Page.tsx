@@ -9,7 +9,7 @@ import { Wrapper } from '../Dashboard';
 import { Title } from 'shared/cards/styles';
 import { RouteGuard } from 'routing/PrivateRoute';
 import { Members } from './Members';
-import { View } from './View';
+import { View, UnauthenticatedView } from './View';
 
 export type Props = RouteComponentProps & {
     groupId?: string;
@@ -17,6 +17,10 @@ export type Props = RouteComponentProps & {
 
 export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId }) => {
     const group = useResource(GroupResource.detailShape(), { id: groupId });
+
+    if (!group.user) {
+        return <UnauthenticatedView groupId={groupId} />;
+    }
 
     return (
         <Wrapper>
@@ -42,7 +46,7 @@ const NavLink: React.FC<{ to: string; children: React.ReactChild }> = ({ to, chi
 const Sidebar: React.FC<{ name: string }> = ({ name }) => {
     return (
         <aside>
-            <Title css={tw`text-center text-3xl`}>{name}</Title>
+            <StyledTitle>{name}</StyledTitle>
             <ul>
                 <Item>
                     <NavLink to="./">Home</NavLink>
@@ -54,6 +58,10 @@ const Sidebar: React.FC<{ name: string }> = ({ name }) => {
         </aside>
     );
 };
+
+export const StyledTitle = styled(Title)`
+    ${tw`text-center text-3xl`}
+`;
 
 const Item = styled.li`
     ${tw`my-4`}
