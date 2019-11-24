@@ -7,6 +7,7 @@ import { Logout } from 'auth/Logout';
 import { createGlobalStyle } from 'styled-components/macro';
 
 const Calendar = lazy(() => import('calendar/Page'));
+const Group = lazy(() => import('groups/Page'));
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -21,6 +22,7 @@ const App: React.FC = () => {
             <Router>
                 <RouteGuard as={Dashboard} action="dashboard:visit" path="/" />
                 <RouteGuard as={Calendar} action="events:visit" path="calendar/*" />
+                <Group path="groups/*" />
                 <RouteGuard as={Login} action="login" path="/login" />
                 <RouteGuard as={Logout} action="logout" path="/logout" />
                 <NotFoundPage path="*" />
