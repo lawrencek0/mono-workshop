@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IsEmail } from 'class-validator';
 import { Detail } from '../../appointments/entity/Detail';
 import { Event } from '../../events/entity/Event';
