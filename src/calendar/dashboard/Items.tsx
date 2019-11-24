@@ -36,7 +36,7 @@ const Items: React.FC<{
                         {item.picUrl ? (
                             <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={item.picUrl} />
                         ) : (
-                            <FaUserCircle size="3em" />
+                            <FaUserCircle css={tw`w-6 h-6 ml-2 mr-4`} />
                         )}
                         {itemToString(item)}
                     </Item>

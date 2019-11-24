@@ -40,12 +40,12 @@ export const UserItems: React.FC<{ users: UserResource[]; deleteCb: (user: UserR
             {users.map(user => (
                 <div
                     css={tw`flex items-center rounded py-2 border-2 border-transparent hover:border-gray-400 w-full `}
-                    key={user.id}
+                    key={`${user.id}-${user.email}`}
                 >
                     {user.picUrl ? (
                         <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={user.picUrl} />
                     ) : (
-                        <FaUserCircle size="3em" />
+                        <FaUserCircle css={tw`w-6 h-6 ml-2 mr-4`} />
                     )}
                     <div>
                         {user.firstName} {user.lastName}
