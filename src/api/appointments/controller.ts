@@ -65,6 +65,7 @@ export class AppointmentControler {
                 });
                 const slotsWithDetail = slots.map(slot => ({ ...slot, detail: newDetail }));
                 const detailUsers = students.map(student => ({ user: student, detail: newDetail, hexColor: color }));
+                detailUsers.push({ user, hexColor: color, detail: newDetail });
                 const [newSlots, newUsers] = await Promise.all([
                     this.slotRepository.saveSlots(slotsWithDetail),
                     this.detailUsersRepo.saveDetailUsers(detailUsers),
@@ -112,7 +113,7 @@ export class AppointmentControler {
     @Get('/:detailId')
     async findSlotsForDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
         if (user.role === 'student') {
-            const { slots, ...Detail } = await this.detailRepository.findById(detailId);
+            const { slots, users: _, ...Detail } = await this.detailRepository.findById(detailId);
             const output = slots.map(({ student, ...slot }) => {
                 // If slot is owned by the user include the student information
                 // If slot has a student replace its information with "student":true
@@ -124,7 +125,13 @@ export class AppointmentControler {
 
             return { slots: output, ...Detail };
         } else if (user.role === 'faculty') {
-            return this.detailRepository.findById(detailId);
+            const { users, slots, ...Detail } = await this.detailRepository.findById(detailId);
+
+            return {
+                slots,
+                students: users.filter(({ user: { id } }) => id !== user.id).map(({ user }) => user),
+                ...Detail,
+            };
         }
     }
     // student selects an appointment slot
@@ -144,12 +151,26 @@ export class AppointmentControler {
                 if (taken) {
                     //deselects the old appointment
                     taken.student = null;
-                    this.slotRepository.saveSlot(taken);
+                    await this.slotRepository.saveSlot(taken);
                 }
-                //selects the new slot for the student
-                slot.student = user;
-                await this.slotRepository.saveSlot(slot);
-                return this.detailRepository.findById(detailId);
+
+                if (!taken || taken.id !== slotId) {
+                    //selects the new slot for the student
+                    slot.student = user;
+                    await this.slotRepository.saveSlot(slot);
+                }
+
+                const { slots, users: _, ...Detail } = await this.detailRepository.findById(detailId);
+                const output = slots.map(({ student, ...slot }) => {
+                    // If slot is owned by the user include the student information
+                    // If slot has a student replace its information with "student":true
+                    // If it doesn't have a student, add "student":false
+                    return student
+                        ? { ...slot, student: student.id === user.id ? student : true }
+                        : { ...slot, student: false };
+                });
+
+                return { slots: output, ...Detail };
             } catch (e) {
                 throw new BadRequestError(e);
             }

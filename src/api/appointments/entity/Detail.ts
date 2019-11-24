@@ -26,4 +26,6 @@ export class Detail {
 
     @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.detail)
     users: DetailUsers[];
+
+    userProps?: DetailUsers;
 }
