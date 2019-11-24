@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { useCache, useResource } from 'rest-hooks';
+import { useResource } from 'rest-hooks';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { GroupResource, GroupUserResource } from 'resources/GroupResource';
+import { GroupResource, GroupUserResource, GroupPostResource } from 'resources/GroupResource';
 import { Wrapper } from 'shared/cards/styles';
 import { Props, StyledTitle } from './Page';
 import { UserResource } from 'resources/UserResource';
@@ -13,17 +13,16 @@ import { FaExclamation } from 'react-icons/fa';
 import { Link } from '@reach/router';
 import { media } from 'theme';
 import { ErrorMessage } from 'auth/Login';
+import { EmptyMessage } from './EmptyMessage';
 
 export const View: React.FC<Props> = ({ groupId }) => {
-    const group = useCache(GroupResource.detailShape(), { id: groupId });
+    const [posts] = useResource([GroupPostResource.listShape(), { groupId }]);
 
-    if (!group) return <>Loading</>;
+    if (!posts.length) {
+        return <EmptyMessage>It seems nobody has posted anything yet.</EmptyMessage>;
+    }
 
-    return (
-        <>
-            <div>{group.name}</div>
-        </>
-    );
+    return <></>;
 };
 
 export const UnauthenticatedView: React.FC<{ groupId?: string }> = ({ groupId }) => {
