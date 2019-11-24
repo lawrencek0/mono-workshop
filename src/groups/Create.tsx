@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RouteComponentProps } from '@reach/router';
 import * as Yup from 'yup';
 import * as XLSX from 'xlsx';
-import { StyledSubmitBtn } from 'shared/inputs/styles';
+import { StyledSubmitBtn, StyledLabel } from 'shared/inputs/styles';
 import { Formik, Form } from 'formik';
 import { Field } from 'shared/inputs/Field';
 import { Title } from 'shared/cards/styles';
@@ -118,6 +118,7 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
                             <Field type="text" name="name" id="name" label="Group Name" />
                             <Field as="textarea" type="text" name="description" id="description" label="Description" />
                             <Separator aria-hidden css={tw`my-4`} />
+                            <StyledLabel css={tw`text-gray-700`}>Search for users</StyledLabel>
                             <StyledDropdown users={selectedUsers} setUsers={setSelectedUsers} />
                             <div css={tw`my-4`}>
                                 <UserItems users={selectedUsers} deleteCb={handleUserDelete} />
@@ -149,6 +150,12 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
 };
 
 const StyledDropdown = styled(DropdownSelect)`
+    input {
+        ${tw`border-0 focus:outline-none focus:shadow-outline hover:bg-transparent 
+            focus:bg-transparent shadow appearance-none rounded w-full py-2 px-3 
+            text-gray-700 leading-tight`}
+    }
+
     ${/*sc-sel*/ Menu} {
         ${tw`w-1/2`}
     }
