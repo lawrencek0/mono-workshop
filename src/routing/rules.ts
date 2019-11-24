@@ -4,13 +4,13 @@ const rules = {
         static: ['login'],
     },
     student: {
-        static: ['dashboard:visit', 'events:visit', 'events:add', 'logout'],
+        static: ['dashboard:visit', 'events:visit', 'events:add', 'groups:visit', 'groups:create', 'logout'],
     },
     faculty: {
-        static: ['dashboard:visit', 'events:visit', 'events:add', 'logout'],
+        static: ['dashboard:visit', 'events:visit', 'events:add', 'groups:visit', 'groups:create', 'logout'],
     },
     admin: {
-        static: ['dashboard:visit', 'events:visit', 'events:add', 'logout'],
+        static: ['dashboard:visit', 'events:visit', 'events:add', 'groups:visit', 'groups:create', 'logout'],
     },
 };
 
