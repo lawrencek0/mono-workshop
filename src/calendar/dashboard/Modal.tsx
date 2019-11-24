@@ -1,11 +1,10 @@
-import React, { forwardRef, useState, Suspense, useEffect } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import moment from 'moment';
 import { Formik, Form, Field } from 'formik';
-import { useResource, useFetcher } from 'rest-hooks';
-import Downshift, { ControllerStateAndHelpers } from 'downshift';
+import { useFetcher } from 'rest-hooks';
 import { FaHeading } from 'react-icons/fa';
 import { FaAlignLeft } from 'react-icons/fa';
 import { FaCalendarWeek } from 'react-icons/fa';
@@ -18,10 +17,11 @@ import { UserResource } from 'resources/UserResource';
 import { Avatar } from 'calendar/appointment/create/StudentSelection';
 import { slotsFromRanges } from 'calendar/helpers';
 import { AppointmentResource } from 'resources/AppointmentResource';
-import { Link } from '@reach/router';
 import { StyledLink } from 'shared/cards/styles';
+import { useAuthState } from 'auth/hooks';
+import { DropdownSelect } from './Items';
 
-type EventType = 'appointment';
+type EventType = 'appointment' | 'event';
 
 export type Position = { left?: number; top?: number };
 
@@ -31,115 +31,42 @@ export type Props = {
     startDate?: moment.Moment;
 };
 
-const Items: React.FC<{
-    downshift: ControllerStateAndHelpers<InstanceType<typeof UserResource>>;
-    selectedUsers: InstanceType<typeof UserResource>[];
-}> = ({ downshift: { inputValue, getItemProps, highlightedIndex, itemToString }, selectedUsers }) => {
-    // @TODO: add endpoint to search by name instead
-    const users = useResource(UserResource.listByRole(), { role: 'student' });
-
+export const UserItems: React.FC<{ users: UserResource[]; deleteCb: (user: UserResource) => void }> = ({
+    users,
+    deleteCb,
+}) => {
     return (
         <>
-            {users
-                .filter(item => !inputValue || item.firstName.toLowerCase().includes(inputValue.toLowerCase()))
-                .map((item, index) => (
-                    <Item
-                        key={{}}
-                        css={tw`flex items-center`}
-                        {...getItemProps({
-                            key: `${item.firstName} ${item.lastName}`,
-                            index,
-                            item,
-                            style: {
-                                backgroundColor: highlightedIndex === index ? 'lightgray' : 'white',
-                                fontWeight: selectedUsers.find(selectedUser => selectedUser.id === item.id)
-                                    ? 'bold'
-                                    : 'normal',
-                            },
-                        })}
-                    >
-                        {item.picUrl ? (
-                            <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={item.picUrl} />
-                        ) : (
-                            <FaUserCircle size="3em" />
-                        )}
-                        {itemToString(item)}
-                    </Item>
-                ))}
+            {users.map(user => (
+                <div
+                    css={tw`flex items-center rounded py-2 border-2 border-transparent hover:border-gray-400 w-full `}
+                    key={user.id}
+                >
+                    {user.picUrl ? (
+                        <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={user.picUrl} />
+                    ) : (
+                        <FaUserCircle size="3em" />
+                    )}
+                    <div>
+                        {user.firstName} {user.lastName}
+                    </div>
+                    <FaMinusCircle
+                        onClick={() => deleteCb(user)}
+                        css={tw`text-gray-600 hover:text-gray-800 ml-auto mr-4 cursor-pointer`}
+                    />
+                </div>
+            ))}
         </>
     );
 };
 
-const DropdownSelect: React.FC<{
-    users: InstanceType<typeof UserResource>[];
-    setUsers: React.Dispatch<React.SetStateAction<InstanceType<typeof UserResource>[]>>;
-}> = ({ users, setUsers }) => {
-    return (
-        <Downshift
-            onChange={(selectedItem: InstanceType<typeof UserResource>, stateAndHelpers) => {
-                const item = users.find(user => user.id === selectedItem.id);
-
-                if (item) {
-                    setUsers(users.filter(user => user.id !== selectedItem.id));
-                } else {
-                    setUsers([...users, selectedItem]);
-                }
-            }}
-            itemToString={(i: InstanceType<typeof UserResource>): string => (i ? `${i.firstName} ${i.lastName}` : '')}
-            stateReducer={(state, changes) => {
-                switch (changes.type) {
-                    case Downshift.stateChangeTypes.keyDownEnter:
-                    case Downshift.stateChangeTypes.clickItem:
-                        return {
-                            ...changes,
-                            isOpen: false,
-                            highlightedIndex: state.highlightedIndex,
-                            inputValue: '',
-                        };
-
-                    default:
-                        return changes;
-                }
-            }}
-            selectedItem={null}
-        >
-            {props => (
-                <div>
-                    <input
-                        css={tw`hover:bg-gray-300 hover:border-gray-500 focus:border-gray-800 focus:bg-gray-300 px-2 pt-2 w-full border-b-2 border-b-2 border-transparent`}
-                        {...props.getInputProps({
-                            placeholder: 'Add guests',
-                        })}
-                    />
-                    <Menu
-                        {...props.getMenuProps({
-                            'aria-label': 'Search users and groups',
-                        })}
-                    >
-                        {props.isOpen ? (
-                            <Suspense fallback={<Item>Searching...</Item>}>
-                                <Items downshift={props} selectedUsers={users} />
-                            </Suspense>
-                        ) : null}
-                    </Menu>
-                </div>
-            )}
-        </Downshift>
-    );
-};
-
-const Menu = styled.ul`
-    ${tw`absolute shadow rounded w-9/12`}
-    max-height: 20em;
-`;
-
-const Item = styled.li`
-    ${tw`px-2 py-4 block cursor-pointer`}
-`;
-
 export const Modal = forwardRef<HTMLElement, Props>(
-    ({ position, type: eventType = 'appointment', startDate = moment() }, ref) => {
-        const create = useFetcher(AppointmentResource.createShape());
+    ({ position, type: eventType = 'event', startDate = moment() }, ref) => {
+        const {
+            user: { role },
+        } = useAuthState();
+        const createAppointment = useFetcher(AppointmentResource.createShape());
+        // const createEvent = useFetcher();
         const [type, setType] = useState<EventType>(eventType);
         const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
 
@@ -147,9 +74,8 @@ export const Modal = forwardRef<HTMLElement, Props>(
             setSelectedUsers([]);
         }, [position]);
 
-        const handleTypeClick = ({ currentTarget }: React.MouseEvent<HTMLButtonElement>): void => {
-            const value = currentTarget.name as EventType;
-            setType(value);
+        const handleUserDelete = ({ id: userId }: UserResource): void => {
+            setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.id !== userId));
         };
 
         return createPortal(
@@ -185,7 +111,7 @@ export const Modal = forwardRef<HTMLElement, Props>(
                             },
                         ]);
 
-                        await create(
+                        await createAppointment(
                             {},
                             {
                                 ...values,
@@ -205,17 +131,25 @@ export const Modal = forwardRef<HTMLElement, Props>(
                                 placeholder="Enter the title"
                                 aria-label="Title"
                             />
-                            <ButtonWrapper>
-                                <StyledButton
-                                    css={tw`bg-gray-200`}
-                                    type="button"
-                                    name="appointments"
-                                    onClick={handleTypeClick}
-                                    active={type === 'appointment'}
-                                >
-                                    Appointment
-                                </StyledButton>
-                            </ButtonWrapper>
+                            {role === 'faculty' && (
+                                <ButtonWrapper>
+                                    <StyledButton
+                                        css={tw`mr-2`}
+                                        type="button"
+                                        onClick={() => setType('event')}
+                                        active={type === 'event'}
+                                    >
+                                        Event
+                                    </StyledButton>
+                                    <StyledButton
+                                        type="button"
+                                        onClick={() => setType('appointment')}
+                                        active={type === 'appointment'}
+                                    >
+                                        Appointment
+                                    </StyledButton>
+                                </ButtonWrapper>
+                            )}
                             <Separator aria-hidden />
                             <StyledIcon as={FaCalendarWeek} aria-hidden />
                             <div css={tw`flex`}>
@@ -227,41 +161,21 @@ export const Modal = forwardRef<HTMLElement, Props>(
                                 <StyledField css={tw`mr-4`} type="time" name="startTime" aria-label="Start time" />
                                 <StyledField type="time" name="endTime" aria-label="End time" />
                             </div>
-                            <div css="grid-column-start: 2">
-                                <StyledField
-                                    type="number"
-                                    name="length"
-                                    placeholder="Length of appointment"
-                                    aria-label="Length of appointment"
-                                />
-                            </div>
+                            {type === 'appointment' && (
+                                <div css="grid-column-start: 2">
+                                    <StyledField
+                                        type="number"
+                                        name="length"
+                                        placeholder="Length of appointment"
+                                        aria-label="Length of appointment"
+                                    />
+                                </div>
+                            )}
                             <Separator aria-hidden />
                             <StyledIcon as={FaUsers} aria-hidden />
                             <DropdownSelect users={selectedUsers} setUsers={setSelectedUsers} />
                             <div css="grid-column-start: 2">
-                                {selectedUsers.map(user => (
-                                    <div
-                                        css={tw`flex items-center rounded py-2 border-2 border-transparent hover:border-gray-400 w-full `}
-                                        key={user.id}
-                                    >
-                                        {user.picUrl ? (
-                                            <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={user.picUrl} />
-                                        ) : (
-                                            <FaUserCircle size="3em" />
-                                        )}
-                                        <div>
-                                            {user.firstName} {user.lastName}
-                                        </div>
-                                        <FaMinusCircle
-                                            onClick={() =>
-                                                setSelectedUsers(
-                                                    selectedUsers.filter(selectedUser => selectedUser.id !== user.id),
-                                                )
-                                            }
-                                            css={tw`text-gray-600 hover:text-gray-800 ml-auto mr-4 cursor-pointer`}
-                                        />
-                                    </div>
-                                ))}
+                                <UserItems users={selectedUsers} deleteCb={handleUserDelete} />
                             </div>
                             <Separator aria-hidden />
                             <StyledIcon as={FaAlignLeft} aria-hidden />
@@ -323,7 +237,7 @@ const ActionButtons = styled.div`
     grid-column-start: 2;
 `;
 
-const Separator = styled.div`
+export const Separator = styled.div`
     ${tw`bg-gray-200 w-full`}
     grid-column: span 2;
     height: 2px;
