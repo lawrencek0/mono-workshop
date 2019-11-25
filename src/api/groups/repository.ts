@@ -21,6 +21,13 @@ export class GroupRepository {
         });
     }
 
+    findAllEventsById(groupId: number) {
+        return this.repository.find({
+            where: { id: groupId },
+            relations: ['events', 'events.event'],
+        });
+    }
+
     deleteGroup(groupId: number) {
         return this.repository
             .createQueryBuilder()
@@ -38,6 +45,15 @@ export class GroupEventRepository {
     saveGroupEvent(groupEvent: GroupEventRoster) {
         return this.repository.save(groupEvent);
     }
+
+    findAllByGroup(groupId: number) {
+        return this.repository
+            .createQueryBuilder('roster')
+            .where('roster.group = :groupId', { groupId })
+            .distinct()
+            .innerJoinAndSelect('roster.event', 'event')
+            .getMany();
+    }
 }
 
 @Service()
@@ -49,7 +65,7 @@ export class GroupUsersRepository {
         return this.repository.save(groupUser);
     }
 
-    getMyGroups(userId: number) {
+    findAllByUser(userId: number) {
         return this.repository
             .createQueryBuilder('groupUser')
             .where('groupUser.user = :user', { user: userId })

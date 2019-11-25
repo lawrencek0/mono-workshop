@@ -9,6 +9,7 @@ import {
     Param,
     Delete,
     UnauthorizedError,
+    Body,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
@@ -20,6 +21,8 @@ import Cognito from '../auth/cognito';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { Group } from './entity/Group';
 import { Role } from './entity/GroupUsers';
+import { Event } from '../events/entity/Event';
+import { EventRepository } from '../events/repository';
 
 @JsonController('/groups')
 export class GroupController {
@@ -27,6 +30,7 @@ export class GroupController {
     @Inject() private groupUserRepo: GroupUsersRepository;
     @Inject() private groupEventRepo: GroupEventRepository;
     @Inject() private userRepository: UserRepository;
+    @Inject() private eventRepository: EventRepository;
     @Inject() private postRepo: PostRepo;
     @Inject() private cognito: Cognito;
     private events = new EventList<this, Group>();
@@ -143,7 +147,7 @@ export class GroupController {
     // returns the groups that the current user is a part of
     @Get('/')
     async getMyGroups(@CurrentUser({ required: true }) user: User) {
-        const groups = await this.groupUserRepo.getMyGroups(user.id);
+        const groups = await this.groupUserRepo.findAllByUser(user.id);
 
         return groups.map(({ group, ...rest }) => ({ ...group, ...rest }));
     }
@@ -207,8 +211,8 @@ export class GroupController {
             this.groupUserRepo.findByUserAndGroup(user.id, groupId),
         ]);
 
-        if (groupUser.role !== 'owner') {
-            throw new UnauthorizedError('Only owners can do this!');
+        if (groupUser.role === 'member') {
+            throw new UnauthorizedError('You are only a member!');
         }
 
         if (name) group.name = name;
@@ -284,5 +288,52 @@ export class GroupController {
         const group = await this.groupRepo.findById(groupId);
 
         return this.postRepo.savePost({ id: undefined, title: title, contents: contents, poster: user, group: group });
+    }
+
+    @Get('/:groupId/events')
+    async getEvents(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
+        const roster = await this.groupEventRepo.findAllByGroup(groupId);
+        const eventIds = roster.reduce((unique, { event }) => {
+            if (unique.has(event.id)) {
+                return unique;
+            }
+            unique.add(event.id);
+            return unique;
+        }, new Set<number>());
+
+        return this.eventRepository.findByIds(Array.from(eventIds.values()));
+    }
+
+    @Post('/:groupId/events')
+    async createEvent(
+        @CurrentUser({ required: true }) user: User,
+        @Param('groupId') groupId: number,
+        @Body() event: Event,
+    ) {
+        const owner = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
+
+        if (owner.role === 'member') {
+            throw new UnauthorizedError("You don't have permissions to create an event");
+        }
+
+        const [newEvent, group, members] = await Promise.all([
+            this.eventRepository.saveEvent({ ...event, owner: user }),
+            this.groupRepo.findById(groupId),
+            this.groupUserRepo.findAllByGroup(groupId),
+        ]);
+
+        console.dir(owner);
+        await Promise.all(
+            members.map(member => {
+                this.groupEventRepo.saveGroupEvent({
+                    event: newEvent,
+                    user: member.user,
+                    group,
+                    going: false,
+                });
+            }),
+        );
+
+        return newEvent;
     }
 }

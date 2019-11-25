@@ -101,7 +101,7 @@ export class EventController {
     @Get('/')
     async findAll(@CurrentUser({ required: true }) user: User) {
         try {
-            const Events: Event[] = await this.eventRepository.findAll(user.id);
+            const Events: Event[] = await this.eventRepository.findAllByUser(user.id);
 
             return { Events };
         } catch (e) {
