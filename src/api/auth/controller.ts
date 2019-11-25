@@ -84,9 +84,11 @@ export class AuthController {
                     }
                     const idToken = result.getIdToken().getJwtToken();
                     const refreshToken = result.getRefreshToken().getToken();
+                    const accessToken = result.getAccessToken().getJwtToken();
 
                     return resolve({
-                        accessToken: idToken,
+                        accessToken,
+                        idToken,
                         refreshToken,
                         user: {
                             ...user,
@@ -187,6 +189,8 @@ export class AuthController {
         );
     }
 
+    // user selects 'Forgot password' and enters their email
+    // a verification code is sent to that email
     @Post('/forgotPassword')
     async forgotPass(@BodyParam('email') email: string) {
         const userData = {
@@ -197,6 +201,7 @@ export class AuthController {
 
         return new Promise((resolve, reject) =>
             cognitoUser.forgotPassword({
+                // onSuccess sends the confirmation code
                 onSuccess: data => {
                     return resolve(data);
                 },
@@ -207,6 +212,8 @@ export class AuthController {
         );
     }
 
+    // follow up to forgotPassword
+    // user enters the code sent to their email and then creates a new password
     @Post('/recovery')
     async passwordRecovery(
         @BodyParam('code') code: string,
@@ -219,6 +226,7 @@ export class AuthController {
         };
         const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
         return new Promise((resolve, reject) =>
+            // onSuccess updates the password
             cognitoUser.confirmPassword(code, newPassword, {
                 onSuccess: () => {
                     return resolve('Success!');
@@ -229,38 +237,29 @@ export class AuthController {
             }),
         );
     }
-    // @FIXME: doesn't allow password changes
+    // allows the user to change password if they are already signed in
+    // requires that they also know the old password
     @Post('/password')
     async resetPassword(
         @CurrentUser({ required: true }) user: User,
         @BodyParam('oldPassword') oldPassword: string,
         @BodyParam('code') code: string,
         @BodyParam('newPassword') newPassword: string,
+        @BodyParam('accessToken') accToken: string,
     ) {
-        const userData = {
-            Username: user.email,
-            Pool: this.cognito.userPool,
-        };
-        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
         const cogIDP = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-2' });
-        const sess: AmazonCognitoIdentity.CognitoUserSession = cognitoUser.getSession(
-            (err: Error, result: AmazonCognitoIdentity.CognitoUserSession) => {
-                if (err) throw new Error(err.message);
-                return result;
-            },
-        );
-        // console.dir(cognitoUser.setSignInUserSession(new AmazonCognitoIdentity.CognitoUserSession()));
+
         return new Promise((resolve, reject) =>
             cogIDP.changePassword(
                 {
-                    AccessToken: sess.getAccessToken().getJwtToken(),
+                    AccessToken: accToken,
                     PreviousPassword: oldPassword,
                     ProposedPassword: newPassword,
                 },
-                (err, data) => {
+                (err, _data) => {
                     if (err) return reject(new Error(err.message));
 
-                    return resolve(data);
+                    return resolve('Success changing password');
                 },
             ),
         );
