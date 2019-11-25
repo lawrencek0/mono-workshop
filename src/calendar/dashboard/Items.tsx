@@ -1,66 +1,106 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { useResource } from 'rest-hooks';
 import Downshift, { ControllerStateAndHelpers } from 'downshift';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaUsers } from 'react-icons/fa';
 import { UserResource } from 'resources/UserResource';
 import { Avatar } from 'calendar/appointment/create/StudentSelection';
+import { GroupResource } from 'resources/GroupResource';
+import { getName } from 'calendar/helpers';
 
 const Items: React.FC<{
-    downshift: ControllerStateAndHelpers<InstanceType<typeof UserResource>>;
-    selectedUsers: InstanceType<typeof UserResource>[];
-}> = ({ downshift: { inputValue, getItemProps, highlightedIndex, itemToString }, selectedUsers }) => {
+    downshift: ControllerStateAndHelpers<UserResource | GroupResource>;
+    selectedUsers: UserResource[];
+    selectedGroups: GroupResource[];
+}> = ({ downshift: { inputValue, getItemProps, highlightedIndex, itemToString }, selectedUsers, selectedGroups }) => {
     // @TODO: add endpoint to search by name instead
     const users = useResource(UserResource.listByRole(), { role: 'student' });
+    const groups = useResource(GroupResource.listShape(), {});
+    const combined = useMemo(() => [...users, ...groups], [groups, users]);
+
+    const filterItem = (item: UserResource | GroupResource): boolean => {
+        if (inputValue) {
+            const term = inputValue.toLowerCase();
+            if (item instanceof UserResource) {
+                return item.firstName.toLowerCase().includes(term) || item.lastName.toLowerCase().includes(term);
+            }
+            return item.name.toLowerCase().includes(term);
+        }
+        return false;
+    };
+
     return (
         <>
-            {users
-                .filter(item => !inputValue || item.firstName.toLowerCase().includes(inputValue.toLowerCase()))
-                .map((item, index) => (
-                    <Item
-                        key={{}}
-                        css={tw`flex items-center`}
-                        {...getItemProps({
-                            key: `${item.firstName} ${item.lastName}`,
-                            index,
-                            item,
-                            style: {
-                                backgroundColor: highlightedIndex === index ? 'lightgray' : 'white',
-                                fontWeight: selectedUsers.find(selectedUser => selectedUser.id === item.id)
+            {combined.filter(filterItem).map((item, index) => (
+                <Item
+                    key={{}}
+                    css={tw`flex items-center`}
+                    {...getItemProps({
+                        key:
+                            item instanceof UserResource
+                                ? `${item.firstName} ${item.lastName}`
+                                : item instanceof GroupResource
+                                ? item.name
+                                : '',
+                        index,
+                        item,
+                        style: {
+                            backgroundColor: highlightedIndex === index ? 'lightgray' : 'white',
+                            fontWeight:
+                                selectedUsers.find(selectedUser => selectedUser.id === item.id) ||
+                                selectedGroups.find(selectedGroup => selectedGroup.id === item.id)
                                     ? 'bold'
                                     : 'normal',
-                            },
-                        })}
-                    >
-                        {item.picUrl ? (
-                            <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={item.picUrl} />
+                        },
+                    })}
+                >
+                    {item instanceof UserResource ? (
+                        item.picUrl ? (
+                            <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={(item as UserResource).picUrl} />
                         ) : (
                             <FaUserCircle css={tw`w-6 h-6 ml-2 mr-4`} />
-                        )}
-                        {itemToString(item)}
-                    </Item>
-                ))}
+                        )
+                    ) : (
+                        <FaUsers css={tw`w-6 h-6 m-2 mr-4`} />
+                    )}
+                    {itemToString(item)}
+                </Item>
+            ))}
         </>
     );
 };
 
 export const DropdownSelect: React.FC<{
-    users: InstanceType<typeof UserResource>[];
-    setUsers: React.Dispatch<React.SetStateAction<InstanceType<typeof UserResource>[]>>;
+    users: UserResource[];
+    groups: GroupResource[];
+    setGroups: React.Dispatch<React.SetStateAction<GroupResource[]>>;
+    setUsers: React.Dispatch<React.SetStateAction<UserResource[]>>;
     className?: string;
-}> = ({ users, setUsers, className }) => {
+}> = ({ users, groups, setGroups, setUsers, className }) => {
     return (
         <Downshift
-            onChange={(selectedItem: InstanceType<typeof UserResource>, stateAndHelpers) => {
-                const item = users.find(user => user.id === selectedItem.id);
-                if (item) {
-                    setUsers(users.filter(user => user.id !== selectedItem.id));
-                } else {
-                    setUsers([...users, selectedItem]);
+            onChange={(selectedItem: UserResource | GroupResource, stateAndHelpers) => {
+                const item =
+                    selectedItem instanceof UserResource
+                        ? users.find(user => user.id === selectedItem.id)
+                        : groups.find(group => group.id === selectedItem.id);
+
+                if (item instanceof UserResource) {
+                    return setUsers(users.filter(user => user.id !== selectedItem.id));
                 }
+
+                if (selectedItem instanceof UserResource) {
+                    return setUsers([...users, selectedItem]);
+                }
+
+                if (item instanceof GroupResource) {
+                    return setGroups(groups.filter(group => group.id !== selectedItem.id));
+                }
+
+                return setGroups([...groups, selectedItem]);
             }}
-            itemToString={(i: InstanceType<typeof UserResource>): string => (i ? `${i.firstName} ${i.lastName}` : '')}
+            itemToString={getName}
             stateReducer={(state, changes) => {
                 switch (changes.type) {
                     case Downshift.stateChangeTypes.keyDownEnter:
@@ -92,7 +132,7 @@ export const DropdownSelect: React.FC<{
                     >
                         {props.isOpen ? (
                             <Suspense fallback={<Item>Searching...</Item>}>
-                                <Items downshift={props} selectedUsers={users} />
+                                <Items downshift={props} selectedGroups={groups} selectedUsers={users} />
                             </Suspense>
                         ) : null}
                     </Menu>

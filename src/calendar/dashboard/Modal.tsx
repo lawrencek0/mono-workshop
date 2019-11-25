@@ -15,11 +15,12 @@ import { FaUserCircle } from 'react-icons/fa';
 import { PrimaryButton, FlatButton } from 'shared/buttons';
 import { UserResource } from 'resources/UserResource';
 import { Avatar } from 'calendar/appointment/create/StudentSelection';
-import { slotsFromRanges } from 'calendar/helpers';
+import { slotsFromRanges, getName } from 'calendar/helpers';
 import { AppointmentResource } from 'resources/AppointmentResource';
 import { StyledLink } from 'shared/cards/styles';
 import { useAuthState } from 'auth/hooks';
 import { DropdownSelect } from './Items';
+import { GroupResource } from 'resources/GroupResource';
 
 type EventType = 'appointment' | 'event';
 
@@ -31,27 +32,29 @@ export type Props = {
     startDate?: moment.Moment;
 };
 
-export const UserItems: React.FC<{ users: UserResource[]; deleteCb: (user: UserResource) => void }> = ({
-    users,
-    deleteCb,
-}) => {
+export const UserItems: React.FC<{
+    items: (UserResource | GroupResource)[];
+    deleteCb: (item: UserResource | GroupResource) => void;
+}> = ({ items, deleteCb }) => {
     return (
         <>
-            {users.map(user => (
+            {items.map(item => (
                 <div
                     css={tw`flex items-center rounded py-2 border-2 border-transparent hover:border-gray-400 w-full `}
-                    key={`${user.id}-${user.email}`}
+                    key={item instanceof UserResource ? `${item.id}-${item.email}` : `${item.id}-${item.name}`}
                 >
-                    {user.picUrl ? (
-                        <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={user.picUrl} />
+                    {item instanceof UserResource ? (
+                        item.picUrl ? (
+                            <Avatar css={tw`w-6 h-6 ml-2 mr-4`} src={(item as UserResource).picUrl} />
+                        ) : (
+                            <FaUserCircle css={tw`w-6 h-6 ml-2 mr-4`} />
+                        )
                     ) : (
-                        <FaUserCircle css={tw`w-6 h-6 ml-2 mr-4`} />
+                        <FaUsers css={tw`w-6 h-6 m-2 mr-4`} />
                     )}
-                    <div>
-                        {user.firstName} {user.lastName}
-                    </div>
+                    <div>{getName(item)}</div>
                     <FaMinusCircle
-                        onClick={() => deleteCb(user)}
+                        onClick={() => deleteCb(item)}
                         css={tw`text-gray-600 hover:text-gray-800 ml-auto mr-4 cursor-pointer`}
                     />
                 </div>
@@ -69,13 +72,19 @@ export const Modal = forwardRef<HTMLElement, Props>(
         // const createEvent = useFetcher();
         const [type, setType] = useState<EventType>(eventType);
         const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
+        const [selectedGroups, setSelectedGroups] = useState<GroupResource[]>([]);
 
         useEffect(() => {
             setSelectedUsers([]);
+            setSelectedGroups([]);
         }, [position]);
 
-        const handleUserDelete = ({ id: userId }: UserResource): void => {
-            setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.id !== userId));
+        const handleUserDelete = (item: UserResource | GroupResource): void => {
+            if (item instanceof UserResource) {
+                return setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.id !== item.id));
+            }
+
+            return setSelectedGroups(selectedGroups.filter(selectedGroup => selectedGroup.id !== item.id));
         };
 
         return createPortal(
@@ -173,9 +182,15 @@ export const Modal = forwardRef<HTMLElement, Props>(
                             )}
                             <Separator aria-hidden />
                             <StyledIcon as={FaUsers} aria-hidden />
-                            <DropdownSelect users={selectedUsers} setUsers={setSelectedUsers} />
+                            <DropdownSelect
+                                groups={selectedGroups}
+                                users={selectedUsers}
+                                setUsers={setSelectedUsers}
+                                setGroups={setSelectedGroups}
+                            />
                             <div css="grid-column-start: 2">
-                                <UserItems users={selectedUsers} deleteCb={handleUserDelete} />
+                                <UserItems items={selectedUsers} deleteCb={handleUserDelete} />
+                                <UserItems items={selectedGroups} deleteCb={handleUserDelete} />
                             </div>
                             <Separator aria-hidden />
                             <StyledIcon as={FaAlignLeft} aria-hidden />

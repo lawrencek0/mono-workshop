@@ -2,6 +2,8 @@ import moment from 'moment';
 import { SlotsByDate } from 'calendar/types';
 import { DatetimeRange } from './appointment/create/Form';
 import { SlotResource } from 'resources/AppointmentResource';
+import { UserResource } from 'resources/UserResource';
+import { GroupResource } from 'resources/GroupResource';
 
 const getDate = (
     date: moment.MomentInput = moment(),
@@ -59,4 +61,14 @@ const groupSlotsByDay = (allSlots: InstanceType<typeof SlotResource>[]): SlotsBy
     }, {});
 };
 
-export { getDate, generateSlots, slotsFromRanges, groupSlotsByDay };
+const getName = (i: UserResource | GroupResource): string => {
+    if (i) {
+        if (i instanceof UserResource) {
+            return `${i.firstName} ${i.lastName}`;
+        }
+        return i.name;
+    }
+    return '';
+};
+
+export { getDate, generateSlots, slotsFromRanges, groupSlotsByDay, getName };

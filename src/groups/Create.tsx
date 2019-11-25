@@ -50,13 +50,21 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
     const create = useFetcher(GroupResource.createShape());
     const [selectedUsers, setSelectedUsers] = useState<UserResource[]>([]);
     const [usersFromFile, setUsersFromFile] = useState<UserResource[]>([]);
+    // @TODO: create group from groups
+    const [groups, setGroups] = useState<GroupResource[]>([]);
 
-    const handleUserDelete = ({ id: userId }: UserResource): void => {
-        setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.id !== userId));
+    const handleDelete = (item: UserResource | GroupResource): void => {
+        if (item instanceof UserResource) {
+            return setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.id !== item.id));
+        }
+
+        return setGroups(groups.filter(selectedGroup => selectedGroup.id !== item.id));
     };
 
-    const handleUsersFromFileDelete = ({ email }: UserResource): void => {
-        setUsersFromFile(usersFromFile.filter(user => user.email !== email));
+    const handleUsersFromFileDelete = (item: UserResource | GroupResource): void => {
+        if (item instanceof UserResource) {
+            return setUsersFromFile(usersFromFile.filter(user => user.email !== item.email));
+        }
     };
 
     const handleFile = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>): void => {
@@ -119,9 +127,14 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
                             <Field as="textarea" type="text" name="description" id="description" label="Description" />
                             <Separator aria-hidden css={tw`my-4`} />
                             <StyledLabel css={tw`text-gray-700`}>Search for users</StyledLabel>
-                            <StyledDropdown users={selectedUsers} setUsers={setSelectedUsers} />
+                            <StyledDropdown
+                                groups={groups}
+                                setGroups={setGroups}
+                                users={selectedUsers}
+                                setUsers={setSelectedUsers}
+                            />
                             <div css={tw`my-4`}>
-                                <UserItems users={selectedUsers} deleteCb={handleUserDelete} />
+                                <UserItems items={selectedUsers} deleteCb={handleDelete} />
                             </div>
                             <Separator aria-hidden css={tw`my-4`} />
                             <Field
@@ -133,7 +146,7 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
                                 multiple
                             />
                             <div css={tw`my-4`}>
-                                <UserItems users={usersFromFile} deleteCb={handleUsersFromFileDelete} />
+                                <UserItems items={usersFromFile} deleteCb={handleUsersFromFileDelete} />
                             </div>
                             <StyledSubmitBtn
                                 type="submit"
