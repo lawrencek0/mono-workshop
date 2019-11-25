@@ -163,17 +163,25 @@ export class GroupController {
     async updateGroup(
         @CurrentUser({ required: true }) user: User,
         @Param('groupId') groupId: number,
-        @BodyParam('name') name: string,
-        @BodyParam('description') groupDescription: string,
-        @BodyParam('members') users: User[],
+        @BodyParam('name') name?: string,
+        @BodyParam('description') groupDescription?: string,
+        @BodyParam('members') users?: User[],
     ) {
-        const group = await this.groupRepo.findById(groupId);
-        const groupUsers = await this.userRepository.findAllById(users.map(({ id }) => id));
+        const [group, groupUser] = await Promise.all([
+            this.groupRepo.findById(groupId),
+            this.groupUserRepo.findByUserAndGroup(user.id, groupId),
+        ]);
+
+        if (groupUser.role !== 'owner') {
+            throw new UnauthorizedError('Only owners can do this!');
+        }
 
         if (name) group.name = name;
         if (groupDescription) group.description = groupDescription;
 
         if (users) {
+            const groupUsers = await this.userRepository.findAllByIds(users.map(({ id }) => id));
+
             await Promise.all(
                 groupUsers.map(member => {
                     return this.groupUserRepo.saveGroupUser({ user: member, group: group, role: 'member' });
