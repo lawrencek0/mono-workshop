@@ -11,6 +11,7 @@
     "@fullcalendar/react": "^4.3.0",
     "@reach/menu-button": "^0.1.18",
     "@reach/router": "^1.2.1",
+    "@tinymce/tinymce-react": "^3.3.2",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.2",
     "@types/react-dates": "^17.1.5",
@@ -30,6 +31,7 @@
     "rest-hooks": "^3.0.0",
     "styled-components": "^4.3.2",
     "styled-theming": "^2.2.0",
+    "tinymce": "^5.1.2",
     "typescript": "3.5.3",
     "xlsx": "^0.15.2",
     "yup": "^0.27.0"
