@@ -101,8 +101,15 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
                 }
 
                 try {
-                    const groupUsers = [...selectedUsers, ...usersFromFile] as GroupUserResource[];
-                    const group = await create({}, { ...values, groupUsers });
+                    const groupUsers = [...selectedUsers, ...usersFromFile].reduce((unique, item) => {
+                        if (unique.has(item.email)) {
+                            return unique;
+                        }
+                        unique.set(item.email, item as GroupUserResource);
+                        return unique;
+                    }, new Map<string, GroupUserResource>());
+
+                    const group = await create({}, { ...values, groupUsers: Array.from(groupUsers.values()) });
                     if (navigate) {
                         await navigate(`../${group.id}`);
                     }
