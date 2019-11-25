@@ -86,7 +86,11 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
 
     const handleDocClick = ({ target }: MouseEvent): void => {
         if (calendarRef.current && modalRef.current && target) {
-            if (calendarRef.current.getApi().el.contains(target as Node) || modalRef.current.contains(target as Node)) {
+            if (
+                calendarRef.current.getApi().el.contains(target as Node) ||
+                modalRef.current.contains(target as Node) ||
+                !document.body.contains(target as Node)
+            ) {
                 return;
             }
         }

@@ -14,6 +14,7 @@ import { Link } from '@reach/router';
 import { media } from 'theme';
 import { ErrorMessage } from 'auth/Login';
 import { EmptyMessage } from './EmptyMessage';
+import { FormWrapper } from 'shared/inputs/styles';
 
 export const View: React.FC<Props> = ({ groupId }) => {
     const [posts] = useResource([GroupPostResource.listShape(), { groupId }]);
@@ -21,7 +22,12 @@ export const View: React.FC<Props> = ({ groupId }) => {
     return (
         <div>
             {posts.length > 0 ? (
-                'Rendering ur posts.'
+                posts.map(post => (
+                    <FormWrapper key={post.id} css={tw`lg:w-full`}>
+                        <StyledTitle>{post.title}</StyledTitle>
+                        {post.contents && <p dangerouslySetInnerHTML={{ __html: post.contents }} />}
+                    </FormWrapper>
+                ))
             ) : (
                 <EmptyMessage css={tw`my-20 lg:my-32`}>It seems nobody has posted anything yet.</EmptyMessage>
             )}

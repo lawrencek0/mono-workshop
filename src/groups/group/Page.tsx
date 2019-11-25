@@ -1,15 +1,15 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { RouteComponentProps, Link, Match, Router } from '@reach/router';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { useResource } from 'rest-hooks';
 import { GroupResource } from 'resources/GroupResource';
 import theme from 'styled-theming';
-import { Wrapper } from '../Dashboard';
 import { Title } from 'shared/cards/styles';
 import { RouteGuard } from 'routing/PrivateRoute';
 import { Members } from './Members';
 import { View, UnauthenticatedView } from './View';
+import { media } from 'theme';
 
 export type Props = RouteComponentProps & {
     groupId?: string;
@@ -25,7 +25,7 @@ export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ gr
     }
 
     return (
-        <Wrapper css={tw`flex-col-reverse`}>
+        <Wrapper>
             <StyledTitle
                 css={`
                     ${tw`order-1 lg:order-none`}
@@ -34,11 +34,13 @@ export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ gr
             >
                 {group.name}
             </StyledTitle>
-            <Router>
-                <RouteGuard as={View} path="/" action="groups:visit" />
-                <RouteGuard as={Members} path="/members" action="groups:visit" />
-                <RouteGuard as={PostCreationFrom} path="/posts/new" action="groups:visit" />
-            </Router>
+            <Suspense fallback={<div>Loading your group...</div>}>
+                <Router>
+                    <RouteGuard as={View} path="/" action="groups:visit" />
+                    <RouteGuard as={Members} path="/members" action="groups:visit" />
+                    <RouteGuard as={PostCreationFrom} path="/posts/new" action="groups:visit" />
+                </Router>
+            </Suspense>
             <Sidebar />
         </Wrapper>
     );
@@ -74,6 +76,16 @@ const Sidebar: React.FC = () => {
 
 export const StyledTitle = styled(Title)`
     ${tw`text-center text-3xl`}
+`;
+
+const Wrapper = styled.div`
+    ${tw`flex flex-col-reverse mx-auto lg:w-2/3`}
+
+    ${media.tablet} {
+        display: grid;
+        grid-template-columns: 1fr minmax(min-content, 25%);
+        grid-gap: 2em;
+    }
 `;
 
 const Item = styled.li`

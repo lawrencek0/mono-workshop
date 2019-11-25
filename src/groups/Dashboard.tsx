@@ -2,35 +2,37 @@ import React from 'react';
 import { RouteComponentProps, Link } from '@reach/router';
 import { useResource } from 'rest-hooks';
 import { GroupResource } from 'resources/GroupResource';
-import { Wrapper as Card, Title } from 'shared/cards/styles';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { media } from 'theme';
+import { FormWrapper } from 'shared/inputs/styles';
+import { StyledTitle } from './group/Page';
 
 export const Dashboard: React.FC<RouteComponentProps> = () => {
     const groups = useResource(GroupResource.listShape(), {});
 
     return (
-        <Wrapper>
-            <Card>Groups here</Card>
-            <Card as="aside">
-                <Title>Groups</Title>
-                {groups.map(({ id, name }) => (
-                    <Link css={tw`capitalize`} key={id} to={`./${id}`}>
-                        {name}
-                    </Link>
-                ))}
-            </Card>
-        </Wrapper>
+        <FormWrapper>
+            <StyledTitle>Groups</StyledTitle>
+            {groups.map(({ id, name, description }) => (
+                <Link css={tw`capitalize`} key={id} to={`./${id}`}>
+                    <Wrapper>
+                        <GroupTitle>{name}</GroupTitle>
+                        <Content>{description}</Content>
+                    </Wrapper>
+                </Link>
+            ))}
+        </FormWrapper>
     );
 };
 
-export const Wrapper = styled.div`
-    ${tw`flex flex-col mx-auto lg:w-2/3`}
+const Wrapper = styled.div`
+    ${tw`w-full px-2 py-4 hover:bg-gray-300`}
+`;
 
-    ${media.tablet} {
-        display: grid;
-        grid-template-columns: 1fr minmax(min-content, 25%);
-        grid-gap: 2em;
-    }
+const GroupTitle = styled.h2`
+    ${tw`font-bold`}
+`;
+
+const Content = styled.p`
+    ${tw`text-base`}
 `;
