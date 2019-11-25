@@ -18,11 +18,15 @@ import { EmptyMessage } from './EmptyMessage';
 export const View: React.FC<Props> = ({ groupId }) => {
     const [posts] = useResource([GroupPostResource.listShape(), { groupId }]);
 
-    if (!posts.length) {
-        return <EmptyMessage>It seems nobody has posted anything yet.</EmptyMessage>;
-    }
-
-    return <></>;
+    return (
+        <div>
+            {posts.length > 0 ? (
+                'Rendering ur posts.'
+            ) : (
+                <EmptyMessage css={tw`my-20 lg:my-32`}>It seems nobody has posted anything yet.</EmptyMessage>
+            )}
+        </div>
+    );
 };
 
 export const UnauthenticatedView: React.FC<{ groupId?: string }> = ({ groupId }) => {

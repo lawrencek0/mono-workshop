@@ -15,7 +15,7 @@ export type Props = RouteComponentProps & {
     groupId?: string;
 };
 
-const PostCreationFrom = lazy(() => import('../posts/Create'));
+const PostCreationFrom = lazy(() => import('groups/posts/Create'));
 
 export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId }) => {
     const group = useResource(GroupResource.detailShape(), { id: groupId });
@@ -25,13 +25,21 @@ export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ gr
     }
 
     return (
-        <Wrapper>
+        <Wrapper css={tw`flex-col-reverse`}>
+            <StyledTitle
+                css={`
+                    ${tw`order-1 lg:order-none`}
+                    grid-column-start: 2;
+                `}
+            >
+                {group.name}
+            </StyledTitle>
             <Router>
                 <RouteGuard as={View} path="/" action="groups:visit" />
                 <RouteGuard as={Members} path="/members" action="groups:visit" />
                 <RouteGuard as={PostCreationFrom} path="/posts/new" action="groups:visit" />
             </Router>
-            <Sidebar name={group.name} />
+            <Sidebar />
         </Wrapper>
     );
 };
@@ -46,13 +54,15 @@ const NavLink: React.FC<{ to: string; children: React.ReactChild }> = ({ to, chi
     </Match>
 );
 
-const Sidebar: React.FC<{ name: string }> = ({ name }) => {
+const Sidebar: React.FC = () => {
     return (
         <aside>
-            <StyledTitle>{name}</StyledTitle>
             <ul>
                 <Item>
                     <NavLink to="./">Home</NavLink>
+                </Item>
+                <Item>
+                    <NavLink to="./posts/new">Create Post</NavLink>
                 </Item>
                 <Item>
                     <NavLink to="./members">Members</NavLink>

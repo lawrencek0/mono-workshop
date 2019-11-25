@@ -7,7 +7,7 @@ import { Dashboard } from './Dashboard';
 import { Group } from './group/Page';
 
 const GroupCreationForm = lazy(() => import('./Create'));
-const PostCreationFrom = lazy(() => import('./posts/Create'));
+const PostCreationFrom = lazy(() => import('groups/posts/Create'));
 
 const Page: React.FC<RouteComponentProps> = () => {
     return (

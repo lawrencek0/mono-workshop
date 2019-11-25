@@ -4,10 +4,11 @@ import tw from 'tailwind.macro';
 import { FaFolderOpen } from 'react-icons/fa';
 
 export const EmptyMessage: React.FC<{
+    className?: string;
     children: React.ReactChild;
-}> = ({ children }) => {
+}> = ({ className, children }) => {
     return (
-        <Wrapper>
+        <Wrapper className={className}>
             <FaFolderOpen size="2em" />
             <Content>{children}</Content>
         </Wrapper>

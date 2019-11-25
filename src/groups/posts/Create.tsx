@@ -37,9 +37,6 @@ const Post: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId })
             }}
             validationSchema={schema}
             onSubmit={async (values, actions) => {
-                if (values.contents === '<p>Add description...</p>') {
-                    actions.setFieldValue('contents', '');
-                }
                 try {
                     await create({ groupId: values.groupId }, { ...values });
                     await navigate(`/groups/${values.groupId}`);
@@ -62,8 +59,8 @@ const Post: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId })
                         <Title css={tw`text-2xl text-center`}>Create a new post</Title>
                         <Form>
                             <FieldWithLabel type="text" name="title" id="title" label="Post Title" />
+                            <Label>Contents</Label>
                             <Editor
-                                initialValue="<p>Add description...</p>"
                                 init={{
                                     height: 125,
                                     menubar: false,
