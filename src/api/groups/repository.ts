@@ -50,7 +50,15 @@ export class GroupUsersRepository {
     }
 
     getMyGroups(userId: number) {
-        return this.repository.find({ where: { user: userId }, relations: ['group'] });
+        return this.repository
+            .createQueryBuilder('groupUser')
+            .where('groupUser.user = :user', { user: userId })
+            .leftJoinAndSelect('groupUser.group', 'group')
+            .leftJoin('group.posts', 'post')
+            .orderBy({
+                'post.id': 'DESC',
+            })
+            .getMany();
     }
 
     removeUser(userId: number, groupId: number) {
