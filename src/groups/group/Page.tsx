@@ -3,7 +3,7 @@ import { RouteComponentProps, Link, Match, Router } from '@reach/router';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { useResource } from 'rest-hooks';
-import { GroupResource } from 'resources/GroupResource';
+import { GroupResource, GroupUserResource } from 'resources/GroupResource';
 import theme from 'styled-theming';
 import { Title } from 'shared/cards/styles';
 import { RouteGuard } from 'routing/PrivateRoute';
@@ -15,7 +15,9 @@ export type Props = RouteComponentProps & {
     groupId?: string;
 };
 
-const PostCreationFrom = lazy(() => import('groups/posts/Create'));
+const PostCreationForm = lazy(() => import('groups/posts/Create'));
+const Events = lazy(() => import('groups/events/Page'));
+const GroupEditForm = lazy(() => import('./Edit'));
 
 export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId }) => {
     const group = useResource(GroupResource.detailShape(), { id: groupId });
@@ -34,14 +36,18 @@ export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ gr
             >
                 {group.name}
             </StyledTitle>
-            <Suspense fallback={<div>Loading your group...</div>}>
-                <Router>
-                    <RouteGuard as={View} path="/" action="groups:visit" />
-                    <RouteGuard as={Members} path="/members" action="groups:visit" />
-                    <RouteGuard as={PostCreationFrom} path="/posts/new" action="groups:visit" />
-                </Router>
-            </Suspense>
-            <Sidebar />
+            <div css="grid-row-start: 1">
+                <Suspense fallback={<div>Loading your group...</div>}>
+                    <Router>
+                        <RouteGuard as={View} path="/" action="groups:visit" />
+                        <RouteGuard as={Members} path="/members" action="groups:visit" />
+                        <RouteGuard as={PostCreationForm} path="/posts/new" action="groups:visit" />
+                        <Events path="/events/*" />
+                        <RouteGuard as={GroupEditForm} path="/edit" action="groups:visit" />
+                    </Router>
+                </Suspense>
+            </div>
+            <Sidebar user={group.user} />
         </Wrapper>
     );
 };
@@ -56,9 +62,14 @@ const NavLink: React.FC<{ to: string; children: React.ReactChild }> = ({ to, chi
     </Match>
 );
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<{ user: GroupUserResource }> = ({ user: { role } }) => {
     return (
-        <aside>
+        <aside
+            css={`
+                grid-row-start: 2;
+                grid-column-start: 2;
+            `}
+        >
             <ul>
                 <Item>
                     <NavLink to="./">Home</NavLink>
@@ -66,9 +77,19 @@ const Sidebar: React.FC = () => {
                 <Item>
                     <NavLink to="./posts/new">Create Post</NavLink>
                 </Item>
+                {role !== 'member' && (
+                    <Item>
+                        <NavLink to="./events/new">Create Event</NavLink>
+                    </Item>
+                )}
                 <Item>
                     <NavLink to="./members">Members</NavLink>
                 </Item>
+                {role !== 'member' && (
+                    <Item>
+                        <NavLink to="./edit">Edit</NavLink>
+                    </Item>
+                )}
             </ul>
         </aside>
     );
@@ -84,6 +105,7 @@ const Wrapper = styled.div`
     ${media.tablet} {
         display: grid;
         grid-template-columns: 1fr minmax(min-content, 25%);
+        grid-template-rows: 200px repeat(2, auto);
         grid-gap: 2em;
     }
 `;

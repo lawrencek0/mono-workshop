@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useResource } from 'rest-hooks';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { GroupResource, GroupUserResource, GroupPostResource } from 'resources/GroupResource';
+import { GroupResource, GroupUserResource, GroupPostResource, GroupEventResource } from 'resources/GroupResource';
 import { Wrapper } from 'shared/cards/styles';
 import { Props, StyledTitle } from './Page';
 import { UserResource } from 'resources/UserResource';
@@ -15,18 +15,53 @@ import { media } from 'theme';
 import { ErrorMessage } from 'auth/Login';
 import { EmptyMessage } from './EmptyMessage';
 import { FormWrapper } from 'shared/inputs/styles';
+import CalendarWrapper from 'calendar/dashboard/Calendar';
+import moment from 'moment';
 
-export const View: React.FC<Props> = ({ groupId }) => {
-    const [posts] = useResource([GroupPostResource.listShape(), { groupId }]);
+export const View: React.FC<Props> = ({ navigate, groupId }) => {
+    const [posts, rawEvents] = useResource(
+        [GroupPostResource.listShape(), { groupId }],
+        [GroupEventResource.listShape(), { groupId }],
+    );
+
+    const events = useMemo(
+        () =>
+            rawEvents.map(event => ({
+                ...event,
+                eventId: event.id,
+                borderColor: event.color,
+                backgroundColor: event.color,
+            })),
+        [rawEvents],
+    );
 
     return (
         <div>
+            <CalendarWrapper
+                header={{ left: 'prev', center: 'title', right: 'next' }}
+                columnHeaderHtml={col => {
+                    if (moment(col).weekday() === moment().weekday()) {
+                        return `<span class="current-day">${moment(col).format('M/D')}</span>`;
+                    }
+                    return moment(col).format('M/D');
+                }}
+                eventClick={({ event }) => {
+                    if (navigate) {
+                        navigate(`./events/${event.extendedProps.eventId}`);
+                    }
+                }}
+                height={150}
+                defaultView="dayGridWeek"
+                variant="raised"
+                events={events}
+                defaultDate={events[0] ? moment(events[0].start).toDate() : new Date()}
+            />
             {posts.length > 0 ? (
                 posts.map(post => (
-                    <FormWrapper key={post.id} css={tw`lg:w-full`}>
+                    <StyledWrapper key={post.id}>
                         <StyledTitle>{post.title}</StyledTitle>
                         {post.contents && <p dangerouslySetInnerHTML={{ __html: post.contents }} />}
-                    </FormWrapper>
+                    </StyledWrapper>
                 ))
             ) : (
                 <EmptyMessage css={tw`my-20 lg:my-32`}>It seems nobody has posted anything yet.</EmptyMessage>
@@ -93,4 +128,8 @@ const Content = styled.div`
         justify-items: center;
         grid-gap: 1em;
     }
+`;
+
+export const StyledWrapper = styled(FormWrapper)`
+    ${tw`lg:w-full`}
 `;
