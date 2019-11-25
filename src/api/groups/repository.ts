@@ -78,6 +78,10 @@ export class PostRepo {
     @InjectRepository(GroupPost)
     private repository: Repository<GroupPost>;
 
+    findAllByGroup(groupId: number) {
+        return this.repository.find({ where: { group: groupId }, relations: ['poster'], order: { id: 'DESC' } });
+    }
+
     savePost(post: GroupPost) {
         return this.repository.save(post);
     }

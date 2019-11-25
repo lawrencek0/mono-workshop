@@ -8,6 +8,7 @@ import {
     Patch,
     Param,
     Delete,
+    UnauthorizedError,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { User } from '../users/entity/User';
@@ -117,7 +118,7 @@ export class GroupController {
             );
             // this next line saves the creator as "owner" in the Group_users table
             await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            const allGroupInfo = await this.groupRepo.getGroup(newGroup.id);
+            const allGroupInfo = await this.groupRepo.findById(newGroup.id);
             this.dispatch('create', { ...allGroupInfo });
 
             return { ...allGroupInfo };
@@ -198,12 +199,23 @@ export class GroupController {
         const owner = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
 
         if (owner && owner.role === 'owner') {
-            const emailGroup = await this.groupRepo.getGroup(groupId);
+            const emailGroup = await this.groupRepo.findById(groupId);
             this.dispatch('delete', { ...emailGroup });
             return this.groupRepo.deleteGroup(groupId);
         } else {
             return 'You do not have permission to delete this group!';
         }
+    }
+
+    @Get('/:groupId/posts')
+    async getPosts(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
+        const isInGroup = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
+
+        if (!isInGroup) {
+            throw new UnauthorizedError("You aren't in this group");
+        }
+
+        return this.postRepo.findAllByGroup(groupId);
     }
 
     @Post('/:groupId/posts')
