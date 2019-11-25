@@ -172,8 +172,8 @@ export class GroupController {
             this.groupUserRepo.findByUserAndGroup(user.id, groupId),
         ]);
 
-        if (groupUser.role !== 'owner') {
-            throw new UnauthorizedError('Only owners can do this!');
+        if (groupUser.role === 'member') {
+            throw new UnauthorizedError('You are only a member!');
         }
 
         if (name) group.name = name;
