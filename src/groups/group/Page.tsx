@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { RouteComponentProps, Link, Match, Router } from '@reach/router';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
@@ -15,6 +15,8 @@ export type Props = RouteComponentProps & {
     groupId?: string;
 };
 
+const PostCreationFrom = lazy(() => import('../posts/Create'));
+
 export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId }) => {
     const group = useResource(GroupResource.detailShape(), { id: groupId });
 
@@ -27,6 +29,7 @@ export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ gr
             <Router>
                 <RouteGuard as={View} path="/" action="groups:visit" />
                 <RouteGuard as={Members} path="/members" action="groups:visit" />
+                <RouteGuard as={PostCreationFrom} path="/posts/new" action="groups:visit" />
             </Router>
             <Sidebar name={group.name} />
         </Wrapper>
