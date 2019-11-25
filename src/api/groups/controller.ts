@@ -269,6 +269,20 @@ export class GroupController {
         return this.eventRepository.findByIds(Array.from(eventIds.values()));
     }
 
+    @Get('/:groupId/events/:eventId')
+    async getEvent(
+        @CurrentUser({ required: true }) user: User,
+        @Param('groupId') groupId: number,
+        @Param('eventId') eventId: number,
+    ) {
+        const [{ event, ...rest }, members] = await Promise.all([
+            this.groupEventRepo.findOne(user.id, groupId, eventId),
+            this.groupEventRepo.findAllByGroupAndEvent(groupId, eventId),
+        ]);
+
+        return { ...event, ...rest, members };
+    }
+
     @Post('/:groupId/events')
     async createEvent(
         @CurrentUser({ required: true }) user: User,
@@ -287,7 +301,6 @@ export class GroupController {
             this.groupUserRepo.findAllByGroup(groupId),
         ]);
 
-        console.dir(owner);
         await Promise.all(
             members.map(member => {
                 this.groupEventRepo.saveGroupEvent({
@@ -299,6 +312,6 @@ export class GroupController {
             }),
         );
 
-        return newEvent;
+        return this.eventRepository.findById(newEvent.id);
     }
 }
