@@ -3,7 +3,12 @@ import { localStorageKey } from '../utils/storage';
 import { navigate } from '@reach/router';
 import { UserResource } from 'resources/UserResource';
 
-type State = { accessToken?: string; refreshToken?: string; user: Required<InstanceType<typeof UserResource>> };
+type State = {
+    accessToken?: string;
+    idToken?: string;
+    refreshToken?: string;
+    user: Required<InstanceType<typeof UserResource>>;
+};
 type Action = { type: 'login'; payload: Required<NonNullable<State>> } | { type: 'logout' } | { type: 'refreshToken' };
 type Dispatch = (action: Action) => void;
 
@@ -13,8 +18,9 @@ const AuthDispatchContext = createContext<Dispatch | undefined>(undefined);
 const authReducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'login': {
-            const { accessToken, refreshToken, user } = action.payload;
+            const { accessToken, refreshToken, idToken, user } = action.payload;
             localStorage.setItem(localStorageKey('accessToken'), accessToken);
+            localStorage.setItem(localStorageKey('idToken'), idToken);
             localStorage.setItem(localStorageKey('refreshToken'), refreshToken);
             localStorage.setItem(localStorageKey('user'), JSON.stringify(user));
 
@@ -22,6 +28,7 @@ const authReducer = (state: State, action: Action): State => {
         }
         case 'logout': {
             localStorage.removeItem(localStorageKey('accessToken'));
+            localStorage.removeItem(localStorageKey('idToken'));
             localStorage.removeItem(localStorageKey('refreshToken'));
             localStorage.removeItem(localStorageKey('user'));
             navigate('/login', { replace: true });
@@ -38,9 +45,10 @@ const authReducer = (state: State, action: Action): State => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const accessToken = localStorage.getItem(localStorageKey('accessToken')) || undefined;
+    const idToken = localStorage.getItem(localStorageKey('idToken')) || undefined;
     const refreshToken = localStorage.getItem(localStorageKey('refreshToken')) || undefined;
     const user = localStorage.getItem(localStorageKey('user')) || '{}';
-    const [state, dispatch] = useReducer(authReducer, { accessToken, refreshToken, user: JSON.parse(user) });
+    const [state, dispatch] = useReducer(authReducer, { accessToken, idToken, refreshToken, user: JSON.parse(user) });
 
     return (
         <AuthStateContext.Provider value={state}>

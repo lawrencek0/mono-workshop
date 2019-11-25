@@ -39,7 +39,7 @@ export class AuthManager implements Manager {
                                 })
                                     .then(res => res.json())
                                     .then(body => {
-                                        localStorage.setItem(localStorageKey('accessToken'), body.idToken);
+                                        localStorage.setItem(localStorageKey('idToken'), body.idToken);
                                         return dispatch({
                                             ...this.originalAction,
                                             error: undefined,

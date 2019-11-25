@@ -40,8 +40,8 @@ export class UserResource extends Resource {
                 return '/api/auth/login';
             },
             fetch: async (params: {}, body: Readonly<{ email: 'string'; password: 'string' }>) => {
-                const { accessToken, refreshToken, user } = await this.fetch('post', '/api/auth/login', body);
-                return { ...user, accessToken, refreshToken };
+                const { accessToken, refreshToken, idToken, user } = await this.fetch('post', '/api/auth/login', body);
+                return { ...user, accessToken, idToken, refreshToken };
             },
         };
     }

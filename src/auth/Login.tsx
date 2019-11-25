@@ -54,8 +54,8 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
             }}
             onSubmit={async (values, actions) => {
                 try {
-                    const { accessToken, refreshToken, ...user } = await login({}, values);
-                    dispatch({ type: 'login', payload: { accessToken, refreshToken, user } });
+                    const { accessToken, refreshToken, idToken, ...user } = await login({}, values);
+                    dispatch({ type: 'login', payload: { accessToken, refreshToken, idToken, user } });
                     if (rememberUser) {
                         localStorage.setItem(localStorageKey('email'), values.email);
                         localStorage.setItem(localStorageKey('rememberMe'), 'true');
