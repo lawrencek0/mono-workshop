@@ -5,8 +5,7 @@ import { UserRepository } from './repository';
 import hashids from '../../util/hasher';
 import Cognito from '../auth/cognito';
 import { Role } from './entity/User';
-import AWS from 'aws-sdk';
-import { AttributeType } from 'aws-sdk/clients/cognitoidentityserviceprovider';
+import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 
 type UserWithPassword = User & { password: string };
 @JsonController('/users')
@@ -30,6 +29,7 @@ export class UserController {
                         if (!existUser) {
                             return this.userRepository.saveUser(element).then(user => ({
                                 ...user,
+                                password: element.password,
                             }));
                         }
                         return null;
@@ -37,27 +37,32 @@ export class UserController {
                 }),
             );
             const newStudents = students.filter(student => student);
-
             await Promise.all(
                 newStudents.map(async element => {
                     const id = element.id;
                     const hashedId = hashids.encode(id);
-
-                    const cogIDP = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-2' });
-                    const attributes: AttributeType[] = [
-                        { Name: 'email', Value: element.email },
-                        { Name: 'custom:user_id', Value: hashedId },
+                    const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
+                        new AmazonCognitoIdentity.CognitoUserAttribute({
+                            Name: 'email',
+                            Value: element.email,
+                        }),
+                        new AmazonCognitoIdentity.CognitoUserAttribute({
+                            Name: 'custom:user_id',
+                            Value: hashedId,
+                        }),
                     ];
+
                     return new Promise((resolve, reject) =>
-                        cogIDP.adminCreateUser(
-                            {
-                                Username: element.email,
-                                UserPoolId: this.cognito.userPool.getUserPoolId(),
-                                UserAttributes: attributes,
-                                DesiredDeliveryMediums: ['EMAIL'],
-                            },
+                        this.cognito.userPool.signUp(
+                            element.email,
+                            element.password,
+                            attributeList,
+                            null,
                             (err, _result) => {
-                                if (err) return reject(new HttpError(409, err.message));
+                                if (err) {
+                                    // @FIXME: what if it fails here? need a way to undo the query
+                                    return reject(new HttpError(409, err.message));
+                                }
 
                                 return resolve({ id: hashedId, element });
                             },

@@ -9,7 +9,6 @@ import {
     HttpError,
     UnauthorizedError,
     CurrentUser,
-    Req,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
@@ -152,7 +151,7 @@ export class AuthController {
 
     // route for refreshing the user's session tokens
     @Post('/refresh')
-    async refresh(@BodyParam('refreshToken') refreshToken: string, @Req() request: any) {
+    async refresh(@BodyParam('refreshToken') refreshToken: string) {
         const RefreshToken = new AmazonCognitoIdentity.CognitoRefreshToken({ RefreshToken: refreshToken });
         const sessionData = {
             IdToken: '',
@@ -188,6 +187,48 @@ export class AuthController {
         );
     }
 
+    @Post('/forgotPassword')
+    async forgotPass(@BodyParam('email') email: string) {
+        const userData = {
+            Username: email,
+            Pool: this.cognito.userPool,
+        };
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+        return new Promise((resolve, reject) =>
+            cognitoUser.forgotPassword({
+                onSuccess: data => {
+                    return resolve(data);
+                },
+                onFailure: err => {
+                    return reject(new Error(err.message));
+                },
+            }),
+        );
+    }
+
+    @Post('/recovery')
+    async passwordRecovery(
+        @BodyParam('code') code: string,
+        @BodyParam('newPassword') newPassword: string,
+        @BodyParam('email') email: string,
+    ) {
+        const userData = {
+            Username: email,
+            Pool: this.cognito.userPool,
+        };
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+        return new Promise((resolve, reject) =>
+            cognitoUser.confirmPassword(code, newPassword, {
+                onSuccess: () => {
+                    return resolve('Success!');
+                },
+                onFailure: err => {
+                    return reject(new Error(err.message));
+                },
+            }),
+        );
+    }
     // @FIXME: doesn't allow password changes
     @Post('/password')
     async resetPassword(
@@ -202,19 +243,22 @@ export class AuthController {
         };
         const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
         const cogIDP = new AWS.CognitoIdentityServiceProvider({ region: 'us-east-2' });
+        const sess: AmazonCognitoIdentity.CognitoUserSession = cognitoUser.getSession(
+            (err: Error, result: AmazonCognitoIdentity.CognitoUserSession) => {
+                if (err) throw new Error(err.message);
+                return result;
+            },
+        );
         // console.dir(cognitoUser.setSignInUserSession(new AmazonCognitoIdentity.CognitoUserSession()));
         return new Promise((resolve, reject) =>
             cogIDP.changePassword(
                 {
-                    AccessToken: cognitoUser
-                        .getSignInUserSession()
-                        .getAccessToken()
-                        .getJwtToken(),
+                    AccessToken: sess.getAccessToken().getJwtToken(),
                     PreviousPassword: oldPassword,
                     ProposedPassword: newPassword,
                 },
-                (err, data: AWS.CognitoIdentityServiceProvider.ChangePasswordResponse) => {
-                    if (err) return reject(err.message);
+                (err, data) => {
+                    if (err) return reject(new Error(err.message));
 
                     return resolve(data);
                 },
