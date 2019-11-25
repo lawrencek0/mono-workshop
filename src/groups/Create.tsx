@@ -26,7 +26,7 @@ type MoodleFormat = {
     'Email address': string;
 };
 
-const processFile = (file: File, cb: (users: UserResource[]) => unknown): void => {
+export const processFile = (file: File, cb: (users: UserResource[]) => unknown): void => {
     const reader = new FileReader();
     reader.onload = ({ target }) => {
         if (!target) return;

@@ -234,7 +234,7 @@ const StyledForm = styled(Form)`
     align-items: center;
 `;
 
-const StyledField = styled(Field)`
+export const StyledField = styled(Field)`
     ${tw`hover:bg-gray-300 hover:border-gray-500 focus:border-gray-800 focus:bg-gray-300 px-2 pt-2 w-full border-b-2 border-b-2 border-transparent`}
 `;
 
@@ -258,6 +258,6 @@ export const Separator = styled.div`
     height: 2px;
 `;
 
-const StyledIcon = styled.div`
+export const StyledIcon = styled.div`
     ${tw`text-xl`}
 `;

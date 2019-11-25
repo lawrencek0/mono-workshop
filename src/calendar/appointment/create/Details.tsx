@@ -23,4 +23,4 @@ const StyledColor = styled(Field)`
     }
 `;
 
-export { Details };
+export { Details, StyledColor };

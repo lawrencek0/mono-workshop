@@ -30,7 +30,7 @@ const InputWrapper = styled.div`
 `;
 
 const StyledLabel = styled.label`
-    ${tw`font-medium text-lg mb-2`}
+    ${tw`font-medium text-lg mb-2 text-gray-700`}
     ${textColor}
 `;
 

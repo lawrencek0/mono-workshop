@@ -2,9 +2,8 @@ import React from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { MdSearch } from 'react-icons/md';
-import { MdNotifications } from 'react-icons/md';
-import { MdAccountCircle } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
+import { FaUserCircle } from 'react-icons/fa';
 import { Menu, MenuList, MenuButton, MenuLink } from '@reach/menu-button';
 import { useAuthState } from 'auth/hooks';
 import { Link } from '@reach/router';
@@ -12,7 +11,7 @@ import '@reach/menu-button/styles.css';
 
 const Navbar: React.FC = () => {
     const {
-        user: { firstName, lastName },
+        user: { firstName, lastName, picUrl },
     } = useAuthState();
 
     return (
@@ -21,11 +20,14 @@ const Navbar: React.FC = () => {
                 <StyledIcon as={MdSearch} />
                 <StyledSearch disabled={false} placeholder="Search" />
             </SearchWrapper>
-            <StyledIcon as={MdNotifications} css={tw`ml-auto`} />
             <Menu>
                 <Avatar>
-                    <StyledIcon as={MdAccountCircle} css={tw`text-5xl mr-4`} />
-                    <div>
+                    {picUrl ? (
+                        <img alt={`${firstName} ${lastName}`} css={tw`w-12 h-12 rounded-full`} src={picUrl} />
+                    ) : (
+                        <FaUserCircle css={tw`w-12 h-12`} />
+                    )}
+                    <div css={tw`ml-2`}>
                         {firstName} {lastName}
                     </div>
                     <StyledIcon as={FaCaretDown} aria-hidden css={tw`ml-2`} />
@@ -56,7 +58,7 @@ export const StyledMenuList = styled(MenuList)`
 `;
 
 const Avatar = styled(MenuButton)`
-    ${tw`flex items-center content-between text-xl ml-16 mr-8 text-gray-800`}
+    ${tw`flex items-center content-between text-xl mx-2 text-gray-800`}
 `;
 
 const StyledHeader = styled.header`
@@ -72,7 +74,7 @@ const SearchWrapper = styled.div`
 `;
 
 const StyledSearch = styled.input`
-    ${tw`bg-white focus:outline-none border-none
+    ${tw`w-full bg-white focus:outline-none border-none
         py-2 px-4 block appearance-none leading-tight`}
 `;
 

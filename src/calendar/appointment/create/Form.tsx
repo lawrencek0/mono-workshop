@@ -48,14 +48,14 @@ const datetimeRangesSchema = Yup.object({
                 .required()
                 .test('is-lesser', "Start date can't be after end date", function(value) {
                     const { endDate } = this.parent;
-                    return moment(value).isBefore(moment(endDate));
+                    return moment(value).isSameOrBefore(moment(endDate));
                 }),
             endDate: Yup.string()
                 .nullable()
                 .required()
                 .test('is-greater', "End date can't be before start date", function(value) {
                     const { startDate } = this.parent;
-                    return moment(value).isAfter(moment(startDate));
+                    return moment(value).isSameOrAfter(moment(startDate));
                 }),
             times: Yup.array(
                 Yup.object({

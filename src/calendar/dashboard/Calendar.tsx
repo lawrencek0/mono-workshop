@@ -18,76 +18,92 @@ type Props = OptionsInput & {
     height?: number;
 };
 
-const CalendarWrapper = forwardRef<FullCalendar, Props>(({ events, className, variant = 'flat', ...props }, ref) => {
-    const [height, setHeight] = useState(-1);
-    const wrapperRef = useRef<HTMLDivElement>(null);
+const CalendarWrapper = forwardRef<FullCalendar, Props>(
+    (
+        {
+            events,
+            className,
+            header = { left: 'prev,next', center: 'title', right: 'dayGridMonth' },
+            defaultView = 'dayGridMonth',
+            variant = 'flat',
+            height: passedHeight = -1,
+            ...props
+        },
+        ref,
+    ) => {
+        const [height, setHeight] = useState(passedHeight);
+        const wrapperRef = useRef<HTMLDivElement>(null);
 
-    // @FIXME: hack cuz https://github.com/fullcalendar/fullcalendar/issues/4650
-    useLayoutEffect(() => {
-        (async (): Promise<void> => {
-            while (!wrapperRef.current || wrapperRef.current.getBoundingClientRect().height === 0) {
-                await new Promise(resolve => requestAnimationFrame(resolve));
+        // @FIXME: hack cuz https://github.com/fullcalendar/fullcalendar/issues/4650
+        useLayoutEffect(() => {
+            if (passedHeight === -1) {
+                (async (): Promise<void> => {
+                    while (!wrapperRef.current || wrapperRef.current.getBoundingClientRect().height === 0) {
+                        await new Promise(resolve => requestAnimationFrame(resolve));
+                    }
+
+                    if (wrapperRef.current) {
+                        const bounds = await wrapperRef.current.getBoundingClientRect();
+                        setHeight(bounds.height);
+                    }
+                })();
             }
+        }, [wrapperRef, passedHeight]);
 
-            if (wrapperRef.current) {
-                const bounds = await wrapperRef.current.getBoundingClientRect();
-                setHeight(bounds.height);
-            }
-        })();
-    }, [wrapperRef]);
+        const eventLimitText = (eventCnt: number): string => {
+            // if (isMobile) {
+            //     return '.'.repeat(eventCnt);
+            // }
+            return '+ ' + eventCnt + ' more events';
+        };
 
-    const eventLimitText = (eventCnt: number): string => {
-        // if (isMobile) {
-        //     return '.'.repeat(eventCnt);
-        // }
-        return '+ ' + eventCnt + ' more events';
-    };
+        /**
+         * TODO:
+         * 1. Different titles for different views: on day: Today, October 3, on week: 7-14 Oct, on month: October, 2019
+         * 2. Add and style more views
+         * 3. On day click, open a pop-up to create the event
+         */
 
-    /**
-     * TODO:
-     * 1. Different titles for different views: on day: Today, October 3, on week: 7-14 Oct, on month: October, 2019
-     * 2. Add and style more views
-     * 3. On day click, open a pop-up to create the event
-     */
-
-    return (
-        <ThemeProvider theme={{ variant }}>
-            <Wrapper ref={wrapperRef} className={className}>
-                <FullCalendar
-                    {...props}
-                    ref={ref}
-                    events={events}
-                    height={height}
-                    header={{ left: 'prev,next', center: 'title', right: 'dayGridMonth' }}
-                    titleFormat={{ year: 'numeric', month: 'long' }}
-                    columnHeaderHtml={col => {
-                        if (moment(col).weekday() === moment().weekday()) {
-                            return `<span class="current-day">${moment(col).format('ddd')}</span>`;
-                        }
-                        return moment(col).format('ddd');
-                    }}
-                    select={e => console.log(e)}
-                    eventLimit={true}
-                    eventLimitText={eventLimitText}
-                    defaultView="dayGridMonth"
-                    plugins={[interactionPlugin, dayGridPlugin]}
-                />
-            </Wrapper>
-        </ThemeProvider>
-    );
-});
+        return (
+            <ThemeProvider theme={{ variant }}>
+                <Wrapper ref={wrapperRef} className={className}>
+                    <FullCalendar
+                        ref={ref}
+                        events={events}
+                        height={height}
+                        header={header}
+                        titleFormat={{ year: 'numeric', month: 'long' }}
+                        columnHeaderHtml={col => {
+                            if (moment(col).weekday() === moment().weekday()) {
+                                return `<span class="current-day">${moment(col).format('ddd')}</span>`;
+                            }
+                            return moment(col).format('ddd');
+                        }}
+                        select={e => console.log(e)}
+                        eventLimit={true}
+                        eventLimitText={eventLimitText}
+                        defaultView={defaultView}
+                        plugins={[interactionPlugin, dayGridPlugin]}
+                        {...props}
+                    />
+                </Wrapper>
+            </ThemeProvider>
+        );
+    },
+);
 
 CalendarWrapper.displayName = 'CalendarWrapper';
 
 const fullCalendarStyles = theme('variant', {
-    card: css`
+    raised: css`
+        ${tw`bg-white rounded shadow`}
         .fc {
+            ${tw`px-2 py-2`}
             table {
                 ${tw`text-center`}
                 th,
                 td {
                     /* removes all borders */
-                    ${tw`border-none`}
                 }
 
                 .fc-day-top {

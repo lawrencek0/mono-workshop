@@ -17,7 +17,7 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
                 <Link css={tw`capitalize`} key={id} to={`./${id}`}>
                     <Wrapper>
                         <GroupTitle>{name}</GroupTitle>
-                        <Content>{description}</Content>
+                        {description && <Content dangerouslySetInnerHTML={{ __html: description }} />}
                     </Wrapper>
                 </Link>
             ))}
