@@ -19,6 +19,7 @@ import { IEvent, EventList } from 'strongly-typed-events';
 import Cognito from '../auth/cognito';
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { Group } from './entity/Group';
+import { Role } from './entity/GroupUsers';
 
 @JsonController('/groups')
 export class GroupController {
@@ -155,6 +156,40 @@ export class GroupController {
             this.groupRepo.findById(groupId),
         ]);
         return { ...group, user: groupUser ? { ...groupUser.user, role: groupUser.role } : undefined };
+    }
+
+    @Patch('/role/:groupId/:userId')
+    async updateUserRole(
+        @CurrentUser({ required: true }) user: User,
+        @Param('groupId') groupId: number,
+        @Param('userId') userId: number,
+        @BodyParam('role') role: Role,
+    ) {
+        const targetUser = await this.groupUserRepo.findByUserAndGroup(userId, groupId);
+        const currUser = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
+        const tar = await this.userRepository.findById(userId);
+        const group = await this.groupRepo.findById(groupId);
+
+        if (targetUser && currUser) {
+            if (
+                currUser.role === 'member' ||
+                (currUser.role === 'mod' && (role === 'owner' || targetUser.role === 'owner')) ||
+                tar.id === user.id
+            ) {
+                // prevents users (mod or member) from changing a user to above their role
+                return 'You cannot do that';
+            } else if (currUser.role === 'mod' && (targetUser.role === 'member' || targetUser.role === 'mod')) {
+                // mods can add or remove mods
+                targetUser.role = role;
+                return this.groupUserRepo.saveGroupUser({ role: role, user: tar, group: group });
+            } else if (currUser.role === 'owner') {
+                // owners can edit roles freely
+                targetUser.role = role;
+                return this.groupUserRepo.saveGroupUser({ role: role, user: tar, group: group });
+            }
+        } else {
+            return 'You or the target is not part of this group';
+        }
     }
 
     // allows updating the name of the group
