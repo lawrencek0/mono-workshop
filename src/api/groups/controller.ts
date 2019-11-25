@@ -107,8 +107,15 @@ export class GroupController {
                 events: undefined,
                 posts: undefined,
             });
+
+            const newMembers = new Set<string>();
+
             await Promise.all(
                 users.map(async member => {
+                    if (newMembers.has(member.email)) {
+                        return [];
+                    }
+                    newMembers.add(member.email);
                     return this.groupUserRepo.saveGroupUser({
                         user: await this.userRepository.findByEmail(member.email),
                         group: newGroup,
@@ -118,10 +125,16 @@ export class GroupController {
             );
             // this next line saves the creator as "owner" in the Group_users table
             await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            const allGroupInfo = await this.groupRepo.findById(newGroup.id);
-            this.dispatch('create', { ...allGroupInfo });
+            const [group, members] = await Promise.all([
+                this.groupRepo.findById(newGroup.id),
+                this.groupUserRepo.findAllByGroup(newGroup.id),
+            ]);
 
-            return { ...allGroupInfo };
+            const allGroupInfo = { ...group, groupUsers: members };
+
+            this.dispatch('create', allGroupInfo);
+
+            return allGroupInfo;
         } catch (error) {
             throw new HttpError(error);
         }
