@@ -28,6 +28,10 @@ const Post: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId })
     const create = useFetcher(GroupPostResource.createShape());
     const groups = useResource(GroupResource.listShape(), {});
 
+    if (!groups.length) {
+        return <Wrapper variant="danger">You are not in any group! The horror :O</Wrapper>;
+    }
+
     return (
         <Formik
             initialValues={{
@@ -38,12 +42,23 @@ const Post: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId })
             validationSchema={schema}
             onSubmit={async (values, actions) => {
                 try {
-                    await create({ groupId: values.groupId }, { ...values });
+                    await create({ groupId: values.groupId }, { ...values }, [
+                        [
+                            GroupPostResource.listShape(),
+                            { groupId: values.groupId },
+                            (postId: string, postIds: string[] | undefined) => [postId, ...(postIds || [])],
+                        ],
+                    ]);
                     await navigate(`/groups/${values.groupId}`);
                 } catch (e) {
+                    console.error(e);
                     actions.setSubmitting(false);
-                    const msg = e.response.body ? e.response.body.message : e.response.text;
-                    actions.setStatus(JSON.stringify(msg));
+                    if (e && e.response && e.response.body) {
+                        const msg = e.response.body ? e.response.body.message : e.response.text;
+                        actions.setStatus(JSON.stringify(msg));
+                    } else {
+                        actions.setStatus(JSON.stringify(e));
+                    }
                 }
             }}
         >
