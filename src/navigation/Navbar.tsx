@@ -58,11 +58,15 @@ export const StyledMenuList = styled(MenuList)`
 `;
 
 const Avatar = styled(MenuButton)`
-    ${tw`flex items-center content-between text-xl mx-2 text-gray-800`}
+    ${tw`flex ml-auto items-center content-between text-xl mx-2 text-gray-800`}
 `;
 
 const StyledHeader = styled.header`
     ${tw`flex items-center text-2xl shadow pt-2 pb-4 bg-white`}
+
+    & [data-reach-menu-button] {
+        ${tw`ml-auto`}
+    }
 `;
 
 const StyledIcon = styled.div<{ css?: string }>`
