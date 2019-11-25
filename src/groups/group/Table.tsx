@@ -19,7 +19,7 @@ export const Table: React.FC<{
         nextPage,
         previousPage,
         pageCount,
-        state: { pageIndex },
+        // state: { pageIndex },
     } = useTable(
         {
             columns: [
@@ -75,12 +75,12 @@ export const Table: React.FC<{
                 <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
                     {'>>'}
                 </button>{' '}
-                <span>
+                {/* <span>
                     Page{' '}
                     <strong>
                         {pageIndex + 1} of {pageOptions.length}
                     </strong>{' '}
-                </span>
+                </span> */}
             </div>
         </div>
     );

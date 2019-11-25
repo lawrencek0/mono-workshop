@@ -130,6 +130,7 @@ declare module 'react-table' {
         canNextPage: boolean;
         page: Page<D>;
         pageOptions: [];
+        pageCount: number;
     }
 
     export interface UseRowsValues<D> {
