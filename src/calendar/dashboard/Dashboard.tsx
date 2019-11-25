@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useLayoutEffect } from 'react';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
 import { useResource } from 'rest-hooks';
 import { RouteComponentProps } from '@reach/router';
+import * as queryString from 'query-string';
 import FullCalendar from '@fullcalendar/react';
 import { DateClickApi } from '@fullcalendar/core/Calendar';
-import 'react-tiny-fab/dist/styles.css';
 import Calendar from 'calendar/dashboard/Calendar';
 import { Modal, Props as ModalProps, Position } from './Modal';
 import { getDate } from 'calendar/helpers';
@@ -56,7 +56,6 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
     const {
         user: { role },
     } = useAuthState();
-
     const events = useMemo(() => {
         return role === 'faculty'
             ? appointments.flatMap(({ slots, title, id, userProps }) =>
@@ -83,6 +82,7 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
                       }));
               });
     }, [appointments, role]);
+    const { activateModal } = queryString.parse(window.location.search);
 
     const handleDocClick = ({ target }: MouseEvent): void => {
         if (calendarRef.current && modalRef.current && target) {
@@ -100,6 +100,27 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
             document.removeEventListener('click', handleDocClick);
         };
     }, []);
+
+    useLayoutEffect(() => {
+        (async () => {
+            if (activateModal) {
+                while (!calendarRef.current || !modalRef.current) {
+                    await new Promise(resolve => requestAnimationFrame(resolve));
+                }
+                let el = calendarRef.current.getApi().el.querySelector('.fc-today') as HTMLElement;
+                while (!el || el.getBoundingClientRect().height === 0) {
+                    el = calendarRef.current.getApi().el.querySelector('.fc-today') as HTMLElement;
+                    await new Promise(resolve => requestAnimationFrame(resolve));
+                }
+                const position = calculateModalPos(calendarRef.current.getApi().el, el, modalRef.current);
+                setModalInfo({ position });
+            }
+        })();
+
+        return () => {
+            setModalInfo({ position: undefined });
+        };
+    }, [activateModal]);
 
     const handleDateClick = ({ dayEl, date }: DateClickApi): void => {
         if (calendarRef.current && modalRef.current) {

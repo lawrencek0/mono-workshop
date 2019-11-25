@@ -21,24 +21,19 @@ type Props = OptionsInput & {
 const CalendarWrapper = forwardRef<FullCalendar, Props>(({ events, className, variant = 'flat', ...props }, ref) => {
     const [height, setHeight] = useState(-1);
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const timer = useRef<number>();
 
     // @FIXME: hack cuz https://github.com/fullcalendar/fullcalendar/issues/4650
     useLayoutEffect(() => {
         (async (): Promise<void> => {
             while (!wrapperRef.current || wrapperRef.current.getBoundingClientRect().height === 0) {
-                // @FIXME: setTimeout cuz element is hidden https://github.com/facebook/react/issues/14536
-                await new Promise(resolve => {
-                    timer.current = setTimeout(() => resolve(), 50);
-                });
+                await new Promise(resolve => requestAnimationFrame(resolve));
             }
-            const bounds = await wrapperRef.current.getBoundingClientRect();
-            setHeight(bounds.height);
-        })();
 
-        return () => {
-            clearInterval(timer.current);
-        };
+            if (wrapperRef.current) {
+                const bounds = await wrapperRef.current.getBoundingClientRect();
+                setHeight(bounds.height);
+            }
+        })();
     }, [wrapperRef]);
 
     const eventLimitText = (eventCnt: number): string => {
