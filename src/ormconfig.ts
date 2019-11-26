@@ -10,6 +10,6 @@ export default {
     password: database.MYSQL_PASSWORD,
     database: database.DATABASE,
     entities: [join(process.cwd(), 'dist', 'api/**/entity/**/*.js')],
-    synchronize: false,
+    synchronize: true,
     logging: false,
 } as ConnectionOptions;
