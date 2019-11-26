@@ -3,6 +3,7 @@ import { EmailService } from './service';
 import { Group } from '../api/groups/entity/Group';
 import moment from 'moment';
 import { int } from 'aws-sdk/clients/datapipeline';
+import { User } from '../api/users/entity/User';
 
 @Service()
 export class GroupEmail {
@@ -10,74 +11,66 @@ export class GroupEmail {
 
     public onCreate(group: Group) {
         const template = EmailService.getTemplate('group', 'create');
-        let owner: any;
+        const owner: User = group.groupUsers.find(groupUser => groupUser.role === 'owner').user;
         group.groupUsers.map(user => {
-            if (user.role === 'owner') {
-                owner = user;
-            }
-        }),
-            group.groupUsers.map(user => {
-                this.email.sendEmail(
-                    {
-                        template,
-                        message: {
-                            //to: user.user.email,
-                            to: 'sujeong0826@gmail.com',
-                        },
-                        locals: {
-                            name: user.user.firstName,
-                            owner: owner,
-                            title: group.name,
+            this.email.sendEmail(
+                {
+                    template,
+                    message: {
+                        //to: user.user.email,
+                        to: 'sujeong0826@gmail.com',
+                    },
+                    locals: {
+                        name: user.user.firstName,
+                        owner: owner,
+                        title: group.name,
+                    },
+                },
+                {
+                    // set preview to true to open email in browser
+                    preview: true,
+                    // set send to true to send email even if in development/test
+                    send: false,
+                    juiceResources: {
+                        webResources: {
+                            relativeTo: template,
                         },
                     },
-                    {
-                        // set preview to true to open email in browser
-                        preview: true,
-                        // set send to true to send email even if in development/test
-                        send: false,
-                        juiceResources: {
-                            webResources: {
-                                relativeTo: template,
-                            },
-                        },
-                    },
-                );
-            });
+                },
+            );
+        });
     }
     public onDelete(group: Group) {
         const template = EmailService.getTemplate('group', 'delete');
-        let owner: any;
+        // let owner: any;
+        const owner: User = group.groupUsers.find(groupUser => groupUser.role === 'owner').user;
+
         group.groupUsers.map(user => {
-            if (user.role === 'owner') {
-                owner = user;
-            }
-        }),
-            group.groupUsers.map(user => {
-                this.email.sendEmail(
-                    {
-                        template,
-                        message: {
-                            //to: user.user.email,
-                            to: 'sujeong0826@gmail.com',
-                        },
-                        locals: {
-                            name: user.user.firstName,
-                            owner: owner.faculty,
-                            title: group.name,
+            this.email.sendEmail(
+                {
+                    template,
+                    message: {
+                        //to: user.user.email,
+                        to: 'sujeong0826@gmail.com',
+                    },
+                    locals: {
+                        name: user.user.firstName,
+                        owner: owner,
+                        title: group.name,
+                    },
+                },
+                {
+                    // set preview to true to open email in browser
+                    preview: true,
+                    // set send to true to send email even if in development/test
+                    send: false,
+                    juiceResources: {
+                        webResources: {
+                            relativeTo: template,
                         },
                     },
-                    {
-                        // set preview to true to open email in browser
-                        preview: true,
-                        // set send to true to send email even if in development/test
-                        send: false,
-                        juiceResources: {
-                            webResources: {
-                                relativeTo: template,
-                            },
-                        },
-                    },
-                );
-            });
+                },
+            );
+        });
     }
 }
