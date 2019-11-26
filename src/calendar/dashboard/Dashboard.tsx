@@ -82,6 +82,9 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
                       }));
               });
     }, [appointments, role]);
+    const hideModal = (): void => {
+        setModalInfo({ position: undefined });
+    };
     const { activateModal } = queryString.parse(window.location.search);
 
     const handleDocClick = ({ target }: MouseEvent): void => {
@@ -138,7 +141,7 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
 
     return (
         <Wrapper>
-            <Modal ref={modalRef} {...modalInfo} />
+            <Modal ref={modalRef} {...modalInfo} hideModal={hideModal} />
             <Calendar
                 eventClick={({ event }) => {
                     if (navigate) {

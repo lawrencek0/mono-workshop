@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import moment from 'moment';
 import { Formik, Form, Field } from 'formik';
-import { useFetcher } from 'rest-hooks';
+import { useFetcher, useResource } from 'rest-hooks';
 import { FaHeading } from 'react-icons/fa';
 import { FaAlignLeft } from 'react-icons/fa';
 import { FaCalendarWeek } from 'react-icons/fa';
@@ -20,7 +20,8 @@ import { AppointmentResource } from 'resources/AppointmentResource';
 import { StyledLink } from 'shared/cards/styles';
 import { useAuthState } from 'auth/hooks';
 import { DropdownSelect } from './Items';
-import { GroupResource } from 'resources/GroupResource';
+import { GroupResource, GroupEventResource } from 'resources/GroupResource';
+import { navigate } from '@reach/router';
 
 type EventType = 'appointment' | 'event';
 
@@ -30,6 +31,7 @@ export type Props = {
     position?: Position;
     type?: EventType;
     startDate?: moment.Moment;
+    hideModal: () => void;
 };
 
 export const UserItems: React.FC<{
@@ -64,12 +66,12 @@ export const UserItems: React.FC<{
 };
 
 export const Modal = forwardRef<HTMLElement, Props>(
-    ({ position, type: eventType = 'event', startDate = moment() }, ref) => {
+    ({ position, hideModal, type: eventType = 'event', startDate = moment() }, ref) => {
         const {
             user: { role },
         } = useAuthState();
         const createAppointment = useFetcher(AppointmentResource.createShape());
-        // const createEvent = useFetcher();
+        const createGroupEvent = useFetcher(GroupEventResource.createShape());
         const [type, setType] = useState<EventType>(eventType);
         const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
         const [selectedGroups, setSelectedGroups] = useState<GroupResource[]>([]);
@@ -93,6 +95,7 @@ export const Modal = forwardRef<HTMLElement, Props>(
                     initialValues={{
                         title: '',
                         description: '',
+                        location: '',
                         startDate: moment(startDate).format('YYYY-MM-DD'),
                         endDate: moment(startDate).format('YYYY-MM-DD'),
                         startTime: moment(startDate).format('HH:mm'),
@@ -104,30 +107,71 @@ export const Modal = forwardRef<HTMLElement, Props>(
                     }}
                     enableReinitialize
                     onSubmit={async values => {
-                        const slots = slotsFromRanges([
-                            {
-                                id: 0,
-                                startDate: values.startDate,
-                                endDate: values.endDate,
-                                times: [
-                                    {
-                                        id: 0,
-                                        startTime: values.startTime,
-                                        endTime: values.endTime,
-                                    },
-                                ],
-                                length: values.length,
-                            },
-                        ]);
+                        if (type === 'appointment') {
+                            const slots = slotsFromRanges([
+                                {
+                                    id: 0,
+                                    startDate: values.startDate,
+                                    endDate: values.endDate,
+                                    times: [
+                                        {
+                                            id: 0,
+                                            startTime: values.startTime,
+                                            endTime: values.endTime,
+                                        },
+                                    ],
+                                    length: values.length,
+                                },
+                            ]);
 
-                        await createAppointment(
-                            {},
-                            {
-                                ...values,
-                                students: selectedUsers,
-                                slots,
-                            },
-                        );
+                            await createAppointment(
+                                {},
+                                {
+                                    ...values,
+                                    students: selectedUsers,
+                                    slots,
+                                },
+                            );
+                        }
+
+                        if (type === 'event') {
+                            const start = moment(values.startDate)
+                                .add('hours', moment(values.startTime, 'HH:mm').hours())
+                                .add('minutes', moment(values.startTime, 'HH:mm').minutes())
+                                .toLocaleString();
+                            const end = moment(values.endDate)
+                                .add('hours', moment(values.endTime, 'HH:mm').hours())
+                                .add('minutes', moment(values.endTime, 'HH:mm').minutes())
+                                .toLocaleString();
+                            moment(values.endDate)
+                                .add('hours', moment(values.endTime, 'HH:mm').hours())
+                                .add('minutes', moment(values.endTime, 'HH:mm').minutes())
+                                .toLocaleString();
+
+                            const groups = selectedGroups.map(({ id: groupId }) =>
+                                createGroupEvent(
+                                    { groupId },
+                                    {
+                                        ...values,
+                                        start,
+                                        end,
+                                    },
+                                    [
+                                        [
+                                            GroupEventResource.listShape(),
+                                            { groupId },
+                                            (groupId: string, groupIds: string[] | undefined) => [
+                                                groupId,
+                                                ...(groupIds || []),
+                                            ],
+                                        ],
+                                    ],
+                                ),
+                            );
+                            await Promise.all(groups);
+                        }
+
+                        await hideModal();
                     }}
                 >
                     {({ values }) => (
