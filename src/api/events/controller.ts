@@ -101,7 +101,6 @@ export class EventController {
 
     @Get('/:eventId')
     async findOne(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
-        const Event: Event = await this.eventRepository.findOne(id);
-        return { Event, a: '' };
+        return this.eventRepository.findOne(id);
     }
 }
