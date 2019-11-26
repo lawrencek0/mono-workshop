@@ -17,7 +17,13 @@ export class EventRepository {
     findById(id: number) {
         return this.repository.findOne({ where: { id }, relations: ['owner'] });
     }
+    findByIds(ids: number[]) {
+        return this.repository.findByIds(ids);
+    }
     findAll(userId: number) {
+        return this.repository.find({ where: { owner: userId } });
+    }
+    findAllByUser(userId: number) {
         return this.repository.find({ where: { owner: userId } });
     }
     findOne(id: number) {
