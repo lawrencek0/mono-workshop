@@ -57,6 +57,10 @@ export class GroupEventRepository {
         return this.repository.find({ where: { group: groupId, event: eventId }, relations: ['user'] });
     }
 
+    findAllByUser(userId: number) {
+        return this.repository.find({ where: { user: userId }, relations: ['event', 'group'] });
+    }
+
     findAllByGroup(groupId: number) {
         return this.repository
             .createQueryBuilder('roster')

@@ -33,10 +33,6 @@ export class Event {
     @OneToMany(() => EventRoster, EventRoster => EventRoster.event)
     eventRoster: EventRoster[];
 
-    // // @FIXME: should only store color in the join table
-    // // @Column()
-    color: string;
-
     @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.event)
     groupEvent: GroupEventRoster[];
 }

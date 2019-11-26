@@ -30,37 +30,37 @@ export class EventController {
     @Inject() private groupEventsRepo: GroupEventRepository;
     @Inject() private groupUsersRepo: GroupUsersRepository;
 
+    @Get('/')
+    async findAll(@CurrentUser({ required: true }) user: User) {
+        const events = await this.eventRosterRepository.findAllByUser(user.id);
+        return events.map(event => ({ ...event.event, color: event.color }));
+    }
+
     @Post('/')
     async create(
         @CurrentUser({ required: true }) owner: User,
         @Body() event: Event,
-        @BodyParam('groupId') groupIds: number[],
+        @BodyParam('users') rawUsers: User[],
+        @BodyParam('color') color: string,
     ) {
-        try {
-            const users: User[] = await this.userRepository.userGroup(groupIds);
-            const newEvent: Event = await this.eventRepository.saveEvent({ ...event, owner });
+        const users = await this.userRepository.findAllByIds(rawUsers.map(({ id }) => id));
 
-            // Create a group event roster for each group for each user
-            users.forEach(user => {
-                getRepository(EventRoster).save({
-                    user: user,
-                    event: newEvent,
-                    color: newEvent.color,
-                });
-                user.group.forEach(group => {
-                    const evnt = new GroupEventRoster();
-                    evnt.group = group.group;
-                    evnt.user = user;
-                    evnt.event = newEvent;
-                    evnt.going = false;
-                    this.groupEventsRepo.saveGroupEvent(evnt);
-                });
-            });
-            return newEvent;
-        } catch (e) {
-            throw new HttpError(e);
-        }
+        const newEvent = await this.eventRepository.saveEvent({ ...event, owner });
+        // Create a group event roster for each group for each user
+        const roster = users.map(user => ({
+            user,
+            event: newEvent,
+            color,
+        }));
+
+        await Promise.all([
+            this.eventRosterRepository.saveEvents(roster),
+            this.eventRosterRepository.saveEvent({ event: newEvent, color, user: owner }),
+        ]);
+
+        return this.eventRepository.findById(newEvent.id);
     }
+
     @Delete('/:eventId')
     async delete(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
         const event: Event = await getRepository(Event).findOne(id, {
@@ -98,23 +98,10 @@ export class EventController {
             throw new HttpError(e);
         }
     }
-    @Get('/')
-    async findAll(@CurrentUser({ required: true }) user: User) {
-        try {
-            const Events: Event[] = await this.eventRepository.findAllByUser(user.id);
 
-            return { Events };
-        } catch (e) {
-            throw new HttpError(e);
-        }
-    }
     @Get('/:eventId')
     async findOne(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
-        try {
-            const Event: Event = await this.eventRepository.findOne(id);
-            return { Event };
-        } catch (e) {
-            throw new HttpError(e);
-        }
+        const Event: Event = await this.eventRepository.findOne(id);
+        return { Event, a: '' };
     }
 }

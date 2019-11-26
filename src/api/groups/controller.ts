@@ -304,6 +304,12 @@ export class GroupController {
         return this.eventRepository.findByIds(Array.from(eventIds.values()));
     }
 
+    @Get('/events/all')
+    async getAllEvents(@CurrentUser({ required: true }) user: User) {
+        const events = await this.groupEventRepo.findAllByUser(user.id);
+        return events.map(event => ({ going: event.going, group: event.group, ...event.event }));
+    }
+
     @Get('/:groupId/events/:eventId')
     async getEvent(
         @CurrentUser({ required: true }) user: User,

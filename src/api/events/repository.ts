@@ -29,6 +29,7 @@ export class EventRepository {
     findOne(id: number) {
         return this.repository.findOne({ where: { id } });
     }
+
     saveEvent(event: Event) {
         return this.repository.save(event);
     }
@@ -41,13 +42,28 @@ export class EventRepository {
 export class EventRosterRepository {
     @InjectRepository(EventRoster)
     private repository: Repository<EventRoster>;
+
     saveColors(color: EventRoster[]) {
         return this.repository.save(color);
     }
+
     deleteByEvent(event: Event) {
         return this.repository.delete(event);
     }
+
     findById(id: number) {
         return this.repository.findOne({ where: { id }, relations: ['event'] });
+    }
+
+    findAllByUser(userId: number) {
+        return this.repository.find({ where: { user: userId }, relations: ['event'] });
+    }
+
+    saveEvent(event: EventRoster) {
+        return this.repository.save(event);
+    }
+
+    saveEvents(events: EventRoster[]) {
+        return this.repository.save(events);
     }
 }
