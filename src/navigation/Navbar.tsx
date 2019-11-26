@@ -33,9 +33,6 @@ const Navbar: React.FC = () => {
                     <StyledIcon as={FaCaretDown} aria-hidden css={tw`ml-2`} />
                 </Avatar>
                 <StyledMenuList>
-                    <MenuLink as={(Link as unknown) as string} to="/profile">
-                        Profile
-                    </MenuLink>
                     <MenuLink as={(Link as unknown) as string} to="/logout">
                         Logout
                     </MenuLink>

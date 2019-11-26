@@ -57,7 +57,7 @@ const General: React.FC<RouteComponentProps> = () => {
 };
 
 const Calendar: React.FC<RouteComponentProps> = () => {
-    const [{ value }, setExport] = useState({ value: '' });
+    const [{ value }, setExport] = useState({ value: 'csv' });
     const events = useResource(
         [GroupEventResource.fetchAll(), {}],
         [EventResource.listShape(), {}],

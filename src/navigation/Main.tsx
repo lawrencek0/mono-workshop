@@ -26,6 +26,7 @@ const Content = styled.main`
 `;
 
 const ContentWrapper = styled.div`
+    ${tw`w-full`}
     @supports (display: grid) {
         display: grid;
         grid-template-rows: minmax(min-content, 75px) 1fr;

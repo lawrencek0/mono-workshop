@@ -10,9 +10,12 @@ import { Separator } from 'calendar/dashboard/Modal';
 import { Link } from '@reach/router';
 import { Avatar } from 'calendar/appointment/create/StudentSelection';
 import { FaUserCircle } from 'react-icons/fa';
+import { StyledLink } from 'shared/cards/styles';
 
 export const View: React.FC<Props> = ({ eventId }) => {
-    const { title, description, start, end, eventRoster } = useResource(EventResource.detailShape(), { id: eventId });
+    const { title, description, start, end, eventRoster, user } = useResource(EventResource.detailShape(), {
+        id: eventId,
+    });
     return (
         <div>
             <StyledTitle>{title}</StyledTitle>
@@ -43,6 +46,7 @@ export const View: React.FC<Props> = ({ eventId }) => {
                         </Link>
                     ))}
             </Members>
+            {user && user.role !== 'member' && <StyledLink to="./edit">Edit</StyledLink>}
         </div>
     );
 };
