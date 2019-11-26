@@ -69,6 +69,7 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
                       slots.map(slot => ({
                           ...slot,
                           groupId: id,
+                          detailId: id,
                           type: 'appointments',
                           slotId: slot.id,
                           title,

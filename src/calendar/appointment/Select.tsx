@@ -25,7 +25,7 @@ type Props = RouteComponentProps & {
 };
 
 const slotSelectionSchema = Yup.object({
-    slot: Yup.string().required('Please select a slot'),
+    slot: Yup.string().notRequired(),
 }).required();
 
 const StudentSelect: React.FC<{
@@ -52,7 +52,7 @@ const StudentSelect: React.FC<{
                 ))}
             </Field>
             {slotsByDay[values.selectedDay].map(slot => {
-                let checked = parseInt(values.slot) === slot.id;
+                let checked = values && values.slot ? parseInt(values.slot) === slot.id : false;
                 if (!dirty && slot.student instanceof Object) {
                     checked = true;
                 }
@@ -188,7 +188,7 @@ const Select: React.FC<Props> = ({ detailId }) => {
     } = useAuthState();
 
     const appointment = useResource(AppointmentResource.detailShape(), { id: detailId });
-
+    const appointmentUpdate = useFetcher(AppointmentResource.partialUpdateShape());
     // used to refetch the slots after the PUT request
     const invalidator = useInvalidator(AppointmentResource.detailShape());
     const update = useFetcher(SlotResource.partialUpdateShape());
@@ -233,10 +233,13 @@ const Select: React.FC<Props> = ({ detailId }) => {
                 selectedDay: selectedSlot ? moment(selectedSlot.start).format('YYYY/MM/DD') : slotDays[0],
             }}
             validationSchema={slotSelectionSchema}
-            onSubmit={async ({ slot: slotId }) => {
+            onSubmit={async values => {
                 try {
-                    console.log('is this called');
-                    await update({ id: slotId, detailId }, {});
+                    if (role === 'student') {
+                        await update({ id: values.slot, detailId }, {});
+                    } else if (role === 'faculty') {
+                        await appointmentUpdate({ id: detailId }, { ...values });
+                    }
                     // invalidates the cache and causes a refetch
                     await invalidator({ id: detailId });
                 } catch (e) {
