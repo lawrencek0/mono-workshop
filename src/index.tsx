@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -7,13 +7,11 @@ import './styles/tailwind.out.css';
 import { DayNightThemeProvider } from 'themes/hooks';
 
 ReactDOM.render(
-    <StrictMode>
-        <DayNightThemeProvider>
-            <AppProviders>
-                <App />
-            </AppProviders>
-        </DayNightThemeProvider>
-    </StrictMode>,
+    <DayNightThemeProvider>
+        <AppProviders>
+            <App />
+        </AppProviders>
+    </DayNightThemeProvider>,
     document.getElementById('root'),
 );
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
-import { MdSearch } from 'react-icons/md';
 import { FaCaretDown } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
 import { Menu, MenuList, MenuButton, MenuLink } from '@reach/menu-button';
@@ -16,10 +15,6 @@ const Navbar: React.FC = () => {
 
     return (
         <StyledHeader>
-            <SearchWrapper>
-                <StyledIcon as={MdSearch} />
-                <StyledSearch disabled={false} placeholder="Search" />
-            </SearchWrapper>
             <Menu>
                 <Avatar>
                     {picUrl ? (
@@ -70,16 +65,6 @@ const StyledHeader = styled.header`
 
 const StyledIcon = styled.div<{ css?: string }>`
     ${tw`text-3xl text-gray-600`}
-`;
-
-const SearchWrapper = styled.div`
-    ${tw`flex items-center w-9/12 ml-8`}
-`;
-
-const StyledSearch = styled.input`
-    ${tw`w-full focus:outline-none border-none
-        py-2 px-4 block appearance-none leading-tight`}
-    background: var(--color-bg-card);
 `;
 
 export default Navbar;

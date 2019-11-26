@@ -20,8 +20,8 @@ export const View: React.FC<Props> = ({ eventId }) => {
         <div>
             <StyledTitle>{title}</StyledTitle>
             {description && <p dangerouslySetInnerHTML={{ __html: description }} />}
-            <div>Start: {moment(start).format('YYYY/MM/DD hh:mm')}</div>
-            <div>End: {moment(end).format('YYYY/MM/DD hh:mm')}</div>
+            <div>Start: {moment(start).format('YYYY/MM/DD hh:mm A')}</div>
+            <div>End: {moment(end).format('YYYY/MM/DD hh:mm A')}</div>
             <Separator css={tw`my-4`} aria-hidden />
             <Members>
                 <h3>Members</h3>

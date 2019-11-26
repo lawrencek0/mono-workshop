@@ -20,6 +20,9 @@ const FabWrapper: React.FC = () => {
             >
                 <FaCalendarPlus />
             </Action>
+            <Action text="New group" onClick={() => navigate('/groups/new')}>
+                <FaUsers />
+            </Action>
             <Action text="New group post" onClick={() => navigate('/groups/posts/new')}>
                 <FaUsers />
             </Action>

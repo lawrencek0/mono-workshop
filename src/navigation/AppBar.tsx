@@ -16,7 +16,7 @@ const AppBar: React.FC<{}> = () => {
 
 const Menu: React.FC<{}> = () => {
     return (
-        <StyledLink to="/menu">
+        <StyledLink to="/settings">
             <StyledIcon />
         </StyledLink>
     );
@@ -32,7 +32,8 @@ const StyledIcon = styled(MdMenu)`
 `;
 
 const Header = styled.header`
-    ${tw`flex bg-primary-400 items-center px-2 py-4 text-2xl`}
+    ${tw`flex items-center px-2 py-4 text-2xl`}
+    background: var(--color-bg-primary-navbar);
     color: ${primaryTextColor};
 `;
 

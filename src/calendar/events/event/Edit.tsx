@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RouteComponentProps, navigate, Link } from '@reach/router';
+import { RouteComponentProps, navigate } from '@reach/router';
 import { useFetcher, useResource } from 'rest-hooks';
 import { Formik, Form } from 'formik';
 import styled from 'styled-components/macro';
@@ -21,11 +21,10 @@ import { Separator, UserItems } from 'calendar/dashboard/Modal';
 import { StyledColor } from 'calendar/appointment/create/Details';
 import { PrimaryButton } from 'shared/buttons';
 import { EventResource, EventMemberResource } from 'resources/EventResource';
-import { GroupResource, GroupUserResource, Role, GroupEventResource } from 'resources/GroupResource';
+import { GroupResource, Role, GroupEventResource } from 'resources/GroupResource';
 import { Avatar } from 'calendar/appointment/create/StudentSelection';
 import { FaUserCircle } from 'react-icons/fa';
 import { Item } from 'groups/group/Page';
-import { StyledDropdown } from 'groups/Create';
 import { DropdownSelect } from 'calendar/dashboard/Items';
 import { UserResource } from 'resources/UserResource';
 
