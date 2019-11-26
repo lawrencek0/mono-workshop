@@ -17,19 +17,12 @@ export class EventRepository {
     findById(id: number) {
         return this.repository.findOne({ where: { id }, relations: ['owner'] });
     }
-
-    findByIds(ids: number[]) {
-        return this.repository.findByIds(ids);
-    }
-
-    findAllByUser(userId: number) {
+    findAll(userId: number) {
         return this.repository.find({ where: { owner: userId } });
     }
-
     findOne(id: number) {
         return this.repository.findOne({ where: { id } });
     }
-
     saveEvent(event: Event) {
         return this.repository.save(event);
     }
@@ -42,19 +35,15 @@ export class EventRepository {
 export class EventRosterRepository {
     @InjectRepository(EventRoster)
     private repository: Repository<EventRoster>;
-
     saveColors(color: EventRoster[]) {
         return this.repository.save(color);
     }
-
     deleteByEvent(event: Event) {
         return this.repository.delete(event);
     }
-
     findById(id: number) {
         return this.repository.findOne({ where: { id }, relations: ['event'] });
     }
-
     findAllByUser(userId: number) {
         return this.repository.find({ where: { user: userId }, relations: ['event'] });
     }
