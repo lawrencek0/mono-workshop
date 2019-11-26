@@ -1,17 +1,24 @@
 import React from 'react';
 import { useResource } from 'rest-hooks';
-import { GroupUserResource } from 'resources/GroupResource';
-import { Props } from './Page';
+import { GroupUserResource, GroupResource } from 'resources/GroupResource';
+import { Props, StyledTitle } from './Page';
 import { Table } from './Table';
+import { StyledWrapper } from './View';
 
 export const Members: React.FC<Props> = ({ groupId }) => {
-    const users = useResource(GroupUserResource.listShape(), { groupId });
-    if (!users) {
-        return <div>No members!</div>;
+    const [users, { user }] = useResource(
+        [GroupUserResource.listShape(), { groupId }],
+        [GroupResource.detailShape(), { id: groupId }],
+    );
+
+    if (!user || !user.role) {
+        return <>Loading</>;
     }
+
     return (
-        <Table users={users} actions={<td>I love You</td>}>
-            We will think
-        </Table>
+        <StyledWrapper>
+            <StyledTitle>Members</StyledTitle>
+            <Table groupId={groupId} users={users} canModify={user.role === 'owner'}></Table>
+        </StyledWrapper>
     );
 };

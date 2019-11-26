@@ -97,7 +97,7 @@ export const UnauthenticatedView: React.FC<{ groupId?: string }> = ({ groupId })
     );
 };
 
-function User<T extends UserResource | GroupUserResource>(item: T): React.ReactElement {
+export function User<T extends UserResource | GroupUserResource>(item: T): React.ReactElement {
     return (
         <Link to={`/users/${item.id}`}>
             <Item css={tw`flex`}>

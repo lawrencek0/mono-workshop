@@ -14,6 +14,13 @@ import { Separator, UserItems } from 'calendar/dashboard/Modal';
 import { DropdownSelect, Menu, Item } from 'calendar/dashboard/Items';
 import { ErrorMessage, Wrapper } from 'auth/Login';
 import { GroupResource, GroupUserResource } from 'resources/GroupResource';
+import { Editor } from '@tinymce/tinymce-react';
+import 'tinymce/tinymce';
+import 'tinymce/themes/silver/theme';
+import 'tinymce/skins/ui/oxide/skin.min.css';
+import 'tinymce/skins/ui/oxide/content.min.css';
+import 'tinymce/plugins/link';
+import 'tinymce/plugins/code';
 
 const schema = Yup.object({
     name: Yup.string().required('Name is required'),
@@ -131,7 +138,25 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
                         <Form>
                             <ErrorMessage>{props.status}</ErrorMessage>
                             <Field type="text" name="name" id="name" label="Group Name" />
-                            <Field as="textarea" type="text" name="description" id="description" label="Description" />
+                            <Editor
+                                init={{
+                                    height: 125,
+                                    menubar: false,
+                                    skin: false,
+                                    // eslint-disable-next-line @typescript-eslint/camelcase
+                                    content_css: false,
+                                    // eslint-disable-next-line @typescript-eslint/camelcase
+                                    content_style: `.mce-content-body {
+                                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+                                        "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", 
+                                        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                                    }`,
+                                }}
+                                plugins={['link', 'code']}
+                                onChange={e => {
+                                    props.setFieldValue('description', e.target.getContent());
+                                }}
+                            />
                             <Separator aria-hidden css={tw`my-4`} />
                             <StyledLabel css={tw`text-gray-700`}>Search for users</StyledLabel>
                             <StyledDropdown
@@ -169,7 +194,7 @@ const Create: React.FC<RouteComponentProps> = ({ navigate }) => {
     );
 };
 
-const StyledDropdown = styled(DropdownSelect)`
+export const StyledDropdown = styled(DropdownSelect)`
     input {
         ${tw`border-0 focus:outline-none focus:shadow-outline hover:bg-transparent 
             focus:bg-transparent shadow appearance-none rounded w-full py-2 px-3 

@@ -12,6 +12,7 @@ export const View: React.FC<RouteComponentProps & { groupId?: string; eventId?: 
         <StyledWrapper>
             <StyledTitle>{event.title}</StyledTitle>
             {event.description && <p dangerouslySetInnerHTML={{ __html: event.description }} />}
+            {event}
         </StyledWrapper>
     );
 };

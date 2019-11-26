@@ -13,14 +13,18 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
     return (
         <FormWrapper>
             <StyledTitle>Groups</StyledTitle>
-            {groups.map(({ id, name, description }) => (
-                <Link css={tw`capitalize`} key={id} to={`./${id}`}>
-                    <Wrapper>
-                        <GroupTitle>{name}</GroupTitle>
-                        {description && <Content dangerouslySetInnerHTML={{ __html: description }} />}
-                    </Wrapper>
-                </Link>
-            ))}
+            {groups.length > 0 ? (
+                groups.map(({ id, name, description }) => (
+                    <Link css={tw`capitalize`} key={id} to={`./${id}`}>
+                        <Wrapper>
+                            <GroupTitle>{name}</GroupTitle>
+                            {description && <Content dangerouslySetInnerHTML={{ __html: description }} />}
+                        </Wrapper>
+                    </Link>
+                ))
+            ) : (
+                <p css={tw`text-center`}>You are not in any groups! The horror!</p>
+            )}
         </FormWrapper>
     );
 };

@@ -10,7 +10,7 @@ export class EventResource extends BaseResource {
     readonly start?: moment.MomentInput = undefined;
     readonly end?: moment.MomentInput = undefined;
     readonly owner?: UserResource = undefined;
-    readonly users?: UserResource[] = undefined;
+    readonly eventRoster?: UserResource[] = undefined;
     readonly color?: string = undefined;
 
     pk(): number | undefined {

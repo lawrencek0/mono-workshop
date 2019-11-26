@@ -191,7 +191,7 @@ export const Modal = forwardRef<HTMLElement, Props>(
 
                             const events =
                                 selectedUsers.length > 0
-                                    ? createEvent({}, { ...values, start, end, users: selectedUsers })
+                                    ? createEvent({}, { ...values, start, end, eventRoster: selectedUsers })
                                     : [];
                             await Promise.all([groups, events]);
                         }

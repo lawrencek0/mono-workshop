@@ -1,11 +1,16 @@
 import React from 'react';
 import { useTable, usePagination } from 'react-table';
 import { GroupUserResource } from 'resources/GroupResource';
+import styled from 'styled-components/macro';
+import tw from 'tailwind.macro';
+import { FlatButton, PrimaryButton } from 'shared/buttons';
+import { useFetcher } from 'rest-hooks';
 
 export const Table: React.FC<{
     users: GroupUserResource[];
-    actions?: React.ReactElement;
-}> = ({ users, actions }) => {
+    canModify: boolean;
+    groupId?: string;
+}> = ({ users, groupId, canModify }) => {
     const {
         getTableProps,
         getTableBodyProps,
@@ -14,12 +19,10 @@ export const Table: React.FC<{
         page,
         canPreviousPage,
         canNextPage,
-        pageOptions,
         gotoPage,
         nextPage,
         previousPage,
         pageCount,
-        // state: { pageIndex },
     } = useTable(
         {
             columns: [
@@ -30,16 +33,29 @@ export const Table: React.FC<{
         },
         usePagination,
     );
+    const update = useFetcher(GroupUserResource.partialUpdateShape());
+    const deleter = useFetcher(GroupUserResource.deleteShape());
+
+    const handleRoleChange = (user: GroupUserResource) => async (
+        e: React.ChangeEvent<HTMLSelectElement>,
+    ): Promise<void> => {
+        await update({ id: user.id, groupId }, { role: e.target.value as 'member' | 'mod' | 'owner' });
+    };
+
+    const handleUserDelete = async (user: GroupUserResource): Promise<void> => {
+        await deleter({ id: user.id, groupId }, undefined);
+    };
+
     return (
         <div>
-            <table {...getTableProps()}>
+            <StyledTable {...getTableProps()}>
                 <thead>
                     {headerGroups.map(headerGroup => (
                         <tr key={undefined} {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                <th key={undefined} {...column.getHeaderProps()}>
+                                <StyledTh key={undefined} {...column.getHeaderProps()}>
                                     {column.render('Header')}
-                                </th>
+                                </StyledTh>
                             ))}
                         </tr>
                     ))}
@@ -51,37 +67,68 @@ export const Table: React.FC<{
                             <tr key={undefined} {...row.getRowProps()}>
                                 {row.cells.map(cell => {
                                     return (
-                                        <td key={undefined} {...cell.getCellProps()}>
+                                        <StyledTd key={undefined} {...cell.getCellProps()}>
                                             {cell.render('Cell')}
-                                        </td>
+                                        </StyledTd>
                                     );
                                 })}
-                                {actions}
+                                {canModify && (
+                                    <>
+                                        <StyledTd>
+                                            <select
+                                                defaultValue={row.original.role}
+                                                onChange={handleRoleChange(row.original as GroupUserResource)}
+                                            >
+                                                <option value="member">Member</option>
+                                                <option value="mod">Mod</option>
+                                                <option value="owner">Admin</option>
+                                            </select>
+                                        </StyledTd>
+                                        <StyledTd>
+                                            <PrimaryButton
+                                                variant="danger"
+                                                onClick={() => handleUserDelete(row.original as GroupUserResource)}
+                                            >
+                                                Delete?
+                                            </PrimaryButton>
+                                        </StyledTd>
+                                    </>
+                                )}
                             </tr>
                         );
                     })}
                 </tbody>
-            </table>
-            <div className="pagination">
-                <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+            </StyledTable>
+            <Pagination>
+                <FlatButton onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
                     {'<<'}
-                </button>{' '}
-                <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                </FlatButton>
+                <FlatButton onClick={() => previousPage()} disabled={!canPreviousPage}>
                     {'<'}
-                </button>{' '}
-                <button onClick={() => nextPage()} disabled={!canNextPage}>
+                </FlatButton>
+                <FlatButton onClick={() => nextPage()} disabled={!canNextPage}>
                     {'>'}
-                </button>{' '}
-                <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                </FlatButton>
+                <FlatButton onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
                     {'>>'}
-                </button>{' '}
-                {/* <span>
-                    Page{' '}
-                    <strong>
-                        {pageIndex + 1} of {pageOptions.length}
-                    </strong>{' '}
-                </span> */}
-            </div>
+                </FlatButton>
+            </Pagination>
         </div>
     );
 };
+
+const Pagination = styled.div`
+    ${tw`flex justify-between py-4`}
+`;
+
+const StyledTable = styled.table`
+    ${tw`text-left w-full border-collapse`}
+`;
+
+const StyledTh = styled.th`
+    ${tw`py-4 px-6 font-bold uppercase text-sm text-gray-dark border-b`}
+`;
+
+export const StyledTd = styled.td`
+    ${tw`py-4 px-6 border-b border-gray-500`}
+`;

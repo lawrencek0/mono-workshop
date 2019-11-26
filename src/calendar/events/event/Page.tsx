@@ -6,8 +6,7 @@ import { View } from './View';
 
 export type Props = RouteComponentProps & { eventId?: string };
 
-const Page: React.FC<Props> = ({ eventId }) => {
-    console.log(eventId);
+const Page: React.FC<Props> = () => {
     return (
         <FormWrapper>
             <Suspense fallback={<div>Loading your event...</div>}>
