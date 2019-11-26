@@ -91,11 +91,11 @@ export class EventController {
         if (!event || user.id !== event.owner.id) {
             throw new UnauthorizedError('Unauthorized: You are not the Owner');
         } else {
+            this.dispatch('delete', { ...event });
+            console.log({ ...event });
             await getRepository(GroupEventRoster).remove(event.groupEvent);
 
             await getRepository(EventRoster).remove(event.eventRoster);
-            this.dispatch('delete', { ...event });
-
             return this.eventRepository.deleteEvent(event.id);
         }
     }
