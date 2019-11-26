@@ -210,9 +210,11 @@ export class AppointmentControler {
                 // or change title or description and update their own color
 
                 const detailUser = await this.detailUsersRepo.getOne(user, detailOwn);
+
                 if (newTitle) detailOwn.title = newTitle;
                 if (newDesc) detailOwn.description = newDesc;
                 if (newColor) detailUser.hexColor = newColor;
+
                 const newDetail = await this.detailRepository.saveDetail(detailOwn);
 
                 if (newUsers) {
@@ -230,7 +232,15 @@ export class AppointmentControler {
                     );
                 }
 
-                return this.detailUsersRepo.saveDetailUser(detailUser);
+                await this.detailUsersRepo.saveDetailUser(detailUser);
+                const { slots, users, ...Detail } = await this.detailRepository.findById(newDetail.id);
+
+                // front end expects data smth like this:
+                return {
+                    slots,
+                    students: users.filter(({ user: { id } }) => id !== user.id).map(({ user }) => user),
+                    ...Detail,
+                };
             }
         }
     }
