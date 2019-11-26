@@ -11,6 +11,8 @@ import { Modal, Props as ModalProps, Position } from './Modal';
 import { getDate } from 'calendar/helpers';
 import { AppointmentResource } from 'resources/AppointmentResource';
 import { useAuthState } from 'auth/hooks';
+import { GroupEventResource } from 'resources/GroupResource';
+import { EventApi } from '@fullcalendar/core';
 
 const calculateModalPos = (calendar: HTMLElement, cell: HTMLElement, modal: HTMLElement): Position => {
     const { top: calendarTop, left: calendarLeft } = calendar.getBoundingClientRect();
@@ -50,41 +52,55 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
     const [modalInfo, setModalInfo] = useState<Pick<ModalProps, 'position' | 'startDate'>>({});
     const calendarRef = useRef<FullCalendar>(null);
     const modalRef = useRef<HTMLElement>(null);
-    const appointments = useResource(AppointmentResource.listShape(), {}) as Required<
-        InstanceType<typeof AppointmentResource>
-    >[];
+    const [appointments, groupEvents] = useResource(
+        [AppointmentResource.listShape(), {}],
+        [GroupEventResource.fetchAll(), {}],
+    );
+
     const {
         user: { role },
     } = useAuthState();
+
     const events = useMemo(() => {
-        return role === 'faculty'
-            ? appointments.flatMap(({ slots, title, id, userProps }) =>
-                  slots.map(slot => ({
-                      ...slot,
-                      groupId: id,
-                      type: 'appointments',
-                      slotId: slot.id,
-                      title,
-                      borderColor: userProps.hexColor,
-                      backgroundColor: userProps.hexColor,
-                  })),
-              )
-            : appointments.flatMap(({ slots, title, id, userProps }) => {
-                  return slots
-                      .filter(({ student }) => student && typeof student !== 'boolean')
-                      .map(slot => ({
+        const appts =
+            role === 'faculty'
+                ? appointments.flatMap(({ title, id, userProps = { hexColor: '' }, slots = [] }) =>
+                      slots.map(slot => ({
                           ...slot,
                           groupId: id,
                           type: 'appointments',
                           slotId: slot.id,
                           title,
                           borderColor: userProps.hexColor,
-                      }));
-              });
-    }, [appointments, role]);
+                          backgroundColor: userProps.hexColor,
+                      })),
+                  )
+                : appointments.flatMap(({ title, id, userProps = { hexColor: '' }, slots = [] }) => {
+                      return slots
+                          .filter(({ student }) => student && typeof student !== 'boolean')
+                          .map(slot => ({
+                              ...slot,
+                              detailId: id,
+                              type: 'appointments',
+                              slotId: slot.id,
+                              title,
+                              borderColor: userProps.hexColor,
+                              backgroundColor: userProps.hexColor,
+                          }));
+                  });
+        const groupEvts = groupEvents.map(event => ({
+            ...event,
+            type: 'groupEvent',
+            groupsId: event.group ? event.group.id : 1,
+            eventId: event.id,
+        }));
+        return [...appts, ...groupEvts];
+    }, [appointments, role, groupEvents]);
+
     const hideModal = (): void => {
         setModalInfo({ position: undefined });
     };
+
     const { activateModal } = queryString.parse(window.location.search);
 
     const handleDocClick = ({ target }: MouseEvent): void => {
@@ -145,7 +161,17 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
             <Calendar
                 eventClick={({ event }) => {
                     if (navigate) {
-                        navigate(`./${event.extendedProps.type}/${event.groupId}`);
+                        const type = event.extendedProps.type;
+
+                        if (type === 'appointments') {
+                            return navigate(`./appointments/${event.extendedProps.detailId}`);
+                        }
+
+                        if (type === 'groupEvent') {
+                            return navigate(
+                                `/groups/${event.extendedProps.groupsId}/events/${event.extendedProps.eventId}`,
+                            );
+                        }
                     }
                 }}
                 events={events}

@@ -4,8 +4,9 @@ import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import moment from 'moment';
 import { Formik, Form, Field } from 'formik';
-import { useFetcher, useResource } from 'rest-hooks';
+import { useFetcher, useResetter } from 'rest-hooks';
 import { FaHeading } from 'react-icons/fa';
+import { FaTimesCircle } from 'react-icons/fa';
 import { FaAlignLeft } from 'react-icons/fa';
 import { FaCalendarWeek } from 'react-icons/fa';
 import { FaClock } from 'react-icons/fa';
@@ -75,10 +76,27 @@ export const Modal = forwardRef<HTMLElement, Props>(
         const [type, setType] = useState<EventType>(eventType);
         const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
         const [selectedGroups, setSelectedGroups] = useState<GroupResource[]>([]);
+        const resetCache = useResetter();
+
+        const handleClose = (e: KeyboardEvent): void => {
+            if (e.key === 'Escape') {
+                hideModal();
+            }
+        };
 
         useEffect(() => {
             setSelectedUsers([]);
             setSelectedGroups([]);
+
+            document.addEventListener('keydown', handleClose);
+
+            if (!position) {
+                return document.removeEventListener('keydown', handleClose);
+            }
+
+            return () => {
+                document.removeEventListener('keydown', handleClose);
+            };
         }, [position]);
 
         const handleUserDelete = (item: UserResource | GroupResource): void => {
@@ -170,12 +188,13 @@ export const Modal = forwardRef<HTMLElement, Props>(
                             );
                             await Promise.all(groups);
                         }
-
+                        await resetCache();
                         await hideModal();
                     }}
                 >
                     {({ values }) => (
                         <StyledForm autoComplete="off">
+                            <Cross onClick={() => hideModal()} />
                             <StyledIcon as={FaHeading} aria-hidden />
                             {/* TODO: Focus with react-focus-trap */}
                             <StyledField
@@ -294,6 +313,11 @@ const StyledButton = styled(FlatButton)<{ active: boolean }>`
 const ActionButtons = styled.div`
     ${tw`flex justify-end`}
     grid-column-start: 2;
+`;
+
+const Cross = styled(FaTimesCircle)`
+    ${tw`ml-auto cursor-pointer`}
+    grid-column-start: 2
 `;
 
 export const Separator = styled.div`

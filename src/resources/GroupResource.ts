@@ -1,5 +1,6 @@
-import { Resource } from 'rest-hooks';
+import { Resource, ReadShape } from 'rest-hooks';
 import { AbstractInstanceType } from 'rest-hooks/lib/types';
+import { SchemaList } from 'rest-hooks/lib/resource';
 import { BaseResource } from './BaseResource';
 import { UserResource } from './UserResource';
 import moment from 'moment';
@@ -114,6 +115,7 @@ export class GroupEventResource extends BaseResource {
     readonly start?: moment.MomentInput = undefined;
     readonly end?: moment.MomentInput = undefined;
     readonly color?: string = undefined;
+    readonly group?: GroupResource = undefined;
 
     pk(): number | undefined {
         return this.id;
@@ -147,5 +149,17 @@ export class GroupEventResource extends BaseResource {
             return `${GroupResource.urlRoot}/${groupId}/events/?${params.toString()}`;
         }
         throw new Error('Group events require groupId to retrieve');
+    }
+
+    static fetchAll<T extends typeof Resource>(this: T): ReadShape<SchemaList<Readonly<AbstractInstanceType<T>>>> {
+        return {
+            ...this.listShape(),
+            getFetchKey: () => {
+                return '/api/groups/events';
+            },
+            fetch: (_params: {}, _body?: Readonly<object | string>) => {
+                return this.fetch('get', `${GroupResource.urlRoot}/events/all`);
+            },
+        };
     }
 }
