@@ -95,13 +95,16 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
             groupsId: event.group ? event.group.id : 1,
             eventId: event.id,
         }));
-        const evts = events.map(event => ({
-            ...event,
-            type: 'events',
-            eventId: event.id,
-            borderColor: event.color,
-            backgroundColor: event.color,
-        }));
+        const evts = events.map(event => {
+            const color = event.color ? event.color : event.user && event.user.color ? event.user.color : '#5c6ac4';
+            return {
+                ...event,
+                type: 'events',
+                eventId: event.id,
+                borderColor: color,
+                backgroundColor: color,
+            };
+        });
 
         return [...appts, ...groupEvts, ...evts];
     }, [appointments, role, groupEvents, events]);

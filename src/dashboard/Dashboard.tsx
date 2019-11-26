@@ -47,31 +47,42 @@ const Dashboard: React.FC<RouteComponentProps> = () => {
     return (
         <Main>
             {role === 'student' && <StudentDashboard />}
-            <StyledTitle css={tw`text-left ml-4`}>Group Events</StyledTitle>
-            <Wrapper>
-                {groups.slice(0, 5).map(event => {
-                    const groupId = event && event.group ? event.group.id : undefined;
-                    return (
-                        <CardWrapper key={event.id}>
-                            <StyledTitle>{event.title}</StyledTitle>
-                            {event.description && <p dangerouslySetInnerHTML={{ __html: event.description }} />}
-                            {groupId && <StyledLink to={`/groups/${groupId}/events/${event.id}`}>Details</StyledLink>}
-                        </CardWrapper>
-                    );
-                })}
-            </Wrapper>
-            <StyledTitle css={tw`text-left ml-4`}>Events</StyledTitle>
-            <Wrapper>
-                {events.slice(0, 5).map(event => {
-                    return (
-                        <CardWrapper key={event.id}>
-                            <StyledTitle>{event.title}</StyledTitle>
-                            {event.description && <p dangerouslySetInnerHTML={{ __html: event.description }} />}
-                            <StyledLink to={`/events/${event.id}`}>Details</StyledLink>
-                        </CardWrapper>
-                    );
-                })}
-            </Wrapper>
+            {groups.length > 0 && (
+                <>
+                    {' '}
+                    <StyledTitle css={tw`text-left ml-4`}>Group Events</StyledTitle>
+                    <Wrapper>
+                        {groups.slice(0, 5).map(event => {
+                            const groupId = event && event.group ? event.group.id : undefined;
+                            return (
+                                <CardWrapper key={event.id}>
+                                    <StyledTitle>{event.title}</StyledTitle>
+                                    {event.description && <p dangerouslySetInnerHTML={{ __html: event.description }} />}
+                                    {groupId && (
+                                        <StyledLink to={`/groups/${groupId}/events/${event.id}`}>Details</StyledLink>
+                                    )}
+                                </CardWrapper>
+                            );
+                        })}
+                    </Wrapper>
+                </>
+            )}
+            {events.length > 0 && (
+                <>
+                    <StyledTitle css={tw`text-left ml-4`}>Events</StyledTitle>
+                    <Wrapper>
+                        {events.slice(0, 5).map(event => {
+                            return (
+                                <CardWrapper key={event.id}>
+                                    <StyledTitle>{event.title}</StyledTitle>
+                                    {event.description && <p dangerouslySetInnerHTML={{ __html: event.description }} />}
+                                    <StyledLink to={`/calendar/events/${event.id}`}>Details</StyledLink>
+                                </CardWrapper>
+                            );
+                        })}
+                    </Wrapper>
+                </>
+            )}
         </Main>
     );
 };

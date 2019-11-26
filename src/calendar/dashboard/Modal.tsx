@@ -22,7 +22,7 @@ import { StyledLink } from 'shared/cards/styles';
 import { useAuthState } from 'auth/hooks';
 import { DropdownSelect } from './Items';
 import { GroupResource, GroupEventResource } from 'resources/GroupResource';
-import { EventResource } from 'resources/EventResource';
+import { EventResource, EventMemberResource } from 'resources/EventResource';
 
 type EventType = 'appointment' | 'event';
 
@@ -191,7 +191,15 @@ export const Modal = forwardRef<HTMLElement, Props>(
 
                             const events =
                                 selectedUsers.length > 0
-                                    ? createEvent({}, { ...values, start, end, eventRoster: selectedUsers })
+                                    ? createEvent(
+                                          {},
+                                          {
+                                              ...values,
+                                              start,
+                                              end,
+                                              eventRoster: selectedUsers as EventMemberResource[],
+                                          },
+                                      )
                                     : [];
                             await Promise.all([groups, events]);
                         }
