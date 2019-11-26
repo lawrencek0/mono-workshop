@@ -27,7 +27,8 @@ export class UserController {
                 rawStudents.map(async element => {
                     return this.userRepository.findByEmail(element.email).then(existUser => {
                         if (!existUser) {
-                            return this.userRepository.saveUser(element).then(user => ({
+                            const role = /^[A-Z0-9]+(@warhawks.ulm.edu)$/i.test(element.email) ? 'student' : 'faculty';
+                            return this.userRepository.saveUser({ ...element, role }).then(user => ({
                                 ...user,
                                 password: element.password,
                             }));
