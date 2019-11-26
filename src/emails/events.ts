@@ -48,8 +48,8 @@ export class EventEmail {
                 {
                     template,
                     message: {
-                        //to: user.user.email,
-                        to: 'sujeong0826@gmail.com',
+                        to: user.user.email,
+                        //to: 'sujeong0826@gmail.com',
                     },
                     locals: {
                         name: user.user.firstName,
