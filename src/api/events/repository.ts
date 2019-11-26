@@ -14,6 +14,10 @@ export class EventRepository {
         return this.repository.find({ where: { student: userId }, relations: ['event'] });
     }
 
+    findOneWithEventRosterUsers(id: number) {
+        return this.repository.findOne(id, { relations: ['owner', 'eventRoster', 'eventRoster.user'] });
+    }
+
     findById(id: number) {
         return this.repository.findOne({ where: { id }, relations: ['owner'] });
     }

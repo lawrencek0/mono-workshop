@@ -68,6 +68,9 @@ export class EventController {
             this.eventRosterRepository.saveEvent({ event: newEvent, color, user: owner }),
         ]);
 
+        const eventForEmail: Event = await this.eventRepository.findOneWithEventRosterUsers(newEvent.id);
+        this.dispatch('create', eventForEmail);
+
         return this.eventRepository.findById(newEvent.id);
     }
     @Delete('/:eventId')
