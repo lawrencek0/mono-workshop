@@ -26,7 +26,7 @@ export class EmailService {
                 from: 'ses4teamyellow@gmail.com',
             },
             // uncomment below to send emails in development/test env:
-            // send: true
+            send: true,
             transport: this.transport,
             views: {
                 root: __dirname,
