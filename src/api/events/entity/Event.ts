@@ -23,7 +23,7 @@ export class Event {
     @Column('text')
     description: string;
 
-    @ManyToOne(() => User, user => user.events)
+    @ManyToOne(() => User, user => user.events, { cascade: true, onDelete: 'CASCADE' })
     owner: User;
 
     // @ManyToMany(() => User, user => user.events)
