@@ -77,7 +77,8 @@ const Users: React.FC<RouteComponentProps> = () => {
 
     return (
         <form
-            onSubmit={async () => {
+            onSubmit={async e => {
+                e.preventDefault();
                 try {
                     const requestHeaders: HeadersInit = new Headers();
                     requestHeaders.set('Content-Type', 'application/json');
@@ -88,6 +89,8 @@ const Users: React.FC<RouteComponentProps> = () => {
                         headers: requestHeaders,
                         body: JSON.stringify({ students: usersFromFile }),
                     });
+
+                    alert('You have successfully created the users');
                 } catch (e) {
                     console.error(e);
                 }
