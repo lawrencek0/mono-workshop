@@ -45,7 +45,7 @@ export class EventRosterRepository {
         return this.repository.save(color);
     }
     deleteByEvent(event: Event) {
-        return this.repository.delete(event);
+        return this.repository.delete(event.id);
     }
     findById(id: number) {
         return this.repository.findOne({ where: { id }, relations: ['event'] });
