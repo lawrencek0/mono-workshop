@@ -4,12 +4,14 @@ import { RouteGuard } from 'routing/PrivateRoute';
 import { View } from './View';
 
 const EventCreationForm = lazy(() => import('./Create'));
+const EventEditForm = lazy(() => import('./Edit'));
 
 const Page: React.FC<RouteComponentProps> = () => {
     return (
         <Suspense fallback={<div>Loading event...</div>}>
             <Router>
                 <RouteGuard as={View} path=":eventId" action="groups:visit" />
+                <RouteGuard as={EventEditForm} path=":eventId/edit" action="groups:visit" />
                 <RouteGuard as={EventCreationForm} path="/new" action="groups:visit" />
             </Router>
         </Suspense>
