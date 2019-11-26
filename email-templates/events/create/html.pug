@@ -1,23 +1,14 @@
 doctype html
 html
     head
-        link(rel="stylesheet", href="style.css", data-inline)
+        //link(rel="stylesheet", href="style.css", data-inline)
     body
         p Hi #{name},
         p #{owner.firstName} #{owner.lastName} has invited you to: #{title}.
         p You can sign up here: 
             <a href={/calendars/appointment/{appointmentId}> Sign up</a>
         p Here are event information:  
-        table(style='width:100%', border='1')
-            thead
-                tr
-                    th Event #{title}
-            tbody
-                    tr
-                        td Location
-                        td #{location}
-                    tr    
-                        td Time
-                        td #{start} to #{end}
-                    tr  
-                        td #{description}
+        p Event:  #{title}
+        p Location: #{location}
+        p Time: #{start} to #{end}
+        p Description: #{description}

@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { EmailService } from './service';
 import { Event } from '../api/events/entity/Event';
+import moment = require('moment');
 @Service()
 export class EventEmail {
     @Inject() private email: EmailService;
@@ -19,8 +20,8 @@ export class EventEmail {
                         name: user.user.firstName,
                         owner: event.owner,
                         title: event.title,
-                        start: event.start,
-                        end: event.end,
+                        start: moment(event.start).format('LLL'),
+                        end: moment(event.end).format('LLL'),
                         location: event.location,
                         description: event.description,
                     },
