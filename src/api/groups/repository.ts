@@ -46,6 +46,10 @@ export class GroupEventRepository {
         return this.repository.save(groupEvent);
     }
 
+    saveGroupEvents(groupEvents: GroupEventRoster[]) {
+        return this.repository.save(groupEvents);
+    }
+
     findOne(userId: number, groupId: number, eventId: number) {
         return this.repository.findOne({
             where: { user: userId, group: groupId, event: eventId },

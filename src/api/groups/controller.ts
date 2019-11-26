@@ -23,6 +23,7 @@ import { Group } from './entity/Group';
 import { Role } from './entity/GroupUsers';
 import { Event } from '../events/entity/Event';
 import { EventRepository } from '../events/repository';
+import { GroupEventRoster } from './entity/GroupEventRoster';
 
 @JsonController('/groups')
 export class GroupController {
@@ -43,11 +44,23 @@ export class GroupController {
         return this.events.get('delete').asEvent();
     }
 
-    numAdder = (num1: number, num2: number) => num1 + num2;
-
     private dispatch(name: 'create' | 'delete', group: Group) {
         this.events.get(name).dispatchAsync(this, group);
     }
+
+    private eventEvents = new EventList<this, Event>();
+    get onCreateEvent(): IEvent<this, Event> {
+        return this.eventEvents.get('create').asEvent();
+    }
+
+    get onDeleteEvent(): IEvent<this, Event> {
+        return this.eventEvents.get('delete').asEvent();
+    }
+
+    private dispatchEvent(name: 'create' | 'delete', roster: Event) {
+        this.eventEvents.get(name).dispatchAsync(this, roster);
+    }
+
     // creates a group and populates the group_user table
     @Post('/')
     async create(
@@ -342,16 +355,18 @@ export class GroupController {
             this.groupUserRepo.findAllByGroup(groupId),
         ]);
 
-        await Promise.all(
-            members.map(member => {
-                this.groupEventRepo.saveGroupEvent({
-                    event: newEvent,
-                    user: member.user,
-                    group,
-                    going: false,
-                });
-            }),
-        );
+        const groupEvents: GroupEventRoster[] = members.map(member => ({
+            event: newEvent,
+            user: member.user,
+            group,
+            going: false,
+        }));
+
+        await this.groupEventRepo.saveGroupEvents(groupEvents);
+
+        const emailEvent: Event = await this.eventRepository.findOneWithGroupEvent(newEvent.id);
+
+        this.dispatchEvent('create', emailEvent);
 
         return this.eventRepository.findById(newEvent.id);
     }

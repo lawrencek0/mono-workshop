@@ -20,5 +20,6 @@ export class EmailOrchestrator {
         this.group.onDelete.subscribe((_, args) => this.groupEmailService.onDelete(args));
         this.event.onCreate.subscribe((_, args) => this.eventEmailService.onCreate(args));
         this.event.onDelete.subscribe((_, args) => this.eventEmailService.onDelete(args));
+        this.group.onCreateEvent.subscribe((_, args) => this.eventEmailService.onCreateWithGroup(args));
     }
 }

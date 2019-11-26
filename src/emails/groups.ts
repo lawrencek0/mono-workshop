@@ -1,8 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { EmailService } from './service';
 import { Group } from '../api/groups/entity/Group';
-import moment from 'moment';
-import { int } from 'aws-sdk/clients/datapipeline';
 import { User } from '../api/users/entity/User';
 
 @Service()
