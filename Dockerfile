@@ -18,5 +18,8 @@ COPY --from=base /usr/app/dist ./dist
 COPY .env ./
 COPY email-templates ./
 
+RUN npm install pm2 -g
+
 EXPOSE 8000
-CMD node dist/server.js
+
+CMD ["pm2-runtime", "dist/server.js"]
