@@ -5,17 +5,25 @@ import tw from 'tailwind.macro';
 import { Main } from 'navigation/Main';
 import { Item, NavLink, StyledTitle } from 'groups/group/Page';
 import { media } from 'themes/theme';
-import { FormWrapper } from 'shared/inputs/styles';
+import { FormWrapper, StyledSubmitBtn } from 'shared/inputs/styles';
 import { NetworkErrorBoundary, useResource } from 'rest-hooks';
 import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
 import { useDayNightThemeDispatch } from 'themes/hooks';
 import { FlatButton } from 'shared/buttons';
-import { GroupEventResource } from 'resources/GroupResource';
+import { GroupEventResource, GroupResource } from 'resources/GroupResource';
 import { EventResource } from 'resources/EventResource';
 import { AppointmentResource } from 'resources/AppointmentResource';
+import { useAuthState } from 'auth/hooks';
+import { processFile } from 'groups/Create';
+import { UserResource } from 'resources/UserResource';
+import { UserItems } from 'calendar/dashboard/Modal';
 
 const Page: React.FC<RouteComponentProps> = () => {
+    const {
+        user: { role },
+    } = useAuthState();
+
     return (
         <Main>
             <Wrapper>
@@ -26,12 +34,72 @@ const Page: React.FC<RouteComponentProps> = () => {
                             <Router>
                                 <General path="/" />
                                 <Calendar path="/calendar" />
+                                {role !== 'student' && <Users path="/users" />}
                             </Router>
                         </NetworkErrorBoundary>
                     </Suspense>
                 </FormWrapper>
             </Wrapper>
         </Main>
+    );
+};
+
+const Users: React.FC<RouteComponentProps> = () => {
+    const { idToken } = useAuthState();
+    const [usersFromFile, setUsersFromFile] = useState<UserResource[]>([]);
+
+    if (!idToken) {
+        return <div>You should not be here</div>;
+    }
+
+    const handleFile = ({ target: { files } }: React.ChangeEvent<HTMLInputElement>): void => {
+        setUsersFromFile([]);
+
+        if (!files) {
+            return;
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files.item(i);
+            if (file) {
+                processFile(file, users => {
+                    setUsersFromFile(u => u.concat(users));
+                });
+            }
+        }
+    };
+
+    const handleUsersFromFileDelete = (item: UserResource | GroupResource): void => {
+        if (item instanceof UserResource) {
+            return setUsersFromFile(usersFromFile.filter(user => user.email !== item.email));
+        }
+    };
+
+    return (
+        <form
+            onSubmit={async () => {
+                try {
+                    const requestHeaders: HeadersInit = new Headers();
+                    requestHeaders.set('Content-Type', 'application/json');
+                    requestHeaders.set('idtoken', idToken);
+
+                    await fetch('/api/users/', {
+                        method: 'POST',
+                        headers: requestHeaders,
+                        body: JSON.stringify({ students: usersFromFile }),
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }}
+        >
+            <label htmlFor="memberFile">Add Users from file</label>
+            <input type="file" name="memberFile" id="memberFile" onChange={handleFile} multiple />
+            <div css={tw`my-4`}>
+                <UserItems items={usersFromFile} deleteCb={handleUsersFromFileDelete} />
+            </div>
+            <StyledSubmitBtn type="submit" value="Create Users" />
+        </form>
     );
 };
 
@@ -107,6 +175,9 @@ const Calendar: React.FC<RouteComponentProps> = () => {
 };
 
 const Sidebar: React.FC = () => {
+    const {
+        user: { role },
+    } = useAuthState();
     return (
         <aside>
             <ul>
@@ -116,6 +187,11 @@ const Sidebar: React.FC = () => {
                 <Item>
                     <NavLink to="./calendar">Calendar</NavLink>
                 </Item>
+                {role !== 'student' && (
+                    <Item>
+                        <NavLink to="./users">Users</NavLink>
+                    </Item>
+                )}
             </ul>
         </aside>
     );

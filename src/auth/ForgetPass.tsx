@@ -27,7 +27,7 @@ const ForgetPass: React.FC<RouteComponentProps> = () => {
             onSubmit={async (values, actions) => {
                 try {
                     await fetch('/api/auth/forgotPassword', {
-                        method: 'POerifyST',
+                        method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: values.email }),
                     });
