@@ -11,10 +11,7 @@
         "sourceMap": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
-        "baseUrl": ".",
-        "paths": {
-            "*": ["node_modules/*", "src/types/*"]
-        }
+        "baseUrl": "."
     },
-    "include": ["src/**/*"]
+    "include": ["src"]
 }
