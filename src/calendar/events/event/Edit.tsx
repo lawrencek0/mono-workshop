@@ -129,12 +129,12 @@ const Edit: React.FC<RouteComponentProps & { eventId?: string }> = ({ eventId })
             validationSchema={schema}
             onSubmit={async (values, actions) => {
                 const start = moment(values.startDate)
-                    .add('hours', moment('HH:mm', values.startTime).hours())
-                    .add('minutes', moment('HH:mm', values.startTime).minutes())
+                    .add(moment(values.startTime, 'HH:mm').hours(), 'hours')
+                    .add(moment(values.startTime, 'HH:mm').minutes(), 'minutes')
                     .toLocaleString();
                 const end = moment(values.endDate)
-                    .add('hours', moment('HH:mm', values.endTime).hours())
-                    .add('minutes', moment('HH:mm', values.endTime).minutes())
+                    .add(moment(values.endTime, 'HH:mm').hours(), 'hours')
+                    .add(moment(values.endTime, 'HH:mm').minutes(), 'minutes')
                     .toLocaleString();
                 try {
                     await edit(

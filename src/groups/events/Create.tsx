@@ -85,12 +85,12 @@ const Post: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId })
                         {
                             ...values,
                             start: moment(values.startDate)
-                                .add('hours', moment(values.startTime, 'HH:mm').hours())
-                                .add('minutes', moment(values.startTime, 'HH:mm').minutes())
+                                .add(moment(values.startTime, 'HH:mm').hours(), 'hours')
+                                .add(moment(values.startTime, 'HH:mm').minutes(), 'minutes')
                                 .toLocaleString(),
                             end: moment(values.endDate)
-                                .add('hours', moment(values.endTime, 'HH:mm').hours())
-                                .add('minutes', moment(values.endTime, 'HH:mm').minutes())
+                                .add(moment(values.endTime, 'HH:mm').hours(), 'hours')
+                                .add(moment(values.endTime, 'HH:mm').minutes(), 'minutes')
                                 .toLocaleString(),
                         },
                         [

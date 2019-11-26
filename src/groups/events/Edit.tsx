@@ -91,12 +91,12 @@ const Edit: React.FC<RouteComponentProps & { groupId?: string; eventId?: string 
                         {
                             ...values,
                             start: moment(values.startDate)
-                                .add('hours', moment('HH:mm', values.startTime).hours())
-                                .add('minutes', moment('HH:mm', values.startTime).minutes())
+                                .add(moment(values.startDate, 'HH:mm').hours(), 'hours')
+                                .add(moment(values.startDate, 'HH:mm').minutes(), 'minutes')
                                 .toLocaleString(),
                             end: moment(values.endDate)
-                                .add('hours', moment('HH:mm', values.endTime).hours())
-                                .add('minutes', moment('HH:mm', values.endTime).minutes())
+                                .add(moment(values.endTime, 'HH:mm').hours(), 'hours')
+                                .add(moment(values.endTime, 'HH:mm').minutes(), 'minutes')
                                 .toLocaleString(),
                         },
                     );

@@ -153,16 +153,16 @@ export const Modal = forwardRef<HTMLElement, Props>(
 
                         if (type === 'event') {
                             const start = moment(values.startDate)
-                                .add('hours', moment(values.startTime, 'HH:mm').hours())
-                                .add('minutes', moment(values.startTime, 'HH:mm').minutes())
+                                .add(moment(values.startTime, 'HH:mm').hours(), 'hours')
+                                .add(moment(values.startTime, 'HH:mm').minutes(), 'minutes')
                                 .toLocaleString();
                             const end = moment(values.endDate)
-                                .add('hours', moment(values.endTime, 'HH:mm').hours())
-                                .add('minutes', moment(values.endTime, 'HH:mm').minutes())
+                                .add(moment(values.endTime, 'HH:mm').hours(), 'hours')
+                                .add(moment(values.endTime, 'HH:mm').minutes(), 'minutes')
                                 .toLocaleString();
                             moment(values.endDate)
-                                .add('hours', moment(values.endTime, 'HH:mm').hours())
-                                .add('minutes', moment(values.endTime, 'HH:mm').minutes())
+                                .add(moment(values.endTime, 'HH:mm').hours(), 'hours')
+                                .add(moment(values.endTime, 'HH:mm').minutes(), 'minutes')
                                 .toLocaleString();
 
                             const groups =
