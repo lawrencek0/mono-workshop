@@ -7,6 +7,7 @@ import { Main } from 'navigation/Main';
 import { RouteGuard } from 'routing/PrivateRoute';
 import Dashboard from './dashboard/Dashboard';
 import Select from './appointment/Select';
+import Event from './events/Page';
 
 const AppointmentCreationForm = lazy(() => import('./appointment/create/Form'));
 
@@ -39,6 +40,7 @@ const Calendar: React.FC<RouteComponentProps> = () => {
                             action="events:add"
                             path="appointments/new/:step"
                         ></RouteGuard>
+                        <Event path="events/*" />
                     </StyledRouter>
                 </NetworkErrorBoundary>
             </Suspense>

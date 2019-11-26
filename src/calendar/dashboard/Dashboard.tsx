@@ -12,7 +12,7 @@ import { getDate } from 'calendar/helpers';
 import { AppointmentResource } from 'resources/AppointmentResource';
 import { useAuthState } from 'auth/hooks';
 import { GroupEventResource } from 'resources/GroupResource';
-import { EventApi } from '@fullcalendar/core';
+import { EventResource } from 'resources/EventResource';
 
 const calculateModalPos = (calendar: HTMLElement, cell: HTMLElement, modal: HTMLElement): Position => {
     const { top: calendarTop, left: calendarLeft } = calendar.getBoundingClientRect();
@@ -52,16 +52,17 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
     const [modalInfo, setModalInfo] = useState<Pick<ModalProps, 'position' | 'startDate'>>({});
     const calendarRef = useRef<FullCalendar>(null);
     const modalRef = useRef<HTMLElement>(null);
-    const [appointments, groupEvents] = useResource(
+    const [appointments, groupEvents, events] = useResource(
         [AppointmentResource.listShape(), {}],
         [GroupEventResource.fetchAll(), {}],
+        [EventResource.listShape(), {}],
     );
 
     const {
         user: { role },
     } = useAuthState();
 
-    const events = useMemo(() => {
+    const allEvents = useMemo(() => {
         const appts =
             role === 'faculty'
                 ? appointments.flatMap(({ title, id, userProps = { hexColor: '' }, slots = [] }) =>
@@ -94,8 +95,16 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
             groupsId: event.group ? event.group.id : 1,
             eventId: event.id,
         }));
-        return [...appts, ...groupEvts];
-    }, [appointments, role, groupEvents]);
+        const evts = events.map(event => ({
+            ...event,
+            type: 'events',
+            eventId: event.id,
+            borderColor: event.color,
+            backgroundColor: event.color,
+        }));
+
+        return [...appts, ...groupEvts, ...evts];
+    }, [appointments, role, groupEvents, events]);
 
     const hideModal = (): void => {
         setModalInfo({ position: undefined });
@@ -167,6 +176,10 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
                             return navigate(`./appointments/${event.extendedProps.detailId}`);
                         }
 
+                        if (type === 'events') {
+                            return navigate(`./events/${event.extendedProps.eventId}`);
+                        }
+
                         if (type === 'groupEvent') {
                             return navigate(
                                 `/groups/${event.extendedProps.groupsId}/events/${event.extendedProps.eventId}`,
@@ -174,7 +187,7 @@ const Dashboard: React.FC<RouteComponentProps> = ({ navigate }) => {
                         }
                     }
                 }}
-                events={events}
+                events={allEvents}
                 ref={calendarRef}
                 dateClick={handleDateClick}
             />

@@ -22,7 +22,7 @@ import { StyledLink } from 'shared/cards/styles';
 import { useAuthState } from 'auth/hooks';
 import { DropdownSelect } from './Items';
 import { GroupResource, GroupEventResource } from 'resources/GroupResource';
-import { navigate } from '@reach/router';
+import { EventResource } from 'resources/EventResource';
 
 type EventType = 'appointment' | 'event';
 
@@ -73,21 +73,20 @@ export const Modal = forwardRef<HTMLElement, Props>(
         } = useAuthState();
         const createAppointment = useFetcher(AppointmentResource.createShape());
         const createGroupEvent = useFetcher(GroupEventResource.createShape());
+        const createEvent = useFetcher(EventResource.createShape());
         const [type, setType] = useState<EventType>(eventType);
         const [selectedUsers, setSelectedUsers] = useState<InstanceType<typeof UserResource>[]>([]);
         const [selectedGroups, setSelectedGroups] = useState<GroupResource[]>([]);
         const resetCache = useResetter();
 
-        const handleClose = (e: KeyboardEvent): void => {
-            if (e.key === 'Escape') {
-                hideModal();
-            }
-        };
-
         useEffect(() => {
             setSelectedUsers([]);
             setSelectedGroups([]);
-
+            const handleClose = (e: KeyboardEvent): void => {
+                if (e.key === 'Escape') {
+                    hideModal();
+                }
+            };
             document.addEventListener('keydown', handleClose);
 
             if (!position) {
@@ -97,7 +96,7 @@ export const Modal = forwardRef<HTMLElement, Props>(
             return () => {
                 document.removeEventListener('keydown', handleClose);
             };
-        }, [position]);
+        }, [position, hideModal]);
 
         const handleUserDelete = (item: UserResource | GroupResource): void => {
             if (item instanceof UserResource) {
@@ -166,27 +165,35 @@ export const Modal = forwardRef<HTMLElement, Props>(
                                 .add('minutes', moment(values.endTime, 'HH:mm').minutes())
                                 .toLocaleString();
 
-                            const groups = selectedGroups.map(({ id: groupId }) =>
-                                createGroupEvent(
-                                    { groupId },
-                                    {
-                                        ...values,
-                                        start,
-                                        end,
-                                    },
-                                    [
-                                        [
-                                            GroupEventResource.listShape(),
-                                            { groupId },
-                                            (groupId: string, groupIds: string[] | undefined) => [
-                                                groupId,
-                                                ...(groupIds || []),
-                                            ],
-                                        ],
-                                    ],
-                                ),
-                            );
-                            await Promise.all(groups);
+                            const groups =
+                                selectedGroups.length > 0
+                                    ? selectedGroups.map(({ id: groupId }) =>
+                                          createGroupEvent(
+                                              { groupId },
+                                              {
+                                                  ...values,
+                                                  start,
+                                                  end,
+                                              },
+                                              [
+                                                  [
+                                                      GroupEventResource.listShape(),
+                                                      { groupId },
+                                                      (groupId: string, groupIds: string[] | undefined) => [
+                                                          groupId,
+                                                          ...(groupIds || []),
+                                                      ],
+                                                  ],
+                                              ],
+                                          ),
+                                      )
+                                    : [];
+
+                            const events =
+                                selectedUsers.length > 0
+                                    ? createEvent({}, { ...values, start, end, users: selectedUsers })
+                                    : [];
+                            await Promise.all([groups, events]);
                         }
                         await resetCache();
                         await hideModal();
@@ -267,9 +274,11 @@ export const Modal = forwardRef<HTMLElement, Props>(
                                 <StyledField css={tw`w-16 h-8 p-2`} type="color" name="color" aria-label="Color" />
                             </div>
                             <ActionButtons>
-                                <StyledLink to="./appointments/new/1" css={tw`mr-4 border-0`}>
-                                    More Options
-                                </StyledLink>
+                                {type === 'appointment' && (
+                                    <StyledLink to="./appointments/new/1" css={tw`mr-4 border-0`}>
+                                        More Options
+                                    </StyledLink>
+                                )}
                                 <PrimaryButton type="submit">Submit</PrimaryButton>
                             </ActionButtons>
                         </StyledForm>
