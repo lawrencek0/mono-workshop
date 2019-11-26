@@ -104,6 +104,8 @@ export class EventController {
         @Param('eventId') eventId: number,
         @BodyParam('color') newColor: string,
         @BodyParam('title') newTitle: string,
+        @BodyParam('startDate') startDate: Date,
+        @BodyParam('endDate') endDate: Date,
         @BodyParam('description') newDesc: string,
         @BodyParam('eventRoster') users: User[],
     ) {
@@ -119,6 +121,8 @@ export class EventController {
         if (newTitle) event.title = newTitle;
         if (newDesc) event.description = newDesc;
         if (newColor) member.color = newColor;
+        if (startDate) event.start = startDate;
+        if (endDate) event.end = endDate;
 
         if (users) {
             const roster = users.map(user => ({
@@ -184,19 +188,21 @@ export class EventController {
     }
     @Get('/')
     async findAll(@CurrentUser({ required: true }) user: User) {
-        const events = await this.eventRepository.findAll(user.id);
+        const events = await this.eventRosterRepository.findAllByUser(user.id);
+        return events.map(({ event, ...rest }) => ({ ...event, user: rest }));
+        // const events = await this.eventRepository.findAll(user.id);
 
-        return events.map(event => {
-            const eventUser = event.eventRoster.find(event => event && event.user && event.user.id === user.id);
+        // return events.map(event => {
+        //     const eventUser = event.eventRoster.find(event => event && event.user && event.user.id === user.id);
 
-            if (eventUser) {
-                return {
-                    ...event,
-                    user: { ...eventUser.user, ...eventUser },
-                };
-            }
-            return { ...event };
-        });
+        //     if (eventUser) {
+        //         return {
+        //             ...event,
+        //             user: { ...eventUser.user, ...eventUser },
+        //         };
+        //     }
+        //     return { ...event };
+        // });
     }
 
     @Get('/:eventId')
