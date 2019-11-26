@@ -10,6 +10,9 @@ import { useAuthState } from 'auth/hooks';
 const Calendar = lazy(() => import('calendar/Page'));
 const Group = lazy(() => import('groups/Page'));
 const Fab = lazy(() => import('./Fab'));
+const ForgetPass = lazy(() => import('auth/ForgetPass'));
+const Token = lazy(() => import('auth/Token'));
+const Verify = lazy(() => import('auth/Verify'));
 
 const GlobalStyle = createGlobalStyle`
     html {
@@ -33,7 +36,10 @@ const App: React.FC = () => {
                 <RouteGuard as={Calendar} action="events:visit" path="calendar/*" />
                 <Group path="groups/*" />
                 <RouteGuard as={Login} action="login" path="/login" />
+                <RouteGuard as={ForgetPass} action="login" path="/forget-password" />
                 <RouteGuard as={Logout} action="logout" path="/logout" />
+                <RouteGuard as={Token} action="login" path="/verify-token" />
+                <RouteGuard as={Verify} action="login" path="/verify-user" />
                 <NotFoundPage path="*" />
             </Router>
             {accessToken && <Fab />}

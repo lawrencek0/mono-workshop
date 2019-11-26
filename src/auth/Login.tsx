@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RouteComponentProps, navigate } from '@reach/router';
+import { RouteComponentProps, navigate, Link } from '@reach/router';
 import { Formik, FormikProps } from 'formik';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
@@ -95,6 +95,9 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                                 />
                                 <StyledCheckboxLabel htmlFor="rememberMe">Remember Me</StyledCheckboxLabel>
                             </InputWrapper>
+                            <InputWrapper css={tw`text-base`}>
+                                <Link to="/forget-password">Forget Password</Link>
+                            </InputWrapper>
                             <InputWrapper>
                                 <StyledSubmitBtn
                                     type="submit"
@@ -111,7 +114,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
     );
 };
 
-const StyledProgress = styled(Progress)`
+export const StyledProgress = styled(Progress)`
     ${tw`absolute inset-0`}
 `;
 

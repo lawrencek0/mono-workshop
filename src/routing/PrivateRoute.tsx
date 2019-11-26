@@ -39,6 +39,10 @@ const RouteGuard = <P extends {}>(props: Props<P>): JSX.Element => {
         to = location.pathname;
     }
 
+    if (!accessToken && action === 'login') {
+        return <Component {...rest}>{children}</Component>;
+    }
+
     if (!accessToken) {
         navigate('/login');
         return <Login to={to} />;
