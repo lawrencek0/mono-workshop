@@ -293,7 +293,8 @@ export const Modal = forwardRef<HTMLElement, Props>(
 Modal.displayName = 'Modal';
 
 const Wrapper = styled.aside<{ left?: number; top?: number }>`
-    ${tw`absolute bg-white rounded p-4 z-10 shadow-lg`};
+    ${tw`absolute rounded p-4 z-10 shadow-lg`};
+    background: var(--color-bg-card);
     visibility: ${props => (props.left ? 'shown' : 'hidden')};
     left: ${props => `${props.left}px`};
     top: ${props => (props.top ? `${props.top}px` : 0)};
@@ -307,6 +308,7 @@ const StyledForm = styled(Form)`
 `;
 
 export const StyledField = styled(Field)`
+    background: var(--color-bg-card);
     ${tw`hover:bg-gray-300 hover:border-gray-500 focus:border-gray-800 focus:bg-gray-300 px-2 pt-2 w-full border-b-2 border-b-2 border-transparent`}
 `;
 

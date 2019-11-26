@@ -5,7 +5,7 @@ import moment from 'moment';
 import { RouteComponentProps, navigate } from '@reach/router';
 import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
-import { useMediaQueryString } from 'theme';
+import { useMediaQueryString } from 'themes/theme';
 import { slotsFromRanges, groupSlotsByDay } from 'calendar/helpers';
 import { FormWrapper } from 'shared/inputs/styles';
 import { FlatButton, PrimaryButton } from 'shared/buttons';

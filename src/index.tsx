@@ -4,12 +4,15 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AppProviders } from 'AppProviders';
 import './styles/tailwind.out.css';
+import { DayNightThemeProvider } from 'themes/hooks';
 
 ReactDOM.render(
     <StrictMode>
-        <AppProviders>
-            <App />
-        </AppProviders>
+        <DayNightThemeProvider>
+            <AppProviders>
+                <App />
+            </AppProviders>
+        </DayNightThemeProvider>
     </StrictMode>,
     document.getElementById('root'),
 );

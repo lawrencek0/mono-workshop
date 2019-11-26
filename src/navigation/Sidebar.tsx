@@ -23,7 +23,8 @@ const Sidebar: React.FC<Props> = ({ routes }) => {
 
 const navStyles = theme('mode', {
     light: css`
-        ${tw`bg-primary-300 shadow-md text-gray-900`}
+        ${tw`shadow-md text-gray-900`}
+        background: var(--color-bg-primary-navbar);
     `,
     dark: css`
         ${tw`bg-dark-4`}

@@ -1,7 +1,7 @@
 import React, { ReactNode, lazy } from 'react';
 import { RouteComponentProps } from '@reach/router';
 import tw from 'tailwind.macro';
-import { media, useMediaQueryString } from 'theme';
+import { media, useMediaQueryString } from 'themes/theme';
 import styled from 'styled-components/macro';
 import { primaryRoutes } from 'routing/routes';
 import { Sidebar } from './Sidebar';

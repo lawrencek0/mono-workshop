@@ -9,7 +9,7 @@ import { Title } from 'shared/cards/styles';
 import { RouteGuard } from 'routing/PrivateRoute';
 import { Members } from './Members';
 import { View, UnauthenticatedView } from './View';
-import { media } from 'theme';
+import { media } from 'themes/theme';
 
 export type Props = RouteComponentProps & {
     groupId?: string;
@@ -52,7 +52,7 @@ export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ gr
     );
 };
 
-const NavLink: React.FC<{ to: string; children: React.ReactChild }> = ({ to, children }) => (
+export const NavLink: React.FC<{ to: string; children: React.ReactChild }> = ({ to, children }) => (
     <Match path={to}>
         {({ match }) => (
             <StyledLink to={to} variant={match ? 'active' : 'default'}>
@@ -110,7 +110,7 @@ const Wrapper = styled.div`
     }
 `;
 
-const Item = styled.li`
+export const Item = styled.li`
     ${tw`my-4`}
 `;
 

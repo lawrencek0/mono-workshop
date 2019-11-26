@@ -9,6 +9,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { OptionsInput } from '@fullcalendar/core';
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
+import { textColor } from 'themes/theme';
 
 type Variant = 'flat' | 'raised';
 type Props = OptionsInput & {
@@ -96,7 +97,9 @@ CalendarWrapper.displayName = 'CalendarWrapper';
 
 const fullCalendarStyles = theme('variant', {
     raised: css`
-        ${tw`bg-white rounded shadow`}
+        ${tw`rounded shadow`}
+        background: var(--color-bg-card);
+
         .fc {
             ${tw`px-2 py-2`}
             table {
@@ -143,10 +146,11 @@ const fullCalendarStyles = theme('variant', {
         .fc {
             .fc-toolbar {
                 .fc-button.fc-button-primary {
-                    ${tw`bg-transparent hover:bg-primary-300 active:bg-primary-400 
-                    text-gray-800 hover:text-gray-800 active:text-gray-800 
+                    ${tw`text-gray-800 hover:text-gray-800 active:text-gray-800 
                     border-gray-500 hover:border-primary-600 focus:border-primary-600 
                     focus:shadow-outline py-2 px-8 uppercase`}
+                    background: transparent;
+                    color: ${textColor};
                 }
             }
             table {
@@ -179,11 +183,13 @@ const fullCalendarStyles = theme('variant', {
                     }
 
                     .fc-today {
-                        ${tw`bg-transparent border-primary-400 text-primary-600`}
+                        ${tw`border-primary-400 text-primary-600`}
+                        background: transparent;
                     }
 
                     .fc-event {
-                        ${tw`bg-white border-l-4 truncate rounded cursor-pointer px-2 mb-2 border-gray-400 text-gray-800`}
+                        ${tw`border-l-4 truncate rounded cursor-pointer px-2 mb-2 border-gray-400 text-gray-800`}
+                        background: var(--color-bg-card);
                     }
                 }
             }

@@ -2025,6 +2025,13 @@
     "@types/prop-types" "*"
     "@types/react" "*"
 
+"@types/react-toggle@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-toggle/-/react-toggle-4.0.2.tgz#46ffa5af1a55de5f25d0aa78ef0b557b5c8bf276"
+  integrity sha512-sHqfoKFnL0YU2+OC4meNEC8Ptx9FE8/+nFeFvNcdBa6ANA8KpAzj3R9JN8GtrvlLgjKDoYgI7iILgXYcTPo2IA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@^16.9.2":
   version "16.9.2"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.2.tgz#6d1765431a1ad1877979013906731aae373de268"
@@ -11128,10 +11135,10 @@ react-hotkeys@2.0.0-pre4:
   dependencies:
     prop-types "^15.6.1"
 
-react-icons@^3.7.0:
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.7.0.tgz#64fe46231fabfeea27895edeae6c3b78114b8c8f"
-  integrity sha512-7MyPwjIhuyW0D2N3s4DEd0hGPGFf0sK+IIRKhc1FvSpZNVmnUoGvHbmAwzGJU+3my+fvihVWgwU5SDtlAri56Q==
+react-icons@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.8.0.tgz#229de5904809696c9f46932bd9b6126b2522866e"
+  integrity sha512-rA/8GRKjPulft8BSBSMsHkE1AGPqJ7LjNsyk0BE7XjG70Iz62zOled2SJk7LDo8x9z86a3xOstDlKlMZ4pAy7A==
   dependencies:
     camelcase "^5.0.0"
 
@@ -11318,6 +11325,13 @@ react-tiny-fab@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/react-tiny-fab/-/react-tiny-fab-3.0.3.tgz#dd394d336f4fc6d0b29881452c6a288fff0c122c"
   integrity sha512-Su0nnIyDB5s1VBYzGms/Sf352gncdHmgfYkpsq20BKAErmaC7a0xA4uWTM+PBOUA0hpJnSc0tN4EM+AocpiLcA==
+
+react-toggle@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-toggle/-/react-toggle-4.1.1.tgz#2317f67bf918ea3508a96b09dd383efd9da572af"
+  integrity sha512-+wXlMcSpg8SmnIXauMaZiKpR+r2wp2gMUteroejp2UTSqGTVvZLN+m9EhMzFARBKEw7KpQOwzCyfzeHeAndQGw==
+  dependencies:
+    classnames "^2.2.5"
 
 react-with-direction@^1.3.1:
   version "1.3.1"

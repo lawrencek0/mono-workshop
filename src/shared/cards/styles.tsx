@@ -4,11 +4,12 @@ import { Link } from '@reach/router';
 
 const Wrapper = styled.div`
     ${tw`flex flex-col justify-between py-4 px-8 mb-4 leading-normal shadow-md
-        rounded bg-white`}
+        rounded`}
+    background: var(--color-bg-card);
 `;
 
 const Title = styled.h1`
-    ${tw`text-gray-900 font-medium text-lg mb-2`}
+    ${tw`font-medium text-lg mb-2`}
 `;
 
 const Body = styled.div`

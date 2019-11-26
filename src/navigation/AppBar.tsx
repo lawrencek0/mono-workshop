@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { primaryTextColor } from 'theme';
+import { primaryTextColor } from 'themes/theme';
 import { MdMenu } from 'react-icons/md';
 import { Link } from '@reach/router';
 

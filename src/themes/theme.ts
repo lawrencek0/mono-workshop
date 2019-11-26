@@ -46,6 +46,16 @@ export const primaryTextColor = theme('mode', {
     dark: '#fff',
 });
 
+export const textColor = theme('mode', {
+    light: '#48483C',
+    dark: '#fff',
+});
+
+export const bodyColor = theme('mode', {
+    light: '#f9f9f9',
+    dark: '#303030',
+});
+
 // Should be used for less important stuff against the primaryColor like inactive
 // links on the sidebar
 export const secondaryTextColor = theme('mode', {

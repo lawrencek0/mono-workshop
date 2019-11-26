@@ -40,6 +40,7 @@ const StyledCheckboxLabel = styled(StyledLabel)`
 
 const StyledInput = styled.input<{ variant?: Variant }>`
     ${tw`shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight`}
+    background: var(--color-bg-card);
     ${focusStyles}
 `;
 
@@ -68,9 +69,16 @@ const submitBtnStyles = theme.variants('mode', 'variant', {
             ${primaryBtnStyles}
             ${tw`font-bold cursor-pointer`}
         `,
+        dark: css`
+            ${primaryBtnStyles}
+            ${tw`font-bold cursor-pointer`}
+        `,
     },
     disabled: {
         light: css`
+            ${flatBtnStyles};
+        `,
+        dark: css`
             ${flatBtnStyles};
         `,
     },

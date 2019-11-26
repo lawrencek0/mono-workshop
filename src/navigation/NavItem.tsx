@@ -4,7 +4,7 @@ import { IconType } from 'react-icons/lib/cjs';
 import styled, { css } from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { RouteTitles } from 'routing/routes';
-import { media, useMediaQueryString } from 'theme';
+import { media, useMediaQueryString } from 'themes/theme';
 import theme from 'styled-theming';
 
 export type Variant = 'active' | 'inactive';
@@ -46,10 +46,15 @@ export const NavItem: React.FC<NavItemProps> = ({ title, to, Icon, isSecondary =
 const navLinkStyles = theme.variants('mode', 'variant', {
     inactive: {
         light: css`
-            ${tw`hover:bg-primary-100`}
+            &:hover {
+                background: var(--color-bg-primary-100);
+            }
         `,
         dark: css`
-            ${tw`bg-transparent text-gray-500 hover:bg-gray-700`}
+            ${tw`bg-transparent text-gray-500`}
+            &:hover {
+                background: var(--color-bg-primary-100);
+            }
         `,
     },
     active: {

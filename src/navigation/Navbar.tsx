@@ -48,21 +48,23 @@ const Navbar: React.FC = () => {
 export const StyledMenuList = styled(MenuList)`
     &[data-reach-menu-list] {
         ${tw`border-gray-400 shadow-lg`}
+        background: var(--color-bg-card);
     }
     & [data-reach-menu-item] {
         ${tw`text-lg`}
     }
     & [data-reach-menu-item][data-selected] {
-        ${tw`bg-primary-400 text-gray-800`}
+        ${tw`bg-primary-400`}
     }
 `;
 
 const Avatar = styled(MenuButton)`
-    ${tw`flex ml-auto items-center content-between text-xl mx-2 text-gray-800`}
+    ${tw`flex ml-auto items-center content-between text-xl mx-2`}
 `;
 
 const StyledHeader = styled.header`
-    ${tw`flex items-center text-2xl shadow pt-2 pb-4 bg-white`}
+    ${tw`flex items-center text-2xl shadow pt-2 pb-4`}
+    background: var(--color-bg-card);
 
     & [data-reach-menu-button] {
         ${tw`ml-auto`}
@@ -78,8 +80,9 @@ const SearchWrapper = styled.div`
 `;
 
 const StyledSearch = styled.input`
-    ${tw`w-full bg-white focus:outline-none border-none
+    ${tw`w-full focus:outline-none border-none
         py-2 px-4 block appearance-none leading-tight`}
+    background: var(--color-bg-card);
 `;
 
 export default Navbar;

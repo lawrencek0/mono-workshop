@@ -181,7 +181,8 @@ const StyledDropdown = styled(DropdownSelect)`
     }
 
     ${/*sc-sel*/ Item} {
-        ${tw`shadow bg-white rounded`}
+        ${tw`shadow rounded`}
+        background: var(--color-bg-card);
     }
 `;
 

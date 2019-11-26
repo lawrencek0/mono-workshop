@@ -11,7 +11,7 @@ import { Avatar } from 'calendar/appointment/create/StudentSelection';
 import { FaUserCircle } from 'react-icons/fa';
 import { FaExclamation } from 'react-icons/fa';
 import { Link } from '@reach/router';
-import { media } from 'theme';
+import { media } from 'themes/theme';
 import { ErrorMessage } from 'auth/Login';
 import { EmptyMessage } from './EmptyMessage';
 import { FormWrapper } from 'shared/inputs/styles';

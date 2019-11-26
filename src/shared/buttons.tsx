@@ -15,6 +15,10 @@ const primaryBtnStyles = theme.variants('mode', 'variant', {
             ${sharedStyles}
             ${tw`bg-primary-400 hover:bg-primary-500`}
         `,
+        dark: css`
+            ${sharedStyles}
+            ${tw`bg-primary-400 hover:bg-primary-500 text-gray-700`}
+        `,
     },
     disabled: {
         light: css`
@@ -22,9 +26,18 @@ const primaryBtnStyles = theme.variants('mode', 'variant', {
             ${disabledStyles}
             ${tw`bg-primary-300 hover:bg-primary-300`}
         `,
+        dark: css`
+            ${sharedStyles}
+            ${disabledStyles}
+            ${tw`bg-primary-300 hover:bg-primary-300 text-gray-700`}
+        `,
     },
     danger: {
         light: css`
+            ${sharedStyles}
+            ${tw`bg-red-400 hover:bg-red-500`}
+        `,
+        dark: css`
             ${sharedStyles}
             ${tw`bg-red-400 hover:bg-red-500`}
         `,

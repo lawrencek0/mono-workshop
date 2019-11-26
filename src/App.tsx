@@ -6,6 +6,7 @@ import { Dashboard } from 'dashboard/Dashboard';
 import { RouteGuard } from 'routing/PrivateRoute';
 import { Logout } from 'auth/Logout';
 import { useAuthState } from 'auth/hooks';
+import { bodyColor, textColor } from 'themes/theme';
 
 const Calendar = lazy(() => import('calendar/Page'));
 const Group = lazy(() => import('groups/Page'));
@@ -13,11 +14,13 @@ const Fab = lazy(() => import('./Fab'));
 const ForgetPass = lazy(() => import('auth/ForgetPass'));
 const Token = lazy(() => import('auth/Token'));
 const Verify = lazy(() => import('auth/Verify'));
+const Settings = lazy(() => import('settings/Page'));
 
 const GlobalStyle = createGlobalStyle`
     html {
         body {
-            background: #f9f9f9;
+            background: ${bodyColor};
+            color: ${textColor};
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
             "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", 
             "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -34,7 +37,8 @@ const App: React.FC = () => {
             <Router>
                 <RouteGuard as={Dashboard} action="dashboard:visit" path="/" />
                 <RouteGuard as={Calendar} action="events:visit" path="calendar/*" />
-                <Group path="groups/*" />
+                <RouteGuard as={Group} action="groups:visit" path="groups/*" />
+                <RouteGuard as={Settings} action="events:visit" path="settings/*" />
                 <RouteGuard as={Login} action="login" path="/login" />
                 <RouteGuard as={ForgetPass} action="login" path="/forget-password" />
                 <RouteGuard as={Logout} action="logout" path="/logout" />
