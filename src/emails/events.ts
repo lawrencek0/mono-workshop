@@ -48,17 +48,13 @@ export class EventEmail {
                 {
                     template,
                     message: {
-                        //to: user.user.email,
-                        to: 'sujeong0826@gmail.com',
+                        to: user.user.email,
+                        //to: 'sujeong0826@gmail.com',
                     },
                     locals: {
                         name: user.user.firstName,
                         owner: event.owner,
                         title: event.title,
-                        start: event.start,
-                        end: event.end,
-                        location: event.location,
-                        description: event.description,
                     },
                 },
                 {
@@ -84,8 +80,8 @@ export class EventEmail {
                 {
                     template,
                     message: {
-                        //to: user.user.email,
-                        to: 'sujeong0826@gmail.com',
+                        to: user.user.email,
+                        //to: 'sujeong0826@gmail.com',
                     },
                     locals: {
                         name: user.user.firstName,
