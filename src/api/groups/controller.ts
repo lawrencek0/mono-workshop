@@ -360,11 +360,15 @@ export class GroupController {
             throw new UnauthorizedError("You don't have permissions to create an event");
         }
 
+        console.dir(owner);
         const [newEvent, group, members] = await Promise.all([
             this.eventRepository.saveEvent({ ...event, owner: user }),
             this.groupRepo.findById(groupId),
             this.groupUserRepo.findAllByGroup(groupId),
         ]);
+        console.log('hmmm');
+
+        console.dir(newEvent, group, members);
 
         const groupEvents: GroupEventRoster[] = members.map(member => ({
             event: newEvent,

@@ -14,6 +14,6 @@ export class EventRoster {
     @Column()
     color: string;
 
-    // @Column({ type: 'enum', enum: ['member', 'mod', 'owner'], default: 'member' })
-    // role: Role;
+    @Column({ type: 'enum', enum: ['member', 'mod', 'owner'], default: 'member' })
+    role: Role;
 }

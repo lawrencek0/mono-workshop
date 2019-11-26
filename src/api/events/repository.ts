@@ -29,14 +29,21 @@ export class EventRepository {
         return this.repository.findByIds(ids);
     }
     findAll(userId: number) {
-        return this.repository.find({ where: { owner: userId } });
+        return this.repository.find({
+            where: { owner: userId },
+            relations: ['owner', 'eventRoster', 'eventRoster.user'],
+        });
     }
     findAllByUser(userId: number) {
         return this.repository.find({ where: { owner: userId } });
     }
     findOne(id: number) {
-        return this.repository.findOne({ where: { id }, relations: ['owner', 'eventRoster', 'eventRoster.user'] });
+        return this.repository.findOne({
+            where: { id },
+            relations: ['owner', 'eventRoster', 'eventRoster.user'],
+        });
     }
+
     saveEvent(event: Event) {
         return this.repository.save(event);
     }
@@ -54,6 +61,9 @@ export class EventRosterRepository {
     }
     deleteByEvent(event: Event) {
         return this.repository.delete(event.id);
+    }
+    findByUserAndEvent(userId: number, eventId: number) {
+        return this.repository.findOne({ where: { user: userId, event: eventId }, relations: ['user'] });
     }
     findById(id: number) {
         return this.repository.findOne({ where: { id }, relations: ['event'] });
