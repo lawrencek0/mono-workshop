@@ -50,7 +50,7 @@ export class EventController {
     async create(
         @CurrentUser({ required: true }) owner: User,
         @Body() event: Event,
-        @BodyParam('users') rawUsers: User[],
+        @BodyParam('eventRoster') rawUsers: User[],
         @BodyParam('color') color: string,
     ) {
         const users = await this.userRepository.findAllByIds(rawUsers.map(({ id }) => id));
@@ -114,19 +114,14 @@ export class EventController {
     }
     @Get('/')
     async findAll(@CurrentUser({ required: true }) user: User) {
-        try {
-            const Events: Event[] = await this.eventRepository.findAll(user.id);
-
-            return { Events };
-        } catch (e) {
-            throw new HttpError(e);
-        }
+        return this.eventRepository.findAll(user.id);
     }
+
     @Get('/:eventId')
     async findOne(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
         try {
-            const Event: Event = await this.eventRepository.findOne(id);
-            return { Event };
+            const { eventRoster, ...event } = await this.eventRepository.findOne(id);
+            return { ...event, eventRoster: eventRoster.map(e => ({ color: e.color, ...e.user })) };
         } catch (e) {
             throw new HttpError(e);
         }

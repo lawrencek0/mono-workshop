@@ -35,7 +35,7 @@ export class EventRepository {
         return this.repository.find({ where: { owner: userId } });
     }
     findOne(id: number) {
-        return this.repository.findOne({ where: { id } });
+        return this.repository.findOne({ where: { id }, relations: ['owner', 'eventRoster', 'eventRoster.user'] });
     }
     saveEvent(event: Event) {
         return this.repository.save(event);

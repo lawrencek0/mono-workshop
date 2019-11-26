@@ -175,7 +175,7 @@ export class GroupController {
         return { ...group, user: groupUser ? { ...groupUser.user, role: groupUser.role } : undefined };
     }
 
-    @Patch('/role/:groupId/:userId')
+    @Patch('/:groupId/members/:userId')
     async updateUserRole(
         @CurrentUser({ required: true }) user: User,
         @Param('groupId') groupId: number,
@@ -194,19 +194,25 @@ export class GroupController {
                 tar.id === user.id
             ) {
                 // prevents users (mod or member) from changing a user to above their role
-                return 'You cannot do that';
+                throw new UnauthorizedError('You cannot do that');
             } else if (currUser.role === 'mod' && (targetUser.role === 'member' || targetUser.role === 'mod')) {
                 // mods can add or remove mods
                 targetUser.role = role;
-                return this.groupUserRepo.saveGroupUser({ role: role, user: tar, group: group });
+                await this.groupUserRepo.saveGroupUser({ role: role, user: tar, group: group });
             } else if (currUser.role === 'owner') {
                 // owners can edit roles freely
                 targetUser.role = role;
-                return this.groupUserRepo.saveGroupUser({ role: role, user: tar, group: group });
+                const { user, role: newRole } = await this.groupUserRepo.saveGroupUser({
+                    role: role,
+                    user: tar,
+                    group: group,
+                });
+                return { ...user, role: newRole };
             }
-        } else {
-            return 'You or the target is not part of this group';
+            return this.groupUserRepo.findByUserAndGroup(userId, groupId);
         }
+
+        throw new UnauthorizedError('You or the target is not part of this group');
     }
 
     // allows updating the name of the group
@@ -217,7 +223,7 @@ export class GroupController {
         @Param('groupId') groupId: number,
         @BodyParam('name') name?: string,
         @BodyParam('description') groupDescription?: string,
-        @BodyParam('members') users?: User[],
+        @BodyParam('groupUsers') users?: User[],
     ) {
         const [group, groupUser] = await Promise.all([
             this.groupRepo.findById(groupId),
@@ -240,7 +246,13 @@ export class GroupController {
                 }),
             );
         }
-        return this.groupRepo.saveGroup(group);
+        await this.groupRepo.saveGroup(group);
+        const [updatedGroup, members] = await Promise.all([
+            this.groupRepo.findById(group.id),
+            this.groupUserRepo.findAllByGroup(group.id),
+        ]);
+
+        return { ...updatedGroup, groupUsers: members.map(({ role, user }) => ({ role, ...user })) };
     }
 
     // returns the list of members in a group
@@ -252,7 +264,7 @@ export class GroupController {
 
     // removes a user from the group
     // only the owner of the group and mods of the group can remove users
-    @Delete(':groupId/members/:userId')
+    @Delete('/:groupId/members/:userId')
     async removeUser(
         @CurrentUser({ required: true }) user: User,
         @Param('groupId') groupId: number,
@@ -261,9 +273,8 @@ export class GroupController {
         const owner = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
         if (owner.role === 'owner' || owner.role === 'mod') {
             return this.groupUserRepo.removeUser(userId, groupId);
-        } else {
-            return 'You do not have permission to do that';
         }
+        throw new UnauthorizedError('You do not have permission to do that');
     }
 
     // deletes group if the current user is the owner

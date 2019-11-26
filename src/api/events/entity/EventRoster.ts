@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { User } from '../../users/entity/User';
 import { Event } from './Event';
+import { Role } from '../../groups/entity/GroupUsers';
 
 @Entity('EventRoster')
 export class EventRoster {
@@ -12,4 +13,7 @@ export class EventRoster {
 
     @Column()
     color: string;
+
+    // @Column({ type: 'enum', enum: ['member', 'mod', 'owner'], default: 'member' })
+    // role: Role;
 }
