@@ -5,10 +5,18 @@ import { Role } from '../../groups/entity/GroupUsers';
 
 @Entity('EventRoster')
 export class EventRoster {
-    @ManyToOne(() => User, User => User.eventColors, { primary: true, cascade: true, onDelete: 'CASCADE' })
+    @ManyToOne(
+        () => User,
+        User => User.eventColors,
+        { primary: true, cascade: true, onDelete: 'CASCADE' },
+    )
     user: User;
 
-    @ManyToOne(() => Event, Event => Event.eventRoster, { primary: true, cascade: true, onDelete: 'CASCADE' })
+    @ManyToOne(
+        () => Event,
+        Event => Event.eventRoster,
+        { primary: true, cascade: true, onDelete: 'CASCADE' },
+    )
     event: Event;
 
     @Column()

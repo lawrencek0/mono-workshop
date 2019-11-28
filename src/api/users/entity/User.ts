@@ -49,25 +49,46 @@ export class User {
     // @ManyToMany(() => Detail, Detail => Detail.users)
     // assignedDetails: Detail[];
 
-    @OneToMany(() => Detail, Detail => Detail.faculty)
+    @OneToMany(
+        () => Detail,
+        Detail => Detail.faculty,
+    )
     details: Detail[];
 
-    @OneToMany(() => Event, Event => Event.owner)
+    @OneToMany(
+        () => Event,
+        Event => Event.owner,
+    )
     events: Event[];
 
-    @OneToMany(() => EventRoster, EventRoster => EventRoster.user)
+    @OneToMany(
+        () => EventRoster,
+        EventRoster => EventRoster.user,
+    )
     eventColors: EventRoster[];
 
-    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.user)
+    @OneToMany(
+        () => DetailUsers,
+        DetailUsers => DetailUsers.user,
+    )
     appointmentColors: DetailUsers[];
 
-    @OneToMany(() => GroupUser, GroupUser => GroupUser.user)
+    @OneToMany(
+        () => GroupUser,
+        GroupUser => GroupUser.user,
+    )
     group: GroupUser[];
 
-    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.user)
+    @OneToMany(
+        () => GroupEventRoster,
+        GroupEventRoster => GroupEventRoster.user,
+    )
     groupEvent: GroupEventRoster[];
 
-    @OneToMany(() => GroupPost, GroupPost => GroupPost.poster)
+    @OneToMany(
+        () => GroupPost,
+        GroupPost => GroupPost.poster,
+    )
     posts: GroupPost[];
 
     // @OneToOne(() => AssignSubmissions, AssignSubmissions => AssignSubmissions.poster)

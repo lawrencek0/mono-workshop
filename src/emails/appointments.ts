@@ -1,8 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { EmailService } from './service';
 import { Detail } from '../api/appointments/entity/Detail';
-import { Slot } from '../api/appointments/entity/Slot';
-import { getMaxListeners } from 'cluster';
 import moment from 'moment';
 
 @Service()

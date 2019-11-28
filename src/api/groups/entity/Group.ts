@@ -14,12 +14,21 @@ export class Group {
     @Column({ length: 1024 })
     description: string;
 
-    @OneToMany(() => GroupUser, GroupUser => GroupUser.group)
+    @OneToMany(
+        () => GroupUser,
+        GroupUser => GroupUser.group,
+    )
     groupUsers: GroupUser[];
 
-    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.group)
+    @OneToMany(
+        () => GroupEventRoster,
+        GroupEventRoster => GroupEventRoster.group,
+    )
     events: GroupEventRoster[];
 
-    @OneToMany(() => GroupPost, GroupPost => GroupPost.group)
+    @OneToMany(
+        () => GroupPost,
+        GroupPost => GroupPost.group,
+    )
     posts: GroupPost[];
 }

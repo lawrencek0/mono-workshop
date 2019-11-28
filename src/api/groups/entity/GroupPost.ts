@@ -13,9 +13,15 @@ export class GroupPost {
     @Column()
     contents: string;
 
-    @ManyToOne(() => User, User => User.posts)
+    @ManyToOne(
+        () => User,
+        User => User.posts,
+    )
     poster: User;
 
-    @ManyToOne(() => Group, Group => Group.posts)
+    @ManyToOne(
+        () => Group,
+        Group => Group.posts,
+    )
     group: Group;
 }

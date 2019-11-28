@@ -23,16 +23,26 @@ export class Event {
     @Column('text')
     description: string;
 
-    @ManyToOne(() => User, user => user.events, { cascade: true, onDelete: 'CASCADE' })
+    @ManyToOne(
+        () => User,
+        user => user.events,
+        { cascade: true, onDelete: 'CASCADE' },
+    )
     owner: User;
 
     // @ManyToMany(() => User, user => user.events)
     // @JoinTable({ name: 'event_roster' })
     // users: User[];
 
-    @OneToMany(() => EventRoster, EventRoster => EventRoster.event)
+    @OneToMany(
+        () => EventRoster,
+        EventRoster => EventRoster.event,
+    )
     eventRoster: EventRoster[];
 
-    @OneToMany(() => GroupEventRoster, GroupEventRoster => GroupEventRoster.event)
+    @OneToMany(
+        () => GroupEventRoster,
+        GroupEventRoster => GroupEventRoster.event,
+    )
     groupEvent: GroupEventRoster[];
 }

@@ -1,24 +1,26 @@
 FROM node:12-alpine as base
 
 WORKDIR /usr/app
-COPY package*.json ./
-RUN npm install
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn
 
 COPY . .
-RUN npm run build
+RUN yarn run build
 
 FROM node:12-alpine as prod
 
 WORKDIR  /usr/app
-COPY package*.json ./
-RUN npm ci
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn
 
 COPY --from=base /usr/app/dist ./dist
 
 COPY .env ./
 COPY email-templates ./
 
-RUN npm install pm2 -g
+RUN yarn global add pm2
 
 EXPOSE 8000
 

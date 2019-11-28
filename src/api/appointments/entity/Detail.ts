@@ -14,17 +14,27 @@ export class Detail {
     @Column('text')
     description: string;
 
-    @OneToMany(() => Slot, Slot => Slot.detail)
+    @OneToMany(
+        () => Slot,
+        Slot => Slot.detail,
+    )
     slots: Slot[];
 
-    @ManyToOne(() => User, User => User.details, { cascade: true, onDelete: 'CASCADE' })
+    @ManyToOne(
+        () => User,
+        User => User.details,
+        { cascade: true, onDelete: 'CASCADE' },
+    )
     faculty: User;
 
     // @ManyToMany(() => User, User => User.assignedDetails, { cascade: true, onDelete: 'CASCADE' })
     // @JoinTable({ name: 'appointment_details_users' })
     // students: User[];
 
-    @OneToMany(() => DetailUsers, DetailUsers => DetailUsers.detail)
+    @OneToMany(
+        () => DetailUsers,
+        DetailUsers => DetailUsers.detail,
+    )
     users: DetailUsers[];
 
     userProps?: DetailUsers;
