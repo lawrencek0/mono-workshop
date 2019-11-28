@@ -11,6 +11,7 @@ import {
     Delete,
     UnauthorizedError,
     NotFoundError,
+    Authorized,
 } from 'routing-controllers';
 import { Inject } from 'typedi';
 import { IEvent, EventList } from 'strongly-typed-events';
@@ -44,6 +45,7 @@ export class AppointmentControler {
     // slots for that appointment are saved
     // supplies the list of students that can 'see' it
     // @FIXME needs colors
+    @Authorized('faculty')
     @Post('/')
     async create(
         @BodyParam('students') selectedStudents: User[],
@@ -53,62 +55,45 @@ export class AppointmentControler {
         @BodyParam('slots') slots: Slot[],
         @BodyParam('color') color: string,
     ) {
-        try {
-            if (user.role === 'faculty') {
-                const students = await this.userRepository.findAllById(selectedStudents);
-                const newDetail = await this.detailRepository.saveDetail({
-                    title: detTitle,
-                    description: detDesc,
-                    slots: undefined,
-                    faculty: user,
-                    users: undefined,
-                    id: undefined,
-                });
-                const slotsWithDetail = slots.map(slot => ({ ...slot, detail: newDetail }));
-                const detailUsers = students.map(student => ({ user: student, detail: newDetail, hexColor: color }));
-                detailUsers.push({ user, hexColor: color, detail: newDetail });
-                const [newSlots, newUsers] = await Promise.all([
-                    this.slotRepository.saveSlots(slotsWithDetail),
-                    this.detailUsersRepo.saveDetailUsers(detailUsers),
-                ]);
+        const students = await this.userRepository.findAllById(selectedStudents);
+        const newDetail = await this.detailRepository.saveDetail({
+            title: detTitle,
+            description: detDesc,
+            slots: undefined,
+            faculty: user,
+            users: undefined,
+            id: undefined,
+        });
+        const slotsWithDetail = slots.map(slot => ({ ...slot, detail: newDetail }));
+        const detailUsers = students.map(student => ({ user: student, detail: newDetail, hexColor: color }));
+        detailUsers.push({ user, hexColor: color, detail: newDetail });
+        const [newSlots, newUsers] = await Promise.all([
+            this.slotRepository.saveSlots(slotsWithDetail),
+            this.detailUsersRepo.saveDetailUsers(detailUsers),
+        ]);
 
-                this.dispatch('create', { ...newDetail, slots: newSlots, users: newUsers });
+        this.dispatch('create', { ...newDetail, slots: newSlots, users: newUsers });
 
-                return { ...newDetail, slots: newSlots };
-            }
-        } catch (e) {
-            throw new HttpError(e);
-        }
+        return { ...newDetail, slots: newSlots };
     }
 
     // finds all appointments that the user is associated with
     @Get('/')
     async findAll(@CurrentUser({ required: true }) user: User) {
-        try {
-            if (user.role === 'faculty') {
-                return this.detailRepository.findAllForFaculty(user.id);
-            } else if (user.role === 'student') {
-                return this.detailRepository.findAllForStudent(user.id);
-            }
-        } catch (e) {
-            throw new HttpError(e);
+        if (user.role === 'faculty') {
+            return this.detailRepository.findAllForFaculty(user.id);
+        } else if (user.role === 'student') {
+            return this.detailRepository.findAllForStudent(user.id);
         }
     }
 
     // @FIXME: bug in routing-controller allows request to '/untaken' to fall through
     // to ':/detailId'
+    @Authorized('student')
     @Get('/details/untaken')
     async untakenByDetail(@CurrentUser({ required: true }) user: User) {
         // returns the appointment details that the student must still need to sign up for
-        if (user.role === 'student') {
-            try {
-                return this.detailRepository.findUntaken(user);
-            } catch (e) {
-                throw new HttpError(e);
-            }
-        }
-
-        throw new UnauthorizedError('you are not supposed to be here');
+        return this.detailRepository.findUntaken(user);
     }
 
     @Get('/:detailId')
@@ -140,47 +125,40 @@ export class AppointmentControler {
     }
     // student selects an appointment slot
     // re-selects if they already have one for that detail
+    @Authorized('student')
     @Patch('/:detailId/:slotId')
     async update(
         @CurrentUser({ required: true }) user: User,
         @Param('detailId') detailId: number,
         @Param('slotId') slotId: number,
     ) {
-        if (user.role === 'student') {
-            try {
-                //finds the slot that the user wants
-                const slot = await this.slotRepository.findById(slotId);
-                //finds the slots for the detail that the user has already taken
-                const taken: Slot = await this.slotRepository.findMyTaken(user.id, detailId);
-                if (taken) {
-                    //deselects the old appointment
-                    taken.student = null;
-                    await this.slotRepository.saveSlot(taken);
-                }
-
-                if (!taken || taken.id !== slotId) {
-                    //selects the new slot for the student
-                    slot.student = user;
-                    await this.slotRepository.saveSlot(slot);
-                }
-
-                const { slots, users: _, ...Detail } = await this.detailRepository.findById(detailId);
-                const output = slots.map(({ student, ...slot }) => {
-                    // If slot is owned by the user include the student information
-                    // If slot has a student replace its information with "student":true
-                    // If it doesn't have a student, add "student":false
-                    return student
-                        ? { ...slot, student: student.id === user.id ? student : true }
-                        : { ...slot, student: false };
-                });
-
-                return { slots: output, ...Detail };
-            } catch (e) {
-                throw new BadRequestError(e);
-            }
+        //finds the slot that the user wants
+        const slot = await this.slotRepository.findById(slotId);
+        //finds the slots for the detail that the user has already taken
+        const taken: Slot = await this.slotRepository.findMyTaken(user.id, detailId);
+        if (taken) {
+            //deselects the old appointment
+            taken.student = null;
+            await this.slotRepository.saveSlot(taken);
         }
 
-        throw new UnauthorizedError('You can not do this silly head');
+        if (!taken || taken.id !== slotId) {
+            //selects the new slot for the student
+            slot.student = user;
+            await this.slotRepository.saveSlot(slot);
+        }
+
+        const { slots, users: _, ...Detail } = await this.detailRepository.findById(detailId);
+        const output = slots.map(({ student, ...slot }) => {
+            // If slot is owned by the user include the student information
+            // If slot has a student replace its information with "student":true
+            // If it doesn't have a student, add "student":false
+            return student
+                ? { ...slot, student: student.id === user.id ? student : true }
+                : { ...slot, student: false };
+        });
+
+        return { slots: output, ...Detail };
     }
 
     // if owner then they can update color, title, description, or student list
@@ -249,13 +227,9 @@ export class AppointmentControler {
     // only the owner of an appointment can delete it
     @Delete('/:detailId')
     async deleteDetail(@CurrentUser({ required: true }) user: User, @Param('detailId') detailId: number) {
-        try {
-            const detail = await this.detailRepository.findDetail(detailId);
-            this.dispatch('delete', { ...detail });
-            return this.detailRepository.deleteDetail(detailId, user.id);
-        } catch (error) {
-            return 'You cannot delete this detail ' + error;
-        }
+        const detail = await this.detailRepository.findDetail(detailId);
+        this.dispatch('delete', { ...detail });
+        return this.detailRepository.deleteDetail(detailId, user.id);
     }
 
     // deletes an individual slot

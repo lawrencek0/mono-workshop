@@ -69,95 +69,92 @@ export class GroupController {
         @BodyParam('description') groupDescription: string,
         @BodyParam('groupUsers') users: User[],
     ) {
-        try {
-            const students = await Promise.all(
-                users.map(async element => {
-                    return this.userRepository.findByEmail(element.email).then(existUser => {
-                        if (!existUser) {
-                            const role = /^[A-Z0-9]+(@warhawks.ulm.edu)$/i.test(element.email) ? 'student' : 'faculty';
-                            return this.userRepository.saveUser({ ...element, role }).then(user => ({
-                                ...user,
-                                password: '$uperStr0ng',
-                            }));
-                        }
-                        return null;
-                    });
-                }),
-            );
-            const newStudents = students.filter(student => student);
-            await Promise.all(
-                newStudents.map(async element => {
-                    const id = element.id;
-                    const hashedId = hashids.encode(id);
-                    const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
-                        new AmazonCognitoIdentity.CognitoUserAttribute({
-                            Name: 'email',
-                            Value: element.email,
-                        }),
-                        new AmazonCognitoIdentity.CognitoUserAttribute({
-                            Name: 'custom:user_id',
-                            Value: hashedId,
-                        }),
-                    ];
-
-                    return new Promise((resolve, reject) =>
-                        this.cognito.userPool.signUp(
-                            element.email,
-                            element.password,
-                            attributeList,
-                            null,
-                            (err, _result) => {
-                                if (err) {
-                                    // @FIXME: what if it fails here? need a way to undo the query
-                                    return reject(new HttpError(409, err.message));
-                                }
-
-                                return resolve({ id: hashedId, element });
-                            },
-                        ),
-                    );
-                }),
-            );
-            const newGroup = await this.groupRepo.saveGroup({
-                name: groupName,
-                description: groupDescription,
-                groupUsers: undefined,
-                id: undefined,
-                events: undefined,
-                posts: undefined,
-            });
-
-            const newMembers = new Set<string>();
-
-            await Promise.all(
-                users.map(async member => {
-                    if (newMembers.has(member.email)) {
-                        return [];
+        const students = await Promise.all(
+            users.map(async element => {
+                return this.userRepository.findByEmail(element.email).then(existUser => {
+                    if (!existUser) {
+                        const role = /^[A-Z0-9]+(@warhawks.ulm.edu)$/i.test(element.email) ? 'student' : 'faculty';
+                        return this.userRepository.saveUser({ ...element, role }).then(user => ({
+                            ...user,
+                            password: '$uperStr0ng',
+                        }));
                     }
-                    newMembers.add(member.email);
-                    return this.groupUserRepo.saveGroupUser({
-                        user: await this.userRepository.findByEmail(member.email),
-                        group: newGroup,
-                        role: 'member',
-                    });
-                }),
-            );
-            // this next line saves the creator as "owner" in the Group_users table
-            await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
-            const [group, members] = await Promise.all([
-                this.groupRepo.findById(newGroup.id),
-                this.groupUserRepo.findAllByGroup(newGroup.id),
-            ]);
+                    return null;
+                });
+            }),
+        );
+        const newStudents = students.filter(student => student);
+        await Promise.all(
+            newStudents.map(async element => {
+                const id = element.id;
+                const hashedId = hashids.encode(id);
+                const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
+                    new AmazonCognitoIdentity.CognitoUserAttribute({
+                        Name: 'email',
+                        Value: element.email,
+                    }),
+                    new AmazonCognitoIdentity.CognitoUserAttribute({
+                        Name: 'custom:user_id',
+                        Value: hashedId,
+                    }),
+                ];
 
-            const allGroupInfo = { ...group, groupUsers: members };
+                return new Promise((resolve, reject) =>
+                    this.cognito.userPool.signUp(
+                        element.email,
+                        element.password,
+                        attributeList,
+                        null,
+                        (err, _result) => {
+                            if (err) {
+                                // @FIXME: what if it fails here? need a way to undo the query
+                                return reject(new HttpError(409, err.message));
+                            }
 
-            this.dispatch('create', allGroupInfo);
+                            return resolve({ id: hashedId, element });
+                        },
+                    ),
+                );
+            }),
+        );
+        const newGroup = await this.groupRepo.saveGroup({
+            name: groupName,
+            description: groupDescription,
+            groupUsers: undefined,
+            id: undefined,
+            events: undefined,
+            posts: undefined,
+        });
 
-            return allGroupInfo;
-        } catch (error) {
-            throw new HttpError(error);
-        }
+        const newMembers = new Set<string>();
+
+        await Promise.all(
+            users.map(async member => {
+                if (newMembers.has(member.email)) {
+                    return [];
+                }
+                newMembers.add(member.email);
+                return this.groupUserRepo.saveGroupUser({
+                    user: await this.userRepository.findByEmail(member.email),
+                    group: newGroup,
+                    role: 'member',
+                });
+            }),
+        );
+        // this next line saves the creator as "owner" in the Group_users table
+        await this.groupUserRepo.saveGroupUser({ user, group: newGroup, role: 'owner' });
+        const [group, members] = await Promise.all([
+            this.groupRepo.findById(newGroup.id),
+            this.groupUserRepo.findAllByGroup(newGroup.id),
+        ]);
+
+        const allGroupInfo = { ...group, groupUsers: members };
+
+        this.dispatch('create', allGroupInfo);
+
+        return allGroupInfo;
     }
+
     // returns the groups that the current user is a part of
     @Get('/')
     async getMyGroups(@CurrentUser({ required: true }) user: User) {
@@ -310,6 +307,12 @@ export class GroupController {
         @BodyParam('title') title: string,
         @BodyParam('contents') contents: string,
     ) {
+        const isInGroup = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
+
+        if (!isInGroup) {
+            throw new UnauthorizedError("You aren't in this group");
+        }
+
         const group = await this.groupRepo.findById(groupId);
 
         return this.postRepo.savePost({ id: undefined, title: title, contents: contents, poster: user, group: group });
@@ -361,15 +364,11 @@ export class GroupController {
             throw new UnauthorizedError("You don't have permissions to create an event");
         }
 
-        console.dir(owner);
         const [newEvent, group, members] = await Promise.all([
             this.eventRepository.saveEvent({ ...event, owner: user }),
             this.groupRepo.findById(groupId),
             this.groupUserRepo.findAllByGroup(groupId),
         ]);
-        console.log('hmmm');
-
-        console.dir(newEvent, group, members);
 
         const groupEvents: GroupEventRoster[] = members.map(member => ({
             event: newEvent,

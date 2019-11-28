@@ -23,58 +23,54 @@ export class UserController {
     @Post('/')
     @Authorized(['admin', 'faculty'])
     async create(@BodyParam('students') rawStudents: UserWithPassword[]) {
-        try {
-            const students = await Promise.all(
-                rawStudents.map(async element => {
-                    return this.userRepository.findByEmail(element.email).then(existUser => {
-                        if (!existUser) {
-                            const role = /^[A-Z0-9]+(@warhawks.ulm.edu)$/i.test(element.email) ? 'student' : 'faculty';
-                            return this.userRepository.saveUser({ ...element, role }).then(user => ({
-                                ...user,
-                                password: element.password,
-                            }));
-                        }
-                        return null;
-                    });
-                }),
-            );
-            const newStudents = students.filter(student => student);
-            await Promise.all(
-                newStudents.map(async element => {
-                    const id = element.id;
-                    const hashedId = hashids.encode(id);
-                    const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
-                        new AmazonCognitoIdentity.CognitoUserAttribute({
-                            Name: 'email',
-                            Value: element.email,
-                        }),
-                        new AmazonCognitoIdentity.CognitoUserAttribute({
-                            Name: 'custom:user_id',
-                            Value: hashedId,
-                        }),
-                    ];
+        const students = await Promise.all(
+            rawStudents.map(async element => {
+                return this.userRepository.findByEmail(element.email).then(existUser => {
+                    if (!existUser) {
+                        const role = /^[A-Z0-9]+(@warhawks.ulm.edu)$/i.test(element.email) ? 'student' : 'faculty';
+                        return this.userRepository.saveUser({ ...element, role }).then(user => ({
+                            ...user,
+                            password: element.password,
+                        }));
+                    }
+                    return null;
+                });
+            }),
+        );
+        const newStudents = students.filter(student => student);
+        await Promise.all(
+            newStudents.map(async element => {
+                const id = element.id;
+                const hashedId = hashids.encode(id);
+                const attributeList: AmazonCognitoIdentity.CognitoUserAttribute[] = [
+                    new AmazonCognitoIdentity.CognitoUserAttribute({
+                        Name: 'email',
+                        Value: element.email,
+                    }),
+                    new AmazonCognitoIdentity.CognitoUserAttribute({
+                        Name: 'custom:user_id',
+                        Value: hashedId,
+                    }),
+                ];
 
-                    return new Promise((resolve, reject) =>
-                        this.cognito.userPool.signUp(
-                            element.email,
-                            element.password,
-                            attributeList,
-                            null,
-                            (err, _result) => {
-                                if (err) {
-                                    // @FIXME: what if it fails here? need a way to undo the query
-                                    return reject(new HttpError(409, err.message));
-                                }
+                return new Promise((resolve, reject) =>
+                    this.cognito.userPool.signUp(
+                        element.email,
+                        element.password,
+                        attributeList,
+                        null,
+                        (err, _result) => {
+                            if (err) {
+                                // @FIXME: what if it fails here? need a way to undo the query
+                                return reject(new HttpError(409, err.message));
+                            }
 
-                                return resolve({ id: hashedId, element });
-                            },
-                        ),
-                    );
-                }),
-            );
-            return newStudents;
-        } catch (e) {
-            throw new HttpError(e);
-        }
+                            return resolve({ id: hashedId, element });
+                        },
+                    ),
+                );
+            }),
+        );
+        return newStudents;
     }
 }
