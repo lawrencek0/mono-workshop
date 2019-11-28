@@ -1,6 +1,7 @@
 import { ConnectionOptions } from 'typeorm';
 import { join } from 'path';
 import { database } from './util/secrets';
+import TypeORMLogger from './util/TypeORMLogger';
 
 export default {
     type: 'mysql',
@@ -10,6 +11,7 @@ export default {
     password: database.MYSQL_PASSWORD,
     database: database.DATABASE,
     entities: [join(process.cwd(), 'dist', 'api/**/entity/**/*.js')],
-    synchronize: true,
-    logging: false,
+    synchronize: false,
+    logging: true,
+    logger: new TypeORMLogger(),
 } as ConnectionOptions;

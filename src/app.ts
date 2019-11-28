@@ -20,6 +20,18 @@ routingUseContainer(Container);
 const app = createExpressServer({
     controllers: [join(process.cwd(), 'dist', '/api/**/controller.js')],
     routePrefix: '/api',
+    authorizationChecker: async (action: Action, roles: string[]) => {
+        const token = action.request.headers['idtoken'];
+        const cognitoExpress = Container.get(CognitoExpress);
+        const cognitoUser: any = await cognitoExpress.validate(token);
+        const id = hashids.decode(cognitoUser['custom:user_id'])[0] as number;
+        const userRepo = Container.get(UserRepository);
+        const { role } = await userRepo.findById(id);
+        if (role && !roles.length) return true;
+        if (roles && roles.includes(role)) return true;
+
+        return false;
+    },
     currentUserChecker: async (action: Action) => {
         try {
             const token = action.request.headers['idtoken'];

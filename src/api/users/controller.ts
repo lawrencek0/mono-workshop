@@ -1,4 +1,4 @@
-import { JsonController, Post, HttpError, Get, BodyParam, QueryParam } from 'routing-controllers';
+import { JsonController, Post, HttpError, Get, BodyParam, QueryParam, Authorized } from 'routing-controllers';
 import { User } from './entity/User';
 import { Inject } from 'typedi';
 import { UserRepository } from './repository';
@@ -21,6 +21,7 @@ export class UserController {
 
     // admin submits a csv file and users are created and sent a one-time password
     @Post('/')
+    @Authorized(['admin', 'faculty'])
     async create(@BodyParam('students') rawStudents: UserWithPassword[]) {
         try {
             const students = await Promise.all(
