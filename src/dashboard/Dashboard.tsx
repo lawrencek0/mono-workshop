@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { useResource } from 'rest-hooks';
 import tw from 'tailwind.macro';
 import styled from 'styled-components/macro';
-import Slider from 'react-slick';
 import { RouteComponentProps, Link } from '@reach/router';
 import { useAuthState } from 'auth/hooks';
 import { Main } from 'navigation/Main';
@@ -58,39 +57,25 @@ const Dashboard: React.FC<RouteComponentProps> = () => {
         [newGroups, newEvents],
     );
 
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        adaptiveHeight: true,
-        cssEase: 'linear',
-    };
     return (
         <Main>
             <div>
-                <StyledSlider {...settings}>
-                    {allEvents.map(event => {
-                        const link =
-                            event instanceof GroupEventResource && event.group
-                                ? `/group/${event.group.id}/events/${event.id}`
-                                : `/calendar/events/${event.id}`;
-                        return (
-                            <Link key={link} to={link}>
-                                <Div>
-                                    <StyledTitle>{event.title}</StyledTitle>
-                                    {event.description && (
-                                        <p
-                                            css={tw`text-xl`}
-                                            dangerouslySetInnerHTML={{ __html: event.description }}
-                                        ></p>
-                                    )}
-                                </Div>
-                            </Link>
-                        );
-                    })}
-                </StyledSlider>
+                {allEvents.map(event => {
+                    const link =
+                        event instanceof GroupEventResource && event.group
+                            ? `/group/${event.group.id}/events/${event.id}`
+                            : `/calendar/events/${event.id}`;
+                    return (
+                        <Link key={link} to={link}>
+                            <Div>
+                                <StyledTitle>{event.title}</StyledTitle>
+                                {event.description && (
+                                    <p css={tw`text-xl`} dangerouslySetInnerHTML={{ __html: event.description }}></p>
+                                )}
+                            </Div>
+                        </Link>
+                    );
+                })}
             </div>
             {role === 'student' && <StudentDashboard />}
             {newGroups.length > 0 && (
@@ -145,16 +130,6 @@ const Div = styled.div`
     padding: 2%;
     position: relative;
     text-align: center;
-`;
-
-const StyledSlider = styled(Slider)`
-    width: 90vw;
-    ${tw`mx-auto mb-8`}
-
-    .slick-next::before,
-    .slick-prev::before {
-        color: #424242;
-    }
 `;
 
 export { Dashboard };
