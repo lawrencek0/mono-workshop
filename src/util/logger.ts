@@ -1,6 +1,7 @@
-import { LoggerOptions, transports, createLogger } from 'winston';
+import { LoggerOptions, transports, createLogger, format } from 'winston';
 
 const options: LoggerOptions = {
+    format: format.combine(format.timestamp(), format.json()),
     transports: [
         new transports.Console({
             level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
