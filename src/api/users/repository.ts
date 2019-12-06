@@ -10,6 +10,10 @@ export class UserRepository {
     @InjectConnection()
     private connection: Connection;
 
+    findAll() {
+        return this.repository.find();
+    }
+
     findById(id: number) {
         return this.repository.findOne(id);
     }

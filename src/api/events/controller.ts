@@ -86,7 +86,7 @@ export class EventController {
             ],
         });
 
-        if (!event || user.id !== event.owner.id) {
+        if (!event || user.id !== event.owner.id || user.role !== 'admin') {
             throw new UnauthorizedError('Unauthorized: You are not the Owner');
         } else {
             this.dispatch('delete', { ...event });
@@ -188,6 +188,10 @@ export class EventController {
     }
     @Get('/')
     async findAll(@CurrentUser({ required: true }) user: User) {
+        if (user.role == 'admin') {
+            return this.eventRepository.findAllForAdmin();
+        }
+
         const events = await this.eventRosterRepository.findAllByUser(user.id);
         return events.map(({ event, ...rest }) => ({ ...event, user: rest }));
         // const events = await this.eventRepository.findAll(user.id);
@@ -208,8 +212,12 @@ export class EventController {
     @Get('/:eventId')
     async findOne(@CurrentUser({ required: true }) user: User, @Param('eventId') id: number) {
         const { eventRoster, ...event } = await this.eventRepository.findOne(id);
-        const eventUser = eventRoster.find(event => event.user.id === user.id);
 
+        if (user.role == 'admin') {
+            return { ...event, eventRoster: eventRoster.map(e => ({ ...e.user, color: e.color, role: e.role })) };
+        }
+
+        const eventUser = eventRoster.find(event => event.user.id === user.id);
         if (!eventUser) {
             throw new UnauthorizedError("You shouldn't be here!");
         }

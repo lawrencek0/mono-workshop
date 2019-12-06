@@ -65,6 +65,10 @@ export class DetailRepository {
     @InjectRepository(Detail)
     private repository: Repository<Detail>;
 
+    findAll() {
+        return this.repository.find({ relations: ['faculty'] });
+    }
+
     // finds all the appointments that a student is allowed to sign up for
     findAllForStudent(userId: number) {
         return this.repository

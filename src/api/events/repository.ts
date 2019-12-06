@@ -10,6 +10,10 @@ export class EventRepository {
     @InjectRepository(Event)
     private repository: Repository<Event>;
 
+    findAllForAdmin() {
+        return this.repository.find();
+    }
+
     findAllStu(userId: number) {
         return this.repository.find({ where: { student: userId }, relations: ['event'] });
     }

@@ -15,6 +15,10 @@ export class GroupRepository {
         return this.repository.save(group);
     }
 
+    findAll() {
+        return this.repository.find();
+    }
+
     findById(groupId: number) {
         return this.repository.findOne({
             where: { id: groupId },

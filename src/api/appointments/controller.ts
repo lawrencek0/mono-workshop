@@ -80,9 +80,15 @@ export class AppointmentControler {
     // finds all appointments that the user is associated with
     @Get('/')
     async findAll(@CurrentUser({ required: true }) user: User) {
+        if (user.role === 'admin') {
+            return this.detailRepository.findAll();
+        }
+
         if (user.role === 'faculty') {
             return this.detailRepository.findAllForFaculty(user.id);
-        } else if (user.role === 'student') {
+        }
+
+        if (user.role === 'student') {
             return this.detailRepository.findAllForStudent(user.id);
         }
     }
@@ -112,7 +118,7 @@ export class AppointmentControler {
                 });
 
                 return { slots: output, ...Detail };
-            } else if (user.role === 'faculty') {
+            } else if (user.role === 'faculty' || user.role === 'admin') {
                 return {
                     slots,
                     students: users.filter(({ user: { id } }) => id !== user.id).map(({ user }) => user),
@@ -179,7 +185,7 @@ export class AppointmentControler {
             detailUser.hexColor = newColor;
 
             return this.detailUsersRepo.saveDetailUser(detailUser);
-        } else if (user.role === 'faculty') {
+        } else if (user.role === 'faculty' || user.role === 'admin') {
             // checks that the current user is the owner of the detail
             const detailOwn = await this.detailRepository.isOwner(detailId, user.id);
             if (detailOwn) {
@@ -242,7 +248,7 @@ export class AppointmentControler {
     ) {
         const detailOwn = await this.detailRepository.isOwner(detailId, user.id);
 
-        if (detailOwn) {
+        if (detailOwn || user.role === 'admin') {
             await this.slotRepository.deleteSlot(slotId, user.id);
             return this.detailRepository.findById(detailId);
         } else {

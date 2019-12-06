@@ -1,4 +1,13 @@
-import { JsonController, Post, HttpError, Get, BodyParam, QueryParam, Authorized } from 'routing-controllers';
+import {
+    JsonController,
+    Post,
+    HttpError,
+    Get,
+    BodyParam,
+    QueryParam,
+    Authorized,
+    CurrentUser,
+} from 'routing-controllers';
 import { User } from './entity/User';
 import { Inject } from 'typedi';
 import { UserRepository } from './repository';
@@ -15,7 +24,10 @@ export class UserController {
 
     // @FIXME: need more security!
     @Get('/')
-    async findAllByRole(@QueryParam('role') role: Role) {
+    async findAllByRole(@QueryParam('role') role: Role, @CurrentUser({ required: true }) user: User) {
+        if (user.role === 'admin') {
+            return this.userRepository.findAll();
+        }
         return this.userRepository.findAllByRole(role);
     }
 

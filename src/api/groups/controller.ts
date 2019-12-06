@@ -158,6 +158,10 @@ export class GroupController {
     // returns the groups that the current user is a part of
     @Get('/')
     async getMyGroups(@CurrentUser({ required: true }) user: User) {
+        if (user.role === 'admin') {
+            return this.groupRepo.findAll();
+        }
+
         const groups = await this.groupUserRepo.findAllByUser(user.id);
 
         return groups.map(({ group, ...rest }) => ({ ...group, ...rest }));
@@ -170,6 +174,11 @@ export class GroupController {
             this.groupUserRepo.findByUserAndGroup(user.id, groupId),
             this.groupRepo.findById(groupId),
         ]);
+
+        if (user.role === 'admin') {
+            return group;
+        }
+
         return { ...group, user: groupUser ? { ...groupUser.user, role: groupUser.role } : undefined };
     }
 
@@ -291,6 +300,10 @@ export class GroupController {
 
     @Get('/:groupId/posts')
     async getPosts(@CurrentUser({ required: true }) user: User, @Param('groupId') groupId: number) {
+        if (user.role === 'admin') {
+            return this.postRepo.findAllByGroup(groupId);
+        }
+
         const isInGroup = await this.groupUserRepo.findByUserAndGroup(user.id, groupId);
 
         if (!isInGroup) {
