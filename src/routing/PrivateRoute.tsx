@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { useAuthState } from 'auth/hooks';
 import { RouteComponentProps, navigate } from '@reach/router';
 import Login from 'auth/Login';
 import { rbacRules } from './rules';
-import { Dashboard } from 'dashboard/Dashboard';
 import { Role } from 'resources/UserResource';
 
 const can = (action: string, role?: Role): boolean => {
@@ -42,6 +41,9 @@ const RouteGuard = <P extends {}>(props: Props<P>): JSX.Element => {
     if (!accessToken && action === 'login') {
         return <Component {...rest}>{children}</Component>;
     }
+
+    const Dashboard =
+        user?.role === 'admin' ? lazy(() => import('dashboard/Admin')) : lazy(() => import('dashboard/Dashboard'));
 
     if (!accessToken) {
         navigate('/login');

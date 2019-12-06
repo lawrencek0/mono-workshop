@@ -45,8 +45,8 @@ export const processFile = (file: File, cb: (users: UserResource[]) => unknown):
         const worksheet = workbook.Sheets[worksheetName];
         const users = XLSX.utils.sheet_to_json(worksheet).map(props => {
             const { 'First name': firstName, 'Last name': lastName, 'Email address': email } = props as MoodleFormat;
-
-            return UserResource.fromJS({ firstName, lastName, email });
+            const role = /^[A-Z0-9]+(@warhawks.ulm.edu)$/i.test(email) ? 'student' : 'faculty';
+            return UserResource.fromJS({ firstName, lastName, email, role });
         });
         cb(users);
     };

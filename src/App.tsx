@@ -2,7 +2,6 @@ import React, { Suspense, lazy } from 'react';
 import { Router, RouteComponentProps, Link } from '@reach/router';
 import { createGlobalStyle } from 'styled-components/macro';
 import Login from 'auth/Login';
-import { Dashboard } from 'dashboard/Dashboard';
 import { RouteGuard } from 'routing/PrivateRoute';
 import { Logout } from 'auth/Logout';
 import { useAuthState } from 'auth/hooks';
@@ -10,7 +9,6 @@ import { bodyColor, textColor } from 'themes/theme';
 
 const Calendar = lazy(() => import('calendar/Page'));
 const Group = lazy(() => import('groups/Page'));
-const Fab = lazy(() => import('./Fab'));
 const ForgetPass = lazy(() => import('auth/ForgetPass'));
 const Token = lazy(() => import('auth/Token'));
 const Verify = lazy(() => import('auth/Verify'));
@@ -29,7 +27,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const App: React.FC = () => {
-    const { accessToken } = useAuthState();
+    const { user } = useAuthState();
+
+    const Dashboard =
+        user?.role === 'admin' ? lazy(() => import('dashboard/Admin')) : lazy(() => import('dashboard/Dashboard'));
+    const Fab = user?.role !== 'admin' && lazy(() => import('./Fab'));
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -46,7 +48,7 @@ const App: React.FC = () => {
                 <RouteGuard as={Verify} action="login" path="/verify-user" />
                 <NotFoundPage path="*" />
             </Router>
-            {accessToken && <Fab />}
+            {Fab && <Fab />}
         </Suspense>
     );
 };

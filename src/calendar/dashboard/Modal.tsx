@@ -38,7 +38,8 @@ export type Props = {
 export const UserItems: React.FC<{
     items: (UserResource | GroupResource)[];
     deleteCb: (item: UserResource | GroupResource) => void;
-}> = ({ items, deleteCb }) => {
+    more?: boolean;
+}> = ({ items, deleteCb, more = false }) => {
     return (
         <>
             {items.map(item => (
@@ -56,6 +57,12 @@ export const UserItems: React.FC<{
                         <FaUsers css={tw`w-6 h-6 m-2 mr-4`} />
                     )}
                     <div>{getName(item)}</div>
+                    {more && item instanceof UserResource && (
+                        <>
+                            <div css={tw`ml-4`}>{item.email}</div>
+                            <div css={tw`ml-4`}>{item.role}</div>
+                        </>
+                    )}
                     <FaMinusCircle
                         onClick={() => deleteCb(item)}
                         css={tw`text-gray-600 hover:text-gray-800 ml-auto mr-4 cursor-pointer`}

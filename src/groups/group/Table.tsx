@@ -117,15 +117,15 @@ export const Table: React.FC<{
     );
 };
 
-const Pagination = styled.div`
+export const Pagination = styled.div`
     ${tw`flex justify-between py-4`}
 `;
 
-const StyledTable = styled.table`
+export const StyledTable = styled.table`
     ${tw`text-left w-full border-collapse`}
 `;
 
-const StyledTh = styled.th`
+export const StyledTh = styled.th`
     ${tw`py-4 px-6 font-bold uppercase text-sm text-gray-dark border-b`}
 `;
 

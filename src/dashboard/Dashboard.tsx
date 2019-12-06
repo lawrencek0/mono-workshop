@@ -132,4 +132,4 @@ const Div = styled.div`
     text-align: center;
 `;
 
-export { Dashboard };
+export default Dashboard;

@@ -64,7 +64,7 @@ const Login: React.FC<RouteComponentProps & { to?: string; replace?: boolean }> 
                         localStorage.removeItem(localStorageKey('rememberMe'));
                     }
                     if (!to.includes('login')) {
-                        navigate(to, { replace });
+                        await navigate(to, { replace });
                     }
                 } catch (e) {
                     actions.setSubmitting(false);

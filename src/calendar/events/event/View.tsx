@@ -11,8 +11,12 @@ import { Link } from '@reach/router';
 import { Avatar } from 'calendar/appointment/create/StudentSelection';
 import { FaUserCircle } from 'react-icons/fa';
 import { StyledLink } from 'shared/cards/styles';
+import { useAuthState } from 'auth/hooks';
 
 export const View: React.FC<Props> = ({ eventId }) => {
+    const {
+        user: { role },
+    } = useAuthState();
     const { title, description, start, end, eventRoster, user } = useResource(EventResource.detailShape(), {
         id: eventId,
     });
@@ -46,7 +50,7 @@ export const View: React.FC<Props> = ({ eventId }) => {
                         </Link>
                     ))}
             </Members>
-            {user && user.role !== 'member' && <StyledLink to="./edit">Edit</StyledLink>}
+            {(user?.role !== 'member' || role === 'admin') && <StyledLink to="./edit">Edit</StyledLink>}
         </div>
     );
 };

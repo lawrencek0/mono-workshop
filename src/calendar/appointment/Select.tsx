@@ -249,15 +249,15 @@ const Select: React.FC<Props> = ({ detailId }) => {
             }}
         >
             <Form>
-                {role === 'faculty' ? (
+                {role === 'student' ? (
+                    <StudentSelect slotDays={slotDays} slotsByDay={slotsByDay} appointment={appointment} />
+                ) : (
                     <Faculty
                         slotDays={slotDays}
                         slotsByDay={slotsByDay}
                         appointment={appointment}
                         handleSlotDelete={handleSlotDelete}
                     />
-                ) : (
-                    <StudentSelect slotDays={slotDays} slotsByDay={slotsByDay} appointment={appointment} />
                 )}
             </Form>
         </Formik>

@@ -3,13 +3,14 @@ import { RouteComponentProps, Link, Match, Router } from '@reach/router';
 import styled from 'styled-components/macro';
 import tw from 'tailwind.macro';
 import { useResource } from 'rest-hooks';
-import { GroupResource, GroupUserResource } from 'resources/GroupResource';
+import { GroupResource } from 'resources/GroupResource';
 import theme from 'styled-theming';
 import { Title } from 'shared/cards/styles';
 import { RouteGuard } from 'routing/PrivateRoute';
 import { Members } from './Members';
 import { View, UnauthenticatedView } from './View';
 import { media } from 'themes/theme';
+import { useAuthState } from 'auth/hooks';
 
 export type Props = RouteComponentProps & {
     groupId?: string;
@@ -21,8 +22,9 @@ const GroupEditForm = lazy(() => import('./Edit'));
 
 export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ groupId }) => {
     const group = useResource(GroupResource.detailShape(), { id: groupId });
+    const { user } = useAuthState();
 
-    if (!group.user) {
+    if (!group.user && user?.role !== 'admin') {
         return <UnauthenticatedView groupId={groupId} />;
     }
 
@@ -47,7 +49,7 @@ export const Group: React.FC<RouteComponentProps & { groupId?: string }> = ({ gr
                     </Router>
                 </Suspense>
             </div>
-            <Sidebar user={group.user} />
+            {<Sidebar user={group.user ?? user} />}
         </Wrapper>
     );
 };
@@ -62,7 +64,7 @@ export const NavLink: React.FC<{ to: string; children: React.ReactChild }> = ({ 
     </Match>
 );
 
-const Sidebar: React.FC<{ user: GroupUserResource }> = ({ user: { role } }) => {
+const Sidebar: React.FC<{ user: { role?: string } }> = ({ user: { role } }) => {
     return (
         <aside
             css={`

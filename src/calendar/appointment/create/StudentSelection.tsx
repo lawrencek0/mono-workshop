@@ -4,7 +4,6 @@ import tw from 'tailwind.macro';
 import { useField } from 'formik';
 import { FaUserCircle } from 'react-icons/fa';
 import { FormTitle, InputWrapper, StyledCheckboxLabel as CheckboxLabel } from 'shared/inputs/styles';
-import { Field } from 'shared/inputs/Field';
 import { ErrorMessage } from 'shared/inputs/ErrorMessage';
 import { UserResource } from 'resources/UserResource';
 
@@ -19,14 +18,6 @@ const StudentSelection: React.FC<Props> = ({ students }) => {
         <>
             <FormTitle>Select Students</FormTitle>
             <ErrorMessage name="students" />
-            <Field
-                type="text"
-                id="search"
-                name="search"
-                disabled={true}
-                label="Search Students"
-                placeholder="Search Students with ElasticSearch (Coming Soon)"
-            />
             <InputWrapper>
                 <StyledList>
                     {students.map(({ id, firstName, lastName, picUrl }, i) => (
