@@ -12,3 +12,11 @@ fantoccini = "0.12.0"
 [dependencies.tokio]
 version = "0.2"
 features = ["macros"]
+
+[dependencies.reqwest]
+version = "0.10"
+features = ["json"]
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
