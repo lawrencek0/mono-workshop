@@ -48,10 +48,9 @@ pub async fn get_host_genera() -> Result<Vec<HostGenus>, reqwest::Error> {
 }
 
 pub async fn get_phages(genus: u8) -> Result<Vec<Phage>, reqwest::Error> {
-    let mut page = 1;
     let res = reqwest::get(&format!(
-        "https://phagesdb.org/api/host_genera/{}/phagelist/?page={}&count=1000",
-        genus, page
+        "https://phagesdb.org/api/host_genera/{}/phagelist/?page=1",
+        genus
     ))
     .await?
     .json::<PhageList>()
@@ -68,11 +67,7 @@ pub async fn get_phages(genus: u8) -> Result<Vec<Phage>, reqwest::Error> {
     let mut phages = res.results;
 
     loop {
-        page += 1;
-        let res = reqwest::get(&format!(
-            "https://phagesdb.org/api/host_genera/{}/phagelist/?page={}&count=1000",
-            genus, page,
-        ))
+        let res = reqwest::get(res.next.as_ref().unwrap())
         .await?
         .json::<PhageList>()
         .await?;
