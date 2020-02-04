@@ -10,10 +10,13 @@ pub struct HostGenus {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct PhageList {
+struct PhageList {
     count: u32,
     results: Vec<Phage>,
+    next: Option<String>,
 }
+
+// filtering out counts and making next next yknw getting all phages
 
 #[derive(Deserialize, Debug)]
 pub struct Phage {
@@ -34,6 +37,56 @@ pub struct Phage {
 enum EndType {
     Circular,
     Linear,
+}
+
+pub async fn get_host_genera() -> Result<Vec<HostGenus>, reqwest::Error> {
+    reqwest::get("https://phagesdb.org/api/host_genera/")
+        .await?
+        .json::<Vec<HostGenus>>()
+        .await
+}
+
+pub async fn get_phages(genus: u8) -> Result<Vec<Phage>, reqwest::Error> {
+    let mut page = 1;
+    let res = reqwest::get(&format!(
+        "https://phagesdb.org/api/host_genera/{}/phagelist/?page={}&count=1000",
+        genus, page
+    ))
+    .await?
+    .json::<PhageList>()
+    .await?;
+
+    if res.next.is_none() {
+        return Ok(res
+            .results
+            .into_iter()
+            .filter(|p| p.fasta_file.is_some())
+            .collect());
+    }
+
+    let mut phages = res.results;
+
+    loop {
+        page += 1;
+        let res = reqwest::get(&format!(
+            "https://phagesdb.org/api/host_genera/{}/phagelist/?page={}&count=1000",
+            genus, page,
+        ))
+        .await?
+        .json::<PhageList>()
+        .await?;
+
+        phages.extend(
+            res.results
+                .into_iter()
+                .filter(|p| p.fasta_file.is_some())
+                .collect::<Vec<Phage>>(),
+        );
+
+        if res.next.is_none() {
+            return Ok(phages);
+        }
+    }
 }
 
 fn format_end_type<'de, D>(deserializer: D) -> Result<EndType, D::Error>
