@@ -21,7 +21,8 @@ struct PhageList {
 #[derive(Deserialize, Debug)]
 pub struct Phage {
     phage_name: String,
-    old_names: String,
+    #[serde(deserialize_with = "format_old_names")]
+    old_names: Option<Vec<String>>,
     fasta_file: Option<String>,
     #[serde(deserialize_with = "format_end_type")]
     end_type: EndType,
@@ -87,6 +88,34 @@ pub async fn get_phages(genus: u8) -> Result<Vec<Phage>, reqwest::Error> {
             return Ok(phages);
         }
     }
+}
+
+fn format_old_names<'de, D>(deserializer: D) -> Result<Option<Vec<String>>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    struct FormatOldNamesVisitor;
+
+    impl<'de> Visitor<'de> for FormatOldNamesVisitor {
+        type Value = Option<Vec<String>>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            formatter.write_str("string containing old names separated by comma")
+        }
+
+        fn visit_str<V>(self, value: &str) -> Result<Self::Value, V>
+        where
+            V: de::Error,
+        {
+            if value == "" {
+                return Ok(None);
+            }
+
+            Ok(Some(value.split(',').map(|s| s.trim().to_string()).collect()))
+        }
+    }
+
+    deserializer.deserialize_str(FormatOldNamesVisitor)
 }
 
 fn format_end_type<'de, D>(deserializer: D) -> Result<EndType, D::Error>
