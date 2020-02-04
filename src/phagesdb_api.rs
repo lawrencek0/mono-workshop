@@ -16,7 +16,7 @@ pub struct PhageList {
 }
 
 #[derive(Deserialize, Debug)]
-struct Phage {
+pub struct Phage {
     phage_name: String,
     old_names: String,
     fasta_file: Option<String>,
@@ -25,7 +25,7 @@ struct Phage {
     #[serde(deserialize_with = "format_genus", alias = "isolation_host")]
     genus: String,
     #[serde(deserialize_with = "format_cluster", alias = "pcluster")]
-    cluster: Option<String>,
+    cluster: String,
     #[serde(deserialize_with = "format_subcluster", alias = "psubcluster")]
     subcluster: Option<String>,
 }
@@ -105,14 +105,14 @@ where
     deserializer.deserialize_map(FormatGenusVisitor)
 }
 
-fn format_cluster<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+fn format_cluster<'de, D>(deserializer: D) -> Result<String, D::Error>
 where
     D: Deserializer<'de>,
 {
     struct FormatClusterVisitor;
 
     impl<'de> Visitor<'de> for FormatClusterVisitor {
-        type Value = Option<String>;
+        type Value = String;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
             formatter.write_str("an object/map from pcluster")
@@ -122,7 +122,7 @@ where
         where
             E: de::Error,
         {
-            Ok(None)
+            Ok(String::from("Unclustered"))
         }
 
         fn visit_map<V>(self, mut map: V) -> Result<Self::Value, V::Error>
@@ -139,7 +139,7 @@ where
 
             while let Some((IgnoredAny, IgnoredAny)) = map.next_entry()? {}
 
-            Some(cluster).ok_or_else(|| de::Error::missing_field("cluster"))
+            cluster.ok_or_else(|| de::Error::missing_field("cluster"))
         }
     }
 
