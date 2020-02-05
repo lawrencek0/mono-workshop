@@ -1,6 +1,8 @@
 use fantoccini::error::CmdError;
 use fantoccini::{Client, Element, Locator};
 
+use crate::phagesdb_api::Phage;
+
 pub struct Pet {
     pub client: Client,
 }
@@ -94,14 +96,48 @@ impl Pet {
         Ok(())
     }
 
-    // @TODO: parse the results of scrape and maybe store in a struct?
-    pub async fn scrape_phages(&mut self) -> Result<Vec<String>, CmdError> {
-        let mut rows = self.client.find_all(Locator::Css("tr[id^='phage']")).await?;
-        let mut phages = Vec::with_capacity(rows.len());
-        for row in rows.iter_mut() {
-            let info = row.text().await?;
-            phages.push(info);
+    pub async fn scrape_phages(&mut self) -> Result<Vec<Phage>, CmdError> {
+        let mut phages = vec![];
+
+        loop {
+            let mut rows = self
+                .client
+                .find_all(Locator::Css("tr[id^='phage']"))
+                .await?;
+            for row in rows.iter_mut() {
+                let info = row.text().await?;
+                let mut fields = info
+                    .as_str()
+                    .split(" ")
+                    .map(|s| s.to_owned())
+                    .take(4)
+                    .collect::<Vec<_>>();
+                let phage = Phage {
+                    subcluster: match fields[3].as_str() {
+                        "None" => None,
+                        _ => fields.pop(),
+                    },
+                    cluster: fields.pop().unwrap(),
+                    genus: fields.pop().unwrap(),
+                    phage_name: fields.pop().unwrap(),
+                    end_type: None,
+                    old_names: None,
+                    fasta_file: None,
+                };
+                phages.push(phage);
+            }
+
+            let mut next_btn = self.client.find(Locator::Css("#cutTable_next")).await?;
+
+            let class_names = next_btn.attr("class").await?.unwrap();
+
+            if class_names.as_str().contains("disabled") {
+                break;
+            }
+
+            next_btn.click().await?;
         }
+
         Ok(phages)
     }
 
