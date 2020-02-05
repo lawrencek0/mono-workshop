@@ -8,10 +8,11 @@ edition = "2018"
 
 [dependencies]
 fantoccini = "0.12.0"
+futures = "0.3"
 
 [dependencies.tokio]
 version = "0.2"
-features = ["macros"]
+features = ["macros", "blocking"]
 
 [dependencies.reqwest]
 version = "0.10"
@@ -20,3 +21,7 @@ features = ["json"]
 [dependencies.serde]
 version = "1.0"
 features = ["derive"]
+
+[dependencies.rusqlite]
+version = "0.21.0"
+features = ["bundled"]
