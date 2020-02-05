@@ -1,12 +1,12 @@
 use serde::de::{self, IgnoredAny, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer};
 
-use std::fmt;
+use std::fmt::{self, Debug, Display, Formatter};
 
 #[derive(Deserialize, Debug)]
 pub struct HostGenus {
     pub id: u8,
-    genus_name: String,
+    pub genus_name: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -16,28 +16,32 @@ struct PhageList {
     next: Option<String>,
 }
 
-// filtering out counts and making next next yknw getting all phages
-
 #[derive(Deserialize, Debug)]
 pub struct Phage {
-    phage_name: String,
+    pub phage_name: String,
     #[serde(deserialize_with = "format_old_names")]
-    old_names: Option<Vec<String>>,
-    fasta_file: Option<String>,
+    pub old_names: Option<Vec<String>>,
+    pub fasta_file: Option<String>,
     #[serde(deserialize_with = "format_end_type")]
-    end_type: EndType,
+    pub end_type: Option<EndType>,
     #[serde(deserialize_with = "format_genus", alias = "isolation_host")]
-    genus: String,
+    pub genus: String,
     #[serde(deserialize_with = "format_cluster", alias = "pcluster")]
-    cluster: String,
+    pub cluster: String,
     #[serde(deserialize_with = "format_subcluster", alias = "psubcluster")]
-    subcluster: Option<String>,
+    pub subcluster: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]
-enum EndType {
+pub enum EndType {
     Circular,
     Linear,
+}
+
+impl Display for EndType {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        Debug::fmt(self, f)
+    }
 }
 
 pub async fn get_host_genera() -> Result<Vec<HostGenus>, reqwest::Error> {
@@ -48,7 +52,7 @@ pub async fn get_host_genera() -> Result<Vec<HostGenus>, reqwest::Error> {
 }
 
 pub async fn get_phages(genus: u8) -> Result<Vec<Phage>, reqwest::Error> {
-    let res = reqwest::get(&format!(
+    let mut res = reqwest::get(&format!(
         "https://phagesdb.org/api/host_genera/{}/phagelist/?page=1",
         genus
     ))
@@ -67,10 +71,10 @@ pub async fn get_phages(genus: u8) -> Result<Vec<Phage>, reqwest::Error> {
     let mut phages = res.results;
 
     loop {
-        let res = reqwest::get(res.next.as_ref().unwrap())
-        .await?
-        .json::<PhageList>()
-        .await?;
+        res = reqwest::get(res.next.as_ref().unwrap())
+            .await?
+            .json::<PhageList>()
+            .await?;
 
         phages.extend(
             res.results
@@ -106,21 +110,23 @@ where
                 return Ok(None);
             }
 
-            Ok(Some(value.split(',').map(|s| s.trim().to_string()).collect()))
+            Ok(Some(
+                value.split(',').map(|s| s.trim().to_string()).collect(),
+            ))
         }
     }
 
     deserializer.deserialize_str(FormatOldNamesVisitor)
 }
 
-fn format_end_type<'de, D>(deserializer: D) -> Result<EndType, D::Error>
+fn format_end_type<'de, D>(deserializer: D) -> Result<Option<EndType>, D::Error>
 where
     D: Deserializer<'de>,
 {
     struct FormatEndTypeVisitor;
 
     impl<'de> Visitor<'de> for FormatEndTypeVisitor {
-        type Value = EndType;
+        type Value = Option<EndType>;
 
         fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
             formatter.write_str("string or empty string from end_type")
@@ -131,10 +137,10 @@ where
             V: de::Error,
         {
             if value == "CIRC" {
-                return Ok(EndType::Circular);
+                return Ok(Some(EndType::Circular));
             }
 
-            Ok(EndType::Linear)
+            Ok(Some(EndType::Linear))
         }
     }
 
