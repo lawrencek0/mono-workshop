@@ -1,3 +1,4 @@
+use rusqlite::types::{FromSql, FromSqlResult, ValueRef};
 use serde::de::{self, IgnoredAny, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer};
 
@@ -18,6 +19,7 @@ struct PhageList {
 
 #[derive(Deserialize, Debug)]
 pub struct Phage {
+    #[serde(alias = "phage_name")]
     pub name: String,
     #[serde(deserialize_with = "format_old_names")]
     pub old_names: Option<Vec<String>>,
@@ -41,6 +43,16 @@ pub enum EndType {
 impl Display for EndType {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         Debug::fmt(self, f)
+    }
+}
+
+impl FromSql for EndType {
+    fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
+        value.as_str().and_then(|s| match s {
+            "Circular" => Ok(EndType::Circular),
+            "Linear" => Ok(EndType::Linear),
+            _ => unimplemented!(),
+        })
     }
 }
 
