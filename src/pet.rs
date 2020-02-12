@@ -119,7 +119,7 @@ impl Pet {
                     },
                     cluster: fields.pop().unwrap(),
                     genus: fields.pop().unwrap(),
-                    phage_name: fields.pop().unwrap(),
+                    name: fields.pop().unwrap(),
                     end_type: None,
                     old_names: None,
                     fasta_file: None,

@@ -18,7 +18,7 @@ struct PhageList {
 
 #[derive(Deserialize, Debug)]
 pub struct Phage {
-    pub phage_name: String,
+    pub name: String,
     #[serde(deserialize_with = "format_old_names")]
     pub old_names: Option<Vec<String>>,
     pub fasta_file: Option<String>,

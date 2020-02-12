@@ -26,7 +26,7 @@ async fn update_phagesdb(conn: Arc<Mutex<Connection>>) -> Result<(), Box<dyn std
                         )
                         .unwrap();
                     stmt.execute(params!(
-                        phage.phage_name,
+                        phage.name,
                         phage.genus,
                         phage.cluster,
                         phage.subcluster,
@@ -71,7 +71,7 @@ async fn scrape_pet(
                     )
                     .unwrap();
                 stmt.execute(params!(
-                    phage.phage_name,
+                    phage.name,
                     phage.genus,
                     phage.cluster,
                     phage.subcluster,
