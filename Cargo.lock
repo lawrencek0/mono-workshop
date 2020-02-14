@@ -1828,6 +1828,7 @@ dependencies = [
  "reqwest 0.10.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusqlite 0.21.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.98 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tempfile 3.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "tokio 0.2.10 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

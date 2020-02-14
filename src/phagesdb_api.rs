@@ -1,6 +1,10 @@
+use futures::{stream, StreamExt};
 use rusqlite::types::{FromSql, FromSqlResult, ValueRef};
 use serde::de::{self, IgnoredAny, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer};
+use tempfile::Builder;
+use tokio::fs::File;
+use tokio::prelude::*;
 
 use std::fmt::{self, Debug, Display, Formatter};
 
@@ -99,6 +103,27 @@ pub async fn get_phages(genus: u8) -> Result<Vec<Phage>, reqwest::Error> {
             return Ok(phages);
         }
     }
+}
+
+pub async fn download_fasta_files(
+    phages: Vec<Phage>,
+) -> Result<tempfile::TempDir, Box<dyn std::error::Error>> {
+    let tmp_dir = Builder::new().prefix("fasta").tempdir()?;
+
+    stream::iter(phages)
+        .for_each_concurrent(8 as usize, |phage| async {
+            let mut res = match reqwest::get(&phage.fasta_file.unwrap()).await {
+                Ok(r) => r,
+                Err(e) => unimplemented!("Add retry logic: {:?}", e),
+            };
+            let mut file = File::create(tmp_dir.path().join(phage.name)).await.unwrap();
+            while let Some(chunk) = res.chunk().await.unwrap() {
+                file.write_all(&chunk).await.unwrap();
+            }
+        })
+        .await;
+
+    Ok(tmp_dir)
 }
 
 fn format_old_names<'de, D>(deserializer: D) -> Result<Option<Vec<String>>, D::Error>
