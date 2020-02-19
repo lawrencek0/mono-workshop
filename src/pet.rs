@@ -4,7 +4,7 @@ use rusqlite::{params, Connection};
 use tokio::sync::mpsc;
 use tokio::task::spawn_blocking;
 
-use crate::phagesdb_api::Phage;
+use crate::phagesdb_api::{Phage, EndType};
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 
@@ -45,73 +45,6 @@ impl Pet {
         self.client
             .wait_for_find(Locator::Css(r#"a[href="known_phage_visualization"]"#))
             .await
-    }
-
-    pub async fn get_genera(&mut self) -> Result<Vec<String>, CmdError> {
-        self.client
-            .wait_for_find(Locator::Css(r#"a[href="known_phage_visualization"]"#))
-            .await?
-            .click()
-            .await?;
-        self.client.wait_for_find(Locator::Css("#genera")).await?;
-        let options = self
-            .client
-            .find_all(Locator::Css("#genera > option"))
-            .await?;
-
-        let mut genera = Vec::with_capacity(options.len());
-        for mut option in options {
-            let text = option
-                .attr("value")
-                .await?
-                .expect("Genus value can't be blank");
-            genera.push(text);
-        }
-
-        Ok(genera)
-    }
-
-    pub async fn open_genus(&mut self, genus: &str) -> Result<(), CmdError> {
-        self.client
-            .wait_for_find(Locator::Css(r#"a[href="known_phage_visualization"]"#))
-            .await?
-            .click()
-            .await?;
-        self.client
-            .wait_for_find(Locator::Css(r#"input[placeholder="Search Genera"]"#))
-            .await?
-            .click()
-            .await?
-            .wait_for_find(Locator::Css(r#"input[placeholder="Search Genera"]"#))
-            .await?
-            .send_keys(genus)
-            .await?;
-        self.client
-            .find(Locator::Css(&format!(r#"li[id$=-{}]"#, genus)))
-            .await?
-            .click()
-            .await?;
-        self.client
-            .find(Locator::Css(r#"input[placeholder="Search Enzymes"]"#))
-            .await?
-            .click()
-            .await?;
-        self.client
-            .find(Locator::Css(r#"li[id$="-AanI"]"#))
-            .await?
-            .click()
-            .await?;
-        self.client
-            .find(Locator::Css("#submit"))
-            .await?
-            .click()
-            .await?;
-        self.client
-            .wait_for_find(Locator::Css(r#"select[name="cutTable_length"]"#))
-            .await?
-            .select_by_value("100")
-            .await?;
-        Ok(())
     }
 
     async fn open_modify_phage(&mut self) -> Result<Element, CmdError> {
@@ -205,11 +138,15 @@ impl Pet {
         Ok(())
     }
 
-    async fn insert_phage(&mut self, phage: Phage, fasta_dir: &Path) -> Result<(), CmdError> {
-        let subcluster = if phage.subcluster.is_none() {
-            "None"
-        } else {
-            phage.subcluster.as_ref().unwrap()
+    async fn insert_phage(
+        &mut self,
+        phage: Phage,
+        fasta_dir: &Path,
+        tx: &mut mpsc::Sender<Phage>,
+    ) -> Result<(), CmdError> {
+        let subcluster = match phage.subcluster.as_ref() {
+            Some(s) => s,
+            None => "None"
         };
 
         self.client
@@ -252,7 +189,7 @@ impl Pet {
             .await?
             .send_keys(
                 fasta_dir
-                    .join(format!("{}.fasta", phage.name))
+                    .join(format!("{}.fasta", &phage.name))
                     .to_str()
                     .unwrap(),
             )
@@ -270,7 +207,7 @@ impl Pet {
         self.client
             .find(Locator::Css("#subcluster"))
             .await?
-            .select_by_value(subcluster)
+            .select_by_value(&subcluster)
             .await?;
 
         let mut form = self
@@ -280,7 +217,11 @@ impl Pet {
         form.set_by_name("phage_name", &phage.name).await?;
         form.set_by_name(
             "circular_linear",
-            &phage.end_type.unwrap().to_string().to_lowercase(),
+            match phage.end_type {
+                Some(EndType::Circular) => "circular",
+                Some(EndType::Linear) => "linear",
+                _ => unreachable!("shouldn't be null in pet")
+            },
         )
         .await?;
 
@@ -288,19 +229,6 @@ impl Pet {
 
         self.client
             .wait_for_find(Locator::Css("span[style='color: green; ']"))
-            .await?;
-
-        self.client
-            .find(Locator::Css("input[name='phage_name']"))
-            .await?
-            .send_keys(&phage.name)
-            .await?;
-
-        self.client
-            .wait_for_find(Locator::Css(&format!(
-                "#cluster optionnnn[value='{}']",
-                &phage.cluster
-            )))
             .await?;
 
         self.client
@@ -313,6 +241,8 @@ impl Pet {
             .wait_for_find(Locator::Css("span[style='color: green; ']"))
             .await?;
 
+        tx.send(phage).await.expect("receiver dropped");
+
         Ok(())
     }
 
@@ -320,38 +250,32 @@ impl Pet {
         &mut self,
         phages: Vec<Phage>,
         fasta_dir: &Path,
+        mut tx: mpsc::Sender<Phage>,
     ) -> Result<(), CmdError> {
         for phage in phages {
-            self.insert_phage(phage, fasta_dir).await?;
+            self.insert_phage(phage, fasta_dir, &mut tx).await?;
         }
 
         Ok(())
     }
 
-    pub async fn save_phages(conn: Arc<Mutex<Connection>>, mut rx: mpsc::Receiver<Phage>) {
-        while let Some(phage) = rx.recv().await {
-            let conn = conn.clone();
-            spawn_blocking(move || {
-                let conn = conn.lock().unwrap();
-                let mut stmt = conn
-                    .prepare(
-                        "INSERT OR IGNORE INTO pet 
-                                (name, genus, cluster, subcluster) 
-                                VALUES (?1, ?2, ?3, ?4)",
-                    )
-                    .unwrap();
-                stmt.execute(params!(
-                    phage.name,
-                    phage.genus,
-                    phage.cluster,
-                    phage.subcluster,
-                ))
-                .unwrap();
-            });
-        }
-    }
-
     pub async fn drop(&mut self) -> Result<(), CmdError> {
         self.client.close().await
+    }
+}
+
+pub async fn save_phages(conn: Arc<Mutex<Connection>>, mut rx: mpsc::Receiver<Phage>) {
+    while let Some(phage) = rx.recv().await {
+        let conn = conn.clone();
+        spawn_blocking(move || {
+            let conn = conn.lock().unwrap();
+            conn.execute(
+                "INSERT OR IGNORE INTO pet 
+                        (name, genus, cluster, subcluster) 
+                        VALUES (?1, ?2, ?3, ?4)",
+                params!(phage.name, phage.genus, phage.cluster, phage.subcluster,),
+            )
+            .unwrap();
+        });
     }
 }
