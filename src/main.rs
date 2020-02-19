@@ -1,91 +1,12 @@
-use futures::{future, join, stream, StreamExt};
+use futures::join;
 use rusqlite::{params, Connection};
-use std::sync::{Arc, Mutex};
+use tokio::sync::mpsc;
 use tokio::task::spawn_blocking;
+
+use std::sync::{Arc, Mutex};
 
 mod pet;
 mod phagesdb_api;
-
-async fn update_phagesdb(conn: Arc<Mutex<Connection>>) -> Result<(), Box<dyn std::error::Error>> {
-    let genera = phagesdb_api::get_host_genera().await?;
-    let phage_lists = stream::iter(genera)
-        .map(|genus| async move { phagesdb_api::get_phages(genus.id).await })
-        .buffer_unordered(8);
-    phage_lists
-        .for_each(move |phages| {
-            let conn = conn.clone();
-            spawn_blocking(move || {
-                let phages = phages.unwrap();
-                phages
-                    .iter()
-                    .filter(|phage| phage.fasta_file.is_some())
-                    .for_each(|phage| {
-                        let conn = conn.lock().unwrap();
-                        let mut stmt = conn
-                            .prepare(
-                                "INSERT OR IGNORE INTO phagesdb 
-                                (name, genus, cluster, subcluster, endType, fastaFile) 
-                                VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-                            )
-                            .unwrap();
-                        stmt.execute(params!(
-                            phage.name,
-                            phage.genus,
-                            phage.cluster,
-                            phage.subcluster,
-                            phage.end_type.as_ref().map(|s| s.to_string()),
-                            phage.fasta_file.as_ref().map(|s| s.to_string()),
-                        ))
-                        .unwrap();
-                    });
-            });
-            future::ready(())
-        })
-        .await;
-    Ok(())
-}
-
-async fn scrape_pet(
-    conn: Arc<Mutex<Connection>>,
-    c: &mut pet::Pet,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let email = "email";
-    let password = "password";
-
-    if let Err(e) = c.login(email, password).await {
-        // @FIXME: it never times out when the element is not found
-        // instead after login check the url (login to home page), it should be more thane nough to verify
-        // maybe interrupt wait a duration and check for the red error text?
-        eprintln!("Failed to login {}", e);
-    }
-
-    let genera = c.get_genera().await?;
-    for genus in genera {
-        c.open_genus(&genus).await?;
-        let phages = c.scrape_phages().await?;
-        for phage in phages {
-            let conn = conn.clone();
-            spawn_blocking(move || {
-                let conn = conn.lock().unwrap();
-                let mut stmt = conn
-                    .prepare(
-                        "INSERT OR IGNORE INTO pet 
-                            (name, genus, cluster, subcluster) 
-                            VALUES (?1, ?2, ?3, ?4)",
-                    )
-                    .unwrap();
-                stmt.execute(params!(
-                    phage.name,
-                    phage.genus,
-                    phage.cluster,
-                    phage.subcluster,
-                ))
-                .unwrap();
-            });
-        }
-    }
-    Ok(())
-}
 
 async fn update_phages(
     conn: Arc<Mutex<Connection>>,
@@ -149,15 +70,41 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         COMMIT;",
     )?;
 
+    let mut c = pet::Pet::new(
+        String::from("email"),
+        String::from("password"),
+    )
+    .await;
+    c.login().await?;
+
+    let pet_count: u32 = conn.query_row("SELECT COUNT(*) FROM pet", rusqlite::NO_PARAMS, |r| {
+        r.get(0)
+    })?;
+
     let conn = Arc::new(Mutex::new(conn));
-    let mut c = pet::Pet::new().await;
-    {
-        let phagesdb = update_phagesdb(conn.clone());
-        let pet = scrape_pet(conn.clone(), &mut c);
-        let (phagesdb, pet) = join!(phagesdb, pet);
-        (phagesdb?, pet?);
+
+    // only scrape PET whent the database is empty
+    if pet_count == 0 {
+        let (tx, rx) = mpsc::channel(100);
+        let update_phagesdb = phagesdb_api::update_phagesdb(conn.clone());
+        let scrape_pet = c.scrape_phages(tx);
+        let save_pet = pet::save_phages(conn.clone(), rx);
+        let (scrape_pet, _, update_phagesdb) = join!(scrape_pet, save_pet, update_phagesdb);
+        (scrape_pet?, update_phagesdb?);
+    } else {
+        phagesdb_api::update_phagesdb(conn.clone()).await?;
     }
-    update_phages(conn.clone()).await?;
+    let new_phages = update_phages(conn.clone()).await?;
+
+    let temp_dir = phagesdb_api::download_fasta_files(new_phages).await?;
+    let new_phages = update_phages(conn.clone()).await?;
+    {
+        let (tx, rx) = mpsc::channel(30);
+        let insert_phages = c.insert_phages(new_phages, temp_dir.path(), tx);
+        let save_phages = pet::save_phages(conn.clone(), rx);
+        let (insert_phages, _) = join!(insert_phages, save_phages);
+        insert_phages?;
+    }
     c.drop().await?;
 
     Ok(())
