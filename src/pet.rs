@@ -4,7 +4,7 @@ use rusqlite::{params, Connection};
 use tokio::sync::mpsc;
 use tokio::task::spawn_blocking;
 
-use crate::phagesdb_api::{Phage, EndType};
+use crate::phagesdb::{EndType, Phage};
 use std::path::Path;
 use std::sync::{Arc, Mutex};
 
@@ -14,11 +14,19 @@ pub struct Pet {
     password: String,
 }
 
+enum ModifyPhageTab {
+    UploadPhage,
+    DeletePhage,
+    ModifyPhage,
+    EditClusterSubcluster,
+    AddDeleteGenus,
+}
+
 impl Pet {
     pub async fn new(email: String, password: String) -> Self {
         let caps = r#"{
             "moz:firefoxOptions": {
-                "args": ["--headless"]
+                "args": [""]
             }
         }"#;
 
@@ -47,24 +55,24 @@ impl Pet {
             .await
     }
 
-    async fn open_modify_phage(&mut self) -> Result<Element, CmdError> {
+    async fn open_modify_phage_data_tab(&mut self, tab: ModifyPhageTab) -> Result<(), CmdError> {
         self.client
             .goto("http://phageenzymetools.com/modify_phage_data")
             .await?;
-
         self.client
-            .wait_for_find(Locator::Css("a[href='#view3']"))
+            .wait_for_find(Locator::Css(&format!("a[href='#view{}']", (tab as u8) + 1)))
             .await?
             .click()
             .await?;
-        self.client
-            .wait_for_find(Locator::Css("#select_modify_phage"))
-            .await
+        Ok(())
     }
 
     pub async fn scrape_phages(&mut self, mut tx: mpsc::Sender<Phage>) -> Result<(), CmdError> {
+        self.open_modify_phage_data_tab(ModifyPhageTab::ModifyPhage)
+            .await?;
         let n = self
-            .open_modify_phage()
+            .client
+            .wait_for_find(Locator::Css("#select_modify_phage"))
             .await?
             .find_all(Locator::Css("option"))
             .await?
@@ -78,7 +86,12 @@ impl Pet {
                 self.login().await?;
             }
 
-            let mut select = self.open_modify_phage().await?;
+            self.open_modify_phage_data_tab(ModifyPhageTab::ModifyPhage)
+                .await?;
+            let mut select = self
+                .client
+                .wait_for_find(Locator::Css("#select_modify_phage"))
+                .await?;
             select
                 .find(Locator::Css(&format!("option:nth-of-type({})", i)))
                 .await?
@@ -138,23 +151,75 @@ impl Pet {
         Ok(())
     }
 
+    async fn add_cluster(&mut self, cluster: &str) -> Result<(), CmdError> {
+        self.open_modify_phage_data_tab(ModifyPhageTab::EditClusterSubcluster)
+            .await?;
+        self.client
+            .wait_for_find(Locator::Css("#ui-id-1"))
+            .await?
+            .click()
+            .await?;
+        self.client
+            .find(Locator::Css("#add_cluster"))
+            .await?
+            .send_keys(cluster)
+            .await?;
+        self.client
+            .find(Locator::Css("button[value='add_cluster']"))
+            .await?
+            .click()
+            .await?;
+        self.client
+            .wait_for_find(Locator::Css("p[style='color: green;']"))
+            .await?;
+        Ok(())
+    }
+
+    async fn add_subcluster(&mut self, cluster: &str, subcluster: &str) -> Result<(), CmdError> {
+        let subcluster_num = subcluster
+            .chars()
+            .skip_while(|c| c.is_alphabetic())
+            .collect::<String>();
+
+        self.open_modify_phage_data_tab(ModifyPhageTab::EditClusterSubcluster)
+            .await?;
+        self.client
+            .wait_for_find(Locator::Css("#ui-id-3"))
+            .await?
+            .click()
+            .await?;
+        self.client
+            .find(Locator::Css("#add_subcluster_cluster"))
+            .await?
+            .select_by_value(cluster)
+            .await?;
+        self.client
+            .find(Locator::Css("#add_subcluster_subcluster"))
+            .await?
+            .send_keys(&subcluster_num)
+            .await?;
+        self.client
+            .find(Locator::Css("button[value='add_subcluster']"))
+            .await?
+            .click()
+            .await?;
+        self.client
+            .wait_for_find(Locator::Css("p[style='color: green;']"))
+            .await?;
+
+        Ok(())
+    }
+
     async fn insert_phage(
         &mut self,
         phage: Phage,
         fasta_dir: &Path,
         tx: &mut mpsc::Sender<Phage>,
     ) -> Result<(), CmdError> {
-        let subcluster = match phage.subcluster.as_ref() {
-            Some(s) => s,
-            None => "None"
-        };
-
-        self.client
-            .find(Locator::Css("a[href='modify_phage_data']"))
-            .await?
-            .click()
+        self.open_modify_phage_data_tab(ModifyPhageTab::UploadPhage)
             .await?;
         self.client.wait_for_find(Locator::Css("#cluster")).await?;
+
         match self
             .client
             .find(Locator::Css(&format!(
@@ -163,11 +228,23 @@ impl Pet {
             )))
             .await
         {
-            Err(CmdError::NoSuchElement(e)) => {
-                println!("need to add code for updating clusters {}", e);
-                return Ok(());
+            Err(CmdError::NoSuchElement(_)) => {
+                self.add_cluster(&phage.cluster).await?;
+                self.open_modify_phage_data_tab(ModifyPhageTab::UploadPhage)
+                    .await?;
             }
             _ => {}
+        };
+
+        self.client
+            .find(Locator::Css("#cluster"))
+            .await?
+            .select_by_value(&phage.cluster)
+            .await?;
+
+        let subcluster = match phage.subcluster.as_ref() {
+            Some(s) => s,
+            None => "None",
         };
         match self
             .client
@@ -177,12 +254,24 @@ impl Pet {
             )))
             .await
         {
-            Err(CmdError::NoSuchElement(e)) => {
-                println!("need to add code for updating subclusters {}", e);
-                return Ok(());
+            Err(CmdError::NoSuchElement(_)) => {
+                self.add_subcluster(&phage.cluster, subcluster).await?;
+                self.open_modify_phage_data_tab(ModifyPhageTab::UploadPhage)
+                    .await?;
+                self.client
+                    .find(Locator::Css("#cluster"))
+                    .await?
+                    .select_by_value(&phage.cluster)
+                    .await?;
             }
             _ => {}
         };
+
+        self.client
+            .find(Locator::Css("#subcluster"))
+            .await?
+            .select_by_value(&subcluster)
+            .await?;
 
         self.client
             .find(Locator::Css("input[name='file']"))
@@ -199,15 +288,16 @@ impl Pet {
             .await?
             .select_by_value(&phage.genus)
             .await?;
+
+        let end_type = match phage.end_type {
+            Some(EndType::Circular) => "circular",
+            Some(EndType::Linear) => "linear",
+            _ => unreachable!("shouldn't be null in pet"),
+        };
         self.client
-            .find(Locator::Css("#cluster"))
+            .find(Locator::Css(&format!("input[value='{}']", end_type)))
             .await?
-            .select_by_value(&phage.cluster)
-            .await?;
-        self.client
-            .find(Locator::Css("#subcluster"))
-            .await?
-            .select_by_value(&subcluster)
+            .click()
             .await?;
 
         let mut form = self
@@ -215,16 +305,6 @@ impl Pet {
             .form(Locator::Css("form[name='uploadPhage']"))
             .await?;
         form.set_by_name("phage_name", &phage.name).await?;
-        form.set_by_name(
-            "circular_linear",
-            match phage.end_type {
-                Some(EndType::Circular) => "circular",
-                Some(EndType::Linear) => "linear",
-                _ => unreachable!("shouldn't be null in pet")
-            },
-        )
-        .await?;
-
         form.submit().await?;
 
         self.client
