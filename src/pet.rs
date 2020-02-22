@@ -2,7 +2,7 @@ use fantoccini::error::CmdError;
 use fantoccini::{Client, Element, Locator};
 use rusqlite::{params, Connection};
 use tokio::sync::mpsc;
-use tokio::task::spawn_blocking;
+use tokio::task;
 
 use crate::phagesdb::{EndType, Phage};
 use std::path::Path;
@@ -344,10 +344,13 @@ impl Pet {
     }
 }
 
-pub async fn save_phages(conn: Arc<Mutex<Connection>>, mut rx: mpsc::Receiver<Phage>) {
+pub async fn save_phages(
+    conn: Arc<Mutex<Connection>>,
+    mut rx: mpsc::Receiver<Phage>,
+) -> Result<(), task::JoinError> {
     while let Some(phage) = rx.recv().await {
         let conn = conn.clone();
-        spawn_blocking(move || {
+        task::spawn_blocking(move || {
             let conn = conn.lock().unwrap();
             conn.execute(
                 "INSERT OR IGNORE INTO pet 
@@ -356,6 +359,9 @@ pub async fn save_phages(conn: Arc<Mutex<Connection>>, mut rx: mpsc::Receiver<Ph
                 params!(phage.name, phage.genus, phage.cluster, phage.subcluster,),
             )
             .unwrap();
-        });
+        })
+        .await?;
     }
+
+    Ok(())
 }
