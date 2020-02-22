@@ -1,17 +1,15 @@
 use futures::join;
 use rusqlite::{params, Connection};
-use tokio::sync::mpsc;
-use tokio::task::spawn_blocking;
-
 use std::sync::{Arc, Mutex};
+use tokio::{sync::mpsc, task};
 
 mod pet;
-mod phagesdb_api;
+mod phagesdb;
 
-async fn update_phages(
+async fn compare_phages(
     conn: Arc<Mutex<Connection>>,
-) -> Result<Vec<phagesdb_api::Phage>, Box<dyn std::error::Error>> {
-    let phages = spawn_blocking(move || {
+) -> Result<Vec<phagesdb::Phage>, Box<dyn std::error::Error>> {
+    let phages = task::spawn_blocking(move || {
         let conn = conn.lock().unwrap();
         let mut stmt = conn
             .prepare(
@@ -22,7 +20,7 @@ async fn update_phages(
             .unwrap();
         let phages = stmt
             .query_map(params![], |row| {
-                Ok(phagesdb_api::Phage {
+                Ok(phagesdb::Phage {
                     name: row.get(0)?,
                     genus: row.get(1)?,
                     cluster: row.get(2)?,
@@ -39,6 +37,61 @@ async fn update_phages(
     .await?;
 
     Ok(phages)
+}
+
+async fn update_phages(
+    conn: Arc<Mutex<Connection>>,
+    scrape_pet: bool,
+    email: &str,
+    password: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    if scrape_pet {
+        let mut c = pet::Pet::new(email.to_string(), password.to_string()).await;
+        c.login().await?;
+
+        let (scrape_pet, save_pet_phages) = {
+            let (tx, rx) = mpsc::channel(100);
+            (c.scrape_phages(tx), pet::save_phages(conn.clone(), rx))
+        };
+
+        let (scrape_bacillus, get_phagesdb_phages, save_phagesdb_phages) = {
+            let (tx, rx) = mpsc::channel(100);
+            (
+                phagesdb::bacillus_scraper::scrape_phages(tx.clone()),
+                phagesdb::api::get_phages(tx),
+                phagesdb::save_phages(conn.clone(), rx),
+            )
+        };
+
+        let (scrape_bacillus, get_phagesdb_phages, save_phagesdb_phages, scrape_pet, _) = join!(
+            scrape_bacillus,
+            get_phagesdb_phages,
+            save_phagesdb_phages,
+            scrape_pet,
+            save_pet_phages
+        );
+
+        (
+            scrape_bacillus?,
+            get_phagesdb_phages?,
+            save_phagesdb_phages?,
+            scrape_pet?,
+        );
+
+        c.drop().await?;
+    } else {
+        let (tx, rx) = mpsc::channel(100);
+        let (scrape_bacillus, get_phages, save_phagesdb_phages) = (
+            phagesdb::bacillus_scraper::scrape_phages(tx.clone()),
+            phagesdb::api::get_phages(tx),
+            phagesdb::save_phages(conn.clone(), rx),
+        );
+        let (scrape_bacillus, get_phages, save_phagesdb_phages) =
+            join!(scrape_bacillus, get_phages, save_phagesdb_phages);
+        (scrape_bacillus?, get_phages?, save_phagesdb_phages?);
+    }
+
+    Ok(())
 }
 
 #[tokio::main]
@@ -70,34 +123,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         COMMIT;",
     )?;
 
-    let mut c = pet::Pet::new(
-        String::from("email"),
-        String::from("password"),
-    )
-    .await;
-    c.login().await?;
-
     let pet_count: u32 = conn.query_row("SELECT COUNT(*) FROM pet", rusqlite::NO_PARAMS, |r| {
         r.get(0)
     })?;
 
     let conn = Arc::new(Mutex::new(conn));
 
-    // only scrape PET whent the database is empty
-    if pet_count == 0 {
-        let (tx, rx) = mpsc::channel(100);
-        let update_phagesdb = phagesdb_api::update_phagesdb(conn.clone());
-        let scrape_pet = c.scrape_phages(tx);
-        let save_pet = pet::save_phages(conn.clone(), rx);
-        let (scrape_pet, _, update_phagesdb) = join!(scrape_pet, save_pet, update_phagesdb);
-        (scrape_pet?, update_phagesdb?);
-    } else {
-        phagesdb_api::update_phagesdb(conn.clone()).await?;
-    }
-    let new_phages = update_phages(conn.clone()).await?;
+    update_phages(conn.clone(), pet_count == 0, "email", "password").await?;
 
-    let temp_dir = phagesdb_api::download_fasta_files(new_phages).await?;
-    let new_phages = update_phages(conn.clone()).await?;
+    let mut c = pet::Pet::new(String::from("email"), String::from("password")).await;
+    let new_phages = compare_phages(conn.clone()).await?;
+
+    let temp_dir = phagesdb::api::download_fasta_files(new_phages).await?;
+    let new_phages = compare_phages(conn.clone()).await?;
     {
         let (tx, rx) = mpsc::channel(30);
         let insert_phages = c.insert_phages(new_phages, temp_dir.path(), tx);
