@@ -1,10 +1,7 @@
 use fantoccini::{error::CmdError, Client, Locator};
-use rusqlite::{params, Connection};
-use std::sync::{Arc, Mutex};
 use tokio::sync::mpsc;
-use tokio::task::spawn_blocking;
 
-use super::{Phage, EndType};
+use super::{EndType, Phage};
 
 pub async fn scrape_phages(mut tx: mpsc::Sender<Phage>) -> Result<(), CmdError> {
     let caps = r#"{
@@ -121,29 +118,5 @@ pub async fn scrape_phages(mut tx: mpsc::Sender<Phage>) -> Result<(), CmdError> 
     }
 
     client.close().await?;
-
     Ok(())
-}
-
-pub async fn save_phages(conn: Arc<Mutex<Connection>>, mut rx: mpsc::Receiver<Phage>) {
-    while let Some(phage) = rx.recv().await {
-        let conn = conn.clone();
-        spawn_blocking(move || {
-            let conn = conn.lock().unwrap();
-            conn.execute(
-                "INSERT OR IGNORE INTO phagesdb 
-                        (name, genus, cluster, subcluster, endType, fastaFile) 
-                        VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-                params!(
-                    phage.name,
-                    phage.genus,
-                    phage.cluster,
-                    phage.subcluster,
-                    phage.end_type.as_ref().map(|s| s.to_string()),
-                    phage.fasta_file.as_ref().map(|s| s.to_string()),
-                ),
-            )
-            .unwrap();
-        });
-    }
 }
