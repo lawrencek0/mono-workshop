@@ -1,6 +1,5 @@
 use futures::{stream, StreamExt};
 use serde::Deserialize;
-use tempfile::Builder;
 use tokio::fs::File;
 use tokio::prelude::*;
 use tokio::sync::mpsc;
@@ -36,22 +35,20 @@ pub async fn get_phages(mut tx: mpsc::Sender<Phage>) -> Result<(), reqwest::Erro
         tx.send(phage).await.expect("receiver dropped");
     }
 
-
     Ok(())
 }
 
 pub async fn download_fasta_files(
     phages: Vec<Phage>,
-) -> Result<tempfile::TempDir, Box<dyn std::error::Error>> {
-    let tmp_dir = Builder::new().prefix("fasta").tempdir()?;
-
+    dir: &std::path::Path,
+) -> Result<(), Box<dyn std::error::Error>> {
     stream::iter(phages)
         .for_each_concurrent(8 as usize, |phage| async {
             let mut res = match reqwest::get(&phage.fasta_file.unwrap()).await {
                 Ok(r) => r,
                 Err(e) => unimplemented!("Add retry logic: {:?}", e),
             };
-            let mut file = File::create(tmp_dir.path().join(format!("{}.fasta", phage.name)))
+            let mut file = File::create(dir.join(format!("{}.fasta", phage.name)))
                 .await
                 .unwrap();
             while let Some(chunk) = res.chunk().await.unwrap() {
@@ -60,5 +57,5 @@ pub async fn download_fasta_files(
         })
         .await;
 
-    Ok(tmp_dir)
+    Ok(())
 }
