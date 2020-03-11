@@ -107,7 +107,7 @@ async fn update_pet(
     let new_phages = compare_phages(conn.clone()).await?;
 
     let mut c = pet::Pet::new(email.to_string(), password.to_string()).await;
-
+    c.login().await?;
     let (tx, rx) = mpsc::channel(100);
     let insert_phages = c.insert_phages(new_phages, tmp_dir.path(), tx);
     let save_phages = pet::save_phages(conn.clone(), rx);
