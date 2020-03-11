@@ -1,6 +1,7 @@
 use futures::join;
 use rusqlite::{params, Connection};
 use std::sync::{Arc, Mutex};
+use tempfile::Builder;
 use tokio::{sync::mpsc, task};
 
 mod pet;
@@ -94,6 +95,29 @@ async fn update_phages(
     Ok(())
 }
 
+async fn update_pet(
+    conn: Arc<Mutex<Connection>>,
+    email: &str,
+    password: &str,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let tmp_dir = Builder::new().prefix("fasta").tempdir()?;
+    let new_phages = compare_phages(conn.clone()).await?;
+    phagesdb::api::download_fasta_files(new_phages, tmp_dir.path()).await?;
+
+    let new_phages = compare_phages(conn.clone()).await?;
+
+    let mut c = pet::Pet::new(email.to_string(), password.to_string()).await;
+
+    let (tx, rx) = mpsc::channel(100);
+    let insert_phages = c.insert_phages(new_phages, tmp_dir.path(), tx);
+    let save_phages = pet::save_phages(conn.clone(), rx);
+    let (insert_phages, save_phages) = join!(insert_phages, save_phages);
+    (insert_phages?, save_phages?);
+    c.drop().await?;
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let conn = Connection::open("./target/db")?;
@@ -129,21 +153,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let conn = Arc::new(Mutex::new(conn));
 
-    update_phages(conn.clone(), pet_count == 0, "email", "password").await?;
+    update_phages(
+        conn.clone(),
+        pet_count == 0,
+        "email",
+        "password",
+    )
+    .await?;
 
-    let mut c = pet::Pet::new(String::from("email"), String::from("password")).await;
-    let new_phages = compare_phages(conn.clone()).await?;
-
-    let temp_dir = phagesdb::api::download_fasta_files(new_phages).await?;
-    let new_phages = compare_phages(conn.clone()).await?;
-    {
-        let (tx, rx) = mpsc::channel(30);
-        let insert_phages = c.insert_phages(new_phages, temp_dir.path(), tx);
-        let save_phages = pet::save_phages(conn.clone(), rx);
-        let (insert_phages, _) = join!(insert_phages, save_phages);
-        insert_phages?;
-    }
-    c.drop().await?;
+    update_pet(conn.clone(), "email", "password").await?;
 
     Ok(())
 }
+
