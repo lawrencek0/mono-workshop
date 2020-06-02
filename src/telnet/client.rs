@@ -1,6 +1,6 @@
 use std::convert::TryFrom;
 use std::io::prelude::*;
-use std::io::{BufReader, BufWriter};
+use std::io::{self, BufReader, BufWriter};
 use std::net::TcpStream;
 
 use super::{Command, Option, TerminalType};
@@ -11,7 +11,7 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn new(addr: &str) -> std::io::Result<Self> {
+    pub fn new(addr: &str) -> io::Result<Self> {
         let stream = TcpStream::connect(addr)?;
 
         Ok(Self {
@@ -20,7 +20,7 @@ impl Client {
         })
     }
 
-    pub fn process(&mut self) -> std::io::Result<()> {
+    pub fn process(&mut self) -> io::Result<()> {
         let mut buf = [0; 2048];
 
         let n = self.input.read(&mut buf[..])?;
@@ -31,7 +31,7 @@ impl Client {
 
         let mut iter = buf.iter().take_while(|b| **b != 0);
 
-        let stdout = std::io::stdout();
+        let stdout = io::stdout();
         let mut stdout = BufWriter::new(stdout.lock());
 
         while let Some(byte) = iter.next() {
@@ -55,11 +55,7 @@ impl Client {
                                     ])?;
                                 }
                                 Option::Echo => {
-                                    self.output.write_all(&[
-                                        Command::IAC.into(),
-                                        Command::DO.into(),
-                                        Option::Echo.into(),
-                                    ])?;
+                                    self.send_command(&[Command::DO.into(), Option::Echo.into()])?;
                                 }
                                 _ => unimplemented!("opt for will {:?}", opt),
                             }
@@ -137,5 +133,10 @@ impl Client {
         stdout.flush()?;
 
         Ok(())
+    }
+
+    fn send_command(&mut self, cmd: &[u8]) -> io::Result<()> {
+        self.output
+            .write_all(&[&[Command::IAC.into()], cmd].concat())
     }
 }
