@@ -25,7 +25,8 @@ impl Client {
 
         let n = self.input.read(&mut buf[..])?;
 
-        if n == 1 {
+        // request more bytes if its an IAC
+        if n == 1 && buf[1] == Command::IAC.into() {
             self.input.read(&mut buf[1..])?;
         }
 
@@ -55,6 +56,7 @@ impl Client {
                                     ])?;
                                 }
                                 Option::Echo => {
+                                    // maybe change writer from bufreader to smth else?
                                     self.send_command(&[Command::DO.into(), Option::Echo.into()])?;
                                 }
                                 _ => unimplemented!("opt for will {:?}", opt),
