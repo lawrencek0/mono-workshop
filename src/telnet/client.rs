@@ -5,18 +5,29 @@ use std::net::TcpStream;
 
 use super::{Command, Option, TerminalType};
 
+struct Configuration {
+    should_echo: bool,
+    should_supress_ga: bool,
+}
+
 pub struct Client {
     input: BufReader<TcpStream>,
     output: BufWriter<TcpStream>,
+    configuration: Configuration,
 }
 
 impl Client {
     pub fn new(addr: &str) -> io::Result<Self> {
         let stream = TcpStream::connect(addr)?;
+        let configuration = Configuration {
+            should_echo: false,
+            should_supress_ga: false,
+        };
 
         Ok(Self {
             input: BufReader::new(stream.try_clone()?),
             output: BufWriter::new(stream),
+            configuration,
         })
     }
 
@@ -26,7 +37,7 @@ impl Client {
         let n = self.input.read(&mut buf[..])?;
 
         // request more bytes if its an IAC
-        if n == 1 && buf[1] == Command::IAC.into() {
+        if n == 1 && buf[0] == Command::IAC.into() {
             self.input.read(&mut buf[1..])?;
         }
 
@@ -49,6 +60,7 @@ impl Client {
                             let opt = Option::try_from(*iter.next().unwrap()).unwrap();
                             match opt {
                                 Option::SuppressGA => {
+                                    self.configuration.should_supress_ga = true;
                                     self.output.write_all(&[
                                         Command::IAC.into(),
                                         Command::DO.into(),
@@ -56,6 +68,7 @@ impl Client {
                                     ])?;
                                 }
                                 Option::Echo => {
+                                    self.configuration.should_echo = true;
                                     // maybe change writer from bufreader to smth else?
                                     self.send_command(&[Command::DO.into(), Option::Echo.into()])?;
                                 }
