@@ -52,19 +52,22 @@ impl Client {
     pub fn process(&mut self) -> io::Result<()> {
         let mut buf = [0; 2048];
 
-        if let Ok(n) = self.input.read(&mut buf[..]) {
+        if let Ok(mut n) = self.input.read(&mut buf[..]) {
             // request more bytes if its an IAC
             if n == 1 && buf[0] == Command::IAC.into() {
                 loop {
                     match self.input.read(&mut buf[1..]) {
-                        Ok(_) => break,
+                        Ok(o) => {
+                            n += o;
+                            break;
+                        }
                         Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {}
                         Err(e) => return Err(e),
                     }
                 }
             }
 
-            let mut iter = buf.iter().take_while(|b| **b != 0);
+            let mut iter = buf.iter().take(n);
 
             let mut stdout = BufWriter::new(io::stdout());
 
