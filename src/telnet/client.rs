@@ -1,10 +1,11 @@
+use crossterm::terminal::enable_raw_mode;
 use std::convert::TryFrom;
 use std::io::{self, prelude::*, BufReader, BufWriter};
 use std::net::TcpStream;
-use std::sync::mpsc::{self, Receiver};
-use std::thread;
+use std::sync::mpsc::Receiver;
 
 use super::{Command, Option, TerminalType};
+use crate::terminal;
 
 struct Configuration {
     should_echo: bool,
@@ -21,7 +22,7 @@ pub struct Client {
 impl Client {
     pub fn new(addr: &str) -> io::Result<Self> {
         let stream = TcpStream::connect(addr)?;
-        stream.set_nonblocking(true).unwrap();
+        stream.set_nonblocking(true)?;
 
         let configuration = Configuration {
             should_echo: false,
@@ -32,7 +33,7 @@ impl Client {
             input: BufReader::new(stream.try_clone()?),
             output: BufWriter::new(stream),
             configuration,
-            input_channel: spawn_stdin_channel(),
+            input_channel: terminal::spawn_stdin_channel(),
         })
     }
 
@@ -86,6 +87,7 @@ impl Client {
                                 match opt {
                                     Option::SuppressGA => {
                                         self.configuration.should_supress_ga = true;
+                                        enable_raw_mode().expect("could not enter raw mode");
                                         self.output.write_all(&[
                                             Command::IAC.into(),
                                             Command::DO.into(),
@@ -123,13 +125,16 @@ impl Client {
                                             Command::IAC.into(),
                                             Command::WILL.into(),
                                             Option::NAWS.into(),
-                                            // subneg time
+                                        ])?;
+                                        // subneg time
+                                        self.output.write_all(&[
                                             Command::IAC.into(),
                                             Command::SB.into(),
-                                            width[0],
-                                            width[1],
-                                            height[0],
-                                            height[1],
+                                            Option::NAWS.into(),
+                                        ])?;
+                                        self.output.write(&width)?;
+                                        self.output.write(&height)?;
+                                        self.output.write_all(&[
                                             Command::IAC.into(),
                                             Command::SE.into(),
                                         ])?;
@@ -182,14 +187,4 @@ impl Client {
         self.output
             .write_all(&[&[Command::IAC.into()], cmd].concat())
     }
-}
-
-fn spawn_stdin_channel() -> mpsc::Receiver<(usize, Vec<u8>)> {
-    let (tx, rx) = mpsc::channel();
-    thread::spawn(move || loop {
-        let mut buf = vec![0; 15];
-        let n = io::stdin().read(&mut buf).unwrap();
-        tx.send((n, buf)).unwrap();
-    });
-    rx
 }
