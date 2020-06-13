@@ -61,9 +61,18 @@ impl Client {
 
         loop {
             match self.processed_data.pop_front() {
-                Some(res) => {}
+                Some(res) => match self.proccess_res(res)? {
+                    Some(x) => {
+                        self.output.write_all(&x[..])?;
+                        self.output.flush()?;
+                    }
+                    None => {}
+                },
                 None => {
                     if let Ok(mut n) = self.input.read(&mut buf[..]) {
+                        if n == 0 {
+                            break;
+                        }
                         // request more bytes if its an IAC
                         if n == 1 && buf[0] == Command::IAC.into() {
                             loop {
@@ -85,6 +94,88 @@ impl Client {
         }
 
         Ok(())
+    }
+
+    fn proccess_res(&mut self, res: Response) -> io::Result<std::option::Option<Vec<u8>>> {
+        let resp = match res {
+            Response::Command(act, opt) => match (act, opt) {
+                (Action::WILL, Option::SuppressGA) => {
+                    self.configuration.should_supress_ga = true;
+                    // enable_raw_mode().expect("could not enter raw mode");
+                    Some(vec![
+                        Command::IAC.into(),
+                        Command::DO.into(),
+                        Option::SuppressGA.into(),
+                    ])
+                }
+                (Action::WILL, Option::Echo) => {
+                    self.configuration.should_echo = true;
+                    // maybe change writer from bufreader to smth else?
+                    Some(vec![
+                        Command::IAC.into(),
+                        Command::DO.into(),
+                        Option::Echo.into(),
+                    ])
+                }
+                (Action::DO, Option::TerminalType) => Some(vec![
+                    Command::IAC.into(),
+                    Command::WILL.into(),
+                    Option::TerminalType.into(),
+                ]),
+                (Action::DO, Option::NAWS) => {
+                    // TODO: get actual width nd height
+                    let (width, height) = (174u16.to_be_bytes(), 48u16.to_be_bytes());
+
+                    Some(vec![
+                        Command::IAC.into(),
+                        Command::WILL.into(),
+                        Option::NAWS.into(),
+                        // subneg time
+                        Command::IAC.into(),
+                        Command::SB.into(),
+                        Option::NAWS.into(),
+                        width[0],
+                        width[1],
+                        height[0],
+                        height[1],
+                        Command::IAC.into(),
+                        Command::SE.into(),
+                    ])
+                }
+                _ => unimplemented!("unknown action {:?} with opt {:?}", act, opt),
+            },
+            Response::Subnegation(opt, data) => match opt {
+                Option::TerminalType => {
+                    if data.get(0).is_some() && data[0] == TerminalType::SEND.into() {
+                        let b = b"xterm-256color".to_vec();
+                        Some(
+                            [
+                                vec![
+                                    Command::IAC.into(),
+                                    Command::SB.into(),
+                                    Option::TerminalType.into(),
+                                    TerminalType::IS.into(),
+                                    // TODO: get actual terminal type
+                                ],
+                                b"xterm-256color".to_vec(),
+                                vec![Command::IAC.into(), Command::SE.into()],
+                            ]
+                            .concat(),
+                        )
+                    } else {
+                        None
+                    }
+                }
+                _ => unimplemented!("unknown subnegation with opt {:?} and data {:?}", opt, data),
+            },
+            Response::Data(data) => {
+                let mut stdout = io::stdout();
+                stdout.write_all(&data[..])?;
+                stdout.flush()?;
+                None
+            }
+        };
+        Ok(resp)
     }
 
     fn parse(&mut self, buffer: &[u8]) -> io::Result<()> {
