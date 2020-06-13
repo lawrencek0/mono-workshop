@@ -89,7 +89,7 @@ impl Client {
 
     fn parse(&mut self, buffer: &[u8]) -> io::Result<()> {
         let mut state = ParseStatus::NormalData(0);
-        let mut iter = buffer.iter().enumerate();
+        let mut iter = buffer.iter().enumerate().peekable();
 
         while let Some((i, byte)) = iter.next() {
             match state {
@@ -101,7 +101,7 @@ impl Client {
                             let data = buffer[data_start..i + 1].to_vec();
                             self.processed_data.push_back(Response::Data(data));
                         }
-                    } else if iter.next().is_none() {
+                    } else if iter.peek().is_none() {
                         let data = buffer[data_start..i + 1].to_vec();
                         self.processed_data.push_back(Response::Data(data));
                     }
