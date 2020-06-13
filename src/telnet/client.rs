@@ -1,10 +1,11 @@
 use crossterm::terminal::enable_raw_mode;
+use std::collections::VecDeque;
 use std::convert::TryFrom;
 use std::io::{self, prelude::*, BufReader, BufWriter};
 use std::net::TcpStream;
 use std::sync::mpsc::Receiver;
 
-use super::{Command, Option, TerminalType};
+use super::{Action, Command, Option, TerminalType};
 use crate::terminal;
 
 struct Configuration {
@@ -17,6 +18,23 @@ pub struct Client {
     output: BufWriter<TcpStream>,
     configuration: Configuration,
     input_channel: Receiver<(usize, Vec<u8>)>,
+    processed_data: VecDeque<Response>,
+}
+
+enum ParseStatus {
+    NormalData(usize),
+    Command,
+    Action(Action),
+    Subnegation,
+    SubnegationBegin(Option, usize),
+    SubnegationEnd(Option, usize),
+}
+
+#[derive(Debug)]
+enum Response {
+    Data(Vec<u8>),
+    Command(Action, Option),
+    Subnegation(Option, Vec<u8>),
 }
 
 impl Client {
@@ -34,7 +52,101 @@ impl Client {
             output: BufWriter::new(stream),
             configuration,
             input_channel: terminal::spawn_stdin_channel(),
+            processed_data: VecDeque::with_capacity(2048),
         })
+    }
+
+    pub fn run2(&mut self) -> io::Result<()> {
+        let mut buf = [0; 2048];
+
+        loop {
+            match self.processed_data.pop_front() {
+                Some(res) => {}
+                None => {
+                    if let Ok(mut n) = self.input.read(&mut buf[..]) {
+                        // request more bytes if its an IAC
+                        if n == 1 && buf[0] == Command::IAC.into() {
+                            loop {
+                                match self.input.read(&mut buf[1..]) {
+                                    Ok(o) => {
+                                        n += o;
+                                        break;
+                                    }
+                                    Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {}
+                                    Err(e) => return Err(e),
+                                }
+                            }
+                        }
+
+                        self.parse(&buf[..n])?;
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    fn parse(&mut self, buffer: &[u8]) -> io::Result<()> {
+        let mut state = ParseStatus::NormalData(0);
+        let mut iter = buffer.iter().enumerate();
+
+        while let Some((i, byte)) = iter.next() {
+            match state {
+                ParseStatus::NormalData(data_start) => {
+                    if *byte == Command::IAC.into() {
+                        state = ParseStatus::Command;
+
+                        if data_start > i {
+                            let data = buffer[data_start..i + 1].to_vec();
+                            self.processed_data.push_back(Response::Data(data));
+                        }
+                    } else if iter.next().is_none() {
+                        let data = buffer[data_start..i + 1].to_vec();
+                        self.processed_data.push_back(Response::Data(data));
+                    }
+                }
+                ParseStatus::Command => match Action::try_from(*byte) {
+                    Ok(Action::SB) => {
+                        state = ParseStatus::Subnegation;
+                    }
+                    Ok(a) => {
+                        state = ParseStatus::Action(a);
+                    }
+                    // ignore unknown command
+                    Err(_) => {
+                        state = ParseStatus::NormalData(i + 1);
+                    }
+                },
+                ParseStatus::Action(action) => {
+                    if let Ok(opt) = Option::try_from(*byte) {
+                        self.processed_data
+                            .push_back(Response::Command(action, opt));
+                    }
+                    state = ParseStatus::NormalData(i + 1);
+                }
+                ParseStatus::Subnegation => {
+                    if let Ok(opt) = Option::try_from(*byte) {
+                        state = ParseStatus::SubnegationBegin(opt, i + 1);
+                    }
+                }
+                ParseStatus::SubnegationBegin(opt, start) => {
+                    if *byte == Command::IAC.into() {
+                        state = ParseStatus::SubnegationEnd(opt, start);
+                    }
+                }
+                ParseStatus::SubnegationEnd(opt, start) => {
+                    if *byte == Command::SE.into() {
+                        let subneg_data = buffer[start..i + 1].to_vec();
+                        self.processed_data
+                            .push_back(Response::Subnegation(opt, subneg_data));
+                    }
+                    state = ParseStatus::NormalData(i + 1);
+                }
+            }
+        }
+
+        Ok(())
     }
 
     pub fn run(&mut self) -> io::Result<()> {

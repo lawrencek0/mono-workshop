@@ -4,7 +4,7 @@ pub use client::Client;
 
 mod client;
 
-#[derive(Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
 pub enum Option {
     // When the echoing option is in effect, the party at the end performing the echoing is expected to transmit (echo) data characters it receives back to the sender of the data characters
@@ -22,6 +22,21 @@ pub enum Option {
 pub enum TerminalType {
     IS = 0,
     SEND = 1,
+}
+
+#[derive(Debug, Copy, Clone, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum Action {
+    // Indicates that what follows is subnegotiation of the indicated option
+    SB = 250,
+    // Indicates the desire to begin performing, or confirmation that you are now performing, the indicated option
+    WILL = 251,
+    // Indicates the refusal to perform, or continue performing, the indicated option
+    WONT = 252,
+    // Indicates the request that the other party perform, or confirmation that you are expecting the other party to perform, the indicated option
+    DO = 253,
+    // Indicates the demand that the other party stop performing, or confirmation that you are no longer expecting the other party to perform, the indicated option
+    DONT = 254,
 }
 
 #[derive(Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
