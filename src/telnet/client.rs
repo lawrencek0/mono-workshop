@@ -27,7 +27,7 @@ enum ParseStatus {
     Action(Action),
     Subnegation,
     SubnegationBegin(Option, usize),
-    SubnegationEnd(Option, usize),
+    SubnegationEnd(Option, usize, usize),
 }
 
 #[derive(Debug)]
@@ -132,12 +132,12 @@ impl Client {
                 }
                 ParseStatus::SubnegationBegin(opt, start) => {
                     if *byte == Command::IAC.into() {
-                        state = ParseStatus::SubnegationEnd(opt, start);
+                        state = ParseStatus::SubnegationEnd(opt, start, i - 1);
                     }
                 }
-                ParseStatus::SubnegationEnd(opt, start) => {
+                ParseStatus::SubnegationEnd(opt, start, end) => {
                     if *byte == Command::SE.into() {
-                        let subneg_data = buffer[start..i + 1].to_vec();
+                        let subneg_data = buffer[start..=end].to_vec();
                         self.processed_data
                             .push_back(Response::Subnegation(opt, subneg_data));
                     }
