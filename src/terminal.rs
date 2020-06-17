@@ -53,7 +53,10 @@ pub fn spawn_stdin_channel() -> Receiver<(usize, Vec<u8>)> {
             read_line(&mut buf).unwrap()
         };
 
-        tx.send((n, buf)).unwrap();
+        match tx.send((n, buf)) {
+            Ok(_) => {}
+            Err(_) => break,
+        }
     });
     rx
 }
