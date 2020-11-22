@@ -17,17 +17,23 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private class ListIterator implements Iterator<Item> {
+        private Node current = head;
 
         @Override
         public boolean hasNext() {
-            // TODO Auto-generated method stub
-            return false;
+            return current.next != null;
         }
 
         @Override
         public Item next() {
-            // TODO Auto-generated method stub
-            return null;
+            Item i = current.item;
+            current = current.next;
+            return i;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
         }
     }
 
