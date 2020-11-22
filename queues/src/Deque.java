@@ -17,11 +17,11 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     private class ListIterator implements Iterator<Item> {
-        private Node current = head;
+        private Node current = head == null ? tail : head;
 
         @Override
         public boolean hasNext() {
-            return current.next != null;
+            return current != null;
         }
 
         @Override
@@ -63,6 +63,10 @@ public class Deque<Item> implements Iterable<Item> {
         if (head != null) {
             newHead.next = head;
             head.prev = newHead;
+
+            if (head.next == null && tail == null) {
+                tail = head;
+            }
         }
 
         head = newHead;
@@ -80,6 +84,10 @@ public class Deque<Item> implements Iterable<Item> {
         if (tail != null) {
             tail.next = newTail;
             newTail.prev = tail;
+
+            if (tail.prev == null && head == null) {
+                head = tail;
+            }
         }
 
         tail = newTail;
@@ -100,9 +108,17 @@ public class Deque<Item> implements Iterable<Item> {
         } else {
             n = head;
             head = head.next;
+            if (head != null) {
+                head.prev = null;
+            }
         }
 
         size--;
+
+        if (isEmpty()) {
+            head = null;
+            tail = null;
+        }
 
         return n.item;
     }
@@ -121,9 +137,17 @@ public class Deque<Item> implements Iterable<Item> {
         } else {
             n = tail;
             tail = tail.prev;
+            if (tail != null) {
+                tail.next = null;
+            }
         }
 
         size--;
+
+        if (isEmpty()) {
+            head = null;
+            tail = null;
+        }
 
         return n.item;
     }
@@ -135,7 +159,142 @@ public class Deque<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
-        System.out.println("it compiles!");
+        Deque<Integer> deque = new Deque<>();
+        System.out.printf("It should be empty: %s with size: %d\n", deque.isEmpty(), deque.size());
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        deque.addFirst(-2);
+        System.out.println("After adding -2 to the start: ");
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        deque.addFirst(-1);
+        System.out.println("After adding -1 to the start: ");
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        deque.addLast(-3);
+        System.out.println("After adding -3 to the end: ");
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        Integer integer = deque.removeLast();
+        System.out.printf("After removing %d from the end\n", integer);
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        integer = deque.removeFirst();
+        System.out.printf("After removing %d from the start\n", integer);
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        integer = deque.removeLast();
+        System.out.printf("It should be empty after removing %d: %s\n", integer, deque.isEmpty());
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        deque.addLast(2);
+        System.out.println("After adding 2 to end: ");
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        deque.addLast(3);
+        System.out.println("After adding 3 to end: ");
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        deque.addFirst(1);
+        System.out.println("After adding 1 to start: ");
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        integer = deque.removeFirst();
+        System.out.printf("After removing %d from the start\n", integer);
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        integer = deque.removeLast();
+        System.out.printf("After removing %d from the end\n", integer);
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        integer = deque.removeFirst();
+        System.out.printf("It should be empty after removing %d: %s\n", integer, deque.isEmpty());
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        System.out.println("After adding 0 to 3 to first:");
+        for (int i = 3; i >= 0; i--) {
+            deque.addFirst(i);
+        }
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        System.out.println("After adding 4 to 7 to end:");
+        for (int i = 4; i < 8; i++) {
+            deque.addLast(i);
+        }
+        for (Integer i : deque) {
+            System.out.println(i);
+        }
+
+        while (!deque.isEmpty()) {
+            if (deque.size() % 2 == 0) {
+                deque.removeLast();
+            } else {
+                deque.removeFirst();
+            }
+        }
+        System.out.printf("It should be empty after removing all elements: %s\n", deque.isEmpty());
+
+        try {
+            deque.removeFirst();
+        } catch (NoSuchElementException e) {
+            System.out.println("It should catch the NoSuchElementException exception on removeFirst");
+        }
+
+        try {
+            deque.removeLast();
+        } catch (NoSuchElementException e) {
+            System.out.println("It should catch the NoSuchElementException exception on removeLast");
+        }
+
+        try {
+            deque.addFirst(null);
+        } catch (IllegalArgumentException e) {
+            System.out.println("It should catch the IllegalArgumentException exception on addFirst");
+        }
+
+        try {
+            deque.addLast(null);
+        } catch (IllegalArgumentException e) {
+            System.out.println("It should catch the IllegalArgumentException exception on addLast");
+        }
+
+        try {
+            Iterator<Integer> iterator = deque.iterator();
+            iterator.remove();
+        } catch (UnsupportedOperationException e) {
+            System.out.println(
+                    "It should catch the UnsupportedOperationException exception on remove operation on iterator");
+        }
+
+        System.out.println("Tests Passed :)");
     }
 
 }
