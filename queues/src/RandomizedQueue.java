@@ -42,9 +42,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int j = head;
         int count = 0;
         while (count < size()) {
-            copy[i++] = q[j];
+            if (q[j] != null) {
+                copy[i++] = q[j];
+                count++;
+            }
             j = (j + 1) % q.length;
-            count++;
         }
 
         head = 0;
@@ -73,13 +75,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // remove and return a random item
     public Item dequeue() {
-        Item i = q[head];
-        q[head] = null;
-        head = (head + 1) % q.length;
+        Item item = null;
+        int i = 0;
+
+        if (size() == 1) {
+            i = head;
+            item = q[i];
+        } else {
+            while (item == null) {
+                i = StdRandom.uniform(head, (tail > head ? tail : tail + q.length) + 1) % q.length;
+                item = q[i];
+            }
+        }
+
+        q[i] = null;
+        if (i == head) {
+            head = (head + 1) % q.length;
+        }
         size--;
         if (size() > 0 && size() == q.length / 4)
             resize(q.length / 2);
-        return i;
+        return item;
     }
 
     // return a random item (but do not remove it) {}
@@ -124,10 +140,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         System.out.println("Should have removed 'a' or 'b': " + c);
         System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
 
-        q.enqueue('a');
-        q.enqueue('b');
-        q.enqueue('c');
-        System.out.println("Should have 'a', 'b', 'c':");
+        for (int i = 0; i < 5; i++) {
+            q.enqueue(Character.toChars(i + 'a')[0]);
+        }
+        System.out.println("Should have 'a', 'b', 'c', 'd', 'e':");
         for (Character character : q) {
             System.out.println(character);
         }
@@ -138,13 +154,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             System.out.println(q.sample());
         }
 
-        System.out.println("Should still have 'a', 'b', 'c':");
+        System.out.println("Should still have 'a', 'b', 'c', 'd', 'e':");
         for (Character character : q) {
             System.out.println(character);
         }
 
         size = q.size();
-        System.out.println("Should randomly remove 'a', 'b', 'c':");
+        System.out.println("Should randomly remove 'a', 'b', 'c', 'd', 'e':");
         for (int i = 0; i < size; i++) {
             System.out.println(q.dequeue());
         }
