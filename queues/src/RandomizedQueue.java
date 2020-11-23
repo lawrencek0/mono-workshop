@@ -1,6 +1,5 @@
 import java.util.Iterator;
 
-import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
@@ -89,10 +88,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         q[i] = null;
-        if (i == head) {
-            head = (head + 1) % q.length;
-        }
         size--;
+
+        if (i == head) {
+            if (size() == 0) {
+                head = 0;
+            } else {
+                head = (head + 1) % q.length;
+            }
+        }
         if (size() > 0 && size() == q.length / 4)
             resize(q.length / 2);
         return item;
