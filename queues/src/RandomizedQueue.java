@@ -37,13 +37,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private void resize(int capacity) {
         Item[] copy = (Item[]) new Object[capacity];
 
-        int i = head;
+        int i = 0;
+        int j = head;
         int count = 0;
         while (count < size()) {
-            copy[i] = q[i];
-            i = (i + 1) % q.length;
+            copy[i++] = q[j];
+            j = (j + 1) % q.length;
             count++;
         }
+
+        head = 0;
+        tail = i - 1;
         q = copy;
     }
 
