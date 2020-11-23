@@ -116,12 +116,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         Character c = q.dequeue();
         iterator = q.iterator();
-        System.out.printf("Should have removed 'a': %s (hasNext: %s)\n", c, iterator.hasNext());
-        System.out.printf("Should have only 'b': %s (hasNext: %s)\n", iterator.next(), iterator.hasNext());
+        System.out.printf("Should have removed 'a' or 'b': %s (hasNext: %s)\n", c, iterator.hasNext());
+        System.out.printf("Should have either 'a' or 'b': %s (hasNext: %s)\n", iterator.next(), iterator.hasNext());
 
         c = q.dequeue();
         iterator = q.iterator();
-        System.out.println("Should have removed 'b': " + c);
+        System.out.println("Should have removed 'a' or 'b': " + c);
         System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
 
         q.enqueue('a');
@@ -144,7 +144,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         size = q.size();
-        System.out.println("Should remove 'a', 'b', 'c':");
+        System.out.println("Should randomly remove 'a', 'b', 'c':");
         for (int i = 0; i < size; i++) {
             System.out.println(q.dequeue());
         }
@@ -164,6 +164,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             q.enqueue(Character.toChars(i + 'a')[0]);
         }
         System.out.println("Should have size 100 after random enqueue/dequeue: " + q.size());
+
+        q = new RandomizedQueue<>();
     }
 
 }
