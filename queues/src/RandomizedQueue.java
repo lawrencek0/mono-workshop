@@ -31,16 +31,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         q = (Item[]) new Object[1];
         size = 0;
         head = 0;
-        tail = 0;
+        tail = -1;
     }
 
     private void resize(int capacity) {
         Item[] copy = (Item[]) new Object[capacity];
 
-        int i = 0;
-        while (head != tail) {
-            copy[i++] = q[head];
-            head = (head + 1) % q.length;
+        int i = head;
+        int count = 0;
+        while (count < size()) {
+            copy[i] = q[i];
+            i = (i + 1) % q.length;
+            count++;
         }
         q = copy;
     }
@@ -59,8 +61,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public void enqueue(Item item) {
         if (size() == q.length)
             resize(2 * q.length);
-        q[tail] = item;
         tail = (tail + 1) % q.length;
+        q[tail] = item;
         size++;
     }
 
@@ -92,6 +94,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // unit testing (required) {}
     public static void main(String[] args) {
+        RandomizedQueue<Character> q = new RandomizedQueue<>();
+        System.out.println("Should be empty " + q.isEmpty());
+
+        q.enqueue('a');
+        Iterator<Character> iterator = q.iterator();
+        System.out.printf("Should have only 'a': %s (hasNext: %s)\n", iterator.next(), iterator.hasNext());
+
+        q.enqueue('b');
+        iterator = q.iterator();
+        System.out.printf("Should have only 'a' & 'b': %s (hasNext: %s) %s (hasNext: %s)\n", iterator.next(),
+                iterator.hasNext(), iterator.next(), iterator.hasNext());
     }
 
 }
