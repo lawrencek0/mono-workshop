@@ -117,6 +117,31 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         iterator = q.iterator();
         System.out.println("Should have removed 'b': " + c);
         System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
+
+        q.enqueue('a');
+        q.enqueue('b');
+        q.enqueue('c');
+        System.out.println("Should have 'a', 'b', 'c':");
+        for (Character character : q) {
+            System.out.println(character);
+        }
+
+        System.out.println("Should randomly take a sample:");
+        for (int i = 0; i < 5; i++) {
+            System.out.println(q.sample());
+        }
+
+        System.out.println("Should still have 'a', 'b', 'c':");
+        for (Character character : q) {
+            System.out.println(character);
+        }
+
+        System.out.println("Should remove 'a', 'b', 'c':");
+        for (int i = 0; i < q.size(); i++) {
+            System.out.println(q.dequeue());
+        }
+        iterator = q.iterator();
+        System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
     }
 
 }
