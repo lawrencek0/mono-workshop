@@ -80,7 +80,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // return a random item (but do not remove it) {}
     public Item sample() {
         while (true) {
-            int i = StdRandom.uniform(head, tail > head ? tail : tail + q.length + 1) % q.length;
+            int i = StdRandom.uniform(head, (tail > head ? tail : tail + q.length) + 1) % q.length;
             if (q[i] != null) {
                 return q[i];
             }
