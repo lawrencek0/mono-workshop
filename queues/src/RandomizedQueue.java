@@ -1,5 +1,6 @@
 import java.util.Iterator;
 
+import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
@@ -149,6 +150,20 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
         iterator = q.iterator();
         System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
+
+        for (int i = 0; i < 100; i++) {
+            if (!q.isEmpty()) {
+                if (q.sample() == null) {
+                    throw new Error();
+                }
+                if (StdRandom.bernoulli()) {
+                    Character character = q.dequeue();
+                    q.enqueue(character);
+                }
+            }
+            q.enqueue(Character.toChars(i + 'a')[0]);
+        }
+        System.out.println("Should have size 100 after random enqueue/dequeue: " + q.size());
     }
 
 }
