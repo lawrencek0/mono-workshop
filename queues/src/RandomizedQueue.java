@@ -100,6 +100,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public static void main(String[] args) {
         RandomizedQueue<Character> q = new RandomizedQueue<>();
         Iterator<Character> iterator = q.iterator();
+        int size = q.size();
 
         System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
 
@@ -113,8 +114,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 iterator.hasNext(), iterator.next(), iterator.hasNext());
 
         Character c = q.dequeue();
-        System.out.println("Should have removed 'a': " + c);
         iterator = q.iterator();
+        System.out.printf("Should have removed 'a': %s (hasNext: %s)\n", c, iterator.hasNext());
         System.out.printf("Should have only 'b': %s (hasNext: %s)\n", iterator.next(), iterator.hasNext());
 
         c = q.dequeue();
@@ -130,8 +131,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             System.out.println(character);
         }
 
+        size = q.size();
         System.out.println("Should randomly take a sample:");
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < size * 2; i++) {
             System.out.println(q.sample());
         }
 
@@ -140,8 +142,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             System.out.println(character);
         }
 
+        size = q.size();
         System.out.println("Should remove 'a', 'b', 'c':");
-        for (int i = 0; i < q.size(); i++) {
+        for (int i = 0; i < size; i++) {
             System.out.println(q.dequeue());
         }
         iterator = q.iterator();
