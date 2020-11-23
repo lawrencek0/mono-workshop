@@ -95,16 +95,28 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     // unit testing (required) {}
     public static void main(String[] args) {
         RandomizedQueue<Character> q = new RandomizedQueue<>();
-        System.out.println("Should be empty " + q.isEmpty());
+        Iterator<Character> iterator = q.iterator();
+
+        System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
 
         q.enqueue('a');
-        Iterator<Character> iterator = q.iterator();
+        iterator = q.iterator();
         System.out.printf("Should have only 'a': %s (hasNext: %s)\n", iterator.next(), iterator.hasNext());
 
         q.enqueue('b');
         iterator = q.iterator();
         System.out.printf("Should have only 'a' & 'b': %s (hasNext: %s) %s (hasNext: %s)\n", iterator.next(),
                 iterator.hasNext(), iterator.next(), iterator.hasNext());
+
+        Character c = q.dequeue();
+        System.out.println("Should have removed 'a': " + c);
+        iterator = q.iterator();
+        System.out.printf("Should have only 'b': %s (hasNext: %s)\n", iterator.next(), iterator.hasNext());
+
+        c = q.dequeue();
+        iterator = q.iterator();
+        System.out.println("Should have removed 'b': " + c);
+        System.out.printf("Should be empty: %s (hasNext: %s)\n", q.isEmpty(), iterator.hasNext());
     }
 
 }
