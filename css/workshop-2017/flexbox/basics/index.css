@@ -1,0 +1,47 @@
+:root {
+    box-sizing: border-box;
+}
+
+*,
+::before,
+::after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    display: flex;
+    /*flex-direction: row-reverse;*/
+    /*justify-content: space-between;*/
+    align-items: baseline;
+}
+
+.box {
+    text-align: center;
+    padding: 2em;
+    color: #fff;
+    margin-left: 1.5em;
+}
+
+.one {
+    background-color: #bada55;
+    align-self: flex-end;
+}
+
+.two {
+    background-color: #c0ffee;
+    padding: 3.5em;
+}
+
+.three {
+    background-color: #10aded;
+    padding: 3em;
+}
+
+.four {
+    background-color: #fa5732;
+    padding: 1.6em;
+}

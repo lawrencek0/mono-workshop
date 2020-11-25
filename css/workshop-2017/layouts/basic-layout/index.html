@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Basic Layout</title>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <ul class="site-nav">
+                <li>
+                    <a href="/academics">Academics</a>
+                </li>
+                <li>
+                    <a href="/future">Future Students</a>
+                </li>
+                <li>
+                    <a href="/faculty">Faculty & Staff</a>
+                </li>
+                <li>
+                    <a href="/alumni">Alumni & Friends</a>
+                </li>
+                <li class="nav-right">
+                    <a href="/eulm">eULM</a>
+                </li>
+            </ul>
+        </nav>
+        <header>
+            <h1 class="page-title">University of Louisiana at Monroe</h1>
+        </header>
+        <main class="main tile">
+            <h1>Majors</h1>
+            <p>
+                A great place to start learning about our academic programs, from accounting to toxicology. Multiple program areas offering graduate and undergraduate degrees. The primary purposes of ULM are instruction, research, creative activity, and service. Degree programs are offered by the three Colleges and the Graduate School. 
+            </p>
+        </main>
+        <aside>
+            <div class="sidebar-top tile">
+                <form class="myulm-login">
+                    <h3>myULM</h3>
+                    <p>
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username">
+                    </p>
+                    <p>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password">
+                    </p>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            <div class="sidebar-bottom tile centered">
+                <small>Costs Calculator</small>
+                <div class="cost">
+                    <span class="cost-currency">$</span>
+                    <span class="cost-dollars">500</span>
+                    <span class="cost-cents">.30</span>
+                </div>
+                <a href="/pay" class="pay-button">
+                    Pay Now
+                </a>
+            </div>
+        </aside>
+        <footer class="footer">
+            <h4>The University of Louisiana Monroe | 700 University Ave., Monroe, LA 71209</h4>
+        </footer>
+    </div>
+</body>
+</html>
