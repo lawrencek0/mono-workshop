@@ -1,0 +1,33 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+@import '~semantic-ui-css/semantic.min.css';
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+:root {
+  --background-primary-color: #f9f9f9;
+}
+
+body {
+  transition: background-color 0.8s ease;
+  overflow-x: scroll;
+}
+body,
+input {
+  background-color: var(--background-primary-color);
+}
+
+.center-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form.card {
+  width: 25rem;
+}
+
+.segment.segment--big {
+  padding: 3.5rem 7rem;
+}
