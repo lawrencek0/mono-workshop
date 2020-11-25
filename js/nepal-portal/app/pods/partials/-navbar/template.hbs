@@ -1,0 +1,21 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target="#MyNavbar">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+          {{#link-to "index" id="SiteLogo"}}nepal portal{{/link-to}}
+        </div>
+        <div class="collapse navbar-collapse" id="MyNavbar">
+            <ul class="nav navbar-nav navbar-left">
+              {{#link-to "index" tagName="li"}}<a>{{fa-icon "tint"}} Petrol Finder</a>{{/link-to}}
+              {{#link-to "loadshedding" tagName="li"}}<a>{{fa-icon "lightbulb-o"}} Loadshedding Schedule</a>{{/link-to}}
+              {{#link-to "emergency_numbers" tagName="li"}}<a>{{fa-icon "exclamation"}} Emergency Numbers</a>{{/link-to}}
+              {{#link-to "about" tagName="li"}}<a>{{fa-icon "info"}} About</a>{{/link-to}}
+            </ul>
+        </div>
+    </div>
+</nav>

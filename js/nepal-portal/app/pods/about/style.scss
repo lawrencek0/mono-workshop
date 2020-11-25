@@ -1,0 +1,8 @@
+.node text {
+  display: none;
+  font: 18px sans-serif;
+}
+
+.node:hover text {
+  display: inline;
+}
