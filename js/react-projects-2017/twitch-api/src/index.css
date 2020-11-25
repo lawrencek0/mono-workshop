@@ -1,0 +1,12 @@
+body {
+  background-color: #01d1e5;
+  font-family: sans-serif;
+  margin: 0;
+}
+
+@media (min-width: 35em) {
+  body {
+    width: 50vw;
+    margin: 0 auto;
+  }
+}

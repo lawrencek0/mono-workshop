@@ -1,0 +1,79 @@
+.weather-app {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.1rem;
+  box-shadow: 0 0 5px 1px rgba(0,0,0,0.3);
+  background-color: #05bacc;
+  border-bottom: 2px solid #05bacc;
+  list-style-type: none;
+  padding: .5em;
+  margin: 0;
+}
+
+.tab a {
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  display: block;
+  font-size: 0.85rem;
+  position: relative;
+  padding: .5em 1em;
+}
+
+.tab a::after {
+  content: '';
+  background: #fff;
+  height: 2px;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: -5px;
+  transition: all 250ms ease 0s;
+  transform: scale(0);
+}
+
+.tab a:hover, a:active {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tab.active a {
+  color: #fff;
+}
+
+.tab.active a::after {
+  transform: scale(1);
+}
+
+.more .toggles {
+  display: flex;
+  font-size: 3rem;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 3em;
+}
+
+.toggles a {
+  padding: .5em 1em;
+  color: #fff;
+}
+
+.toggles a:hover {
+  cursor: pointer;
+}
+
+.toggles span[disabled] {
+  cursor: not-allowed;    
+}
+
+.toggles span[disabled] a {
+  background-color: rgba(255,255,255,0.7);  
+  pointer-events: none;
+  color: #000;
+  transition: background-color .4s ease;
+}

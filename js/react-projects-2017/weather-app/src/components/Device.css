@@ -1,0 +1,132 @@
+.container {
+  margin: 1.5em;
+  display: flex;
+  justify-content: center;
+}
+
+.device {
+  background-color: #000;
+  border: 3px solid #2f2f2f;
+  padding-left: .5em;
+  padding-right: .5em;
+  box-shadow: 0 0 30px 10px rgba(0,0,0,0.5);
+  border-radius: 30px;
+}
+
+header, footer {
+  height: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.notification-light {
+  background-color: #adff2f;
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  position: absolute;
+  left: 25px;
+}
+
+.camera {
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  border: 4px solid rgb(132,129,132);
+  background-color: #323232;
+  position: absolute;
+  left: 70px;
+}
+
+.speaker {
+  height: 10px;
+  width: 150px;
+  border-radius: 15px;
+  border: 3px solid #141414;
+  box-shadow: inset 0 0 0 2px #323232;
+}
+
+.screen {
+  width: 24em;
+  height: 44em;
+  background-image: linear-gradient(to bottom, rgb(6,209,229), rgb(119, 239, 251));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.power-button {
+  position: absolute;
+  width: 5px;
+  height: 48px;
+  left: 24.5em;
+  background-color: #000;
+  top: 222px;
+}
+
+.volume-button {
+  position: absolute;
+  width: 5px;
+  height: 96px;
+  left: 24.5em;
+  background-color: #000;
+  top: 310px;
+}
+
+.nav {
+  background-color: #000;
+  height: 50px;
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: auto;
+}
+
+.nav div {
+  background-color: #fff;
+  height: 16px;
+  width: 16px;
+}
+
+.nav .back {
+  width: 0;
+	height: 0;
+	border-top: 8px solid #000;
+	border-right: 16px solid #fff;
+	border-bottom: 8px solid #000;
+}
+
+.nav .home {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #fff;
+  border: 1px solid #000;
+}
+
+.overview {
+  border-radius: 3px;
+}
+
+@media (max-width: 25em) {
+
+  .container {
+    margin: 1em 1.5em;
+  }
+
+  .camera {
+    left: 14vw;
+  }
+
+  .screen {
+    width: 90vw;
+  }
+
+  .power-button, .volume-button {
+    left: calc(90vw + .5em);
+  }
+
+}
