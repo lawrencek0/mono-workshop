@@ -1,0 +1,19 @@
+{
+  "name": "nepalportal",
+  "version": "1.0.0",
+  "description": "JS Dependencies managed by Bower for Rails",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LKhadka/Nepal-Portal.git"
+  },
+  "author": "Lawrence Khadka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LKhadka/Nepal-Portal/issues"
+  },
+  "homepage": "https://github.com/LKhadka/Nepal-Portal#readme"
+}

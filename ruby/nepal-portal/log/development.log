@@ -1,0 +1,1 @@
+DEPRECATION WARNING: LogTailer is deprecated and will be removed on Rails 5. (called from block in tsort_each at /home/law/.rbenv/versions/2.2.3/lib/ruby/2.2.0/tsort.rb:226)

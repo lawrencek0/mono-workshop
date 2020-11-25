@@ -1,0 +1,48 @@
+- provide(:title, 'Home | ')
+div.row
+  div.col-md-1.col-xs-0
+  div.col-md-10.col-xs-10
+    div.center
+      h1.h1.text-uppercase.text-center Welcome to Nepal Portal!
+      p.text-justify Nepal Portal was developed with the main intention of helping the people by making it easier to find the petrol pumps where the fuel is being distributed in this hard time.
+      div.flexslider#homepage-images style="{height: 400px;}"
+        ul.slides
+          li
+            = link_to image_tag('petrol3.jpg', alt: "Back to the Past", title: "Back to the Past", class: "responsive-img center-block"), '#'
+            p.flex-caption People buying logs for cooking.
+          li
+            = link_to image_tag('petrol4.jpg', alt: "The Daily of an Average Nepalese", title: "The Daily of an Average Nepalese", class: "responsive-img center-block"), '#'
+            p.flex-caption People rushing to ride the bus.
+          li
+            = link_to image_tag('petrol5.jpg', alt: "Black Marketing", title: "Black Marketing", class: "responsive-img center-block"), '#'
+            p.flex-caption A cartoon depicting the current black marketing of fuel in Nepal.
+          li
+            = link_to image_tag('petrol6.jpg', alt: "A Dangerous Ride", title: "A Dangerous Ride", class: "responsive-img center-block"), '#'
+            p.flex-caption A child being carried to the hood of the bus due to the lack of seats.
+          li
+            = link_to image_tag('petrol7.jpg', alt: "A Difficult Time", title: "A Difficult Time", class: "responsive-img center-block"), '#'
+            p.flex-caption A child cooking food from an almost empty cylinder which is supposed to be replaced soon.
+          li
+            = link_to image_tag('petrol8.jpg', alt: "Left Hanging", title: "Left Hanging", class: "responsive-img center-block"), '#'
+            p.flex-caption People hanging on a moving bus.
+          li
+            = link_to image_tag('petrol9.jpg', alt: "A Reflection", title: "A Reflection", class: "responsive-img center-block"), '#'
+            p.flex-caption Art depicting the current situation of the Nepalese people.
+          li
+            = link_to image_tag('petrol10.jpg', alt: "A Daily Task", title: "A Daily Task", class: "responsive-img center-block"), '#'
+            p.flex-caption Women struggling to get on the bus. The people are forced to travel in such dangerous ways.
+  div.col-md-1
+    = render 'layouts/social'
+
+
+h3.h4 Made With <i class="fa fa-heart"></i> in Kathmandu Using
+div.row
+  div.col-xs-1
+  div.col-md-12.col-xs-10
+    = link_to image_tag('rails.png',      alt: 'Ruby on Rails', title:'Ruby on Rails', id: 'image1'), 'http://rubyonrails.org/'
+    = link_to image_tag('angularjs.png',  alt: 'AngularJS',     title:'AngularJS',     id: 'image1'), 'http://angularjs.org/'
+    = link_to image_tag('d3.png',         alt: 'D3.js',         title:'D3.js',         id: 'image1'), 'http://d3js.org/'
+    = link_to image_tag('bootstrap.png',  alt: 'Bootstrap',     title:'Bootstrap',     id: 'image1'), 'http://getbootstrap.com/'
+    = link_to image_tag('html5.png',      alt: 'HTML5',         title:'HTML5',         id: 'image1'), 'http://postgresql.org/'
+    = link_to image_tag('leaflet.svg',    alt: 'Leaflet',       title:'Leaflet',       id: 'image1'), 'http://leafletjs.com/'
+  div.col-xs-1
