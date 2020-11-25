@@ -1,0 +1,20 @@
+@tailwind base;
+
+body {
+    --color-bg-primary-100: #fffff0;
+}
+
+.light-mode {
+    --color-bg-primary-navbar: #faf089;
+    --color-bg-card: #FFF;
+
+    --color-bg-primary: #F6EC15;
+    --color-bg-default: #fff;
+}
+
+.dark-mode {
+    --color-bg-primary-navbar: #212121;
+    --color-bg-card: #424242;
+
+    --color-bg-primary: #F6EC15;
+}

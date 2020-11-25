@@ -1,0 +1,35 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier/@typescript-eslint",
+        "plugin:prettier/recommended"
+    ],
+    "plugins": ["react", "@typescript-eslint", "prettier"],
+    "env": {
+        "browser": true,
+        "jasmine": true,
+        "jest": true,
+        "node": true,
+        "es6": true
+    },
+    "rules": {
+        "prettier/prettier": ["error", { "singleQuote": true }],
+        "@typescript-eslint/explicit-function-return-type": [
+            "warn",
+            { "allowExpressions": true, "allowTypedFunctionExpressions": true }
+        ],
+        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+        // @TODO add prop-types later for storybook
+        "react/prop-types": "off",
+        "no-constant-condition": "off"
+    },
+    "settings": {
+        "react": {
+            "pragma": "React",
+            "version": "detect"
+        }
+    },
+    "parser": "@typescript-eslint/parser"
+}

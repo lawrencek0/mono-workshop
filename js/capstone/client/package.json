@@ -1,0 +1,116 @@
+{
+  "name": "team-yellow-client",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:8000",
+  "dependencies": {
+    "@babel/runtime": "^7.6.2",
+    "@fullcalendar/core": "^4.3.1",
+    "@fullcalendar/daygrid": "^4.3.0",
+    "@fullcalendar/interaction": "^4.3.0",
+    "@fullcalendar/react": "^4.3.0",
+    "@reach/menu-button": "^0.1.18",
+    "@reach/router": "^1.2.1",
+    "@tinymce/tinymce-react": "^3.3.2",
+    "@types/jest": "24.0.18",
+    "@types/node": "12.7.2",
+    "@types/react-dates": "^17.1.5",
+    "@types/react-dom": "16.9.0",
+    "downshift": "^3.4.2",
+    "formik": "2",
+    "moment": "^2.24.0",
+    "query-string": "^6.9.0",
+    "react": "^16.9.0",
+    "react-dates": "^21.1.0",
+    "react-dom": "^16.9.0",
+    "react-icons": "^3.8.0",
+    "react-scripts": "3.3.0",
+    "react-spring": "^9.0.0-canary.809.5.f01ecc2",
+    "react-table": "^7.0.0-beta.14",
+    "react-tiny-fab": "^3.0.3",
+    "react-toggle": "^4.1.1",
+    "react-with-direction": "^1.3.1",
+    "rest-hooks": "^3.0.0",
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^4.3.2",
+    "styled-theming": "^2.2.0",
+    "tinymce": "^5.1.2",
+    "typescript": "3.7",
+    "xlsx": "^0.15.2",
+    "yup": "^0.27.0"
+  },
+  "scripts": {
+    "start": "npm-run-all --parallel build:css start:react",
+    "build": "npm-run-all build:css build:react",
+    "start:react": "react-scripts start",
+    "build:react": "react-scripts build",
+    "build:css": "postcss src/styles/tailwind.css -o src/styles/tailwind.out.css",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint:fix": "eslint --fix './src/**/*.{js,ts,tsx}'",
+    "lint:css": "stylelint './src/**/*.{js,ts,tsx}'",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^5.1.11",
+    "@storybook/addon-info": "^5.1.11",
+    "@storybook/addon-links": "^5.1.11",
+    "@storybook/addons": "^5.1.11",
+    "@storybook/react": "^5.1.11",
+    "@types/reach__menu-button": "^0.1.0",
+    "@types/reach__router": "^1.2.5",
+    "@types/react": "^16.9.2",
+    "@types/react-toggle": "^4.0.2",
+    "@types/storybook__react": "^4.0.2",
+    "@types/styled-components": "^4.1.18",
+    "@types/styled-theming": "^2.2.2",
+    "@types/yup": "^0.26.24",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "babel-loader": "^8.0.6",
+    "eslint-config-prettier": "6.7",
+    "eslint-config-react": "^1.1.7",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "^3.0.4",
+    "lint-staged": "^9.2.3",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "^6.1.3",
+    "prettier": "^1.18.2",
+    "react-docgen-typescript-loader": "^3.2.0",
+    "stylelint": "^10.1.0",
+    "stylelint-config-recommended": "^2.2.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-processor-styled-components": "^1.8.0",
+    "tailwind.macro": "^1.0.0-alpha.10",
+    "tailwindcss": "^1.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "stylelint",
+      "git add"
+    ]
+  }
+}
