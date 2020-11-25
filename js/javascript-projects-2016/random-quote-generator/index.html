@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Quote Generator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/materialize-css/dist/js/materialize.js"></script>
+    <script src="dist/spin.js"></script>
+
+    <script src="./index.js" async></script>
+
+    <link href="node_modules/materialize-css/dist/css/materialize.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+
+    <link href="./styles.css" rel="stylesheet">
+</head>
+<body>
+<div id="cover"></div>
+<div id="page">
+    <div class="row">
+        <div class="col s12 m10 l8 offset-l2 offset-m1">
+            <div class="card">
+                <div class="card-content">
+                    <div id="spin"></div>
+                    <div id="quote-text">
+                        <div id="quote"></div>
+                        <div id="author"></div>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <a id="tweetSubmit" class="function-links tooltipped btn waves-effect waves-light left" data-tooltip="Tweet the Quote" data-position="top" data-delay="50" target="_blank"><i class="fa fa-twitter"></i>
+                    </a>
+                    <a id="copyToClipboard" class="function-links btn tooltipped waves-effect waves-light left" data-tooltip="Copy to Clipboard" data-position="top" data-delay="50" target="_blank"><i class="fa fa-clipboard"></i>
+                    </a>
+                    <button id="new-quote" class="btn waves-effect waves-light right"><i class="fa fa-plus"></i> Random Quote</button>
+                </div>
+            </div>
+            <a href="https://www.freecodecamp.com/lkhadka" target="_blank">
+                <span id="credit" class="white-text">By Camper LKhadka</span></a>
+        </div>
+    </div>
+</div></body>
+</html>

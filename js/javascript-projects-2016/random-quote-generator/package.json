@@ -1,0 +1,12 @@
+{
+  "name": "Random-Quote-Generator",
+  "description": "Displays random quotes to the user",
+  "scripts": {
+    "start": "live-server"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.1.1",
+    "materialize-css": "^0.97.8"
+  }
+}

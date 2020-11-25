@@ -1,0 +1,93 @@
+/*based on https://goo.gl/Jx88I3*/
+
+body {
+    margin-top: -15px;
+    background-color: #eee;
+}
+
+#header-btn {
+    margin-top: 15px;
+}
+
+#header-card-action {
+    padding-bottom: 0;
+}
+
+.rounded {
+    border-radius: 18px;
+    padding: 1px 12px;
+}
+
+.tt-menu {
+    /* UPDATE: newer versions use tt-menu instead of tt-dropdown-menu */
+    width: 100%;
+    padding: 3px 0;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor, .tt-suggestion:hover {
+    /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+    color: #000;
+    background-color: #eee;
+}
+
+.tt-suggestion p {
+    margin: 10px;
+}
+
+span.twitter-typeahead {
+    display: inherit !important;
+}
+
+input.typeahead.tt-input {
+    height: 66px;
+    vertical-align: initial !important;
+}
+
+.input-field .twitter-typeahead + label:after {
+    display: block;
+    content: "";
+    position: absolute;
+    top: 65px;
+    opacity: 0;
+    transition: 0.2s opacity ease-out, 0.2s color ease-out;
+    height: 50px;
+}
+
+.input-field .twitter-typeahead ~ .material-icons {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    color: transparent;
+    cursor: pointer;
+    font-size: 2rem;
+    transition: 0.3s color;
+}
+
+.input-field .twitter-typeahead + label {
+    left: 1rem;
+}
+
+#search:focus {
+    background-color: #fff !important;;
+    border: 0;
+    box-shadow: none;
+    color: #444;
+}
+
+nav .input-field label i {
+    color: #444;
+}
+
+.twitter-typeahead, .tt-hint, .tt-input, .tt-menu {
+    width: 100%;
+}

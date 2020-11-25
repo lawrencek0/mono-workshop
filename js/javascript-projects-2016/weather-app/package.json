@@ -1,0 +1,13 @@
+{
+  "name": "Weather-App",
+  "description": "Shows the local weather along with the temperature and different icons and background images",
+  "scripts": {
+    "start": "live-server"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.1.1",
+    "materialize-css": "^0.97.8",
+    "suncalc": "^1.7.0"
+  }
+}

@@ -1,0 +1,36 @@
+.day {
+    background: url(http://hdwallpaperbackgrounds.net/wp-content/uploads/2015/10/above-the-clouds-HD-wallpaper.jpg) no-repeat center top;
+    color: rgb(51,51,51);
+}
+.night {
+    background: url(https://gardenhealingchurch.files.wordpress.com/2014/05/clouds-full-moon.jpg) no-repeat center top;
+    color: #fff;
+}
+h3 {
+    font-size: 24px;
+}
+#heading {
+    font-weight: 700;
+    font-size: 4.5em;
+}
+#desc {
+    text-transform: capitalize;
+    font-size: 2em;
+}
+.hidden {
+    display: none;
+}
+.temp {
+    font-size: 4em;
+    font-weight: 700;
+}
+.btn, .btn:focus {
+    background-color: rgba(0,0,0,0.5);
+    font-size: 3em;
+}
+.btn:hover {
+    background-color: #1D1D1D;
+}
+.btn i {
+    font-size: 0.8em;
+}

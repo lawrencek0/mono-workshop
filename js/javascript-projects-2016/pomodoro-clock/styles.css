@@ -1,0 +1,38 @@
+body {
+    padding: 30px;
+    background-color: #80deea;
+    color: white;
+    font-weight: 400;
+}
+
+.flip-clock-label {
+    color: white !important;
+}
+
+span {
+    padding: 0.1em;
+    margin: 0.3em;
+}
+
+.material-icons {
+    font-size: 12px;
+}
+
+.timer {
+    font-weight: 300;
+    font-size: 24px;
+}
+
+h6 {
+    text-align: center;
+}
+
+.clock {
+    display: inline-block;
+    width: auto;
+}
+
+.h2 {
+    text-align: center;
+    font-weight: 600;
+}
