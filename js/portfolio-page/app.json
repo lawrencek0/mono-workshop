@@ -1,0 +1,6 @@
+{
+  "name": "lawatlife",
+  "description": "Personal Portfolio app built using the MEAN stack",
+  "repository": "https://github.com/LKhadka/MEAN-Hero",
+  "keywords": ["angular", "express", "node"]
+}

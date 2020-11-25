@@ -1,0 +1,144 @@
+.content-container {
+  background-color: #e9ebee;
+}
+
+.parallax {
+  height: 500px;
+  width: auto;
+  text-align: center;
+  position: relative;
+  top: -24px;
+  margin: auto -24px;
+  background-color: rgba(43,43,43,0.8);
+}
+
+.parallax-img {
+  height: 100vh;
+  background: url("https://res.cloudinary.com/lkhadka/image/upload/v1488257838/river_hwhc8s.jpg") no-repeat fixed center;
+  background-size: cover;
+  filter: blur(2px);
+}
+
+
+.parallax-box {
+  position:absolute;
+  top: calc(50% - 2.5em);
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.parallax-text {
+  color: #fff;
+  padding: 0 20px;
+}
+
+.extra-info-container {
+  padding-top: 96px;
+}
+
+.extra-info {
+  width: auto;
+  background: #313131 linear-gradient(90deg, #0094d2 0, #0094d2 50%, #313131 0);
+  margin: auto -24px;
+}
+.extra-info-block {
+  padding: 0;
+}
+
+.extra-info-block+.extra-info-block {
+  background-color: #424242;
+}
+
+.extra-info-block {
+  padding: 0
+}
+
+
+span.extra-info-text {
+  font-size: 2em;
+  display: block;
+  line-height: 48px;
+  margin-top: 2em;
+  margin-bottom: 1.5em;
+  position: relative;
+  padding-left: 54px;
+  color: #fff
+}
+
+a.social-button {
+  margin: 2em 3.1%;
+  color: #eee;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border: solid 2px;
+  border-radius: 100%;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  transition: all 0.6s ease-in-out;
+}
+
+a.social-button:hover {
+  border: solid 2px #fff;
+  color: #313131;
+  background-color: #fff;
+}
+
+.fa-3x {
+  line-height: inherit;
+}
+
+footer {
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 0 0;
+}
+
+footer .credits {
+  margin-top: 6px;
+}
+@media (max-width:768px) {
+  .parallax-img {
+    height: 100vmax;
+  }
+  .parallax-box {
+    top: 30vmin;
+  }
+  .extra-info-container>.row {
+    flex-direction: column-reverse;
+  }
+  .extra-info-block {
+    background-color: #0094d2;
+    max-width: 100%;
+  }
+  span.extra-info-text {
+    font-size: 1.3em;
+    margin-top: 24px;
+    margin-left: 1%;
+    padding-left: 0.8em;
+  }
+  a.social-button {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+  }
+}
+
+@media (max-width: 320px) {
+  .parallax-box {
+    top: 20vmax;
+  }
+  span.extra-info-text {
+    margin-top: 24px;
+    font-size: 1.2em;
+    padding-left: 0.5em;
+    margin-left: 1%;
+  }
+  a.social-button {
+    margin-left: 3.7%;
+    margin-right: 3.7%;
+  }
+}

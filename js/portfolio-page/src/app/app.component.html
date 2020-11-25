@@ -1,0 +1,57 @@
+<clr-main-container>
+  <clr-header>
+    <div class="branding">
+      <a href="/" class="nav-link">
+        <span class="title">lawatlife</span>
+      </a>
+    </div>
+    <div class="header-nav" [clr-nav-level]="1">
+      <a href="#about" class="nav-link">
+        <span class="nav-text">about</span>
+      </a>
+      <a href="#portfolio" class="nav-link">
+        <span class="nav-text">portfolio</span>
+      </a>
+      <a href="#contact" class="nav-link">
+        <span class="nav-text">contact</span>
+      </a>
+    </div>
+  </clr-header>
+  <div class="content-container">
+    <div class="content-area">
+      <div class="parallax" id="about">
+        <div class="parallax-img"></div>
+        <div class="parallax-box">
+          <h3 class="parallax-text">
+            Hi! My name is Lawrence Khadka, a college freshman. I am a self taught full-stack web developer who is trying
+            to learn more about web technologies. I am learning the MEAN stack and Vue.js at present!
+          </h3>
+        </div>
+      </div>
+      <portfolio-slick-carousel></portfolio-slick-carousel>
+      <hr>
+      <portfolio-contact-form></portfolio-contact-form>
+      <section class="extra-info-container">
+        <div class="extra-info row">
+          <div class="extra-info-block col-xs-6">
+            <span class="extra-info-text">3607 Evangeline Street, Monroe, LA</span>
+          </div>
+          <div class="extra-info-block col-xs-6">
+            <a class="social-button" href="https://www.linkedin.com/in/lawrence-khadka-430674119" target="_blank"><i class="fa fa-3x fa-linkedin"></i></a>
+            <a class="social-button" href="https://github.com/LKhadka" target="_blank"><i class="fa fa-3x fa-github"></i></a>
+            <a class="social-button" href="https://www.facebook.com/lawrence.khadka.7" target="_blank"><i class="fa fa-3x fa-facebook"></i></a>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <div class="footer-wrapper">
+          <p class="credits">
+            <h4>
+              Made with <i class="fa fa-heart" aria-hidden="true"></i>
+              and <i class="fa fa-coffee" aria-hidden="true"></i> by Lawrence Khadka
+            </h4>
+        </div>
+      </footer>
+    </div>
+  </div>
+</clr-main-container>
