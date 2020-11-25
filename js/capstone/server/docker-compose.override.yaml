@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+    db:
+        image: mysql:5.7
+        environment:
+            MYSQL_DATABASE: 'capstone'
+            MYSQL_USER: 'team'
+            MYSQL_PASSWORD: 'yellow'
+            MYSQL_ROOT_PASSWORD: 'password'
+        ports:
+            - '3306:3306'
+        volumes:
+            - .:/usr/app
+    web:
+        build:
+            context: .
+            target: base
+        depends_on:
+            - db
+        command: npm run watch
+        volumes:
+            - '.:/usr/app/'
+        environment:
+            NODE_ENV: development
+            WAIT_HOSTS: db:3306
