@@ -110,6 +110,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (i == head) {
             if (size() == 0) {
                 head = 0;
+                tail = -1;
             } else {
                 head = (head + 1) % q.length;
             }
