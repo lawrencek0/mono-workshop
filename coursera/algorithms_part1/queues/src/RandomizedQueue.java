@@ -6,8 +6,6 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] q;
     private int size;
-    private int head;
-    private int tail;
 
     private class ListIterator implements Iterator<Item> {
         private final Item[] list;
@@ -15,10 +13,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public ListIterator() {
             list = (Item[]) new Object[size];
-            for (int i = 0, j = 0; i < q.length; i++) {
-                if (q[i] != null) {
-                    list[j++] = q[i];
-                }
+            for (int i = 0; i < size; i++) {
+                list[i] = q[i];
             }
             StdRandom.shuffle(list);
         }
@@ -46,26 +42,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public RandomizedQueue() {
         q = (Item[]) new Object[1];
         size = 0;
-        head = 0;
-        tail = 0;
     }
 
     private void resize(int capacity) {
         Item[] copy = (Item[]) new Object[capacity];
 
-        int i = 0;
-        int j = head;
-        int count = 0;
-        while (count < size) {
-            if (q[j] != null) {
-                copy[i++] = q[j];
-                count++;
-            }
-            j = (j + 1) % q.length;
+        for (int i = 0; i < size; i++) {
+            copy[i] = q[i];
         }
-
-        head = 0;
-        tail = i;
         q = copy;
     }
 
@@ -86,70 +70,33 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
         if (size == q.length)
             resize(2 * q.length);
-        q[tail] = item;
-        size++;
-        int count = 0;
-        do {
-            count++;
-            tail = (tail + 1) % q.length;
-        } while (q[tail] != null && count < q.length);
-        if (count >= q.length) {
-            tail = count;
-        }
+        q[size++] = item;
     }
 
     // remove and return a random item
     public Item dequeue() {
-        Item item = null;
-
-        if (size == 0) {
+        if (isEmpty()) {
             throw new NoSuchElementException();
-        } else if (size == 1) {
-            item = q[head];
-            q[head] = null;
-            head = 0;
-            tail = 0;
-        } else {
-            int i = -1;
-            while (item == null) {
-                i = StdRandom.uniform(head, (tail > head ? tail : (tail + q.length))) % q.length;
-                item = q[i];
-            }
-            q[i] = null;
-            if (i == head) {
-                do {
-                    i = (i + 1) % q.length;
-                } while (q[i] == null);
-                head = i;
-            }
-        }
-
-        size--;
-
-        if (size > 0 && size == q.length / 4)
+        } else if (size == q.length / 4) {
             resize(q.length / 2);
-
-        if (tail == q.length && size < q.length) {
-            tail = 0;
-            while (q[tail] != null) {
-                tail = (tail + 1) % q.length;
-            }
         }
+
+        int i = StdRandom.uniform(size);
+        Item item = q[i];
+        q[i] = q[--size];
+        q[size] = null;
 
         return item;
     }
 
     // return a random item (but do not remove it) {}
     public Item sample() {
-        if (size == 0) {
+        if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        while (true) {
-            int i = StdRandom.uniform(head, (tail > head ? tail : tail + q.length)) % q.length;
-            if (q[i] != null) {
-                return q[i];
-            }
-        }
+
+        int i = StdRandom.uniform(size);
+        return q[i];
     }
 
     // return an independent iterator over items in random order
