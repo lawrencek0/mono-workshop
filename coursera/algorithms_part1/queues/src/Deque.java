@@ -63,16 +63,19 @@ public class Deque<Item> implements Iterable<Item> {
 
         Node newHead = new Node(item);
 
-        if (head != null) {
-            newHead.next = head;
+        if (head == null) {
+            head = newHead;
+            tail = newHead;
+        } else if (head == tail) {
+            head = newHead;
+            head.next = tail;
+            tail.prev = head;
+        } else {
             head.prev = newHead;
-
-            if (head.next == null && tail == null) {
-                tail = head;
-            }
+            newHead.next = head;
+            head = newHead;
         }
 
-        head = newHead;
         size++;
     }
 
@@ -84,73 +87,60 @@ public class Deque<Item> implements Iterable<Item> {
 
         Node newTail = new Node(item);
 
-        if (tail != null) {
+        if (tail == null) {
+            tail = newTail;
+            head = newTail;
+        } else if (tail == head) {
+            tail = newTail;
+            head.next = tail;
+            tail.prev = head;
+        } else {
             tail.next = newTail;
             newTail.prev = tail;
-
-            if (tail.prev == null && head == null) {
-                head = tail;
-            }
+            tail = newTail;
         }
 
-        tail = newTail;
         size++;
     }
 
     // remove and return the item from the front
     public Item removeFirst() {
-        if (isEmpty()) {
-            throw new NoSuchElementException();
-        }
-
         Node n;
 
         if (head == null) {
-            n = tail;
+            throw new NoSuchElementException();
+        } else if (head == tail) {
+            n = head;
+            head = null;
             tail = null;
         } else {
             n = head;
             head = head.next;
-            if (head != null) {
-                head.prev = null;
-            }
+            head.prev = null;
         }
 
         size--;
-
-        if (isEmpty()) {
-            head = null;
-            tail = null;
-        }
 
         return n.item;
     }
 
     // remove and return the item from the back
     public Item removeLast() {
-        if (isEmpty()) {
-            throw new NoSuchElementException();
-        }
-
         Node n;
 
         if (tail == null) {
-            n = head;
+            throw new NoSuchElementException();
+        } else if (tail == head) {
+            n = tail;
+            tail = null;
             head = null;
         } else {
             n = tail;
             tail = tail.prev;
-            if (tail != null) {
-                tail.next = null;
-            }
+            tail.next = null;
         }
 
         size--;
-
-        if (isEmpty()) {
-            head = null;
-            tail = null;
-        }
 
         return n.item;
     }
