@@ -11,7 +11,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int tail;
 
     private class ListIterator implements Iterator<Item> {
-        private Item[] list;
+        private final Item[] list;
         private int index = 0;
 
         public ListIterator() {
@@ -21,12 +21,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                     list[j++] = q[i];
                 }
             }
-            for (int i = 0; i < list.length; i++) {
-                int j = StdRandom.uniform(i, list.length);
-                Item temp = list[j];
-                list[j] = list[i];
-                list[i] = temp;
-            }
+            StdRandom.shuffle(list);
         }
 
         @Override
