@@ -11,12 +11,27 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int tail;
 
     private class ListIterator implements Iterator<Item> {
-        private int i = head;
-        private int count = 0;
+        private Item[] list;
+        private int index = 0;
+
+        public ListIterator() {
+            list = (Item[]) new Object[size];
+            for (int i = 0, j = 0; i < q.length; i++) {
+                if (q[i] != null) {
+                    list[j++] = q[i];
+                }
+            }
+            for (int i = 0; i < list.length; i++) {
+                int j = StdRandom.uniform(i, list.length);
+                Item temp = list[j];
+                list[j] = list[i];
+                list[i] = temp;
+            }
+        }
 
         @Override
         public boolean hasNext() {
-            return count < size;
+            return index < list.length;
         }
 
         @Override
@@ -24,10 +39,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            Item item = q[i];
-            i = (i + 1) % q.length;
-            count++;
-            return item;
+            return list[index++];
         }
 
         @Override
@@ -41,7 +53,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         q = (Item[]) new Object[1];
         size = 0;
         head = 0;
-        tail = -1;
+        tail = 0;
     }
 
     private void resize(int capacity) {
@@ -50,7 +62,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int i = 0;
         int j = head;
         int count = 0;
-        while (count < size()) {
+        while (count < size) {
             if (q[j] != null) {
                 copy[i++] = q[j];
                 count++;
@@ -59,7 +71,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         head = 0;
-        tail = i - 1;
+        tail = i;
         q = copy;
     }
 
@@ -78,55 +90,68 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (item == null) {
             throw new IllegalArgumentException();
         }
-        if (size() == q.length)
+        if (size == q.length)
             resize(2 * q.length);
-        tail = (tail + 1) % q.length;
         q[tail] = item;
         size++;
+        int count = 0;
+        do {
+            count++;
+            tail = (tail + 1) % q.length;
+        } while (q[tail] != null && count < q.length);
+        if (count >= q.length) {
+            tail = count;
+        }
     }
 
     // remove and return a random item
     public Item dequeue() {
-        if (size() == 0) {
-            throw new NoSuchElementException();
-        }
-
         Item item = null;
-        int i = 0;
 
-        if (size() == 1) {
-            i = head;
-            item = q[i];
+        if (size == 0) {
+            throw new NoSuchElementException();
+        } else if (size == 1) {
+            item = q[head];
+            q[head] = null;
+            head = 0;
+            tail = 0;
         } else {
+            int i = -1;
             while (item == null) {
-                i = StdRandom.uniform(head, (tail > head ? tail : tail + q.length) + 1) % q.length;
+                i = StdRandom.uniform(head, (tail > head ? tail : (tail + q.length))) % q.length;
                 item = q[i];
             }
-        }
-
-        q[i] = null;
-        size--;
-
-        if (i == head) {
-            if (size() == 0) {
-                head = 0;
-                tail = -1;
-            } else {
-                head = (head + 1) % q.length;
+            q[i] = null;
+            if (i == head) {
+                do {
+                    i = (i + 1) % q.length;
+                } while (q[i] == null);
+                head = i;
             }
         }
-        if (size() > 0 && size() == q.length / 4)
+
+        size--;
+
+        if (size > 0 && size == q.length / 4)
             resize(q.length / 2);
+
+        if (tail == q.length && size < q.length) {
+            tail = 0;
+            while (q[tail] != null) {
+                tail = (tail + 1) % q.length;
+            }
+        }
+
         return item;
     }
 
     // return a random item (but do not remove it) {}
     public Item sample() {
-        if (size() == 0) {
+        if (size == 0) {
             throw new NoSuchElementException();
         }
         while (true) {
-            int i = StdRandom.uniform(head, (tail > head ? tail : tail + q.length) + 1) % q.length;
+            int i = StdRandom.uniform(head, (tail > head ? tail : tail + q.length)) % q.length;
             if (q[i] != null) {
                 return q[i];
             }
@@ -205,8 +230,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             q.enqueue(Character.toChars(i + 'a')[0]);
         }
         System.out.println("Should have size 100 after random enqueue/dequeue: " + q.size());
-
-        q = new RandomizedQueue<>();
     }
 
 }
