@@ -14,11 +14,15 @@ public class Point {
 
     public void draw() // draws this point
     {
+        StdDraw.setPenRadius(0.05);
+        StdDraw.setPenColor(StdDraw.MAGENTA);
         StdDraw.point(x, y);
     }
 
     public void drawTo(Point that) // draws the line segment from this point to that point
     {
+        StdDraw.setPenRadius(0.02);
+        StdDraw.setPenColor(StdDraw.BOOK_BLUE);
         StdDraw.line(x, y, that.x, that.y);
     }
 
