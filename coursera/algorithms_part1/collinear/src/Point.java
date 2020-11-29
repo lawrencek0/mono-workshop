@@ -1,9 +1,6 @@
 import java.util.Comparator;
 
-import edu.princeton.cs.algs4.StdArrayIO;
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 
 public class Point {
     private final int x;
@@ -27,7 +24,7 @@ public class Point {
 
     public String toString() // string representation
     {
-        return '(' + x + ',' + y + ')';
+        return "(" + x + "," + y + ")";
     }
 
     public int compareTo(Point that) // compare two points by y-coordinates, breaking ties by x-coordinates
@@ -82,4 +79,5 @@ public class Point {
                 return 0;
         }
     }
+
 }
