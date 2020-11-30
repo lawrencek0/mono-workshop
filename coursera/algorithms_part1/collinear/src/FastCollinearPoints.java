@@ -41,7 +41,7 @@ public class FastCollinearPoints {
             int segmentCount = 1;
             for (int j = 1; j < aux.length; j++) {
                 double newSlope = point.slopeTo(aux[j]);
-                if (!fuzzyEquals(slope, newSlope)) {
+                if (slope != newSlope && !fuzzyEquals(slope, newSlope)) {
                     if (segmentCount >= 4) {
                         Arrays.sort(segment, 0, segmentCount);
                         Point start = segment[0];
