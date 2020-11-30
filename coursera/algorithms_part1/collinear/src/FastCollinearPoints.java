@@ -64,9 +64,12 @@ public class FastCollinearPoints {
                 double newSlope = point.slopeTo(aux[j]);
                 if (!fuzzyEquals(slope, newSlope)) {
                     if (segmentCount >= 4) {
-                        Point start = getSmallest(segment, segmentCount);
-                        Point end = getlargest(segment, segmentCount);
-                        segments[numOfSegments++] = new LineSegment(start, end);
+                        Arrays.sort(segment, 0, segmentCount);
+                        Point start = segment[0];
+                        if (start == point) {
+                            Point end = segment[segmentCount - 1];
+                            segments[numOfSegments++] = new LineSegment(start, end);
+                        }
                     }
                     slope = newSlope;
                     segmentCount = 1;
@@ -76,34 +79,17 @@ public class FastCollinearPoints {
             }
             if (segmentCount >= 4) {
                 Point start = getSmallest(segment, segmentCount);
-                Point end = getlargest(segment, segmentCount);
-                segments[numOfSegments++] = new LineSegment(start, end);
-            }
-        }
-
-        if (numOfSegments == 0) {
-            this.segments = new LineSegment[0];
-        } else {
-
-            int uniqueSegments = 1;
-            System.out.println(numOfSegments);
-            if (numOfSegments > 1) {
-                int i = 1;
-                while (i < numOfSegments) {
-                    LineSegment prev = segments[i - 1];
-                    LineSegment curr = segments[i];
-                    if (prev.start.compareTo(curr.start) != 0 || prev.end.compareTo(curr.end) != 0) {
-                        segments[uniqueSegments++] = curr;
-                    }
-                    i++;
+                if (start == point) {
+                    Point end = getlargest(segment, segmentCount);
+                    segments[numOfSegments++] = new LineSegment(start, end);
                 }
             }
-            this.segments = new LineSegment[uniqueSegments];
-            for (int k = 0; k < uniqueSegments; k++) {
-                this.segments[k] = segments[k];
-            }
         }
 
+        this.segments = new LineSegment[numOfSegments];
+        for (int i = 0; i < numOfSegments; i++) {
+            this.segments[i] = segments[i];
+        }
     }
 
     public int numberOfSegments() // the number of line segments
