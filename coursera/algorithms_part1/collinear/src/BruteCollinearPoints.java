@@ -78,6 +78,11 @@ public class BruteCollinearPoints {
 
     public LineSegment[] segments() // the line segments
     {
-        return this.segments;
+        LineSegment[] copy = new LineSegment[segments.length];
+
+        for (int i = 0; i < segments.length; i++) {
+            copy[i] = segments[i];
+        }
+        return copy;
     }
 }

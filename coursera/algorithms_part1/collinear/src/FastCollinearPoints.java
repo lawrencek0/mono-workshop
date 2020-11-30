@@ -9,32 +9,6 @@ public class FastCollinearPoints {
         return Math.abs(d1 - d2) < epsilon;
     }
 
-    private static Point getSmallest(Point[] points, int count) {
-        Point smallestPoint = points[0];
-
-        for (int i = 1; i < count; i++) {
-            Point point = points[i];
-            if (point.compareTo(smallestPoint) < 0) {
-                smallestPoint = point;
-            }
-        }
-
-        return smallestPoint;
-    }
-
-    private static Point getlargest(Point[] points, int count) {
-        Point largestPoint = points[0];
-
-        for (int i = 1; i < count; i++) {
-            Point point = points[i];
-            if (point.compareTo(largestPoint) > 0) {
-                largestPoint = point;
-            }
-        }
-
-        return largestPoint;
-    }
-
     public FastCollinearPoints(Point[] points) // finds all line segments containing 4 or more points
     {
         if (points == null) {
@@ -78,9 +52,10 @@ public class FastCollinearPoints {
 
             }
             if (segmentCount >= 4) {
-                Point start = getSmallest(segment, segmentCount);
+                Arrays.sort(segment, 0, segmentCount);
+                Point start = segment[0];
                 if (start == point) {
-                    Point end = getlargest(segment, segmentCount);
+                    Point end = segment[segmentCount - 1];
                     segments[numOfSegments++] = new LineSegment(start, end);
                 }
             }
@@ -99,6 +74,11 @@ public class FastCollinearPoints {
 
     public LineSegment[] segments() // the line segments
     {
-        return segments;
+        LineSegment[] copy = new LineSegment[segments.length];
+
+        for (int i = 0; i < segments.length; i++) {
+            copy[i] = segments[i];
+        }
+        return copy;
     }
 }
