@@ -1,6 +1,6 @@
 public class LineSegment {
-    public Point start;
-    public Point end;
+    private final Point start;
+    private final Point end;
 
     public LineSegment(Point p, Point q) // constructs the line segment between points p and q
     {
