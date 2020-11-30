@@ -21,6 +21,11 @@ public class FastCollinearPoints {
             if (points[i] == null) {
                 throw new IllegalArgumentException();
             }
+            for (int j = 0; j < i; j++) {
+                if (points[i].compareTo(points[j]) == 0) {
+                    throw new IllegalArgumentException();
+                }
+            }
             aux[i] = points[i];
         }
 
