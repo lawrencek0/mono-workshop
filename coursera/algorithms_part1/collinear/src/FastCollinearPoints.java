@@ -1,94 +1,47 @@
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.LinkedList;
 
 public class FastCollinearPoints {
     private final LineSegment[] segments;
 
-    private static boolean fuzzyEquals(double d1, double d2) {
-        double epsilon = Math.pow(10, -12);
-        return Math.abs(d1 - d2) < epsilon;
-    }
-
-    private LineSegment[] resize(LineSegment[] segments, int size) {
-        LineSegment[] copy = new LineSegment[segments.length * 2];
-
-        for (int i = 0; i < size; i++) {
-            copy[i] = copy[i];
-        }
-
-        return copy;
-    }
-
     public FastCollinearPoints(Point[] points) // finds all line segments containing 4 or more points
     {
-        if (points == null) {
-            throw new IllegalArgumentException();
-        }
+        checkNulls(points);
 
-        Point[] aux = new Point[points.length];
-
-        for (int i = 0; i < points.length; i++) {
-            if (points[i] == null) {
-                throw new IllegalArgumentException();
-            }
-            aux[i] = points[i];
-        }
-
-        // check for duplicates
+        Point[] aux = points.clone();
         Arrays.sort(aux);
-        for (int i = 1; i < points.length; i++) {
-            if (points[i].compareTo(points[i - 1]) == 0) {
-                throw new IllegalArgumentException();
-            }
-        }
 
-        LineSegment[] segments = new LineSegment[points.length];
-        int numOfSegments = 0;
-        for (int i = 0; i < points.length; i++) {
-            Point point = points[i];
-            Comparator<Point> comp = point.slopeOrder();
-            Arrays.sort(aux, comp);
-            double slope = point.compareTo(point);
-            Point[] segment = new Point[points.length];
-            segment[0] = point;
-            int segmentCount = 1;
-            for (int j = 1; j < aux.length; j++) {
-                double newSlope = point.slopeTo(aux[j]);
-                if (slope != newSlope && !fuzzyEquals(slope, newSlope)) {
-                    if (segmentCount >= 4) {
-                        Arrays.sort(segment, 0, segmentCount);
-                        Point start = segment[0];
-                        if (start == point) {
-                            if (numOfSegments == segments.length) {
-                                segments = resize(segments, numOfSegments);
-                            }
-                            Point end = segment[segmentCount - 1];
-                            segments[numOfSegments++] = new LineSegment(start, end);
-                        }
-                    }
-                    slope = newSlope;
-                    segmentCount = 1;
-                }
-                segment[segmentCount++] = aux[j];
+        checkDuplicates(aux);
 
-            }
-            if (segmentCount >= 4) {
-                Arrays.sort(segment, 0, segmentCount);
-                Point start = segment[0];
-                if (start == point) {
-                    if (numOfSegments == segments.length) {
-                        segments = resize(segments, numOfSegments);
-                    }
-                    Point end = segment[segmentCount - 1];
-                    segments[numOfSegments++] = new LineSegment(start, end);
+        LinkedList<LineSegment> segments = new LinkedList<>();
+
+        for (int i = 0; i < aux.length; i++) {
+            Point point = aux[i];
+            Point[] bySlope = aux.clone();
+            // sort points relative to point
+            Arrays.sort(bySlope, point.slopeOrder());
+
+            int k = 1;
+            while (k < aux.length) {
+                LinkedList<Point> segment = new LinkedList<>();
+
+                double slope = point.slopeTo(bySlope[k]);
+                do {
+                    segment.add(bySlope[k++]);
+                } while (k < bySlope.length && point.slopeTo(bySlope[k]) == slope);
+
+                // only draw if the given point is the start of the line segment
+                if (segment.size() >= 3 && point.compareTo(segment.peek()) < 0) {
+                    Point start = point;
+                    Point end = segment.removeLast();
+
+                    // add the line segment with the start and end points
+                    segments.add(new LineSegment(start, end));
                 }
             }
         }
 
-        this.segments = new LineSegment[numOfSegments];
-        for (int i = 0; i < numOfSegments; i++) {
-            this.segments[i] = segments[i];
-        }
+        this.segments = segments.toArray(new LineSegment[0]);
     }
 
     public int numberOfSegments() // the number of line segments
@@ -104,5 +57,25 @@ public class FastCollinearPoints {
             copy[i] = segments[i];
         }
         return copy;
+    }
+
+    private static void checkNulls(Point[] points) {
+        if (points == null) {
+            throw new IllegalArgumentException();
+        }
+
+        for (int i = 0; i < points.length; i++) {
+            if (points[i] == null) {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    private static void checkDuplicates(Point[] points) {
+        for (int i = 1; i < points.length; i++) {
+            if (points[i].compareTo(points[i - 1]) == 0) {
+                throw new IllegalArgumentException();
+            }
+        }
     }
 }
