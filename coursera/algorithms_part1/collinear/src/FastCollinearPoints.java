@@ -9,6 +9,16 @@ public class FastCollinearPoints {
         return Math.abs(d1 - d2) < epsilon;
     }
 
+    private LineSegment[] resize(LineSegment[] segments, int size) {
+        LineSegment[] copy = new LineSegment[segments.length * 2];
+
+        for (int i = 0; i < size; i++) {
+            copy[i] = copy[i];
+        }
+
+        return copy;
+    }
+
     public FastCollinearPoints(Point[] points) // finds all line segments containing 4 or more points
     {
         if (points == null) {
@@ -46,6 +56,9 @@ public class FastCollinearPoints {
                         Arrays.sort(segment, 0, segmentCount);
                         Point start = segment[0];
                         if (start == point) {
+                            if (numOfSegments == segments.length) {
+                                segments = resize(segments, numOfSegments);
+                            }
                             Point end = segment[segmentCount - 1];
                             segments[numOfSegments++] = new LineSegment(start, end);
                         }
@@ -60,6 +73,9 @@ public class FastCollinearPoints {
                 Arrays.sort(segment, 0, segmentCount);
                 Point start = segment[0];
                 if (start == point) {
+                    if (numOfSegments == segments.length) {
+                        segments = resize(segments, numOfSegments);
+                    }
                     Point end = segment[segmentCount - 1];
                     segments[numOfSegments++] = new LineSegment(start, end);
                 }
