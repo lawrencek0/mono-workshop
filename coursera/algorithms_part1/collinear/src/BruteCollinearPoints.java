@@ -1,8 +1,6 @@
 import java.util.Comparator;
 
 public class BruteCollinearPoints {
-    private final Point[] points;
-    private final int numberOfSegments;
     private final LineSegment[] segments;
 
     private static Point getSmallest(Point[] points) {
@@ -35,13 +33,10 @@ public class BruteCollinearPoints {
             throw new IllegalArgumentException();
         }
 
-        this.points = new Point[points.length];
-
         for (int i = 0; i < points.length; i++) {
             if (points[i] == null) {
                 throw new IllegalArgumentException();
             }
-            this.points[i] = points[i];
         }
 
         int numberOfSegments = 0;
@@ -70,7 +65,6 @@ public class BruteCollinearPoints {
             }
         }
 
-        this.numberOfSegments = numberOfSegments;
         this.segments = new LineSegment[numberOfSegments];
         for (int i = 0; i < numberOfSegments; i++) {
             segments[i] = temp[i];
@@ -79,7 +73,7 @@ public class BruteCollinearPoints {
 
     public int numberOfSegments() // the number of line segments
     {
-        return this.numberOfSegments;
+        return this.segments.length;
     }
 
     public LineSegment[] segments() // the line segments
